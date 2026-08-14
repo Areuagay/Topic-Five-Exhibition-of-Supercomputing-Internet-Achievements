@@ -1,0 +1,66 @@
+# ======================
+# Frontend
+# ======================
+node_modules/
+.nuxt/
+.output/
+dist/
+.vite/
+
+# ======================
+# Python
+# ======================
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+
+# ======================
+# Environment
+# ======================
+.env
+.env.*
+!.env.example
+
+# ======================
+# IDE / OS
+# ======================
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# ======================
+# Runtime
+# ======================
+logs/
+runtime/
+tmp/
+
+# ======================
+# Database
+# ======================
+*.db
+*.sqlite
+*.sqlite3
+
+# ======================
+# Generated artifacts
+# ======================
+artifacts/generated/
+
+# ======================
+# Large packages
+# ======================
+*.zip
+*.tar
+*.tar.gz
+
+# ======================
+# Python test/cache
+# ======================
+.pytest_cache/
+.coverage
+htmlcov/
