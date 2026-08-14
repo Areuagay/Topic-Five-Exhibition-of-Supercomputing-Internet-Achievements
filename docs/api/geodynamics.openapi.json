@@ -1,0 +1,2358 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "课题五-地球动力学模拟接口",
+    "description": "Apifox 导入兼容版。包含 11 个接口、中文接口名称、接口说明、请求/响应示例、字段中文名（title）、字段说明（description）及 Mock 规则（x-apifox-mock）。",
+    "version": "1.2.0"
+  },
+  "tags": [
+    {
+      "name": "场景管理"
+    },
+    {
+      "name": "任务运行"
+    },
+    {
+      "name": "运行监控与结果"
+    }
+  ],
+  "paths": {
+    "/api/v1/geodynamics/scenarios": {
+      "get": {
+        "summary": "获取地球动力学场景列表",
+        "deprecated": false,
+        "description": "获取地球动力学领域下的两个示范应用入口。",
+        "operationId": "getGeodynamicsScenarios",
+        "tags": [
+          "场景管理"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "array",
+                      "title": "场景列表",
+                      "description": "地球动力学场景集合。",
+                      "items": {
+                        "type": "object",
+                        "title": "场景摘要",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "title": "场景ID",
+                            "description": "应用场景唯一标识。",
+                            "example": "wave-propagation"
+                          },
+                          "name": {
+                            "type": "string",
+                            "title": "场景名称",
+                            "description": "应用场景中文名称。",
+                            "example": "地震波传播模拟"
+                          },
+                          "category": {
+                            "type": "string",
+                            "title": "所属领域",
+                            "description": "应用所属领域。",
+                            "example": "地球动力学"
+                          },
+                          "description": {
+                            "type": "string",
+                            "title": "场景简介",
+                            "description": "应用入口卡片简介。",
+                            "example": "大尺度三维地震波传播数值模拟"
+                          },
+                          "status": {
+                            "type": "string",
+                            "title": "可用状态",
+                            "description": "场景当前可用状态。",
+                            "enum": [
+                              "available",
+                              "unavailable",
+                              "developing"
+                            ],
+                            "example": "available"
+                          }
+                        }
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "ISO 8601 响应时间。",
+                      "example": "2026-08-11T10:20:30+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": [
+                    {
+                      "id": "wave-propagation",
+                      "name": "地震波传播模拟",
+                      "category": "地球动力学",
+                      "description": "大尺度三维地震波传播数值模拟",
+                      "status": "available"
+                    },
+                    {
+                      "id": "plate-tectonics",
+                      "name": "板块构造数值模拟",
+                      "category": "地球动力学",
+                      "description": "岩石圈热-力学及板块运动数值模拟",
+                      "status": "available"
+                    }
+                  ],
+                  "timestamp": "2026-08-11T10:20:30+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/geodynamics/scenarios/{scenario_id}": {
+      "get": {
+        "summary": "获取地球动力学场景详情",
+        "deprecated": false,
+        "description": "获取详情页的应用说明、摘要指标、计算中心、技术栈、技术流程、关联算子和成果亮点。",
+        "operationId": "getGeodynamicsScenarioDetail",
+        "tags": [
+          "场景管理"
+        ],
+        "parameters": [
+          {
+            "name": "scenario_id",
+            "in": "path",
+            "description": "场景唯一标识：wave-propagation=地震波传播模拟；plate-tectonics=板块构造数值模拟。",
+            "required": true,
+            "example": "wave-propagation",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "wave-propagation",
+                "plate-tectonics"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "场景详情",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "title": "场景ID",
+                          "description": "应用场景唯一标识。",
+                          "example": "wave-propagation"
+                        },
+                        "name": {
+                          "type": "string",
+                          "title": "场景名称",
+                          "description": "应用场景中文名称。",
+                          "example": "地震波传播模拟"
+                        },
+                        "category": {
+                          "type": "string",
+                          "title": "所属领域",
+                          "description": "应用所属领域。",
+                          "example": "地球动力学"
+                        },
+                        "description": {
+                          "type": "string",
+                          "title": "场景简介",
+                          "description": "场景详细说明。",
+                          "example": "基于数值方法的大尺度三维地震波传播模拟"
+                        },
+                        "summary_metrics": {
+                          "type": "array",
+                          "title": "摘要指标",
+                          "description": "详情页顶部摘要指标。",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "label": {
+                                "type": "string",
+                                "title": "指标名称",
+                                "description": "摘要指标中文名称。",
+                                "example": "模拟频段"
+                              },
+                              "value": {
+                                "type": "string",
+                                "title": "指标值",
+                                "description": "摘要指标展示值。",
+                                "example": "0.1 ~ 10"
+                              },
+                              "unit": {
+                                "type": "string",
+                                "title": "指标单位",
+                                "description": "摘要指标单位。",
+                                "example": "Hz"
+                              }
+                            }
+                          }
+                        },
+                        "supported_clusters": {
+                          "type": "array",
+                          "title": "支持计算中心",
+                          "description": "该应用支持的计算中心 ID。",
+                          "items": {
+                            "type": "string",
+                            "title": "计算中心ID",
+                            "description": "计算中心唯一标识。",
+                            "example": "changsha"
+                          }
+                        },
+                        "tech_stack": {
+                          "type": "array",
+                          "title": "技术栈",
+                          "description": "应用核心技术与软件栈。",
+                          "items": {
+                            "type": "string",
+                            "title": "技术名称",
+                            "description": "技术栈条目。",
+                            "example": "MPI"
+                          }
+                        },
+                        "background": {
+                          "type": "string",
+                          "title": "问题背景",
+                          "description": "应用问题背景说明。",
+                          "example": "地震波传播模拟需要在大规模网格上求解波动方程。"
+                        },
+                        "method": {
+                          "type": "string",
+                          "title": "计算方法",
+                          "description": "应用主要计算方法说明。",
+                          "example": "采用谱元法/有限差分结合 MPI 域分解。"
+                        },
+                        "architecture": {
+                          "type": "array",
+                          "title": "技术流程",
+                          "description": "应用技术流程步骤。",
+                          "items": {
+                            "type": "string",
+                            "title": "流程步骤",
+                            "description": "技术流程节点名称。",
+                            "example": "数据预处理"
+                          }
+                        },
+                        "operators": {
+                          "type": "array",
+                          "title": "关联算子",
+                          "description": "该应用关联的函数/算子。",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "title": "算子ID",
+                                "description": "算子唯一标识。",
+                                "example": "wave-equation"
+                              },
+                              "name": {
+                                "type": "string",
+                                "title": "算子名称",
+                                "description": "算子中文名称。",
+                                "example": "波动方程求解器"
+                              }
+                            }
+                          }
+                        },
+                        "highlights": {
+                          "type": "array",
+                          "title": "成果亮点",
+                          "description": "详情页成果亮点。",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "label": {
+                                "type": "string",
+                                "title": "亮点名称",
+                                "description": "成果亮点名称。",
+                                "example": "模拟规模"
+                              },
+                              "value": {
+                                "type": "string",
+                                "title": "亮点数值",
+                                "description": "成果亮点展示值。",
+                                "example": "3000"
+                              },
+                              "unit": {
+                                "type": "string",
+                                "title": "亮点单位",
+                                "description": "成果亮点单位。",
+                                "example": "km³"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "example": {
+                        "id": "wave-propagation",
+                        "name": "地震波传播模拟",
+                        "category": "地球动力学",
+                        "description": "基于数值方法的大尺度三维地震波传播模拟",
+                        "summary_metrics": [
+                          {
+                            "label": "模拟频段",
+                            "value": "0.1 ~ 10",
+                            "unit": "Hz"
+                          },
+                          {
+                            "label": "网格规模",
+                            "value": "10亿",
+                            "unit": "元素"
+                          },
+                          {
+                            "label": "并行规模",
+                            "value": "256",
+                            "unit": "核"
+                          }
+                        ],
+                        "supported_clusters": [
+                          "changsha",
+                          "guangzhou"
+                        ],
+                        "tech_stack": [
+                          "SEM/FDM",
+                          "MPI",
+                          "Newmark",
+                          "域分解",
+                          "HDF5"
+                        ],
+                        "background": "地震波传播模拟需要在大规模网格上求解波动方程。",
+                        "method": "采用谱元法/有限差分结合 MPI 域分解。",
+                        "architecture": [
+                          "数据预处理",
+                          "网格划分与域分解",
+                          "离散计算",
+                          "时间步进求解",
+                          "波场快照输出",
+                          "可视化后处理"
+                        ],
+                        "operators": [
+                          {
+                            "id": "wave-equation",
+                            "name": "波动方程求解器"
+                          },
+                          {
+                            "id": "sparse-matrix",
+                            "name": "稀疏矩阵运算"
+                          },
+                          {
+                            "id": "fft",
+                            "name": "FFT"
+                          }
+                        ],
+                        "highlights": [
+                          {
+                            "label": "模拟规模",
+                            "value": "3000",
+                            "unit": "km³"
+                          },
+                          {
+                            "label": "网格精度",
+                            "value": "50",
+                            "unit": "m"
+                          },
+                          {
+                            "label": "加速比",
+                            "value": "12.4",
+                            "unit": "x"
+                          }
+                        ]
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "ISO 8601 响应时间。",
+                      "example": "2026-08-11T10:20:30+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "id": "wave-propagation",
+                    "name": "地震波传播模拟",
+                    "category": "地球动力学",
+                    "description": "基于数值方法的大尺度三维地震波传播模拟",
+                    "summary_metrics": [
+                      {
+                        "label": "模拟频段",
+                        "value": "0.1 ~ 10",
+                        "unit": "Hz"
+                      },
+                      {
+                        "label": "网格规模",
+                        "value": "10亿",
+                        "unit": "元素"
+                      },
+                      {
+                        "label": "并行规模",
+                        "value": "256",
+                        "unit": "核"
+                      }
+                    ],
+                    "supported_clusters": [
+                      "changsha",
+                      "guangzhou"
+                    ],
+                    "tech_stack": [
+                      "SEM/FDM",
+                      "MPI",
+                      "Newmark",
+                      "域分解",
+                      "HDF5"
+                    ],
+                    "background": "地震波传播模拟需要在大规模网格上求解波动方程。",
+                    "method": "采用谱元法/有限差分结合 MPI 域分解。",
+                    "architecture": [
+                      "数据预处理",
+                      "网格划分与域分解",
+                      "离散计算",
+                      "时间步进求解",
+                      "波场快照输出",
+                      "可视化后处理"
+                    ],
+                    "operators": [
+                      {
+                        "id": "wave-equation",
+                        "name": "波动方程求解器"
+                      },
+                      {
+                        "id": "sparse-matrix",
+                        "name": "稀疏矩阵运算"
+                      },
+                      {
+                        "id": "fft",
+                        "name": "FFT"
+                      }
+                    ],
+                    "highlights": [
+                      {
+                        "label": "模拟规模",
+                        "value": "3000",
+                        "unit": "km³"
+                      },
+                      {
+                        "label": "网格精度",
+                        "value": "50",
+                        "unit": "m"
+                      },
+                      {
+                        "label": "加速比",
+                        "value": "12.4",
+                        "unit": "x"
+                      }
+                    ]
+                  },
+                  "timestamp": "2026-08-11T10:20:30+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/geodynamics/scenarios/{scenario_id}/params-schema": {
+      "get": {
+        "summary": "获取地球动力学参数定义",
+        "deprecated": false,
+        "description": "获取场景可配置参数，供前端动态生成运行参数表单。",
+        "operationId": "getGeodynamicsParamsSchema",
+        "tags": [
+          "场景管理"
+        ],
+        "parameters": [
+          {
+            "name": "scenario_id",
+            "in": "path",
+            "description": "场景唯一标识：wave-propagation=地震波传播模拟；plate-tectonics=板块构造数值模拟。",
+            "required": true,
+            "example": "wave-propagation",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "wave-propagation",
+                "plate-tectonics"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "参数定义",
+                      "properties": {
+                        "fields": {
+                          "type": "array",
+                          "title": "参数列表",
+                          "description": "当前场景的可配置参数列表。",
+                          "items": {
+                            "type": "object",
+                            "title": "运行参数字段",
+                            "properties": {
+                              "name": {
+                                "type": "string",
+                                "title": "参数英文名",
+                                "description": "参数唯一英文编码。",
+                                "example": "grid_resolution"
+                              },
+                              "label": {
+                                "type": "string",
+                                "title": "参数中文名",
+                                "description": "前端展示中文名称。",
+                                "example": "网格精度"
+                              },
+                              "type": {
+                                "type": "string",
+                                "title": "参数类型",
+                                "description": "参数的数据类型。",
+                                "example": "number"
+                              },
+                              "unit": {
+                                "type": "string",
+                                "title": "参数单位",
+                                "description": "参数单位，可为空。",
+                                "example": "m"
+                              },
+                              "required": {
+                                "type": "boolean",
+                                "title": "是否必填",
+                                "description": "提交任务时是否必须提供。",
+                                "example": true
+                              },
+                              "default_value": {
+                                "type": "string",
+                                "title": "默认值",
+                                "description": "参数默认值，字符串形式返回以便通用渲染。",
+                                "example": "50"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "example": {
+                        "fields": [
+                          {
+                            "name": "grid_resolution",
+                            "label": "网格精度",
+                            "type": "number",
+                            "unit": "m",
+                            "required": true,
+                            "default_value": "50"
+                          },
+                          {
+                            "name": "source_frequency",
+                            "label": "震源频率",
+                            "type": "number",
+                            "unit": "Hz",
+                            "required": true,
+                            "default_value": "5"
+                          },
+                          {
+                            "name": "time_step",
+                            "label": "时间步长",
+                            "type": "number",
+                            "unit": "s",
+                            "required": true,
+                            "default_value": "0.001"
+                          },
+                          {
+                            "name": "total_steps",
+                            "label": "总时间步数",
+                            "type": "integer",
+                            "unit": "",
+                            "required": true,
+                            "default_value": "10000"
+                          }
+                        ]
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "ISO 8601 响应时间。",
+                      "example": "2026-08-11T10:20:30+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "fields": [
+                      {
+                        "name": "grid_resolution",
+                        "label": "网格精度",
+                        "type": "number",
+                        "unit": "m",
+                        "required": true,
+                        "default_value": "50"
+                      },
+                      {
+                        "name": "source_frequency",
+                        "label": "震源频率",
+                        "type": "number",
+                        "unit": "Hz",
+                        "required": true,
+                        "default_value": "5"
+                      },
+                      {
+                        "name": "time_step",
+                        "label": "时间步长",
+                        "type": "number",
+                        "unit": "s",
+                        "required": true,
+                        "default_value": "0.001"
+                      },
+                      {
+                        "name": "total_steps",
+                        "label": "总时间步数",
+                        "type": "integer",
+                        "unit": "",
+                        "required": true,
+                        "default_value": "10000"
+                      }
+                    ]
+                  },
+                  "timestamp": "2026-08-11T10:20:30+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/geodynamics/scenarios/{scenario_id}/benchmark": {
+      "get": {
+        "summary": "获取地球动力学性能对比数据",
+        "deprecated": false,
+        "description": "获取本方案与基准方案的性能对比数据，前端自行绘图。",
+        "operationId": "getGeodynamicsBenchmark",
+        "tags": [
+          "场景管理"
+        ],
+        "parameters": [
+          {
+            "name": "scenario_id",
+            "in": "path",
+            "description": "场景唯一标识：wave-propagation=地震波传播模拟；plate-tectonics=板块构造数值模拟。",
+            "required": true,
+            "example": "wave-propagation",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "wave-propagation",
+                "plate-tectonics"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "性能对比数据",
+                      "properties": {
+                        "dimensions": {
+                          "type": "array",
+                          "title": "对比维度",
+                          "description": "参与性能对比的指标维度。",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "key": {
+                                "type": "string",
+                                "title": "维度编码",
+                                "description": "性能指标英文编码。",
+                                "example": "speed"
+                              },
+                              "name": {
+                                "type": "string",
+                                "title": "维度名称",
+                                "description": "性能指标中文名称。",
+                                "example": "计算速度"
+                              },
+                              "unit": {
+                                "type": "string",
+                                "title": "维度单位",
+                                "description": "指标单位。",
+                                "example": "x"
+                              }
+                            }
+                          }
+                        },
+                        "series": {
+                          "type": "array",
+                          "title": "对比序列",
+                          "description": "各方案的性能指标数值。",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string",
+                                "title": "方案名称",
+                                "description": "对比方案名称。",
+                                "example": "本方案"
+                              },
+                              "speed": {
+                                "type": "number",
+                                "title": "计算速度",
+                                "description": "计算速度指标。",
+                                "example": 12.4
+                              },
+                              "memory": {
+                                "type": "number",
+                                "title": "内存占用",
+                                "description": "内存占用比例。",
+                                "example": 68
+                              },
+                              "parallel_efficiency": {
+                                "type": "number",
+                                "title": "并行效率",
+                                "description": "并行效率百分比。",
+                                "example": 92
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "example": {
+                        "dimensions": [
+                          {
+                            "key": "speed",
+                            "name": "计算速度",
+                            "unit": "x"
+                          },
+                          {
+                            "key": "memory",
+                            "name": "内存占用",
+                            "unit": "%"
+                          },
+                          {
+                            "key": "parallel_efficiency",
+                            "name": "并行效率",
+                            "unit": "%"
+                          }
+                        ],
+                        "series": [
+                          {
+                            "name": "本方案",
+                            "speed": 12.4,
+                            "memory": 68,
+                            "parallel_efficiency": 92
+                          },
+                          {
+                            "name": "基准方案",
+                            "speed": 4.1,
+                            "memory": 100,
+                            "parallel_efficiency": 76
+                          }
+                        ]
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "ISO 8601 响应时间。",
+                      "example": "2026-08-11T10:20:30+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "dimensions": [
+                      {
+                        "key": "speed",
+                        "name": "计算速度",
+                        "unit": "x"
+                      },
+                      {
+                        "key": "memory",
+                        "name": "内存占用",
+                        "unit": "%"
+                      },
+                      {
+                        "key": "parallel_efficiency",
+                        "name": "并行效率",
+                        "unit": "%"
+                      }
+                    ],
+                    "series": [
+                      {
+                        "name": "本方案",
+                        "speed": 12.4,
+                        "memory": 68,
+                        "parallel_efficiency": 92
+                      },
+                      {
+                        "name": "基准方案",
+                        "speed": 4.1,
+                        "memory": 100,
+                        "parallel_efficiency": 76
+                      }
+                    ]
+                  },
+                  "timestamp": "2026-08-11T10:20:30+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/geodynamics/scenarios/{scenario_id}/runs": {
+      "post": {
+        "summary": "创建地球动力学运行任务",
+        "deprecated": false,
+        "description": "提交地震波传播或板块构造任务。",
+        "operationId": "createGeodynamicsRun",
+        "tags": [
+          "任务运行"
+        ],
+        "parameters": [
+          {
+            "name": "scenario_id",
+            "in": "path",
+            "description": "场景唯一标识：wave-propagation=地震波传播模拟；plate-tectonics=板块构造数值模拟。",
+            "required": true,
+            "example": "wave-propagation",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "wave-propagation",
+                "plate-tectonics"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "title": "地球动力学任务创建请求",
+                "description": "创建地震波传播或板块构造任务的请求体。",
+                "required": [
+                  "execution_mode",
+                  "cluster_policy",
+                  "parameters",
+                  "resources"
+                ],
+                "properties": {
+                  "execution_mode": {
+                    "type": "string",
+                    "title": "执行模式",
+                    "description": "real=真实程序/超算；simulated=本地模拟；replay=历史日志/结果回放。",
+                    "enum": [
+                      "real",
+                      "simulated",
+                      "replay"
+                    ],
+                    "example": "real"
+                  },
+                  "cluster_policy": {
+                    "type": "string",
+                    "title": "集群调度策略",
+                    "description": "auto=自动选择；manual=手动选择；multi-center=多中心协同。",
+                    "enum": [
+                      "auto",
+                      "manual",
+                      "multi-center"
+                    ],
+                    "example": "auto"
+                  },
+                  "preferred_clusters": {
+                    "type": "array",
+                    "title": "优选计算中心",
+                    "description": "优先尝试调度的计算中心 ID 列表。",
+                    "items": {
+                      "type": "string",
+                      "title": "计算中心ID",
+                      "description": "计算中心唯一标识。",
+                      "example": "changsha"
+                    }
+                  },
+                  "input_files": {
+                    "type": "array",
+                    "title": "输入文件列表",
+                    "description": "任务输入数据文件路径列表。",
+                    "items": {
+                      "type": "string",
+                      "title": "输入文件路径",
+                      "description": "全局文件系统或对象存储中的输入文件路径。",
+                      "example": "gfs://demo/geodynamics/model.h5"
+                    }
+                  },
+                  "parameters": {
+                    "type": "object",
+                    "title": "地球动力学参数",
+                    "description": "专业计算参数。",
+                    "required": [
+                      "grid_resolution",
+                      "source_frequency",
+                      "time_step",
+                      "total_steps"
+                    ],
+                    "properties": {
+                      "grid_resolution": {
+                        "type": "number",
+                        "title": "网格精度",
+                        "description": "空间网格分辨率，单位 m。",
+                        "example": 50
+                      },
+                      "source_frequency": {
+                        "type": "number",
+                        "title": "震源频率",
+                        "description": "地震源主频，单位 Hz。",
+                        "example": 5
+                      },
+                      "time_step": {
+                        "type": "number",
+                        "title": "时间步长",
+                        "description": "数值积分时间步长，单位 s。",
+                        "example": 0.001
+                      },
+                      "total_steps": {
+                        "type": "integer",
+                        "title": "总时间步数",
+                        "description": "本次计算总时间步数量。",
+                        "example": 10000
+                      }
+                    }
+                  },
+                  "resources": {
+                    "type": "object",
+                    "title": "资源需求",
+                    "description": "任务申请的计算资源。",
+                    "required": [
+                      "nodes",
+                      "cpu_cores"
+                    ],
+                    "properties": {
+                      "nodes": {
+                        "type": "integer",
+                        "title": "计算节点数",
+                        "description": "申请的计算节点数量。",
+                        "example": 4
+                      },
+                      "cpu_cores": {
+                        "type": "integer",
+                        "title": "CPU 核数",
+                        "description": "申请的 CPU 总核数。",
+                        "example": 256
+                      },
+                      "gpu_count": {
+                        "type": "integer",
+                        "title": "GPU/加速卡数量",
+                        "description": "申请的 GPU/DCU/DSP 数量。",
+                        "example": 0
+                      },
+                      "memory_gb": {
+                        "type": "integer",
+                        "title": "内存容量",
+                        "description": "申请总内存，单位 GB。",
+                        "example": 512
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "execution_mode": "real",
+                  "cluster_policy": "auto",
+                  "preferred_clusters": [
+                    "changsha"
+                  ],
+                  "input_files": [
+                    "gfs://demo/geodynamics/model.h5"
+                  ],
+                  "parameters": {
+                    "grid_resolution": 50,
+                    "source_frequency": 5,
+                    "time_step": 0.001,
+                    "total_steps": 10000
+                  },
+                  "resources": {
+                    "nodes": 4,
+                    "cpu_cores": 256,
+                    "gpu_count": 0,
+                    "memory_gb": 512
+                  }
+                }
+              },
+              "example": {
+                "execution_mode": "real",
+                "cluster_policy": "auto",
+                "preferred_clusters": [
+                  "changsha"
+                ],
+                "input_files": [
+                  "gfs://demo/geodynamics/model.h5"
+                ],
+                "parameters": {
+                  "grid_resolution": 50,
+                  "source_frequency": 5,
+                  "time_step": 0.001,
+                  "total_steps": 10000
+                },
+                "resources": {
+                  "nodes": 4,
+                  "cpu_cores": 256,
+                  "gpu_count": 0,
+                  "memory_gb": 512
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "任务创建结果",
+                      "properties": {
+                        "run_id": {
+                          "type": "string",
+                          "title": "运行实例ID",
+                          "description": "任务运行实例唯一标识。",
+                          "example": "GEO-20260811-0001"
+                        },
+                        "status": {
+                          "type": "string",
+                          "title": "任务状态",
+                          "description": "任务当前状态。",
+                          "enum": [
+                            "pending",
+                            "queued",
+                            "running",
+                            "success",
+                            "failed",
+                            "stopped",
+                            "migrating"
+                          ],
+                          "example": "queued"
+                        },
+                        "cluster_id": {
+                          "type": "string",
+                          "title": "计算中心ID",
+                          "description": "任务被调度到的中心。",
+                          "example": "changsha"
+                        },
+                        "job_id": {
+                          "type": "string",
+                          "title": "调度作业ID",
+                          "description": "底层 SLURM/调度系统返回的作业 ID。",
+                          "example": "183920"
+                        }
+                      },
+                      "example": {
+                        "run_id": "GEO-20260811-0001",
+                        "status": "queued",
+                        "cluster_id": "changsha",
+                        "job_id": "183920"
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "ISO 8601 响应时间。",
+                      "example": "2026-08-11T10:20:30+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "run_id": "GEO-20260811-0001",
+                    "status": "queued",
+                    "cluster_id": "changsha",
+                    "job_id": "183920"
+                  },
+                  "timestamp": "2026-08-11T10:20:30+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/geodynamics/runs/{run_id}": {
+      "get": {
+        "summary": "查询地球动力学任务状态",
+        "deprecated": false,
+        "description": "查询任务进度、当前阶段、运行中心、资源信息和累计核时。",
+        "operationId": "getGeodynamicsRun",
+        "tags": [
+          "任务运行"
+        ],
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "description": "任务运行实例唯一标识。",
+            "required": true,
+            "example": "GEO-20260811-0001",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "任务状态",
+                      "properties": {
+                        "run_id": {
+                          "type": "string",
+                          "title": "运行实例ID",
+                          "description": "任务运行实例唯一标识。",
+                          "example": "GEO-20260811-0001"
+                        },
+                        "scenario_id": {
+                          "type": "string",
+                          "title": "场景ID",
+                          "description": "当前任务所属场景。",
+                          "example": "wave-propagation"
+                        },
+                        "status": {
+                          "type": "string",
+                          "title": "任务状态",
+                          "description": "任务当前生命周期状态。",
+                          "enum": [
+                            "pending",
+                            "queued",
+                            "running",
+                            "success",
+                            "failed",
+                            "stopped",
+                            "migrating"
+                          ],
+                          "example": "running"
+                        },
+                        "progress": {
+                          "type": "number",
+                          "title": "任务进度",
+                          "description": "整体完成百分比 0-100。",
+                          "example": 63
+                        },
+                        "execution_mode": {
+                          "type": "string",
+                          "title": "执行模式",
+                          "description": "任务实际执行模式。",
+                          "enum": [
+                            "real",
+                            "simulated",
+                            "replay"
+                          ],
+                          "example": "real"
+                        },
+                        "cluster_id": {
+                          "type": "string",
+                          "title": "计算中心ID",
+                          "description": "当前任务运行中心。",
+                          "example": "changsha"
+                        },
+                        "cluster_name": {
+                          "type": "string",
+                          "title": "计算中心名称",
+                          "description": "当前任务运行中心中文名。",
+                          "example": "天河新一代"
+                        },
+                        "job_id": {
+                          "type": "string",
+                          "title": "调度作业ID",
+                          "description": "SLURM/调度系统作业 ID。",
+                          "example": "183920"
+                        },
+                        "current_stage": {
+                          "type": "string",
+                          "title": "当前阶段",
+                          "description": "当前正在执行的工作流阶段。",
+                          "example": "solver"
+                        },
+                        "start_time": {
+                          "type": "string",
+                          "title": "开始时间",
+                          "description": "任务实际开始时间。",
+                          "example": "2026-08-11T09:00:00+08:00"
+                        },
+                        "end_time": {
+                          "type": "string",
+                          "title": "结束时间",
+                          "description": "任务结束时间；未结束时可返回空字符串。",
+                          "example": ""
+                        },
+                        "elapsed_seconds": {
+                          "type": "integer",
+                          "title": "已运行时长",
+                          "description": "任务累计运行秒数。",
+                          "example": 1256
+                        },
+                        "nodes": {
+                          "type": "integer",
+                          "title": "计算节点数",
+                          "description": "任务使用节点数。",
+                          "example": 4
+                        },
+                        "cpu_cores": {
+                          "type": "integer",
+                          "title": "CPU 核数",
+                          "description": "任务使用 CPU 总核数。",
+                          "example": 256
+                        },
+                        "gpu_count": {
+                          "type": "integer",
+                          "title": "GPU/加速卡数量",
+                          "description": "任务使用加速卡数量。",
+                          "example": 0
+                        },
+                        "memory_gb": {
+                          "type": "integer",
+                          "title": "内存容量",
+                          "description": "任务使用/申请内存 GB。",
+                          "example": 512
+                        },
+                        "core_hours": {
+                          "type": "number",
+                          "title": "累计核时",
+                          "description": "当前累计 core-hours。",
+                          "example": 89.3
+                        }
+                      },
+                      "example": {
+                        "run_id": "GEO-20260811-0001",
+                        "scenario_id": "wave-propagation",
+                        "status": "running",
+                        "progress": 63,
+                        "execution_mode": "real",
+                        "cluster_id": "changsha",
+                        "cluster_name": "天河新一代",
+                        "job_id": "183920",
+                        "current_stage": "solver",
+                        "start_time": "2026-08-11T09:00:00+08:00",
+                        "end_time": "",
+                        "elapsed_seconds": 1256,
+                        "nodes": 4,
+                        "cpu_cores": 256,
+                        "gpu_count": 0,
+                        "memory_gb": 512,
+                        "core_hours": 89.3
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "ISO 8601 响应时间。",
+                      "example": "2026-08-11T10:20:30+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "run_id": "GEO-20260811-0001",
+                    "scenario_id": "wave-propagation",
+                    "status": "running",
+                    "progress": 63,
+                    "execution_mode": "real",
+                    "cluster_id": "changsha",
+                    "cluster_name": "天河新一代",
+                    "job_id": "183920",
+                    "current_stage": "solver",
+                    "start_time": "2026-08-11T09:00:00+08:00",
+                    "end_time": "",
+                    "elapsed_seconds": 1256,
+                    "nodes": 4,
+                    "cpu_cores": 256,
+                    "gpu_count": 0,
+                    "memory_gb": 512,
+                    "core_hours": 89.3
+                  },
+                  "timestamp": "2026-08-11T10:20:30+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/geodynamics/runs/{run_id}/stop": {
+      "post": {
+        "summary": "停止地球动力学任务",
+        "deprecated": false,
+        "description": "停止 pending、queued 或 running 状态的任务。",
+        "operationId": "stopGeodynamicsRun",
+        "tags": [
+          "任务运行"
+        ],
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "description": "任务运行实例唯一标识。",
+            "required": true,
+            "example": "GEO-20260811-0001",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "停止任务结果",
+                      "properties": {
+                        "run_id": {
+                          "type": "string",
+                          "title": "运行实例ID",
+                          "description": "被停止的任务 ID。",
+                          "example": "GEO-20260811-0001"
+                        },
+                        "status": {
+                          "type": "string",
+                          "title": "任务状态",
+                          "description": "停止后固定为 stopped。",
+                          "enum": [
+                            "stopped"
+                          ],
+                          "example": "stopped"
+                        }
+                      },
+                      "example": {
+                        "run_id": "GEO-20260811-0001",
+                        "status": "stopped"
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "ISO 8601 响应时间。",
+                      "example": "2026-08-11T10:20:30+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "run_id": "GEO-20260811-0001",
+                    "status": "stopped"
+                  },
+                  "timestamp": "2026-08-11T10:20:30+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/geodynamics/runs/{run_id}/workflow": {
+      "get": {
+        "summary": "查询地球动力学工作流",
+        "deprecated": false,
+        "description": "查询任务工作流 DAG 的节点、状态、进度和执行中心。",
+        "operationId": "getGeodynamicsWorkflow",
+        "tags": [
+          "运行监控与结果"
+        ],
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "description": "任务运行实例唯一标识。",
+            "required": true,
+            "example": "GEO-20260811-0001",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "工作流",
+                      "properties": {
+                        "nodes": {
+                          "type": "array",
+                          "title": "工作流节点",
+                          "description": "DAG 节点列表。",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "title": "节点ID",
+                                "description": "工作流节点唯一标识。",
+                                "example": "solver"
+                              },
+                              "name": {
+                                "type": "string",
+                                "title": "节点名称",
+                                "description": "工作流节点中文名称。",
+                                "example": "并行求解"
+                              },
+                              "status": {
+                                "type": "string",
+                                "title": "节点状态",
+                                "description": "工作流节点当前状态。",
+                                "enum": [
+                                  "pending",
+                                  "queued",
+                                  "running",
+                                  "success",
+                                  "failed",
+                                  "stopped"
+                                ],
+                                "example": "running"
+                              },
+                              "progress": {
+                                "type": "number",
+                                "title": "节点进度",
+                                "description": "节点完成百分比。",
+                                "example": 63
+                              },
+                              "cluster_id": {
+                                "type": "string",
+                                "title": "执行中心ID",
+                                "description": "执行该节点的计算中心。",
+                                "example": "changsha"
+                              }
+                            }
+                          }
+                        },
+                        "edges": {
+                          "type": "array",
+                          "title": "工作流连线",
+                          "description": "DAG 节点依赖关系。",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "source": {
+                                "type": "string",
+                                "title": "源节点",
+                                "description": "前置节点 ID。",
+                                "example": "partition"
+                              },
+                              "target": {
+                                "type": "string",
+                                "title": "目标节点",
+                                "description": "后置节点 ID。",
+                                "example": "solver"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "example": {
+                        "nodes": [
+                          {
+                            "id": "prepare",
+                            "name": "数据预处理",
+                            "status": "success",
+                            "progress": 100,
+                            "cluster_id": "changsha"
+                          },
+                          {
+                            "id": "partition",
+                            "name": "网格划分与域分解",
+                            "status": "success",
+                            "progress": 100,
+                            "cluster_id": "changsha"
+                          },
+                          {
+                            "id": "solver",
+                            "name": "并行求解",
+                            "status": "running",
+                            "progress": 63,
+                            "cluster_id": "changsha"
+                          },
+                          {
+                            "id": "post",
+                            "name": "结果后处理",
+                            "status": "pending",
+                            "progress": 0,
+                            "cluster_id": "changsha"
+                          }
+                        ],
+                        "edges": [
+                          {
+                            "source": "prepare",
+                            "target": "partition"
+                          },
+                          {
+                            "source": "partition",
+                            "target": "solver"
+                          },
+                          {
+                            "source": "solver",
+                            "target": "post"
+                          }
+                        ]
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "ISO 8601 响应时间。",
+                      "example": "2026-08-11T10:20:30+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "nodes": [
+                      {
+                        "id": "prepare",
+                        "name": "数据预处理",
+                        "status": "success",
+                        "progress": 100,
+                        "cluster_id": "changsha"
+                      },
+                      {
+                        "id": "partition",
+                        "name": "网格划分与域分解",
+                        "status": "success",
+                        "progress": 100,
+                        "cluster_id": "changsha"
+                      },
+                      {
+                        "id": "solver",
+                        "name": "并行求解",
+                        "status": "running",
+                        "progress": 63,
+                        "cluster_id": "changsha"
+                      },
+                      {
+                        "id": "post",
+                        "name": "结果后处理",
+                        "status": "pending",
+                        "progress": 0,
+                        "cluster_id": "changsha"
+                      }
+                    ],
+                    "edges": [
+                      {
+                        "source": "prepare",
+                        "target": "partition"
+                      },
+                      {
+                        "source": "partition",
+                        "target": "solver"
+                      },
+                      {
+                        "source": "solver",
+                        "target": "post"
+                      }
+                    ]
+                  },
+                  "timestamp": "2026-08-11T10:20:30+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/geodynamics/runs/{run_id}/metrics": {
+      "get": {
+        "summary": "查询地球动力学运行指标",
+        "deprecated": false,
+        "description": "查询时间步、残差、单步耗时、CPU 利用率等结构化指标。",
+        "operationId": "getGeodynamicsMetrics",
+        "tags": [
+          "运行监控与结果"
+        ],
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "description": "任务运行实例唯一标识。",
+            "required": true,
+            "example": "GEO-20260811-0001",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "运行指标",
+                      "properties": {
+                        "progress": {
+                          "type": "number",
+                          "title": "任务进度",
+                          "description": "整体任务完成百分比。",
+                          "example": 63
+                        },
+                        "metrics": {
+                          "type": "array",
+                          "title": "专业指标列表",
+                          "description": "日志解析或程序输出得到的结构化指标。",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string",
+                                "title": "指标编码",
+                                "description": "指标英文编码。",
+                                "example": "residual"
+                              },
+                              "label": {
+                                "type": "string",
+                                "title": "指标中文名",
+                                "description": "前端展示名称。",
+                                "example": "残差"
+                              },
+                              "value": {
+                                "type": "number",
+                                "title": "指标值",
+                                "description": "当前指标数值。",
+                                "example": 1.2e-7
+                              },
+                              "total": {
+                                "type": "number",
+                                "title": "指标总值",
+                                "description": "具有进度含义时的总量；无总量可返回 0。",
+                                "example": 10000
+                              },
+                              "unit": {
+                                "type": "string",
+                                "title": "指标单位",
+                                "description": "指标展示单位；无单位返回空字符串。",
+                                "example": "s"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "example": {
+                        "progress": 63,
+                        "metrics": [
+                          {
+                            "name": "time_step",
+                            "label": "当前时间步",
+                            "value": 6300,
+                            "total": 10000,
+                            "unit": ""
+                          },
+                          {
+                            "name": "residual",
+                            "label": "残差",
+                            "value": 1.2e-7,
+                            "total": 0,
+                            "unit": ""
+                          },
+                          {
+                            "name": "step_time",
+                            "label": "单步耗时",
+                            "value": 0.82,
+                            "total": 0,
+                            "unit": "s"
+                          },
+                          {
+                            "name": "cpu_utilization",
+                            "label": "CPU利用率",
+                            "value": 87,
+                            "total": 100,
+                            "unit": "%"
+                          }
+                        ]
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "ISO 8601 响应时间。",
+                      "example": "2026-08-11T10:20:30+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "progress": 63,
+                    "metrics": [
+                      {
+                        "name": "time_step",
+                        "label": "当前时间步",
+                        "value": 6300,
+                        "total": 10000,
+                        "unit": ""
+                      },
+                      {
+                        "name": "residual",
+                        "label": "残差",
+                        "value": 1.2e-7,
+                        "total": 0,
+                        "unit": ""
+                      },
+                      {
+                        "name": "step_time",
+                        "label": "单步耗时",
+                        "value": 0.82,
+                        "total": 0,
+                        "unit": "s"
+                      },
+                      {
+                        "name": "cpu_utilization",
+                        "label": "CPU利用率",
+                        "value": 87,
+                        "total": 100,
+                        "unit": "%"
+                      }
+                    ]
+                  },
+                  "timestamp": "2026-08-11T10:20:30+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/geodynamics/runs/{run_id}/logs": {
+      "get": {
+        "summary": "查询地球动力学运行日志",
+        "deprecated": false,
+        "description": "增量查询原始程序运行日志。",
+        "operationId": "getGeodynamicsLogs",
+        "tags": [
+          "运行监控与结果"
+        ],
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "description": "任务运行实例唯一标识。",
+            "required": true,
+            "example": "GEO-20260811-0001",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "日志起始偏移量。",
+            "required": false,
+            "example": 0,
+            "schema": {
+              "type": "integer",
+              "default": 0
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "单次最大返回条数。",
+            "required": false,
+            "example": 200,
+            "schema": {
+              "type": "integer",
+              "default": 200
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "运行日志",
+                      "properties": {
+                        "next_offset": {
+                          "type": "integer",
+                          "title": "下一偏移量",
+                          "description": "下次查询应使用的 offset。",
+                          "example": 3
+                        },
+                        "has_more": {
+                          "type": "boolean",
+                          "title": "是否还有日志",
+                          "description": "是否存在尚未返回的日志。",
+                          "example": false
+                        },
+                        "lines": {
+                          "type": "array",
+                          "title": "日志行",
+                          "description": "本次返回的日志集合。",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "seq": {
+                                "type": "integer",
+                                "title": "日志序号",
+                                "description": "日志递增序号。",
+                                "example": 1
+                              },
+                              "timestamp": {
+                                "type": "string",
+                                "title": "日志时间",
+                                "description": "日志产生时间。",
+                                "example": "2026-08-11T09:01:01+08:00"
+                              },
+                              "level": {
+                                "type": "string",
+                                "title": "日志级别",
+                                "description": "DEBUG/INFO/WARN/ERROR。",
+                                "enum": [
+                                  "DEBUG",
+                                  "INFO",
+                                  "WARN",
+                                  "ERROR"
+                                ],
+                                "example": "INFO"
+                              },
+                              "message": {
+                                "type": "string",
+                                "title": "日志内容",
+                                "description": "程序原始日志文本。",
+                                "example": "Task started"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "example": {
+                        "next_offset": 3,
+                        "has_more": false,
+                        "lines": [
+                          {
+                            "seq": 1,
+                            "timestamp": "2026-08-11T09:01:01+08:00",
+                            "level": "INFO",
+                            "message": "Task started"
+                          },
+                          {
+                            "seq": 2,
+                            "timestamp": "2026-08-11T09:01:03+08:00",
+                            "level": "INFO",
+                            "message": "MPI initialized"
+                          },
+                          {
+                            "seq": 3,
+                            "timestamp": "2026-08-11T09:01:08+08:00",
+                            "level": "INFO",
+                            "message": "Time step 6300 / 10000, residual=1.2e-7"
+                          }
+                        ]
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "ISO 8601 响应时间。",
+                      "example": "2026-08-11T10:20:30+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "next_offset": 3,
+                    "has_more": false,
+                    "lines": [
+                      {
+                        "seq": 1,
+                        "timestamp": "2026-08-11T09:01:01+08:00",
+                        "level": "INFO",
+                        "message": "Task started"
+                      },
+                      {
+                        "seq": 2,
+                        "timestamp": "2026-08-11T09:01:03+08:00",
+                        "level": "INFO",
+                        "message": "MPI initialized"
+                      },
+                      {
+                        "seq": 3,
+                        "timestamp": "2026-08-11T09:01:08+08:00",
+                        "level": "INFO",
+                        "message": "Time step 6300 / 10000, residual=1.2e-7"
+                      }
+                    ]
+                  },
+                  "timestamp": "2026-08-11T10:20:30+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/geodynamics/runs/{run_id}/artifacts": {
+      "get": {
+        "summary": "查询地球动力学结果文件",
+        "deprecated": false,
+        "description": "查询波场快照、传播动画、HDF5/CSV 等计算结果文件。",
+        "operationId": "getGeodynamicsArtifacts",
+        "tags": [
+          "运行监控与结果"
+        ],
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "description": "任务运行实例唯一标识。",
+            "required": true,
+            "example": "GEO-20260811-0001",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "array",
+                      "title": "结果文件列表",
+                      "description": "任务产生的结果文件。",
+                      "items": {
+                        "type": "object",
+                        "title": "结果文件",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "title": "结果文件ID",
+                            "description": "结果文件唯一标识。",
+                            "example": "ART-GEO-001"
+                          },
+                          "name": {
+                            "type": "string",
+                            "title": "文件名称",
+                            "description": "结果文件名称。",
+                            "example": "wave_snapshot_6300.png"
+                          },
+                          "type": {
+                            "type": "string",
+                            "title": "结果类型",
+                            "description": "结果文件用途类型。",
+                            "enum": [
+                              "dataset",
+                              "image",
+                              "video",
+                              "report",
+                              "log",
+                              "other"
+                            ],
+                            "example": "image"
+                          },
+                          "format": {
+                            "type": "string",
+                            "title": "文件格式",
+                            "description": "结果文件扩展格式。",
+                            "example": "png"
+                          },
+                          "size": {
+                            "type": "integer",
+                            "title": "文件大小",
+                            "description": "文件字节数。",
+                            "example": 842311
+                          },
+                          "storage_path": {
+                            "type": "string",
+                            "title": "存储路径",
+                            "description": "全局文件系统或对象存储路径。",
+                            "example": "gfs://results/GEO-20260811-0001/wave_snapshot_6300.png"
+                          },
+                          "preview_url": {
+                            "type": "string",
+                            "title": "预览地址",
+                            "description": "前端预览接口地址；不支持时返回空字符串。",
+                            "example": "/api/v1/files/ART-GEO-001/preview"
+                          },
+                          "download_url": {
+                            "type": "string",
+                            "title": "下载地址",
+                            "description": "文件下载接口地址。",
+                            "example": "/api/v1/files/ART-GEO-001/download"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "title": "生成时间",
+                            "description": "结果文件生成时间。",
+                            "example": "2026-08-11T10:01:21+08:00"
+                          }
+                        }
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "ISO 8601 响应时间。",
+                      "example": "2026-08-11T10:20:30+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": [
+                    {
+                      "id": "ART-GEO-001",
+                      "name": "wave_snapshot_6300.png",
+                      "type": "image",
+                      "format": "png",
+                      "size": 842311,
+                      "storage_path": "gfs://results/GEO-20260811-0001/wave_snapshot_6300.png",
+                      "preview_url": "/api/v1/files/ART-GEO-001/preview",
+                      "download_url": "/api/v1/files/ART-GEO-001/download",
+                      "created_at": "2026-08-11T10:01:21+08:00"
+                    },
+                    {
+                      "id": "ART-GEO-002",
+                      "name": "wave_propagation.mp4",
+                      "type": "video",
+                      "format": "mp4",
+                      "size": 52428800,
+                      "storage_path": "gfs://results/GEO-20260811-0001/wave_propagation.mp4",
+                      "preview_url": "/api/v1/files/ART-GEO-002/preview",
+                      "download_url": "/api/v1/files/ART-GEO-002/download",
+                      "created_at": "2026-08-11T10:02:00+08:00"
+                    }
+                  ],
+                  "timestamp": "2026-08-11T10:20:30+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    }
+  },
+  "components": {
+    "schemas": {},
+    "responses": {},
+    "securitySchemes": {}
+  },
+  "servers": [],
+  "security": []
+}
