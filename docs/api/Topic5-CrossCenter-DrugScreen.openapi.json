@@ -1,0 +1,3227 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "课题五-跨中心虚拟药物筛选接口",
+    "description": "Apifox 导入兼容版。包含 13 个接口、中文接口名称、接口说明、请求/响应示例、字段中文名（title）、字段说明（description）和 Mock 规则（x-apifox-mock）。覆盖百万级化合物库虚拟筛选与药物分子 ADMET 性质预测两个场景。",
+    "version": "1.2.0"
+  },
+  "tags": [
+    {
+      "name": "场景管理"
+    },
+    {
+      "name": "任务运行"
+    },
+    {
+      "name": "运行监控与结果"
+    },
+    {
+      "name": "算子管理",
+      "description": "算子库函数注册、调用与状态管理接口。"
+    }
+  ],
+  "paths": {
+    "/api/v1/drug/scenarios": {
+      "get": {
+        "summary": "获取跨中心虚拟药物筛选场景列表",
+        "deprecated": false,
+        "description": "获取虚拟药物筛选领域下的两个示范应用入口。",
+        "operationId": "getDrugScenarios",
+        "tags": [
+          "场景管理"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "array",
+                      "title": "药物筛选场景列表",
+                      "description": "药物筛选场景集合。",
+                      "items": {
+                        "type": "object",
+                        "title": "药物筛选场景摘要",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "title": "场景ID",
+                            "description": "药物筛选场景唯一标识。",
+                            "example": "virtual-screening"
+                          },
+                          "name": {
+                            "type": "string",
+                            "title": "场景名称",
+                            "description": "药物筛选场景中文名称。",
+                            "example": "百万级化合物库虚拟筛选"
+                          },
+                          "category": {
+                            "type": "string",
+                            "title": "所属领域",
+                            "description": "应用所属领域。",
+                            "example": "虚拟药物筛选"
+                          },
+                          "description": {
+                            "type": "string",
+                            "title": "场景简介",
+                            "description": "应用入口卡片简介。",
+                            "example": "面向靶点蛋白的海量小分子分片并行对接与候选筛选"
+                          },
+                          "status": {
+                            "type": "string",
+                            "title": "可用状态",
+                            "description": "场景当前可用状态。",
+                            "enum": [
+                              "available",
+                              "unavailable",
+                              "developing"
+                            ],
+                            "example": "available"
+                          }
+                        }
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T12:00:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": [
+                    {
+                      "id": "virtual-screening",
+                      "name": "百万级化合物库虚拟筛选",
+                      "category": "虚拟药物筛选",
+                      "description": "面向靶点蛋白的海量小分子分片并行对接与候选筛选",
+                      "status": "available"
+                    },
+                    {
+                      "id": "admet-prediction",
+                      "name": "药物分子ADMET性质预测",
+                      "category": "虚拟药物筛选",
+                      "description": "面向候选小分子的吸收、分布、代谢、排泄与毒性预测",
+                      "status": "available"
+                    }
+                  ],
+                  "timestamp": "2026-08-11T12:00:00+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/drug/scenarios/{scenario_id}": {
+      "get": {
+        "summary": "获取跨中心虚拟药物筛选场景详情",
+        "deprecated": false,
+        "description": "获取场景说明、摘要指标、支持集群、技术栈、流程、关联算子和成果亮点。",
+        "operationId": "getDrugScenarioDetail",
+        "tags": [
+          "场景管理"
+        ],
+        "parameters": [
+          {
+            "name": "scenario_id",
+            "in": "path",
+            "description": "药物筛选场景唯一标识：virtual-screening=百万级化合物库虚拟筛选；admet-prediction=药物分子 ADMET 性质预测。",
+            "required": true,
+            "example": "virtual-screening",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "virtual-screening",
+                "admet-prediction"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "药物筛选场景详情",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "title": "场景ID",
+                          "description": "药物筛选场景唯一标识。",
+                          "example": "virtual-screening"
+                        },
+                        "name": {
+                          "type": "string",
+                          "title": "场景名称",
+                          "description": "场景中文名称。",
+                          "example": "百万级化合物库虚拟筛选"
+                        },
+                        "category": {
+                          "type": "string",
+                          "title": "所属领域",
+                          "description": "应用所属领域。",
+                          "example": "虚拟药物筛选"
+                        },
+                        "description": {
+                          "type": "string",
+                          "title": "场景简介",
+                          "description": "详情页场景说明。",
+                          "example": "针对固定靶点蛋白对大规模候选小分子进行跨中心分片、分子对接、属性评价和 Top-N 候选筛选。"
+                        },
+                        "summary_metrics": {
+                          "type": "array",
+                          "title": "摘要指标",
+                          "description": "详情页顶部摘要指标。",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "label": {
+                                "type": "string",
+                                "title": "指标名称",
+                                "description": "摘要指标中文名称。",
+                                "example": "化合物规模"
+                              },
+                              "value": {
+                                "type": "string",
+                                "title": "指标值",
+                                "description": "摘要指标展示值。",
+                                "example": "10000"
+                              },
+                              "unit": {
+                                "type": "string",
+                                "title": "指标单位",
+                                "description": "摘要指标单位。",
+                                "example": "个"
+                              }
+                            }
+                          }
+                        },
+                        "supported_clusters": {
+                          "type": "array",
+                          "title": "支持计算中心",
+                          "description": "支持该场景运行的计算中心 ID。",
+                          "items": {
+                            "type": "string",
+                            "title": "计算中心ID",
+                            "description": "计算中心唯一标识。",
+                            "example": "changsha"
+                          }
+                        },
+                        "tech_stack": {
+                          "type": "array",
+                          "title": "技术栈",
+                          "description": "应用核心技术与软件栈。",
+                          "items": {
+                            "type": "string",
+                            "title": "技术名称",
+                            "description": "技术栈条目。",
+                            "example": "AutoDock Vina"
+                          }
+                        },
+                        "background": {
+                          "type": "string",
+                          "title": "问题背景",
+                          "description": "虚拟筛选需要对大量候选化合物执行分子对接和属性评价，任务之间天然可并行，适合跨中心分片计算。"
+                        },
+                        "method": {
+                          "type": "string",
+                          "title": "计算方法",
+                          "description": "采用配体预处理、任务分片、多中心并行 Docking、属性评价和 Top-N 汇总完成候选分子筛选。"
+                        },
+                        "architecture": {
+                          "type": "array",
+                          "title": "技术流程",
+                          "description": "应用技术流程步骤。",
+                          "items": {
+                            "type": "string",
+                            "title": "流程步骤",
+                            "description": "技术流程节点名称。",
+                            "example": "靶标与配体数据准备"
+                          }
+                        },
+                        "operators": {
+                          "type": "array",
+                          "title": "关联算子",
+                          "description": "该应用关联的函数/算子。",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "title": "算子ID",
+                                "description": "算子唯一标识。",
+                                "example": "mk_prepare_receptor"
+                              },
+                              "name": {
+                                "type": "string",
+                                "title": "算子名称",
+                                "description": "算子中文名称。",
+                                "example": "受体制备算子"
+                              }
+                            }
+                          }
+                        },
+                        "highlights": {
+                          "type": "array",
+                          "title": "成果亮点",
+                          "description": "详情页成果亮点。",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "label": {
+                                "type": "string",
+                                "title": "亮点名称",
+                                "description": "亮点指标中文名称。",
+                                "example": "筛选规模"
+                              },
+                              "value": {
+                                "type": "string",
+                                "title": "亮点数值",
+                                "description": "亮点指标展示值。",
+                                "example": "10000"
+                              },
+                              "unit": {
+                                "type": "string",
+                                "title": "亮点单位",
+                                "description": "亮点指标单位。",
+                                "example": "个"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "example": {
+                        "id": "virtual-screening",
+                        "name": "百万级化合物库虚拟筛选",
+                        "category": "虚拟药物筛选",
+                        "description": "针对固定靶点蛋白对大规模候选小分子进行跨中心分片、分子对接、属性评价和 Top-N 候选筛选。",
+                        "summary_metrics": [
+                          {
+                            "label": "化合物规模",
+                            "value": "10000",
+                            "unit": "个"
+                          },
+                          {
+                            "label": "并行中心",
+                            "value": "4",
+                            "unit": "个"
+                          },
+                          {
+                            "label": "最佳Docking Score",
+                            "value": "-11.4",
+                            "unit": "kcal/mol"
+                          }
+                        ],
+                        "supported_clusters": [
+                          "changsha",
+                          "guangzhou",
+                          "kunshan",
+                          "jinan"
+                        ],
+                        "tech_stack": [
+                          "AutoDock Vina",
+                          "AutoDock-GPU",
+                          "PoseBusters",
+                          "RDKit",
+                          "MPI/Celery",
+                          "SLURM"
+                        ],
+                        "background": "虚拟筛选需要对大量候选化合物执行分子对接和属性评价，任务之间天然可并行，适合跨中心分片计算。",
+                        "method": "采用配体预处理、任务分片、多中心并行 Docking、属性评价和 Top-N 汇总完成候选分子筛选。",
+                        "architecture": [
+                          "靶标与配体数据准备",
+                          "配体预处理",
+                          "化合物任务分片",
+                          "跨中心并行分子对接",
+                          "对接结果汇总",
+                          "分子属性评价",
+                          "Top-N候选筛选",
+                          "报告生成"
+                        ],
+                        "operators": [
+                          {
+                            "id": "ligand-preprocess",
+                            "name": "配体预处理算子"
+                          },
+                          {
+                            "id": "molecular-docking",
+                            "name": "分子对接算子"
+                          },
+                          {
+                            "id": "property-evaluation",
+                            "name": "分子属性评价算子"
+                          }
+                        ],
+                        "highlights": [
+                          {
+                            "label": "筛选规模",
+                            "value": "10000",
+                            "unit": "个"
+                          },
+                          {
+                            "label": "跨中心数",
+                            "value": "4",
+                            "unit": "个"
+                          },
+                          {
+                            "label": "Top-N候选",
+                            "value": "20",
+                            "unit": "个"
+                          }
+                        ]
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T12:00:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "id": "virtual-screening",
+                    "name": "百万级化合物库虚拟筛选",
+                    "category": "虚拟药物筛选",
+                    "description": "针对固定靶点蛋白对大规模候选小分子进行跨中心分片、分子对接、属性评价和 Top-N 候选筛选。",
+                    "summary_metrics": [
+                      {
+                        "label": "化合物规模",
+                        "value": "10000",
+                        "unit": "个"
+                      },
+                      {
+                        "label": "并行中心",
+                        "value": "4",
+                        "unit": "个"
+                      },
+                      {
+                        "label": "最佳Docking Score",
+                        "value": "-11.4",
+                        "unit": "kcal/mol"
+                      }
+                    ],
+                    "supported_clusters": [
+                      "changsha",
+                      "guangzhou",
+                      "kunshan",
+                      "jinan"
+                    ],
+                    "tech_stack": [
+                      "AutoDock Vina",
+                      "AutoDock-GPU",
+                      "PoseBusters",
+                      "RDKit",
+                      "MPI/Celery",
+                      "SLURM"
+                    ],
+                    "background": "虚拟筛选需要对大量候选化合物执行分子对接和属性评价，任务之间天然可并行，适合跨中心分片计算。",
+                    "method": "采用配体预处理、任务分片、多中心并行 Docking、属性评价和 Top-N 汇总完成候选分子筛选。",
+                    "architecture": [
+                      "靶标与配体数据准备",
+                      "配体预处理",
+                      "化合物任务分片",
+                      "跨中心并行分子对接",
+                      "对接结果汇总",
+                      "分子属性评价",
+                      "Top-N候选筛选",
+                      "报告生成"
+                    ],
+                    "operators": [
+                      {
+                        "id": "mk_prepare_receptor",
+                        "name": "受体制备算子"
+                      },
+                      {
+                        "id": "mk_prepare_ligand",
+                        "name": "配体制备算子"
+                      },
+                      {
+                        "id": "autogrid4",
+                        "name": "受体网格计算算子"
+                      },
+                      {
+                        "id": "autodock",
+                        "name": "AutoDock-GPU分子对接算子"
+                      },
+                      {
+                        "id": "vina",
+                        "name": "AutoDock Vina分子对接算子"
+                      },
+                      {
+                        "id": "extract_pdb",
+                        "name": "对接结果后处理算子"
+                      }
+                    ],
+                    "highlights": [
+                      {
+                        "label": "筛选规模",
+                        "value": "10000",
+                        "unit": "个"
+                      },
+                      {
+                        "label": "跨中心数",
+                        "value": "4",
+                        "unit": "个"
+                      },
+                      {
+                        "label": "Top-N候选",
+                        "value": "20",
+                        "unit": "个"
+                      }
+                    ]
+                  },
+                  "timestamp": "2026-08-11T12:00:00+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/drug/scenarios/{scenario_id}/params-schema": {
+      "get": {
+        "summary": "获取跨中心虚拟药物筛选参数定义",
+        "deprecated": false,
+        "description": "获取当前场景可配置参数，供前端动态生成筛选任务参数表单。",
+        "operationId": "getDrugParamsSchema",
+        "tags": [
+          "场景管理"
+        ],
+        "parameters": [
+          {
+            "name": "scenario_id",
+            "in": "path",
+            "description": "药物筛选场景唯一标识：virtual-screening=百万级化合物库虚拟筛选；admet-prediction=药物分子 ADMET 性质预测。",
+            "required": true,
+            "example": "virtual-screening",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "virtual-screening",
+                "admet-prediction"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "药物筛选参数定义",
+                      "properties": {
+                        "fields": {
+                          "type": "array",
+                          "title": "参数列表",
+                          "description": "当前药物筛选场景可配置参数。",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string",
+                                "title": "参数英文名",
+                                "description": "参数唯一英文编码。",
+                                "example": "compound_count"
+                              },
+                              "label": {
+                                "type": "string",
+                                "title": "参数中文名",
+                                "description": "前端展示中文名称。",
+                                "example": "化合物数量"
+                              },
+                              "type": {
+                                "type": "string",
+                                "title": "参数类型",
+                                "description": "表单参数数据类型。",
+                                "example": "integer"
+                              },
+                              "unit": {
+                                "type": "string",
+                                "title": "参数单位",
+                                "description": "参数单位，可为空。",
+                                "example": "个"
+                              },
+                              "required": {
+                                "type": "boolean",
+                                "title": "是否必填",
+                                "description": "提交任务时是否必须提供。",
+                                "example": true
+                              },
+                              "default_value": {
+                                "type": "string",
+                                "title": "默认值",
+                                "description": "参数默认值，以字符串形式用于通用渲染。",
+                                "example": "10000"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "example": {
+                        "fields": [
+                          {
+                            "name": "target_name",
+                            "label": "靶点名称",
+                            "type": "string",
+                            "unit": "",
+                            "required": true,
+                            "default_value": "EGFR"
+                          },
+                          {
+                            "name": "compound_count",
+                            "label": "化合物数量",
+                            "type": "integer",
+                            "unit": "个",
+                            "required": true,
+                            "default_value": "10000"
+                          },
+                          {
+                            "name": "top_n",
+                            "label": "Top-N候选数",
+                            "type": "integer",
+                            "unit": "个",
+                            "required": true,
+                            "default_value": "20"
+                          },
+                          {
+                            "name": "docking_engine",
+                            "label": "对接引擎",
+                            "type": "select",
+                            "unit": "",
+                            "required": true,
+                            "default_value": "AutoDock-Vina"
+                          },
+                          {
+                            "name": "exhaustiveness",
+                            "label": "搜索强度",
+                            "type": "integer",
+                            "unit": "",
+                            "required": true,
+                            "default_value": "8"
+                          },
+                          {
+                            "name": "shard_count",
+                            "label": "任务分片数",
+                            "type": "integer",
+                            "unit": "片",
+                            "required": true,
+                            "default_value": "4"
+                          }
+                        ]
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T12:00:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "fields": [
+                      {
+                        "name": "operator",
+                        "label": "算子选择",
+                        "type": "select",
+                        "unit": "",
+                        "required": true,
+                        "default_value": "mk_prepare_receptor",
+                        "description": "选择要执行的算子库函数，与后端 /action/invoke 对齐。"
+                      },
+                      {
+                        "name": "target_name",
+                        "label": "靶点名称",
+                        "type": "string",
+                        "unit": "",
+                        "required": true,
+                        "default_value": "EGFR"
+                      },
+                      {
+                        "name": "compound_count",
+                        "label": "化合物数量",
+                        "type": "integer",
+                        "unit": "个",
+                        "required": true,
+                        "default_value": "10000"
+                      },
+                      {
+                        "name": "top_n",
+                        "label": "Top-N候选数",
+                        "type": "integer",
+                        "unit": "个",
+                        "required": true,
+                        "default_value": "20"
+                      },
+                      {
+                        "name": "docking_engine",
+                        "label": "对接引擎",
+                        "type": "select",
+                        "unit": "",
+                        "required": true,
+                        "default_value": "AutoDock-Vina"
+                      },
+                      {
+                        "name": "exhaustiveness",
+                        "label": "搜索强度",
+                        "type": "integer",
+                        "unit": "",
+                        "required": true,
+                        "default_value": "8"
+                      },
+                      {
+                        "name": "shard_count",
+                        "label": "任务分片数",
+                        "type": "integer",
+                        "unit": "片",
+                        "required": true,
+                        "default_value": "4"
+                      }
+                    ]
+                  },
+                  "timestamp": "2026-08-11T12:00:00+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/drug/scenarios/{scenario_id}/benchmark": {
+      "get": {
+        "summary": "获取跨中心虚拟药物筛选性能对比数据",
+        "deprecated": false,
+        "description": "获取筛选吞吐量、总耗时、并行效率和失败率等性能对比数据。",
+        "operationId": "getDrugBenchmark",
+        "tags": [
+          "场景管理"
+        ],
+        "parameters": [
+          {
+            "name": "scenario_id",
+            "in": "path",
+            "description": "药物筛选场景唯一标识：virtual-screening=百万级化合物库虚拟筛选；admet-prediction=药物分子 ADMET 性质预测。",
+            "required": true,
+            "example": "virtual-screening",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "virtual-screening",
+                "admet-prediction"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "药物筛选性能对比数据",
+                      "properties": {
+                        "dimensions": {
+                          "type": "array",
+                          "title": "对比维度",
+                          "description": "参与性能对比的指标维度。",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "key": {
+                                "type": "string",
+                                "title": "维度编码",
+                                "description": "性能指标英文编码。",
+                                "example": "throughput"
+                              },
+                              "name": {
+                                "type": "string",
+                                "title": "维度名称",
+                                "description": "性能指标中文名称。",
+                                "example": "筛选吞吐量"
+                              },
+                              "unit": {
+                                "type": "string",
+                                "title": "维度单位",
+                                "description": "指标单位。",
+                                "example": "compound/s"
+                              }
+                            }
+                          }
+                        },
+                        "series": {
+                          "type": "array",
+                          "title": "对比序列",
+                          "description": "不同筛选方案的性能指标。",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string",
+                                "title": "方案名称",
+                                "description": "对比方案中文名称。",
+                                "example": "跨中心方案"
+                              },
+                              "throughput": {
+                                "type": "number",
+                                "title": "筛选吞吐量",
+                                "description": "单位时间完成的化合物数量。",
+                                "example": 72.8
+                              },
+                              "walltime": {
+                                "type": "number",
+                                "title": "总耗时",
+                                "description": "完成全部筛选任务的总壁钟时间。",
+                                "example": 137.4
+                              },
+                              "parallel_efficiency": {
+                                "type": "number",
+                                "title": "并行效率",
+                                "description": "多中心分片执行并行效率。",
+                                "example": 82
+                              },
+                              "failure_rate": {
+                                "type": "number",
+                                "title": "失败率",
+                                "description": "无法完成 Docking 的化合物占比。",
+                                "example": 0.4
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "example": {
+                        "dimensions": [
+                          {
+                            "key": "throughput",
+                            "name": "筛选吞吐量",
+                            "unit": "compound/s"
+                          },
+                          {
+                            "key": "walltime",
+                            "name": "总耗时",
+                            "unit": "s"
+                          },
+                          {
+                            "key": "parallel_efficiency",
+                            "name": "并行效率",
+                            "unit": "%"
+                          },
+                          {
+                            "key": "failure_rate",
+                            "name": "失败率",
+                            "unit": "%"
+                          }
+                        ],
+                        "series": [
+                          {
+                            "name": "跨中心方案",
+                            "throughput": 72.8,
+                            "walltime": 137.4,
+                            "parallel_efficiency": 82,
+                            "failure_rate": 0.4
+                          },
+                          {
+                            "name": "单中心基准",
+                            "throughput": 21.6,
+                            "walltime": 463,
+                            "parallel_efficiency": 100,
+                            "failure_rate": 0.5
+                          }
+                        ]
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T12:00:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "dimensions": [
+                      {
+                        "key": "throughput",
+                        "name": "筛选吞吐量",
+                        "unit": "compound/s"
+                      },
+                      {
+                        "key": "walltime",
+                        "name": "总耗时",
+                        "unit": "s"
+                      },
+                      {
+                        "key": "parallel_efficiency",
+                        "name": "并行效率",
+                        "unit": "%"
+                      },
+                      {
+                        "key": "failure_rate",
+                        "name": "失败率",
+                        "unit": "%"
+                      }
+                    ],
+                    "series": [
+                      {
+                        "name": "跨中心方案",
+                        "throughput": 72.8,
+                        "walltime": 137.4,
+                        "parallel_efficiency": 82,
+                        "failure_rate": 0.4
+                      },
+                      {
+                        "name": "单中心基准",
+                        "throughput": 21.6,
+                        "walltime": 463,
+                        "parallel_efficiency": 100,
+                        "failure_rate": 0.5
+                      }
+                    ]
+                  },
+                  "timestamp": "2026-08-11T12:00:00+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/drug/scenarios/{scenario_id}/runs": {
+      "post": {
+        "summary": "创建跨中心虚拟药物筛选任务",
+        "deprecated": false,
+        "description": "创建百万级化合物库虚拟筛选或 ADMET 性质预测任务。",
+        "operationId": "createDrugRun",
+        "tags": [
+          "任务运行"
+        ],
+        "parameters": [
+          {
+            "name": "scenario_id",
+            "in": "path",
+            "description": "药物筛选场景唯一标识：virtual-screening=百万级化合物库虚拟筛选；admet-prediction=药物分子 ADMET 性质预测。",
+            "required": true,
+            "example": "virtual-screening",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "virtual-screening",
+                "admet-prediction"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "title": "跨中心虚拟药物筛选任务创建请求",
+                "description": "创建虚拟筛选或 ADMET 性质预测任务的请求体。",
+                "required": [
+                  "execution_mode",
+                  "cluster_policy",
+                  "parameters",
+                  "resources",
+                  "operator"
+                ],
+                "properties": {
+                  "execution_mode": {
+                    "type": "string",
+                    "title": "执行模式",
+                    "description": "real=真实程序/超算；simulated=本地模拟；replay=历史日志/结果回放。",
+                    "enum": [
+                      "real",
+                      "simulated",
+                      "replay"
+                    ],
+                    "example": "simulated"
+                  },
+                  "cluster_policy": {
+                    "type": "string",
+                    "title": "集群调度策略",
+                    "description": "auto=自动选择；manual=手动选择；multi-center=多中心协同。",
+                    "enum": [
+                      "auto",
+                      "manual",
+                      "multi-center"
+                    ],
+                    "example": "multi-center"
+                  },
+                  "preferred_clusters": {
+                    "type": "array",
+                    "title": "优选计算中心",
+                    "description": "参与本次筛选任务的候选计算中心 ID。",
+                    "items": {
+                      "type": "string",
+                      "title": "计算中心ID",
+                      "description": "计算中心唯一标识。",
+                      "example": "changsha"
+                    }
+                  },
+                  "input_files": {
+                    "type": "array",
+                    "title": "输入文件列表",
+                    "description": "靶点蛋白、配体库及筛选配置等输入数据路径。",
+                    "items": {
+                      "type": "string",
+                      "title": "输入文件路径",
+                      "description": "全局文件系统或对象存储中的文件路径。",
+                      "example": "gfs://demo/drug/target.pdb"
+                    }
+                  },
+                  "parameters": {
+                    "type": "object",
+                    "title": "药物筛选参数",
+                    "description": "虚拟筛选任务的专业计算参数。",
+                    "required": [
+                      "target_name",
+                      "compound_count",
+                      "top_n",
+                      "docking_engine",
+                      "exhaustiveness",
+                      "shard_count"
+                    ],
+                    "properties": {
+                      "target_name": {
+                        "type": "string",
+                        "title": "靶点名称",
+                        "description": "本次筛选使用的蛋白靶点名称。",
+                        "example": "EGFR"
+                      },
+                      "compound_count": {
+                        "type": "integer",
+                        "title": "化合物数量",
+                        "description": "参与虚拟筛选的候选化合物总数。",
+                        "example": 10000
+                      },
+                      "top_n": {
+                        "type": "integer",
+                        "title": "Top-N候选数",
+                        "description": "最终保留的高排名候选分子数量。",
+                        "example": 20
+                      },
+                      "docking_engine": {
+                        "type": "string",
+                        "title": "分子对接引擎",
+                        "description": "执行分子对接使用的软件/引擎。",
+                        "enum": [
+                          "AutoDock-Vina",
+                          "AutoDock-GPU",
+                          "AutoDock"
+                        ],
+                        "example": "AutoDock-Vina"
+                      },
+                      "exhaustiveness": {
+                        "type": "integer",
+                        "title": "搜索强度",
+                        "description": "AutoDock Vina 等对接引擎搜索 exhaustiveness 参数。",
+                        "example": 8
+                      },
+                      "shard_count": {
+                        "type": "integer",
+                        "title": "任务分片数",
+                        "description": "将候选化合物划分为多少个并行任务分片。",
+                        "example": 4
+                      }
+                    }
+                  },
+                  "resources": {
+                    "type": "object",
+                    "title": "资源需求",
+                    "description": "药物筛选任务申请的计算资源。",
+                    "required": [
+                      "nodes",
+                      "cpu_cores"
+                    ],
+                    "properties": {
+                      "nodes": {
+                        "type": "integer",
+                        "title": "计算节点数",
+                        "description": "所有参与中心合计申请的计算节点数量。",
+                        "example": 4
+                      },
+                      "cpu_cores": {
+                        "type": "integer",
+                        "title": "CPU 核数",
+                        "description": "所有参与中心合计申请的 CPU 核数。",
+                        "example": 256
+                      },
+                      "gpu_count": {
+                        "type": "integer",
+                        "title": "GPU/加速卡数量",
+                        "description": "AutoDock-GPU 等场景使用的加速卡数量。",
+                        "example": 4
+                      },
+                      "memory_gb": {
+                        "type": "integer",
+                        "title": "内存容量",
+                        "description": "合计申请总内存，单位 GB。",
+                        "example": 512
+                      }
+                    }
+                  },
+                  "operator": {
+                    "type": "string",
+                    "title": "算子选择",
+                    "description": "选择要执行的算子库函数，如 mk_prepare_receptor。",
+                    "example": "mk_prepare_receptor"
+                  }
+                },
+                "example": {
+                  "execution_mode": "simulated",
+                  "cluster_policy": "multi-center",
+                  "preferred_clusters": [
+                    "changsha",
+                    "guangzhou",
+                    "kunshan",
+                    "jinan"
+                  ],
+                  "input_files": [
+                    "gfs://demo/drug/target.pdb",
+                    "gfs://demo/drug/ligands.sdf",
+                    "gfs://demo/drug/pocket.json"
+                  ],
+                  "parameters": {
+                    "target_name": "EGFR",
+                    "compound_count": 10000,
+                    "top_n": 20,
+                    "docking_engine": "AutoDock-Vina",
+                    "exhaustiveness": 8,
+                    "shard_count": 4
+                  },
+                  "resources": {
+                    "nodes": 4,
+                    "cpu_cores": 256,
+                    "gpu_count": 4,
+                    "memory_gb": 512
+                  }
+                }
+              },
+              "example": {
+                "execution_mode": "simulated",
+                "cluster_policy": "multi-center",
+                "preferred_clusters": [
+                  "changsha",
+                  "guangzhou",
+                  "kunshan",
+                  "jinan"
+                ],
+                "input_files": [
+                  "gfs://demo/drug/target.pdb",
+                  "gfs://demo/drug/ligands.sdf",
+                  "gfs://demo/drug/pocket.json"
+                ],
+                "parameters": {
+                  "target_name": "EGFR",
+                  "compound_count": 10000,
+                  "top_n": 20,
+                  "docking_engine": "AutoDock-Vina",
+                  "exhaustiveness": 8,
+                  "shard_count": 4
+                },
+                "resources": {
+                  "nodes": 4,
+                  "cpu_cores": 256,
+                  "gpu_count": 4,
+                  "memory_gb": 512
+                },
+                "operator": "mk_prepare_receptor"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "任务创建结果",
+                      "properties": {
+                        "run_id": {
+                          "type": "string",
+                          "title": "运行实例ID",
+                          "description": "本次药物筛选任务运行实例唯一标识。",
+                          "example": "DRUG-20260811-0001"
+                        },
+                        "status": {
+                          "type": "string",
+                          "title": "任务状态",
+                          "description": "任务当前状态。",
+                          "enum": [
+                            "pending",
+                            "queued",
+                            "running",
+                            "success",
+                            "failed",
+                            "stopped",
+                            "migrating"
+                          ],
+                          "example": "queued"
+                        },
+                        "cluster_id": {
+                          "type": "string",
+                          "title": "主调度中心ID",
+                          "description": "负责本次任务编排和汇总的主调度中心。",
+                          "example": "changsha"
+                        },
+                        "job_id": {
+                          "type": "string",
+                          "title": "调度作业ID",
+                          "description": "平台/底层任务调度系统返回的作业 ID。",
+                          "example": "DRUG-JOB-58210"
+                        }
+                      },
+                      "example": {
+                        "run_id": "DRUG-20260811-0001",
+                        "status": "queued",
+                        "cluster_id": "changsha",
+                        "job_id": "DRUG-JOB-58210"
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T12:00:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "run_id": "DRUG-20260811-0001",
+                    "status": "queued",
+                    "cluster_id": "changsha",
+                    "job_id": "DRUG-JOB-58210",
+                    "operator": "mk_prepare_receptor"
+                  },
+                  "timestamp": "2026-08-11T12:00:00+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/drug/runs/{run_id}": {
+      "get": {
+        "summary": "查询跨中心虚拟药物筛选任务状态",
+        "deprecated": false,
+        "description": "查询筛选进度、当前阶段、主调度中心、资源配置和累计核时。",
+        "operationId": "getDrugRun",
+        "tags": [
+          "任务运行"
+        ],
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "description": "药物筛选任务运行实例唯一标识。",
+            "required": true,
+            "example": "DRUG-20260811-0001",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "药物筛选任务状态",
+                      "properties": {
+                        "run_id": {
+                          "type": "string",
+                          "title": "运行实例ID",
+                          "description": "任务运行实例唯一标识。",
+                          "example": "DRUG-20260811-0001"
+                        },
+                        "scenario_id": {
+                          "type": "string",
+                          "title": "场景ID",
+                          "description": "当前任务所属药物筛选场景。",
+                          "example": "virtual-screening"
+                        },
+                        "status": {
+                          "type": "string",
+                          "title": "任务状态",
+                          "description": "当前任务生命周期状态。",
+                          "enum": [
+                            "pending",
+                            "queued",
+                            "running",
+                            "success",
+                            "failed",
+                            "stopped",
+                            "migrating"
+                          ],
+                          "example": "running"
+                        },
+                        "progress": {
+                          "type": "number",
+                          "title": "任务进度",
+                          "description": "任务整体完成百分比。",
+                          "example": 76
+                        },
+                        "execution_mode": {
+                          "type": "string",
+                          "title": "执行模式",
+                          "description": "任务实际执行模式。",
+                          "enum": [
+                            "real",
+                            "simulated",
+                            "replay"
+                          ],
+                          "example": "simulated"
+                        },
+                        "cluster_id": {
+                          "type": "string",
+                          "title": "主调度中心ID",
+                          "description": "当前任务主调度/汇总中心。",
+                          "example": "changsha"
+                        },
+                        "cluster_name": {
+                          "type": "string",
+                          "title": "主调度中心名称",
+                          "description": "主调度中心中文名称。",
+                          "example": "长沙中心"
+                        },
+                        "job_id": {
+                          "type": "string",
+                          "title": "调度作业ID",
+                          "description": "平台/调度系统作业 ID。",
+                          "example": "DRUG-JOB-58210"
+                        },
+                        "current_stage": {
+                          "type": "string",
+                          "title": "当前阶段",
+                          "description": "当前正在执行的药物筛选工作流阶段。",
+                          "example": "multi-center-docking"
+                        },
+                        "start_time": {
+                          "type": "string",
+                          "title": "开始时间",
+                          "description": "筛选任务开始时间。",
+                          "example": "2026-08-11T09:20:00+08:00"
+                        },
+                        "end_time": {
+                          "type": "string",
+                          "title": "结束时间",
+                          "description": "任务结束时间，运行中返回空字符串。",
+                          "example": ""
+                        },
+                        "elapsed_seconds": {
+                          "type": "integer",
+                          "title": "已运行时长",
+                          "description": "任务累计运行秒数。",
+                          "example": 104
+                        },
+                        "nodes": {
+                          "type": "integer",
+                          "title": "计算节点数",
+                          "description": "所有参与中心当前合计使用节点数。",
+                          "example": 4
+                        },
+                        "cpu_cores": {
+                          "type": "integer",
+                          "title": "CPU 核数",
+                          "description": "所有参与中心当前合计 CPU 核数。",
+                          "example": 256
+                        },
+                        "gpu_count": {
+                          "type": "integer",
+                          "title": "GPU/加速卡数量",
+                          "description": "当前合计使用加速卡数量。",
+                          "example": 4
+                        },
+                        "memory_gb": {
+                          "type": "integer",
+                          "title": "内存容量",
+                          "description": "当前任务合计内存 GB。",
+                          "example": 512
+                        },
+                        "core_hours": {
+                          "type": "number",
+                          "title": "累计核时",
+                          "description": "截至当前统计的累计 core-hours。",
+                          "example": 7.4
+                        }
+                      },
+                      "example": {
+                        "run_id": "DRUG-20260811-0001",
+                        "scenario_id": "virtual-screening",
+                        "status": "running",
+                        "progress": 76,
+                        "execution_mode": "simulated",
+                        "cluster_id": "changsha",
+                        "cluster_name": "长沙中心",
+                        "job_id": "DRUG-JOB-58210",
+                        "current_stage": "multi-center-docking",
+                        "start_time": "2026-08-11T09:20:00+08:00",
+                        "end_time": "",
+                        "elapsed_seconds": 104,
+                        "nodes": 4,
+                        "cpu_cores": 256,
+                        "gpu_count": 4,
+                        "memory_gb": 512,
+                        "core_hours": 7.4
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T12:00:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "run_id": "DRUG-20260811-0001",
+                    "scenario_id": "virtual-screening",
+                    "status": "running",
+                    "progress": 76,
+                    "execution_mode": "simulated",
+                    "cluster_id": "changsha",
+                    "cluster_name": "长沙中心",
+                    "job_id": "DRUG-JOB-58210",
+                    "current_stage": "multi-center-docking",
+                    "start_time": "2026-08-11T09:20:00+08:00",
+                    "end_time": "",
+                    "elapsed_seconds": 104,
+                    "nodes": 4,
+                    "cpu_cores": 256,
+                    "gpu_count": 4,
+                    "memory_gb": 512,
+                    "core_hours": 7.4
+                  },
+                  "timestamp": "2026-08-11T12:00:00+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/drug/runs/{run_id}/stop": {
+      "post": {
+        "summary": "停止跨中心虚拟药物筛选任务",
+        "deprecated": false,
+        "description": "停止 pending、queued 或 running 状态的药物筛选任务。",
+        "operationId": "stopDrugRun",
+        "tags": [
+          "任务运行"
+        ],
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "description": "药物筛选任务运行实例唯一标识。",
+            "required": true,
+            "example": "DRUG-20260811-0001",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "停止药物筛选任务结果",
+                      "properties": {
+                        "run_id": {
+                          "type": "string",
+                          "title": "运行实例ID",
+                          "description": "被停止的任务 ID。",
+                          "example": "DRUG-20260811-0001"
+                        },
+                        "status": {
+                          "type": "string",
+                          "title": "任务状态",
+                          "description": "停止后固定为 stopped。",
+                          "enum": [
+                            "stopped"
+                          ],
+                          "example": "stopped"
+                        }
+                      },
+                      "example": {
+                        "run_id": "DRUG-20260811-0001",
+                        "status": "stopped"
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T12:00:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "run_id": "DRUG-20260811-0001",
+                    "status": "stopped"
+                  },
+                  "timestamp": "2026-08-11T12:00:00+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/drug/runs/{run_id}/workflow": {
+      "get": {
+        "summary": "查询跨中心虚拟药物筛选工作流",
+        "deprecated": false,
+        "description": "查询数据准备、配体预处理、任务分片、多中心 Docking、结果汇总、属性评价、Top-N 和报告等 DAG 节点。",
+        "operationId": "getDrugWorkflow",
+        "tags": [
+          "运行监控与结果"
+        ],
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "description": "药物筛选任务运行实例唯一标识。",
+            "required": true,
+            "example": "DRUG-20260811-0001",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "药物筛选工作流",
+                      "properties": {
+                        "nodes": {
+                          "type": "array",
+                          "title": "工作流节点",
+                          "description": "虚拟药物筛选 DAG 节点。",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "title": "节点ID",
+                                "description": "工作流节点唯一标识。",
+                                "example": "docking"
+                              },
+                              "name": {
+                                "type": "string",
+                                "title": "节点名称",
+                                "description": "工作流节点中文名称。",
+                                "example": "跨中心并行分子对接"
+                              },
+                              "status": {
+                                "type": "string",
+                                "title": "节点状态",
+                                "description": "节点当前状态。",
+                                "enum": [
+                                  "pending",
+                                  "queued",
+                                  "running",
+                                  "success",
+                                  "failed",
+                                  "stopped"
+                                ],
+                                "example": "running"
+                              },
+                              "progress": {
+                                "type": "number",
+                                "title": "节点进度",
+                                "description": "节点完成百分比。",
+                                "example": 76
+                              },
+                              "cluster_id": {
+                                "type": "string",
+                                "title": "执行中心ID",
+                                "description": "执行该节点的计算中心；多中心节点可返回 multi-center。",
+                                "example": "multi-center"
+                              }
+                            }
+                          }
+                        },
+                        "edges": {
+                          "type": "array",
+                          "title": "工作流连线",
+                          "description": "DAG 节点依赖关系。",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "source": {
+                                "type": "string",
+                                "title": "源节点",
+                                "description": "前置节点 ID。",
+                                "example": "shard"
+                              },
+                              "target": {
+                                "type": "string",
+                                "title": "目标节点",
+                                "description": "后置节点 ID。",
+                                "example": "docking"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "example": {
+                        "nodes": [
+                          {
+                            "id": "prepare",
+                            "name": "靶标与配体数据准备",
+                            "status": "success",
+                            "progress": 100,
+                            "cluster_id": "changsha"
+                          },
+                          {
+                            "id": "ligand-preprocess",
+                            "name": "配体预处理",
+                            "status": "success",
+                            "progress": 100,
+                            "cluster_id": "changsha"
+                          },
+                          {
+                            "id": "shard",
+                            "name": "化合物任务分片",
+                            "status": "success",
+                            "progress": 100,
+                            "cluster_id": "changsha"
+                          },
+                          {
+                            "id": "docking",
+                            "name": "跨中心并行分子对接",
+                            "status": "running",
+                            "progress": 76,
+                            "cluster_id": "multi-center"
+                          },
+                          {
+                            "id": "merge",
+                            "name": "对接结果汇总",
+                            "status": "pending",
+                            "progress": 0,
+                            "cluster_id": "changsha"
+                          },
+                          {
+                            "id": "property",
+                            "name": "分子属性评价",
+                            "status": "pending",
+                            "progress": 0,
+                            "cluster_id": "changsha"
+                          },
+                          {
+                            "id": "topn",
+                            "name": "Top-N候选筛选",
+                            "status": "pending",
+                            "progress": 0,
+                            "cluster_id": "changsha"
+                          },
+                          {
+                            "id": "report",
+                            "name": "报告生成",
+                            "status": "pending",
+                            "progress": 0,
+                            "cluster_id": "changsha"
+                          }
+                        ],
+                        "edges": [
+                          {
+                            "source": "prepare",
+                            "target": "ligand-preprocess"
+                          },
+                          {
+                            "source": "ligand-preprocess",
+                            "target": "shard"
+                          },
+                          {
+                            "source": "shard",
+                            "target": "docking"
+                          },
+                          {
+                            "source": "docking",
+                            "target": "merge"
+                          },
+                          {
+                            "source": "merge",
+                            "target": "property"
+                          },
+                          {
+                            "source": "property",
+                            "target": "topn"
+                          },
+                          {
+                            "source": "topn",
+                            "target": "report"
+                          }
+                        ]
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T12:00:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "nodes": [
+                      {
+                        "id": "prepare",
+                        "name": "靶标与配体数据准备",
+                        "status": "success",
+                        "progress": 100,
+                        "cluster_id": "changsha"
+                      },
+                      {
+                        "id": "ligand-preprocess",
+                        "name": "配体预处理",
+                        "status": "success",
+                        "progress": 100,
+                        "cluster_id": "changsha"
+                      },
+                      {
+                        "id": "shard",
+                        "name": "化合物任务分片",
+                        "status": "success",
+                        "progress": 100,
+                        "cluster_id": "changsha"
+                      },
+                      {
+                        "id": "docking",
+                        "name": "跨中心并行分子对接",
+                        "status": "running",
+                        "progress": 76,
+                        "cluster_id": "multi-center"
+                      },
+                      {
+                        "id": "merge",
+                        "name": "对接结果汇总",
+                        "status": "pending",
+                        "progress": 0,
+                        "cluster_id": "changsha"
+                      },
+                      {
+                        "id": "property",
+                        "name": "分子属性评价",
+                        "status": "pending",
+                        "progress": 0,
+                        "cluster_id": "changsha"
+                      },
+                      {
+                        "id": "topn",
+                        "name": "Top-N候选筛选",
+                        "status": "pending",
+                        "progress": 0,
+                        "cluster_id": "changsha"
+                      },
+                      {
+                        "id": "report",
+                        "name": "报告生成",
+                        "status": "pending",
+                        "progress": 0,
+                        "cluster_id": "changsha"
+                      }
+                    ],
+                    "edges": [
+                      {
+                        "source": "prepare",
+                        "target": "ligand-preprocess"
+                      },
+                      {
+                        "source": "ligand-preprocess",
+                        "target": "shard"
+                      },
+                      {
+                        "source": "shard",
+                        "target": "docking"
+                      },
+                      {
+                        "source": "docking",
+                        "target": "merge"
+                      },
+                      {
+                        "source": "merge",
+                        "target": "property"
+                      },
+                      {
+                        "source": "property",
+                        "target": "topn"
+                      },
+                      {
+                        "source": "topn",
+                        "target": "report"
+                      }
+                    ]
+                  },
+                  "timestamp": "2026-08-11T12:00:00+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/drug/runs/{run_id}/metrics": {
+      "get": {
+        "summary": "查询跨中心虚拟药物筛选运行指标",
+        "deprecated": false,
+        "description": "查询完成分子数、筛选吞吐量、Docking Score、失败数量、多中心分片进度及分数统计。",
+        "operationId": "getDrugMetrics",
+        "tags": [
+          "运行监控与结果"
+        ],
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "description": "药物筛选任务运行实例唯一标识。",
+            "required": true,
+            "example": "DRUG-20260811-0001",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "药物筛选运行指标",
+                      "properties": {
+                        "progress": {
+                          "type": "number",
+                          "title": "任务进度",
+                          "description": "药物筛选任务整体完成百分比。",
+                          "example": 76
+                        },
+                        "metrics": {
+                          "type": "array",
+                          "title": "专业指标列表",
+                          "description": "日志解析或筛选程序输出的结构化指标。",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string",
+                                "title": "指标编码",
+                                "description": "指标英文编码。",
+                                "example": "completed_compounds"
+                              },
+                              "label": {
+                                "type": "string",
+                                "title": "指标中文名",
+                                "description": "前端展示名称。",
+                                "example": "已完成分子数"
+                              },
+                              "value": {
+                                "type": "number",
+                                "title": "指标值",
+                                "description": "当前指标数值。",
+                                "example": 7600
+                              },
+                              "total": {
+                                "type": "number",
+                                "title": "指标总值",
+                                "description": "具有进度含义时的总量；无总量返回 0。",
+                                "example": 10000
+                              },
+                              "unit": {
+                                "type": "string",
+                                "title": "指标单位",
+                                "description": "指标展示单位，无单位返回空字符串。",
+                                "example": "个"
+                              }
+                            }
+                          }
+                        },
+                        "cluster_progress": {
+                          "type": "array",
+                          "title": "多中心分片进度",
+                          "description": "各计算中心承担的分子对接分片完成情况。",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "cluster_id": {
+                                "type": "string",
+                                "title": "计算中心ID",
+                                "description": "计算中心唯一标识。",
+                                "example": "changsha"
+                              },
+                              "cluster_name": {
+                                "type": "string",
+                                "title": "计算中心名称",
+                                "description": "计算中心中文名称。",
+                                "example": "长沙"
+                              },
+                              "completed": {
+                                "type": "integer",
+                                "title": "已完成数量",
+                                "description": "该中心已经完成的化合物数量。",
+                                "example": 2000
+                              },
+                              "total": {
+                                "type": "integer",
+                                "title": "分配总数量",
+                                "description": "该中心被分配的化合物总数量。",
+                                "example": 2500
+                              },
+                              "throughput": {
+                                "type": "number",
+                                "title": "中心吞吐量",
+                                "description": "该中心当前对接吞吐量。",
+                                "example": 18.5
+                              },
+                              "status": {
+                                "type": "string",
+                                "title": "中心任务状态",
+                                "description": "该中心分片任务当前状态。",
+                                "enum": [
+                                  "queued",
+                                  "running",
+                                  "success",
+                                  "failed"
+                                ],
+                                "example": "running"
+                              }
+                            }
+                          }
+                        },
+                        "score_summary": {
+                          "type": "object",
+                          "title": "对接分数统计",
+                          "description": "当前已完成对接结果的分数统计。",
+                          "properties": {
+                            "best_score": {
+                              "type": "number",
+                              "title": "最佳对接分数",
+                              "description": "当前最佳 Binding/Docking Score。",
+                              "example": -11.4
+                            },
+                            "average_score": {
+                              "type": "number",
+                              "title": "平均对接分数",
+                              "description": "已完成分子的平均 Docking Score。",
+                              "example": -7.8
+                            },
+                            "median_score": {
+                              "type": "number",
+                              "title": "中位数对接分数",
+                              "description": "已完成分子的中位数 Docking Score。",
+                              "example": -7.6
+                            },
+                            "qualified_count": {
+                              "type": "integer",
+                              "title": "达标分子数",
+                              "description": "达到设定阈值的候选分子数量。",
+                              "example": 286
+                            }
+                          }
+                        }
+                      },
+                      "example": {
+                        "progress": 76,
+                        "metrics": [
+                          {
+                            "name": "completed_compounds",
+                            "label": "已完成分子数",
+                            "value": 7600,
+                            "total": 10000,
+                            "unit": "个"
+                          },
+                          {
+                            "name": "throughput",
+                            "label": "筛选吞吐量",
+                            "value": 72.8,
+                            "total": 0,
+                            "unit": "compound/s"
+                          },
+                          {
+                            "name": "best_docking_score",
+                            "label": "最佳对接分数",
+                            "value": -11.4,
+                            "total": 0,
+                            "unit": "kcal/mol"
+                          },
+                          {
+                            "name": "failed_compounds",
+                            "label": "失败分子数",
+                            "value": 4,
+                            "total": 10000,
+                            "unit": "个"
+                          },
+                          {
+                            "name": "qualified_compounds",
+                            "label": "达标分子数",
+                            "value": 286,
+                            "total": 10000,
+                            "unit": "个"
+                          }
+                        ],
+                        "cluster_progress": [
+                          {
+                            "cluster_id": "changsha",
+                            "cluster_name": "长沙",
+                            "completed": 2000,
+                            "total": 2500,
+                            "throughput": 18.5,
+                            "status": "running"
+                          },
+                          {
+                            "cluster_id": "guangzhou",
+                            "cluster_name": "广州",
+                            "completed": 1900,
+                            "total": 2500,
+                            "throughput": 17.9,
+                            "status": "running"
+                          },
+                          {
+                            "cluster_id": "kunshan",
+                            "cluster_name": "昆山",
+                            "completed": 2100,
+                            "total": 2500,
+                            "throughput": 20.2,
+                            "status": "running"
+                          },
+                          {
+                            "cluster_id": "jinan",
+                            "cluster_name": "济南",
+                            "completed": 1600,
+                            "total": 2500,
+                            "throughput": 16.2,
+                            "status": "running"
+                          }
+                        ],
+                        "score_summary": {
+                          "best_score": -11.4,
+                          "average_score": -7.8,
+                          "median_score": -7.6,
+                          "qualified_count": 286
+                        }
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T12:00:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "progress": 76,
+                    "metrics": [
+                      {
+                        "name": "completed_compounds",
+                        "label": "已完成分子数",
+                        "value": 7600,
+                        "total": 10000,
+                        "unit": "个"
+                      },
+                      {
+                        "name": "throughput",
+                        "label": "筛选吞吐量",
+                        "value": 72.8,
+                        "total": 0,
+                        "unit": "compound/s"
+                      },
+                      {
+                        "name": "best_docking_score",
+                        "label": "最佳对接分数",
+                        "value": -11.4,
+                        "total": 0,
+                        "unit": "kcal/mol"
+                      },
+                      {
+                        "name": "failed_compounds",
+                        "label": "失败分子数",
+                        "value": 4,
+                        "total": 10000,
+                        "unit": "个"
+                      },
+                      {
+                        "name": "qualified_compounds",
+                        "label": "达标分子数",
+                        "value": 286,
+                        "total": 10000,
+                        "unit": "个"
+                      }
+                    ],
+                    "cluster_progress": [
+                      {
+                        "cluster_id": "changsha",
+                        "cluster_name": "长沙",
+                        "completed": 2000,
+                        "total": 2500,
+                        "throughput": 18.5,
+                        "status": "running"
+                      },
+                      {
+                        "cluster_id": "guangzhou",
+                        "cluster_name": "广州",
+                        "completed": 1900,
+                        "total": 2500,
+                        "throughput": 17.9,
+                        "status": "running"
+                      },
+                      {
+                        "cluster_id": "kunshan",
+                        "cluster_name": "昆山",
+                        "completed": 2100,
+                        "total": 2500,
+                        "throughput": 20.2,
+                        "status": "running"
+                      },
+                      {
+                        "cluster_id": "jinan",
+                        "cluster_name": "济南",
+                        "completed": 1600,
+                        "total": 2500,
+                        "throughput": 16.2,
+                        "status": "running"
+                      }
+                    ],
+                    "score_summary": {
+                      "best_score": -11.4,
+                      "average_score": -7.8,
+                      "median_score": -7.6,
+                      "qualified_count": 286
+                    }
+                  },
+                  "timestamp": "2026-08-11T12:00:00+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/drug/runs/{run_id}/logs": {
+      "get": {
+        "summary": "查询跨中心虚拟药物筛选运行日志",
+        "deprecated": false,
+        "description": "增量查询各计算中心产生的虚拟筛选原始日志。",
+        "operationId": "getDrugLogs",
+        "tags": [
+          "运行监控与结果"
+        ],
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "description": "药物筛选任务运行实例唯一标识。",
+            "required": true,
+            "example": "DRUG-20260811-0001",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "日志起始偏移量。",
+            "required": false,
+            "example": 0,
+            "schema": {
+              "type": "integer",
+              "default": 0
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "单次最大返回日志条数。",
+            "required": false,
+            "example": 200,
+            "schema": {
+              "type": "integer",
+              "default": 200
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "药物筛选运行日志",
+                      "properties": {
+                        "next_offset": {
+                          "type": "integer",
+                          "title": "下一偏移量",
+                          "description": "下一次查询应使用的 offset。",
+                          "example": 6
+                        },
+                        "has_more": {
+                          "type": "boolean",
+                          "title": "是否还有日志",
+                          "description": "是否还有尚未返回的日志。",
+                          "example": false
+                        },
+                        "lines": {
+                          "type": "array",
+                          "title": "日志行",
+                          "description": "药物筛选原始日志集合。",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "seq": {
+                                "type": "integer",
+                                "title": "日志序号",
+                                "description": "日志递增序号。",
+                                "example": 1
+                              },
+                              "timestamp": {
+                                "type": "string",
+                                "title": "日志时间",
+                                "description": "日志产生时间。",
+                                "example": "2026-08-11T09:20:01+08:00"
+                              },
+                              "level": {
+                                "type": "string",
+                                "title": "日志级别",
+                                "description": "DEBUG/INFO/WARN/ERROR。",
+                                "enum": [
+                                  "DEBUG",
+                                  "INFO",
+                                  "WARN",
+                                  "ERROR"
+                                ],
+                                "example": "INFO"
+                              },
+                              "cluster_id": {
+                                "type": "string",
+                                "title": "计算中心ID",
+                                "description": "该条日志来源的计算中心。",
+                                "example": "changsha"
+                              },
+                              "message": {
+                                "type": "string",
+                                "title": "日志内容",
+                                "description": "筛选程序原始日志文本。",
+                                "example": "Docking shard started"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "example": {
+                        "next_offset": 6,
+                        "has_more": false,
+                        "lines": [
+                          {
+                            "seq": 1,
+                            "timestamp": "2026-08-11T09:20:01+08:00",
+                            "level": "INFO",
+                            "cluster_id": "changsha",
+                            "message": "Virtual screening task initialized, compound_count=10000"
+                          },
+                          {
+                            "seq": 2,
+                            "timestamp": "2026-08-11T09:20:04+08:00",
+                            "level": "INFO",
+                            "cluster_id": "changsha",
+                            "message": "Ligand preprocessing completed"
+                          },
+                          {
+                            "seq": 3,
+                            "timestamp": "2026-08-11T09:20:06+08:00",
+                            "level": "INFO",
+                            "cluster_id": "changsha",
+                            "message": "4 shards created and dispatched"
+                          },
+                          {
+                            "seq": 4,
+                            "timestamp": "2026-08-11T09:21:30+08:00",
+                            "level": "INFO",
+                            "cluster_id": "kunshan",
+                            "message": "completed=2100/2500 throughput=20.2 compound/s"
+                          },
+                          {
+                            "seq": 5,
+                            "timestamp": "2026-08-11T09:21:31+08:00",
+                            "level": "INFO",
+                            "cluster_id": "guangzhou",
+                            "message": "completed=1900/2500 throughput=17.9 compound/s"
+                          },
+                          {
+                            "seq": 6,
+                            "timestamp": "2026-08-11T09:21:32+08:00",
+                            "level": "INFO",
+                            "cluster_id": "changsha",
+                            "message": "global_completed=7600/10000 best_score=-11.4"
+                          }
+                        ]
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T12:00:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "next_offset": 6,
+                    "has_more": false,
+                    "lines": [
+                      {
+                        "seq": 1,
+                        "timestamp": "2026-08-11T09:20:01+08:00",
+                        "level": "INFO",
+                        "cluster_id": "changsha",
+                        "message": "Virtual screening task initialized, compound_count=10000"
+                      },
+                      {
+                        "seq": 2,
+                        "timestamp": "2026-08-11T09:20:04+08:00",
+                        "level": "INFO",
+                        "cluster_id": "changsha",
+                        "message": "Ligand preprocessing completed"
+                      },
+                      {
+                        "seq": 3,
+                        "timestamp": "2026-08-11T09:20:06+08:00",
+                        "level": "INFO",
+                        "cluster_id": "changsha",
+                        "message": "4 shards created and dispatched"
+                      },
+                      {
+                        "seq": 4,
+                        "timestamp": "2026-08-11T09:21:30+08:00",
+                        "level": "INFO",
+                        "cluster_id": "kunshan",
+                        "message": "completed=2100/2500 throughput=20.2 compound/s"
+                      },
+                      {
+                        "seq": 5,
+                        "timestamp": "2026-08-11T09:21:31+08:00",
+                        "level": "INFO",
+                        "cluster_id": "guangzhou",
+                        "message": "completed=1900/2500 throughput=17.9 compound/s"
+                      },
+                      {
+                        "seq": 6,
+                        "timestamp": "2026-08-11T09:21:32+08:00",
+                        "level": "INFO",
+                        "cluster_id": "changsha",
+                        "message": "global_completed=7600/10000 best_score=-11.4"
+                      }
+                    ]
+                  },
+                  "timestamp": "2026-08-11T12:00:00+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/drug/runs/{run_id}/artifacts": {
+      "get": {
+        "summary": "查询跨中心虚拟药物筛选结果文件",
+        "deprecated": false,
+        "description": "查询 Top-N 候选、Docking Score、分数分布、候选分子结构、ADMET 结果和报告等文件。",
+        "operationId": "getDrugArtifacts",
+        "tags": [
+          "运行监控与结果"
+        ],
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "description": "药物筛选任务运行实例唯一标识。",
+            "required": true,
+            "example": "DRUG-20260811-0001",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "array",
+                      "title": "药物筛选结果文件列表",
+                      "description": "药物筛选任务产生的结果文件。",
+                      "items": {
+                        "type": "object",
+                        "title": "药物筛选结果文件",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "title": "结果文件ID",
+                            "description": "结果文件唯一标识。",
+                            "example": "ART-DRUG-001"
+                          },
+                          "name": {
+                            "type": "string",
+                            "title": "文件名称",
+                            "description": "结果文件名称。",
+                            "example": "top_n.csv"
+                          },
+                          "type": {
+                            "type": "string",
+                            "title": "结果类型",
+                            "description": "结果文件用途类型。",
+                            "enum": [
+                              "dataset",
+                              "image",
+                              "video",
+                              "model",
+                              "checkpoint",
+                              "report",
+                              "archive",
+                              "log",
+                              "other"
+                            ],
+                            "example": "dataset"
+                          },
+                          "format": {
+                            "type": "string",
+                            "title": "文件格式",
+                            "description": "结果文件扩展格式。",
+                            "example": "csv"
+                          },
+                          "size": {
+                            "type": "integer",
+                            "title": "文件大小",
+                            "description": "文件字节数。",
+                            "example": 286421
+                          },
+                          "storage_path": {
+                            "type": "string",
+                            "title": "存储路径",
+                            "description": "全局文件系统或对象存储路径。",
+                            "example": "gfs://results/DRUG-20260811-0001/top_n.csv"
+                          },
+                          "preview_url": {
+                            "type": "string",
+                            "title": "预览地址",
+                            "description": "前端预览接口地址；不支持时返回空字符串。",
+                            "example": "/api/v1/files/ART-DRUG-001/preview"
+                          },
+                          "download_url": {
+                            "type": "string",
+                            "title": "下载地址",
+                            "description": "文件下载接口地址。",
+                            "example": "/api/v1/files/ART-DRUG-001/download"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "title": "生成时间",
+                            "description": "结果文件生成时间。",
+                            "example": "2026-08-11T09:23:00+08:00"
+                          }
+                        }
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T12:00:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": [
+                    {
+                      "id": "ART-DRUG-001",
+                      "name": "top_n.csv",
+                      "type": "dataset",
+                      "format": "csv",
+                      "size": 286421,
+                      "storage_path": "gfs://results/DRUG-20260811-0001/top_n.csv",
+                      "preview_url": "/api/v1/files/ART-DRUG-001/preview",
+                      "download_url": "/api/v1/files/ART-DRUG-001/download",
+                      "created_at": "2026-08-11T09:23:00+08:00"
+                    },
+                    {
+                      "id": "ART-DRUG-002",
+                      "name": "docking_scores.csv",
+                      "type": "dataset",
+                      "format": "csv",
+                      "size": 1246241,
+                      "storage_path": "gfs://results/DRUG-20260811-0001/docking_scores.csv",
+                      "preview_url": "/api/v1/files/ART-DRUG-002/preview",
+                      "download_url": "/api/v1/files/ART-DRUG-002/download",
+                      "created_at": "2026-08-11T09:23:01+08:00"
+                    },
+                    {
+                      "id": "ART-DRUG-003",
+                      "name": "score_distribution.json",
+                      "type": "dataset",
+                      "format": "json",
+                      "size": 34821,
+                      "storage_path": "gfs://results/DRUG-20260811-0001/score_distribution.json",
+                      "preview_url": "/api/v1/files/ART-DRUG-003/preview",
+                      "download_url": "/api/v1/files/ART-DRUG-003/download",
+                      "created_at": "2026-08-11T09:23:02+08:00"
+                    },
+                    {
+                      "id": "ART-DRUG-004",
+                      "name": "candidate_molecules.sdf",
+                      "type": "dataset",
+                      "format": "sdf",
+                      "size": 852214,
+                      "storage_path": "gfs://results/DRUG-20260811-0001/candidate_molecules.sdf",
+                      "preview_url": "",
+                      "download_url": "/api/v1/files/ART-DRUG-004/download",
+                      "created_at": "2026-08-11T09:23:03+08:00"
+                    },
+                    {
+                      "id": "ART-DRUG-005",
+                      "name": "admet.json",
+                      "type": "dataset",
+                      "format": "json",
+                      "size": 72421,
+                      "storage_path": "gfs://results/DRUG-20260811-0001/admet.json",
+                      "preview_url": "/api/v1/files/ART-DRUG-005/preview",
+                      "download_url": "/api/v1/files/ART-DRUG-005/download",
+                      "created_at": "2026-08-11T09:23:04+08:00"
+                    },
+                    {
+                      "id": "ART-DRUG-006",
+                      "name": "screening_report.pdf",
+                      "type": "report",
+                      "format": "pdf",
+                      "size": 2486421,
+                      "storage_path": "gfs://results/DRUG-20260811-0001/screening_report.pdf",
+                      "preview_url": "/api/v1/files/ART-DRUG-006/preview",
+                      "download_url": "/api/v1/files/ART-DRUG-006/download",
+                      "created_at": "2026-08-11T09:23:05+08:00"
+                    }
+                  ],
+                  "timestamp": "2026-08-11T12:00:00+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/drug/operators/register": {
+      "post": {
+        "summary": "注册跨中心虚拟药物筛选算子",
+        "deprecated": false,
+        "description": "将算子注册到统一函数平台，对齐后端 POST /action/create。注册后可通过算子调用接口执行。",
+        "operationId": "registerDrugOperator",
+        "tags": [
+          "算子管理"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "title": "算子注册请求",
+                "description": "算子注册信息。",
+                "required": [
+                  "name",
+                  "version",
+                  "runtime_type",
+                  "runtime",
+                  "handler"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "title": "算子名称",
+                    "description": "算子唯一标识，与后端函数名一致（如 ai-train-megatron）。",
+                    "example": "ai-train-megatron"
+                  },
+                  "version": {
+                    "type": "string",
+                    "title": "算子版本",
+                    "description": "算子版本号。",
+                    "example": "v1"
+                  },
+                  "runtime_type": {
+                    "type": "string",
+                    "title": "运行时类型",
+                    "description": "docker/docker-run/singularity/instance 等。",
+                    "example": "docker"
+                  },
+                  "runtime": {
+                    "type": "string",
+                    "title": "运行镜像",
+                    "description": "镜像地址或运行时路径。",
+                    "example": "local/ai-operator/ai-train-megatron-server:20260629"
+                  },
+                  "runtime_args": {
+                    "type": "string",
+                    "title": "运行时参数",
+                    "description": "容器挂载、GPU 等运行时参数。",
+                    "example": "--gpus all"
+                  },
+                  "handler": {
+                    "type": "string",
+                    "title": "处理函数",
+                    "description": "容器内处理入口。",
+                    "example": "/invoke"
+                  },
+                  "cpu_cores": {
+                    "type": "integer",
+                    "title": "CPU核数",
+                    "description": "申请 CPU 核数。",
+                    "example": 8
+                  },
+                  "gpu_count": {
+                    "type": "integer",
+                    "title": "GPU数量",
+                    "description": "申请 GPU 数量。",
+                    "example": 1
+                  },
+                  "memory_mb": {
+                    "type": "integer",
+                    "title": "内存容量",
+                    "description": "申请内存，单位 MB。",
+                    "example": 24576
+                  },
+                  "env_vars": {
+                    "type": "object",
+                    "title": "环境变量",
+                    "description": "注入的环境变量。",
+                    "example": {}
+                  },
+                  "mpi_enabled": {
+                    "type": "boolean",
+                    "title": "是否启用MPI",
+                    "description": "是否启用 MPI 并行。",
+                    "example": false
+                  },
+                  "mpi_command": {
+                    "type": "string",
+                    "title": "MPI命令",
+                    "description": "MPI 启动命令。",
+                    "example": ""
+                  },
+                  "timeout_sec": {
+                    "type": "integer",
+                    "title": "超时时间",
+                    "description": "最大执行时间，单位 s。",
+                    "example": 3600
+                  }
+                },
+                "example": {
+                  "name": "ai-train-megatron",
+                  "version": "v1",
+                  "runtime_type": "docker",
+                  "runtime": "local/ai-operator/ai-train-megatron-server:20260629",
+                  "runtime_args": "--gpus all",
+                  "handler": "/invoke",
+                  "cpu_cores": 8,
+                  "gpu_count": 1,
+                  "memory_mb": 24576,
+                  "env_vars": {},
+                  "mpi_enabled": false,
+                  "mpi_command": "",
+                  "timeout_sec": 3600
+                }
+              },
+              "example": {
+                "name": "ai-train-megatron",
+                "version": "v1",
+                "runtime_type": "docker",
+                "runtime": "local/ai-operator/ai-train-megatron-server:20260629",
+                "runtime_args": "--gpus all",
+                "handler": "/invoke",
+                "cpu_cores": 8,
+                "gpu_count": 1,
+                "memory_mb": 24576,
+                "env_vars": {},
+                "mpi_enabled": false,
+                "mpi_command": "",
+                "timeout_sec": 3600
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回的文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "算子注册结果",
+                      "properties": {
+                        "operator_id": {
+                          "type": "string",
+                          "title": "算子ID",
+                          "description": "注册后的算子唯一标识。",
+                          "example": "ai-train-megatron"
+                        },
+                        "name": {
+                          "type": "string",
+                          "title": "算子名称",
+                          "description": "算子函数名。",
+                          "example": "ai-train-megatron"
+                        },
+                        "version": {
+                          "type": "string",
+                          "title": "算子版本",
+                          "description": "算子版本号。",
+                          "example": "v1"
+                        },
+                        "status": {
+                          "type": "string",
+                          "title": "注册状态",
+                          "description": "注册结果状态。",
+                          "example": "registered"
+                        }
+                      },
+                      "example": {
+                        "operator_id": "ai-train-megatron",
+                        "name": "ai-train-megatron",
+                        "version": "v1",
+                        "status": "registered"
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T12:00:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "operator_id": "ai-train-megatron",
+                    "name": "ai-train-megatron",
+                    "version": "v1",
+                    "status": "registered"
+                  },
+                  "timestamp": "2026-08-11T12:00:00+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/drug/operators/{name}/{version}/invoke": {
+      "post": {
+        "summary": "调用跨中心虚拟药物筛选算子",
+        "deprecated": false,
+        "description": "按算子名与版本调用算子，对齐后端 POST /action/invoke。JSON 协议（workDir/args）。",
+        "operationId": "invokeDrugOperator",
+        "tags": [
+          "算子管理"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "算子函数名。",
+            "required": true,
+            "example": "ai-train-megatron",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "description": "算子版本号。",
+            "required": true,
+            "example": "v1",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "title": "算子调用请求",
+                "description": "算子输入参数。",
+                "properties": {
+                  "work_dir": {
+                    "type": "string",
+                    "title": "工作目录",
+                    "description": "算子工作目录（如 OpenFOAM case 目录）。",
+                    "example": "/public/home/demo/case"
+                  },
+                  "args": {
+                    "type": "string",
+                    "title": "命令行参数",
+                    "description": "传递给算子的命令行参数。",
+                    "example": "-parallel"
+                  }
+                },
+                "example": {
+                  "work_dir": "/public/home/demo/case",
+                  "args": "-parallel"
+                }
+              },
+              "example": {
+                "work_dir": "/public/home/demo/case",
+                "args": "-parallel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回的文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "算子调用结果",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "title": "调用状态",
+                          "description": "算子执行状态。",
+                          "example": "success"
+                        },
+                        "metrics": {
+                          "type": "string",
+                          "title": "指标摘要",
+                          "description": "JSON 格式的指标摘要。",
+                          "example": "{\"loss\": 0.02}"
+                        },
+                        "artifact_dir": {
+                          "type": "string",
+                          "title": "产物目录",
+                          "description": "结果产物输出目录。",
+                          "example": "/runs/demo/artifacts"
+                        }
+                      },
+                      "example": {
+                        "status": "success",
+                        "metrics": "{\"loss\": 0.02}",
+                        "artifact_dir": "/runs/demo/artifacts"
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T12:00:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "status": "success",
+                    "metrics": "{\"loss\": 0.02}",
+                    "artifact_dir": "/runs/demo/artifacts"
+                  },
+                  "timestamp": "2026-08-11T12:00:00+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    }
+  },
+  "components": {
+    "schemas": {},
+    "responses": {},
+    "securitySchemes": {}
+  },
+  "servers": [],
+  "security": []
+}

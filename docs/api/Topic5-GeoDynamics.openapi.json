@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "课题五-地球动力学模拟接口",
-    "description": "Apifox 导入兼容版。包含 11 个接口、中文接口名称、接口说明、请求/响应示例、字段中文名（title）、字段说明（description）及 Mock 规则（x-apifox-mock）。",
+    "description": "Apifox 导入兼容版。包含 13 个接口、中文接口名称、接口说明、请求/响应示例、字段中文名（title）、字段说明（description）及 Mock 规则（x-apifox-mock）。",
     "version": "1.2.0"
   },
   "tags": [
@@ -14,6 +14,10 @@
     },
     {
       "name": "运行监控与结果"
+    },
+    {
+      "name": "算子管理",
+      "description": "算子库函数注册、调用与状态管理接口。"
     }
   ],
   "paths": {
@@ -303,13 +307,13 @@
                                 "type": "string",
                                 "title": "算子ID",
                                 "description": "算子唯一标识。",
-                                "example": "wave-equation"
+                                "example": "supg"
                               },
                               "name": {
                                 "type": "string",
                                 "title": "算子名称",
                                 "description": "算子中文名称。",
-                                "example": "波动方程求解器"
+                                "example": "SUPG稳定化有限元求解算子"
                               }
                             }
                           }
@@ -475,16 +479,12 @@
                     ],
                     "operators": [
                       {
-                        "id": "wave-equation",
-                        "name": "波动方程求解器"
+                        "id": "supg",
+                        "name": "SUPG稳定化有限元求解算子"
                       },
                       {
-                        "id": "sparse-matrix",
-                        "name": "稀疏矩阵运算"
-                      },
-                      {
-                        "id": "fft",
-                        "name": "FFT"
+                        "id": "uzawa",
+                        "name": "Uzawa鞍点问题求解算子"
                       }
                     ],
                     "highlights": [
@@ -670,6 +670,15 @@
                   "message": "success",
                   "data": {
                     "fields": [
+                      {
+                        "name": "operator",
+                        "label": "算子选择",
+                        "type": "select",
+                        "unit": "",
+                        "required": true,
+                        "default_value": "supg",
+                        "description": "选择要执行的算子库函数，与后端 /action/invoke 对齐。"
+                      },
                       {
                         "name": "grid_resolution",
                         "label": "网格精度",
@@ -958,7 +967,8 @@
                   "execution_mode",
                   "cluster_policy",
                   "parameters",
-                  "resources"
+                  "resources",
+                  "operator"
                 ],
                 "properties": {
                   "execution_mode": {
@@ -1076,6 +1086,12 @@
                         "example": 512
                       }
                     }
+                  },
+                  "operator": {
+                    "type": "string",
+                    "title": "算子选择",
+                    "description": "选择要执行的算子库函数，如 supg。",
+                    "example": "supg"
                   }
                 },
                 "example": {
@@ -1121,7 +1137,8 @@
                   "cpu_cores": 256,
                   "gpu_count": 0,
                   "memory_gb": 512
-                }
+                },
+                "operator": "supg"
               }
             }
           },
@@ -1215,7 +1232,8 @@
                     "run_id": "GEO-20260811-0001",
                     "status": "queued",
                     "cluster_id": "changsha",
-                    "job_id": "183920"
+                    "job_id": "183920",
+                    "operator": "supg"
                   },
                   "timestamp": "2026-08-11T10:20:30+08:00"
                 }
@@ -1876,7 +1894,7 @@
                                 "type": "number",
                                 "title": "指标值",
                                 "description": "当前指标数值。",
-                                "example": 1.2e-7
+                                "example": 1.2e-07
                               },
                               "total": {
                                 "type": "number",
@@ -1907,7 +1925,7 @@
                           {
                             "name": "residual",
                             "label": "残差",
-                            "value": 1.2e-7,
+                            "value": 1.2e-07,
                             "total": 0,
                             "unit": ""
                           },
@@ -1952,7 +1970,7 @@
                       {
                         "name": "residual",
                         "label": "残差",
-                        "value": 1.2e-7,
+                        "value": 1.2e-07,
                         "total": 0,
                         "unit": ""
                       },
@@ -2338,6 +2356,397 @@
                     }
                   ],
                   "timestamp": "2026-08-11T10:20:30+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/geodynamics/operators/register": {
+      "post": {
+        "summary": "注册地球动力学模拟算子",
+        "deprecated": false,
+        "description": "将算子注册到统一函数平台，对齐后端 POST /action/create。注册后可通过算子调用接口执行。",
+        "operationId": "registerGeodynamicsOperator",
+        "tags": [
+          "算子管理"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "title": "算子注册请求",
+                "description": "算子注册信息。",
+                "required": [
+                  "name",
+                  "version",
+                  "runtime_type",
+                  "runtime",
+                  "handler"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "title": "算子名称",
+                    "description": "算子唯一标识，与后端函数名一致（如 ai-train-megatron）。",
+                    "example": "ai-train-megatron"
+                  },
+                  "version": {
+                    "type": "string",
+                    "title": "算子版本",
+                    "description": "算子版本号。",
+                    "example": "v1"
+                  },
+                  "runtime_type": {
+                    "type": "string",
+                    "title": "运行时类型",
+                    "description": "docker/docker-run/singularity/instance 等。",
+                    "example": "docker"
+                  },
+                  "runtime": {
+                    "type": "string",
+                    "title": "运行镜像",
+                    "description": "镜像地址或运行时路径。",
+                    "example": "local/ai-operator/ai-train-megatron-server:20260629"
+                  },
+                  "runtime_args": {
+                    "type": "string",
+                    "title": "运行时参数",
+                    "description": "容器挂载、GPU 等运行时参数。",
+                    "example": "--gpus all"
+                  },
+                  "handler": {
+                    "type": "string",
+                    "title": "处理函数",
+                    "description": "容器内处理入口。",
+                    "example": "/invoke"
+                  },
+                  "cpu_cores": {
+                    "type": "integer",
+                    "title": "CPU核数",
+                    "description": "申请 CPU 核数。",
+                    "example": 8
+                  },
+                  "gpu_count": {
+                    "type": "integer",
+                    "title": "GPU数量",
+                    "description": "申请 GPU 数量。",
+                    "example": 1
+                  },
+                  "memory_mb": {
+                    "type": "integer",
+                    "title": "内存容量",
+                    "description": "申请内存，单位 MB。",
+                    "example": 24576
+                  },
+                  "env_vars": {
+                    "type": "object",
+                    "title": "环境变量",
+                    "description": "注入的环境变量。",
+                    "example": {}
+                  },
+                  "mpi_enabled": {
+                    "type": "boolean",
+                    "title": "是否启用MPI",
+                    "description": "是否启用 MPI 并行。",
+                    "example": false
+                  },
+                  "mpi_command": {
+                    "type": "string",
+                    "title": "MPI命令",
+                    "description": "MPI 启动命令。",
+                    "example": ""
+                  },
+                  "timeout_sec": {
+                    "type": "integer",
+                    "title": "超时时间",
+                    "description": "最大执行时间，单位 s。",
+                    "example": 3600
+                  }
+                },
+                "example": {
+                  "name": "ai-train-megatron",
+                  "version": "v1",
+                  "runtime_type": "docker",
+                  "runtime": "local/ai-operator/ai-train-megatron-server:20260629",
+                  "runtime_args": "--gpus all",
+                  "handler": "/invoke",
+                  "cpu_cores": 8,
+                  "gpu_count": 1,
+                  "memory_mb": 24576,
+                  "env_vars": {},
+                  "mpi_enabled": false,
+                  "mpi_command": "",
+                  "timeout_sec": 3600
+                }
+              },
+              "example": {
+                "name": "ai-train-megatron",
+                "version": "v1",
+                "runtime_type": "docker",
+                "runtime": "local/ai-operator/ai-train-megatron-server:20260629",
+                "runtime_args": "--gpus all",
+                "handler": "/invoke",
+                "cpu_cores": 8,
+                "gpu_count": 1,
+                "memory_mb": 24576,
+                "env_vars": {},
+                "mpi_enabled": false,
+                "mpi_command": "",
+                "timeout_sec": 3600
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回的文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "算子注册结果",
+                      "properties": {
+                        "operator_id": {
+                          "type": "string",
+                          "title": "算子ID",
+                          "description": "注册后的算子唯一标识。",
+                          "example": "ai-train-megatron"
+                        },
+                        "name": {
+                          "type": "string",
+                          "title": "算子名称",
+                          "description": "算子函数名。",
+                          "example": "ai-train-megatron"
+                        },
+                        "version": {
+                          "type": "string",
+                          "title": "算子版本",
+                          "description": "算子版本号。",
+                          "example": "v1"
+                        },
+                        "status": {
+                          "type": "string",
+                          "title": "注册状态",
+                          "description": "注册结果状态。",
+                          "example": "registered"
+                        }
+                      },
+                      "example": {
+                        "operator_id": "ai-train-megatron",
+                        "name": "ai-train-megatron",
+                        "version": "v1",
+                        "status": "registered"
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T12:00:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "operator_id": "ai-train-megatron",
+                    "name": "ai-train-megatron",
+                    "version": "v1",
+                    "status": "registered"
+                  },
+                  "timestamp": "2026-08-11T12:00:00+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/geodynamics/operators/{name}/{version}/invoke": {
+      "post": {
+        "summary": "调用地球动力学模拟算子",
+        "deprecated": false,
+        "description": "按算子名与版本调用算子，对齐后端 POST /action/invoke。Cap'n Proto 二进制协议（TrainRequest/TrainResponse）。",
+        "operationId": "invokeGeodynamicsOperator",
+        "tags": [
+          "算子管理"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "算子函数名。",
+            "required": true,
+            "example": "ai-train-megatron",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "description": "算子版本号。",
+            "required": true,
+            "example": "v1",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "title": "算子调用请求",
+                "description": "算子输入参数。",
+                "properties": {
+                  "data_root": {
+                    "type": "string",
+                    "title": "数据根目录",
+                    "description": "输入数据根目录，对应算子请求 dataRoot。",
+                    "example": "/data"
+                  },
+                  "output_dir": {
+                    "type": "string",
+                    "title": "输出目录",
+                    "description": "结果输出目录，对应算子请求 outputDir。",
+                    "example": "/runs/demo"
+                  },
+                  "config": {
+                    "type": "object",
+                    "title": "算子配置",
+                    "description": "结构化业务参数，对应算子请求 configJson。",
+                    "example": {}
+                  }
+                },
+                "example": {
+                  "data_root": "/data",
+                  "output_dir": "/runs/demo",
+                  "config": {
+                    "task": "megatron",
+                    "epochs": 3
+                  }
+                }
+              },
+              "example": {
+                "data_root": "/data",
+                "output_dir": "/runs/demo",
+                "config": {
+                  "task": "megatron",
+                  "epochs": 3
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回的文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "算子调用结果",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "title": "调用状态",
+                          "description": "算子执行状态。",
+                          "example": "success"
+                        },
+                        "metrics": {
+                          "type": "string",
+                          "title": "指标摘要",
+                          "description": "JSON 格式的指标摘要。",
+                          "example": "{\"loss\": 0.02}"
+                        },
+                        "artifact_dir": {
+                          "type": "string",
+                          "title": "产物目录",
+                          "description": "结果产物输出目录。",
+                          "example": "/runs/demo/artifacts"
+                        }
+                      },
+                      "example": {
+                        "status": "success",
+                        "metrics": "{\"loss\": 0.02}",
+                        "artifact_dir": "/runs/demo/artifacts"
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T12:00:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "status": "success",
+                    "metrics": "{\"loss\": 0.02}",
+                    "artifact_dir": "/runs/demo/artifacts"
+                  },
+                  "timestamp": "2026-08-11T12:00:00+08:00"
                 }
               }
             },

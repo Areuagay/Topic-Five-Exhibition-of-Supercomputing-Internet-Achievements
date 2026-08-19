@@ -1,0 +1,2719 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "课题五-函数多中心联调接口",
+    "description": "Apifox 导入兼容版。包含 11 个接口、中文接口名称、接口说明、请求/响应示例、字段中文名（title）、字段说明（description）和 Mock 规则（x-apifox-mock）。用于四中心资源状态、函数服务部署矩阵、跨中心函数调用链路、工作负载扩缩容及跨中心迁移联调。所有联调模拟数据均通过 source_type=simulated 或 execution_mode=simulated 明确标记，不得直接作为真实跨中心验收实测数据。",
+    "version": "1.2.0"
+  },
+  "tags": [
+    {
+      "name": "多中心资源"
+    },
+    {
+      "name": "函数注册与部署"
+    },
+    {
+      "name": "工作负载管理"
+    },
+    {
+      "name": "跨中心迁移"
+    },
+    {
+      "name": "算子管理",
+      "description": "算子库函数注册、调用与状态管理接口。"
+    }
+  ],
+  "paths": {
+    "/api/v1/multicenter/clusters": {
+      "get": {
+        "summary": "获取多中心计算资源列表",
+        "deprecated": false,
+        "description": "获取长沙、广州、昆山、济南四个计算中心的架构、调度系统、在线状态和资源摘要。source_type 用于区分真实数据与本地模拟数据。",
+        "operationId": "getMulticenterClusters",
+        "tags": [
+          "多中心资源"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "array",
+                      "title": "计算中心列表",
+                      "description": "平台纳管计算中心集合。",
+                      "items": {
+                        "type": "object",
+                        "title": "计算中心信息",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "title": "计算中心ID",
+                            "description": "平台内部稳定的计算中心唯一标识。",
+                            "example": "changsha"
+                          },
+                          "name": {
+                            "type": "string",
+                            "title": "计算中心名称",
+                            "description": "计算中心中文名称。",
+                            "example": "长沙天河新一代"
+                          },
+                          "location": {
+                            "type": "string",
+                            "title": "所在地区",
+                            "description": "计算中心所在城市或地区。",
+                            "example": "长沙"
+                          },
+                          "architecture": {
+                            "type": "string",
+                            "title": "计算架构",
+                            "description": "中心主要 CPU/GPU/加速器体系结构。",
+                            "example": "飞腾CPU + 迈创DSP"
+                          },
+                          "scheduler": {
+                            "type": "string",
+                            "title": "作业调度系统",
+                            "description": "中心使用的底层作业调度系统。",
+                            "example": "SLURM"
+                          },
+                          "status": {
+                            "type": "string",
+                            "title": "中心状态",
+                            "description": "中心当前对平台的可用状态。",
+                            "enum": [
+                              "online",
+                              "degraded",
+                              "offline",
+                              "unknown"
+                            ],
+                            "example": "online"
+                          },
+                          "source_type": {
+                            "type": "string",
+                            "title": "数据来源类型",
+                            "description": "real=真实中心数据；simulated=本地模拟中心数据。模拟数据不得作为真实跨中心验收证据。",
+                            "enum": [
+                              "real",
+                              "simulated"
+                            ],
+                            "example": "simulated"
+                          },
+                          "cpu_total": {
+                            "type": "integer",
+                            "title": "CPU总核数",
+                            "description": "中心资源视图中统计的 CPU 总核数。",
+                            "example": 4096
+                          },
+                          "cpu_available": {
+                            "type": "integer",
+                            "title": "可用CPU核数",
+                            "description": "当前可调度的 CPU 核数。",
+                            "example": 2860
+                          },
+                          "gpu_total": {
+                            "type": "integer",
+                            "title": "GPU/加速卡总数",
+                            "description": "中心 GPU、DCU、DSP 等加速器总数。",
+                            "example": 64
+                          },
+                          "gpu_available": {
+                            "type": "integer",
+                            "title": "可用GPU/加速卡数",
+                            "description": "当前可调度的加速器数量。",
+                            "example": 42
+                          },
+                          "memory_total_gb": {
+                            "type": "integer",
+                            "title": "总内存",
+                            "description": "中心纳管资源总内存，单位 GB。",
+                            "example": 16384
+                          },
+                          "queue_jobs": {
+                            "type": "integer",
+                            "title": "排队作业数",
+                            "description": "当前排队等待调度的作业数量。",
+                            "example": 18
+                          }
+                        }
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T12:40:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": [
+                    {
+                      "id": "changsha",
+                      "name": "长沙天河新一代",
+                      "location": "长沙",
+                      "architecture": "飞腾CPU + 迈创DSP",
+                      "scheduler": "SLURM",
+                      "status": "online",
+                      "source_type": "simulated",
+                      "cpu_total": 4096,
+                      "cpu_available": 2860,
+                      "gpu_total": 64,
+                      "gpu_available": 42,
+                      "memory_total_gb": 16384,
+                      "queue_jobs": 18
+                    },
+                    {
+                      "id": "guangzhou",
+                      "name": "广州天河二号",
+                      "location": "广州",
+                      "architecture": "Intel CPU",
+                      "scheduler": "SLURM",
+                      "status": "online",
+                      "source_type": "simulated",
+                      "cpu_total": 6144,
+                      "cpu_available": 3980,
+                      "gpu_total": 32,
+                      "gpu_available": 18,
+                      "memory_total_gb": 24576,
+                      "queue_jobs": 27
+                    },
+                    {
+                      "id": "kunshan",
+                      "name": "昆山昆仑",
+                      "location": "昆山",
+                      "architecture": "曙光CPU + DCU",
+                      "scheduler": "SLURM",
+                      "status": "online",
+                      "source_type": "simulated",
+                      "cpu_total": 4096,
+                      "cpu_available": 3110,
+                      "gpu_total": 64,
+                      "gpu_available": 51,
+                      "memory_total_gb": 16384,
+                      "queue_jobs": 12
+                    },
+                    {
+                      "id": "jinan",
+                      "name": "济南神威蓝光",
+                      "location": "济南",
+                      "architecture": "申威CPU",
+                      "scheduler": "SLURM",
+                      "status": "degraded",
+                      "source_type": "simulated",
+                      "cpu_total": 8192,
+                      "cpu_available": 4210,
+                      "gpu_total": 0,
+                      "gpu_available": 0,
+                      "memory_total_gb": 32768,
+                      "queue_jobs": 36
+                    }
+                  ],
+                  "timestamp": "2026-08-11T12:40:00+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/multicenter/topology": {
+      "get": {
+        "summary": "获取多中心网络拓扑",
+        "deprecated": false,
+        "description": "获取四中心节点和中心间互联链路，用于全局资源视图展示。模拟环境下的时延和带宽仅作为联调展示值。",
+        "operationId": "getMulticenterTopology",
+        "tags": [
+          "多中心资源"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "多中心网络拓扑",
+                      "properties": {
+                        "nodes": {
+                          "type": "array",
+                          "title": "拓扑节点",
+                          "description": "多中心网络拓扑中的计算中心节点。",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "title": "节点ID",
+                                "description": "拓扑节点唯一标识，与计算中心 ID 一致。",
+                                "example": "changsha"
+                              },
+                              "name": {
+                                "type": "string",
+                                "title": "节点名称",
+                                "description": "计算中心中文名称。",
+                                "example": "长沙天河新一代"
+                              },
+                              "status": {
+                                "type": "string",
+                                "title": "节点状态",
+                                "description": "计算中心当前状态。",
+                                "enum": [
+                                  "online",
+                                  "degraded",
+                                  "offline"
+                                ],
+                                "example": "online"
+                              },
+                              "source_type": {
+                                "type": "string",
+                                "title": "数据来源类型",
+                                "description": "real 或 simulated。",
+                                "enum": [
+                                  "real",
+                                  "simulated"
+                                ],
+                                "example": "simulated"
+                              }
+                            }
+                          }
+                        },
+                        "links": {
+                          "type": "array",
+                          "title": "中心链路",
+                          "description": "计算中心之间的互联链路及模拟/实测网络指标。",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "source": {
+                                "type": "string",
+                                "title": "源中心ID",
+                                "description": "链路源计算中心 ID。",
+                                "example": "changsha"
+                              },
+                              "target": {
+                                "type": "string",
+                                "title": "目标中心ID",
+                                "description": "链路目标计算中心 ID。",
+                                "example": "guangzhou"
+                              },
+                              "status": {
+                                "type": "string",
+                                "title": "链路状态",
+                                "description": "中心间网络链路状态。",
+                                "enum": [
+                                  "online",
+                                  "degraded",
+                                  "offline"
+                                ],
+                                "example": "online"
+                              },
+                              "latency_ms": {
+                                "type": "number",
+                                "title": "网络时延",
+                                "description": "中心间网络往返时延，单位 ms。模拟模式下为展示用模拟值。",
+                                "example": 18.6
+                              },
+                              "bandwidth_mbps": {
+                                "type": "number",
+                                "title": "可用带宽",
+                                "description": "中心间可用带宽，单位 Mbps。模拟模式下为展示用模拟值。",
+                                "example": 8200
+                              },
+                              "packet_loss_percent": {
+                                "type": "number",
+                                "title": "丢包率",
+                                "description": "链路丢包比例，单位 %。",
+                                "example": 0.02
+                              },
+                              "source_type": {
+                                "type": "string",
+                                "title": "数据来源类型",
+                                "description": "real=实测；simulated=模拟。",
+                                "enum": [
+                                  "real",
+                                  "simulated"
+                                ],
+                                "example": "simulated"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "example": {
+                        "nodes": [
+                          {
+                            "id": "changsha",
+                            "name": "长沙天河新一代",
+                            "status": "online",
+                            "source_type": "simulated"
+                          },
+                          {
+                            "id": "guangzhou",
+                            "name": "广州天河二号",
+                            "status": "online",
+                            "source_type": "simulated"
+                          },
+                          {
+                            "id": "kunshan",
+                            "name": "昆山昆仑",
+                            "status": "online",
+                            "source_type": "simulated"
+                          },
+                          {
+                            "id": "jinan",
+                            "name": "济南神威蓝光",
+                            "status": "degraded",
+                            "source_type": "simulated"
+                          }
+                        ],
+                        "links": [
+                          {
+                            "source": "changsha",
+                            "target": "guangzhou",
+                            "status": "online",
+                            "latency_ms": 18.6,
+                            "bandwidth_mbps": 8200,
+                            "packet_loss_percent": 0.02,
+                            "source_type": "simulated"
+                          },
+                          {
+                            "source": "changsha",
+                            "target": "kunshan",
+                            "status": "online",
+                            "latency_ms": 23.4,
+                            "bandwidth_mbps": 7600,
+                            "packet_loss_percent": 0.03,
+                            "source_type": "simulated"
+                          },
+                          {
+                            "source": "changsha",
+                            "target": "jinan",
+                            "status": "degraded",
+                            "latency_ms": 31.8,
+                            "bandwidth_mbps": 4200,
+                            "packet_loss_percent": 0.12,
+                            "source_type": "simulated"
+                          },
+                          {
+                            "source": "guangzhou",
+                            "target": "kunshan",
+                            "status": "online",
+                            "latency_ms": 27.5,
+                            "bandwidth_mbps": 7100,
+                            "packet_loss_percent": 0.04,
+                            "source_type": "simulated"
+                          }
+                        ]
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T12:40:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "nodes": [
+                      {
+                        "id": "changsha",
+                        "name": "长沙天河新一代",
+                        "status": "online",
+                        "source_type": "simulated"
+                      },
+                      {
+                        "id": "guangzhou",
+                        "name": "广州天河二号",
+                        "status": "online",
+                        "source_type": "simulated"
+                      },
+                      {
+                        "id": "kunshan",
+                        "name": "昆山昆仑",
+                        "status": "online",
+                        "source_type": "simulated"
+                      },
+                      {
+                        "id": "jinan",
+                        "name": "济南神威蓝光",
+                        "status": "degraded",
+                        "source_type": "simulated"
+                      }
+                    ],
+                    "links": [
+                      {
+                        "source": "changsha",
+                        "target": "guangzhou",
+                        "status": "online",
+                        "latency_ms": 18.6,
+                        "bandwidth_mbps": 8200,
+                        "packet_loss_percent": 0.02,
+                        "source_type": "simulated"
+                      },
+                      {
+                        "source": "changsha",
+                        "target": "kunshan",
+                        "status": "online",
+                        "latency_ms": 23.4,
+                        "bandwidth_mbps": 7600,
+                        "packet_loss_percent": 0.03,
+                        "source_type": "simulated"
+                      },
+                      {
+                        "source": "changsha",
+                        "target": "jinan",
+                        "status": "degraded",
+                        "latency_ms": 31.8,
+                        "bandwidth_mbps": 4200,
+                        "packet_loss_percent": 0.12,
+                        "source_type": "simulated"
+                      },
+                      {
+                        "source": "guangzhou",
+                        "target": "kunshan",
+                        "status": "online",
+                        "latency_ms": 27.5,
+                        "bandwidth_mbps": 7100,
+                        "packet_loss_percent": 0.04,
+                        "source_type": "simulated"
+                      }
+                    ]
+                  },
+                  "timestamp": "2026-08-11T12:40:00+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/multicenter/functions": {
+      "get": {
+        "summary": "获取多中心函数服务列表",
+        "deprecated": false,
+        "description": "获取已纳入函数多中心联调的函数服务、版本、运行时、镜像和总体状态。",
+        "operationId": "getMulticenterFunctions",
+        "tags": [
+          "函数注册与部署"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "array",
+                      "title": "函数服务列表",
+                      "description": "平台函数服务集合。",
+                      "items": {
+                        "type": "object",
+                        "title": "函数服务信息",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "title": "函数ID",
+                            "description": "函数服务唯一标识。",
+                            "example": "fn-matrix-multiply"
+                          },
+                          "name": {
+                            "type": "string",
+                            "title": "函数名称",
+                            "description": "函数服务中文名称。",
+                            "example": "矩阵乘法函数"
+                          },
+                          "description": {
+                            "type": "string",
+                            "title": "函数说明",
+                            "description": "函数主要用途说明。",
+                            "example": "面向矩阵乘法的跨中心函数调用示范。"
+                          },
+                          "version": {
+                            "type": "string",
+                            "title": "函数版本",
+                            "description": "当前函数镜像或服务版本。",
+                            "example": "1.0.0"
+                          },
+                          "runtime": {
+                            "type": "string",
+                            "title": "运行时",
+                            "description": "函数运行时或执行环境。",
+                            "example": "python3.11"
+                          },
+                          "image": {
+                            "type": "string",
+                            "title": "容器镜像",
+                            "description": "函数容器镜像地址或标识。",
+                            "example": "registry.local/multicenter/matrix:1.0.0"
+                          },
+                          "status": {
+                            "type": "string",
+                            "title": "函数状态",
+                            "description": "函数在平台注册状态。",
+                            "enum": [
+                              "ready",
+                              "deploying",
+                              "offline",
+                              "error"
+                            ],
+                            "example": "ready"
+                          },
+                          "source_type": {
+                            "type": "string",
+                            "title": "数据来源类型",
+                            "description": "函数部署状态来源。",
+                            "enum": [
+                              "real",
+                              "simulated"
+                            ],
+                            "example": "simulated"
+                          }
+                        }
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T12:40:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": [
+                    {
+                      "id": "fn-matrix-multiply",
+                      "name": "矩阵乘法函数",
+                      "description": "面向矩阵乘法的跨中心函数调用示范。",
+                      "version": "1.0.0",
+                      "runtime": "python3.11",
+                      "image": "registry.local/multicenter/matrix:1.0.0",
+                      "status": "ready",
+                      "source_type": "simulated"
+                    },
+                    {
+                      "id": "fn-fft",
+                      "name": "FFT函数",
+                      "description": "跨中心快速傅里叶变换函数服务。",
+                      "version": "1.0.0",
+                      "runtime": "cpp",
+                      "image": "registry.local/multicenter/fft:1.0.0",
+                      "status": "ready",
+                      "source_type": "simulated"
+                    },
+                    {
+                      "id": "fn-file-convert",
+                      "name": "文件格式转换函数",
+                      "description": "面向全局文件系统的格式转换函数服务。",
+                      "version": "1.1.0",
+                      "runtime": "python3.11",
+                      "image": "registry.local/multicenter/file-convert:1.1.0",
+                      "status": "ready",
+                      "source_type": "simulated"
+                    }
+                  ],
+                  "timestamp": "2026-08-11T12:40:00+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/multicenter/functions/deployment-matrix": {
+      "get": {
+        "summary": "获取函数多中心部署矩阵",
+        "deprecated": false,
+        "description": "获取每个函数在长沙、广州、昆山、济南各中心的部署状态和实例副本数。",
+        "operationId": "getFunctionDeploymentMatrix",
+        "tags": [
+          "函数注册与部署"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "函数多中心部署矩阵",
+                      "properties": {
+                        "clusters": {
+                          "type": "array",
+                          "title": "计算中心列表",
+                          "description": "部署矩阵列对应的中心列表。",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "title": "计算中心ID",
+                                "description": "中心唯一标识。",
+                                "example": "changsha"
+                              },
+                              "name": {
+                                "type": "string",
+                                "title": "计算中心名称",
+                                "description": "中心中文名称。",
+                                "example": "长沙天河新一代"
+                              }
+                            }
+                          }
+                        },
+                        "functions": {
+                          "type": "array",
+                          "title": "函数部署记录",
+                          "description": "每个函数在各中心的部署状态。",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "function_id": {
+                                "type": "string",
+                                "title": "函数ID",
+                                "description": "函数唯一标识。",
+                                "example": "fn-matrix-multiply"
+                              },
+                              "function_name": {
+                                "type": "string",
+                                "title": "函数名称",
+                                "description": "函数中文名称。",
+                                "example": "矩阵乘法函数"
+                              },
+                              "deployments": {
+                                "type": "array",
+                                "title": "中心部署状态",
+                                "description": "函数在各计算中心的部署状态。",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "cluster_id": {
+                                      "type": "string",
+                                      "title": "计算中心ID",
+                                      "description": "部署目标计算中心。",
+                                      "example": "changsha"
+                                    },
+                                    "status": {
+                                      "type": "string",
+                                      "title": "部署状态",
+                                      "description": "ready=已就绪；deploying=部署中；offline=离线；error=异常；unsupported=不支持。",
+                                      "enum": [
+                                        "ready",
+                                        "deploying",
+                                        "offline",
+                                        "error",
+                                        "unsupported"
+                                      ],
+                                      "example": "ready"
+                                    },
+                                    "replicas": {
+                                      "type": "integer",
+                                      "title": "实例副本数",
+                                      "description": "该中心当前函数实例副本数量。",
+                                      "example": 2
+                                    },
+                                    "source_type": {
+                                      "type": "string",
+                                      "title": "数据来源类型",
+                                      "description": "real 或 simulated。",
+                                      "enum": [
+                                        "real",
+                                        "simulated"
+                                      ],
+                                      "example": "simulated"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "example": {
+                        "clusters": [
+                          {
+                            "id": "changsha",
+                            "name": "长沙天河新一代"
+                          },
+                          {
+                            "id": "guangzhou",
+                            "name": "广州天河二号"
+                          },
+                          {
+                            "id": "kunshan",
+                            "name": "昆山昆仑"
+                          },
+                          {
+                            "id": "jinan",
+                            "name": "济南神威蓝光"
+                          }
+                        ],
+                        "functions": [
+                          {
+                            "function_id": "fn-matrix-multiply",
+                            "function_name": "矩阵乘法函数",
+                            "deployments": [
+                              {
+                                "cluster_id": "changsha",
+                                "status": "ready",
+                                "replicas": 2,
+                                "source_type": "simulated"
+                              },
+                              {
+                                "cluster_id": "guangzhou",
+                                "status": "ready",
+                                "replicas": 1,
+                                "source_type": "simulated"
+                              },
+                              {
+                                "cluster_id": "kunshan",
+                                "status": "ready",
+                                "replicas": 2,
+                                "source_type": "simulated"
+                              },
+                              {
+                                "cluster_id": "jinan",
+                                "status": "offline",
+                                "replicas": 0,
+                                "source_type": "simulated"
+                              }
+                            ]
+                          },
+                          {
+                            "function_id": "fn-fft",
+                            "function_name": "FFT函数",
+                            "deployments": [
+                              {
+                                "cluster_id": "changsha",
+                                "status": "ready",
+                                "replicas": 1,
+                                "source_type": "simulated"
+                              },
+                              {
+                                "cluster_id": "guangzhou",
+                                "status": "ready",
+                                "replicas": 1,
+                                "source_type": "simulated"
+                              },
+                              {
+                                "cluster_id": "kunshan",
+                                "status": "deploying",
+                                "replicas": 1,
+                                "source_type": "simulated"
+                              },
+                              {
+                                "cluster_id": "jinan",
+                                "status": "unsupported",
+                                "replicas": 0,
+                                "source_type": "simulated"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T12:40:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "clusters": [
+                      {
+                        "id": "changsha",
+                        "name": "长沙天河新一代"
+                      },
+                      {
+                        "id": "guangzhou",
+                        "name": "广州天河二号"
+                      },
+                      {
+                        "id": "kunshan",
+                        "name": "昆山昆仑"
+                      },
+                      {
+                        "id": "jinan",
+                        "name": "济南神威蓝光"
+                      }
+                    ],
+                    "functions": [
+                      {
+                        "function_id": "fn-matrix-multiply",
+                        "function_name": "矩阵乘法函数",
+                        "deployments": [
+                          {
+                            "cluster_id": "changsha",
+                            "status": "ready",
+                            "replicas": 2,
+                            "source_type": "simulated"
+                          },
+                          {
+                            "cluster_id": "guangzhou",
+                            "status": "ready",
+                            "replicas": 1,
+                            "source_type": "simulated"
+                          },
+                          {
+                            "cluster_id": "kunshan",
+                            "status": "ready",
+                            "replicas": 2,
+                            "source_type": "simulated"
+                          },
+                          {
+                            "cluster_id": "jinan",
+                            "status": "offline",
+                            "replicas": 0,
+                            "source_type": "simulated"
+                          }
+                        ]
+                      },
+                      {
+                        "function_id": "fn-fft",
+                        "function_name": "FFT函数",
+                        "deployments": [
+                          {
+                            "cluster_id": "changsha",
+                            "status": "ready",
+                            "replicas": 1,
+                            "source_type": "simulated"
+                          },
+                          {
+                            "cluster_id": "guangzhou",
+                            "status": "ready",
+                            "replicas": 1,
+                            "source_type": "simulated"
+                          },
+                          {
+                            "cluster_id": "kunshan",
+                            "status": "deploying",
+                            "replicas": 1,
+                            "source_type": "simulated"
+                          },
+                          {
+                            "cluster_id": "jinan",
+                            "status": "unsupported",
+                            "replicas": 0,
+                            "source_type": "simulated"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  "timestamp": "2026-08-11T12:40:00+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/multicenter/functions/{function_id}/invoke": {
+      "post": {
+        "summary": "发起多中心函数调用",
+        "deprecated": false,
+        "description": "指定目标计算中心和执行模式，发起一次函数调用。联调阶段可使用 simulated，真实中心接入后切换为 real。",
+        "operationId": "invokeMulticenterFunction",
+        "tags": [
+          "函数注册与部署"
+        ],
+        "parameters": [
+          {
+            "name": "function_id",
+            "in": "path",
+            "description": "函数服务唯一标识。",
+            "required": true,
+            "example": "fn-matrix-multiply",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "title": "多中心函数调用请求",
+                "description": "指定执行模式、目标中心、函数输入和资源限制，发起一次函数调用。",
+                "required": [
+                  "execution_mode",
+                  "cluster_id",
+                  "input",
+                  "resources"
+                ],
+                "properties": {
+                  "execution_mode": {
+                    "type": "string",
+                    "title": "执行模式",
+                    "description": "real=真实函数/中心调用；simulated=本地模拟；replay=历史调用回放。",
+                    "enum": [
+                      "real",
+                      "simulated",
+                      "replay"
+                    ],
+                    "example": "simulated"
+                  },
+                  "cluster_id": {
+                    "type": "string",
+                    "title": "目标计算中心ID",
+                    "description": "本次函数调用目标计算中心。",
+                    "example": "changsha"
+                  },
+                  "input": {
+                    "type": "object",
+                    "title": "函数输入参数",
+                    "description": "函数业务输入参数。不同函数可按自身协议扩展。",
+                    "properties": {
+                      "input_path": {
+                        "type": "string",
+                        "title": "输入文件路径",
+                        "description": "函数输入数据路径。",
+                        "example": "gfs://demo/function/input.npy"
+                      },
+                      "output_path": {
+                        "type": "string",
+                        "title": "输出目录",
+                        "description": "函数结果输出目录。",
+                        "example": "gfs://results/function/demo-001/"
+                      },
+                      "parameter": {
+                        "type": "string",
+                        "title": "业务参数",
+                        "description": "函数示范业务参数。",
+                        "example": "default"
+                      }
+                    }
+                  },
+                  "resources": {
+                    "type": "object",
+                    "title": "资源限制",
+                    "description": "函数调用申请或限制的资源。",
+                    "properties": {
+                      "cpu_cores": {
+                        "type": "integer",
+                        "title": "CPU核数",
+                        "description": "函数实例申请 CPU 核数。",
+                        "example": 8
+                      },
+                      "gpu_count": {
+                        "type": "integer",
+                        "title": "GPU/加速卡数量",
+                        "description": "函数实例申请加速卡数量。",
+                        "example": 0
+                      },
+                      "memory_gb": {
+                        "type": "integer",
+                        "title": "内存容量",
+                        "description": "函数实例申请内存，单位 GB。",
+                        "example": 16
+                      },
+                      "timeout_seconds": {
+                        "type": "integer",
+                        "title": "超时时间",
+                        "description": "函数最大执行时间，单位 s。",
+                        "example": 600
+                      }
+                    }
+                  },
+                  "name": {
+                    "type": "string",
+                    "title": "函数名",
+                    "description": "算子库函数名，对齐后端 /action/invoke 的 name。",
+                    "example": "fn-matrix-multiply"
+                  },
+                  "version": {
+                    "type": "string",
+                    "title": "函数版本",
+                    "description": "函数版本号，对齐后端 /action/invoke 的 version。",
+                    "example": "1.0"
+                  },
+                  "work_dir": {
+                    "type": "string",
+                    "title": "工作目录",
+                    "description": "函数执行工作目录，对齐后端 /action/invoke 的 workDir。",
+                    "example": "/home/user/fn-demo"
+                  }
+                },
+                "example": {
+                  "execution_mode": "simulated",
+                  "cluster_id": "changsha",
+                  "input": {
+                    "input_path": "gfs://demo/function/input.npy",
+                    "output_path": "gfs://results/function/demo-001/",
+                    "parameter": "default"
+                  },
+                  "resources": {
+                    "cpu_cores": 8,
+                    "gpu_count": 0,
+                    "memory_gb": 16,
+                    "timeout_seconds": 600
+                  }
+                }
+              },
+              "example": {
+                "execution_mode": "simulated",
+                "cluster_id": "changsha",
+                "input": {
+                  "input_path": "gfs://demo/function/input.npy",
+                  "output_path": "gfs://results/function/demo-001/",
+                  "parameter": "default"
+                },
+                "resources": {
+                  "cpu_cores": 8,
+                  "gpu_count": 0,
+                  "memory_gb": 16,
+                  "timeout_seconds": 600
+                },
+                "name": "fn-matrix-multiply",
+                "version": "1.0",
+                "work_dir": "/home/user/fn-demo"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "函数调用创建结果",
+                      "properties": {
+                        "invocation_id": {
+                          "type": "string",
+                          "title": "调用实例ID",
+                          "description": "本次函数调用的唯一标识。",
+                          "example": "INV-20260811-0001"
+                        },
+                        "function_id": {
+                          "type": "string",
+                          "title": "函数ID",
+                          "description": "被调用函数唯一标识。",
+                          "example": "fn-matrix-multiply"
+                        },
+                        "cluster_id": {
+                          "type": "string",
+                          "title": "目标计算中心ID",
+                          "description": "本次调用实际执行中心。",
+                          "example": "changsha"
+                        },
+                        "status": {
+                          "type": "string",
+                          "title": "调用状态",
+                          "description": "函数调用当前状态。",
+                          "enum": [
+                            "pending",
+                            "queued",
+                            "running",
+                            "success",
+                            "failed",
+                            "stopped"
+                          ],
+                          "example": "queued"
+                        },
+                        "execution_mode": {
+                          "type": "string",
+                          "title": "执行模式",
+                          "description": "本次调用执行模式。",
+                          "enum": [
+                            "real",
+                            "simulated",
+                            "replay"
+                          ],
+                          "example": "simulated"
+                        }
+                      },
+                      "example": {
+                        "invocation_id": "INV-20260811-0001",
+                        "function_id": "fn-matrix-multiply",
+                        "cluster_id": "changsha",
+                        "status": "queued",
+                        "execution_mode": "simulated"
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T12:40:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "invocation_id": "INV-20260811-0001",
+                    "function_id": "fn-matrix-multiply",
+                    "cluster_id": "changsha",
+                    "status": "queued",
+                    "execution_mode": "simulated"
+                  },
+                  "timestamp": "2026-08-11T12:40:00+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/multicenter/invocations/{invocation_id}": {
+      "get": {
+        "summary": "查询多中心函数调用状态",
+        "deprecated": false,
+        "description": "查询函数调用进度、实际执行中心、容器实例、耗时及结果路径。",
+        "operationId": "getFunctionInvocation",
+        "tags": [
+          "函数注册与部署"
+        ],
+        "parameters": [
+          {
+            "name": "invocation_id",
+            "in": "path",
+            "description": "函数调用实例唯一标识。",
+            "required": true,
+            "example": "INV-20260811-0001",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "函数调用状态",
+                      "properties": {
+                        "invocation_id": {
+                          "type": "string",
+                          "title": "调用实例ID",
+                          "description": "函数调用唯一标识。",
+                          "example": "INV-20260811-0001"
+                        },
+                        "function_id": {
+                          "type": "string",
+                          "title": "函数ID",
+                          "description": "被调用函数 ID。",
+                          "example": "fn-matrix-multiply"
+                        },
+                        "function_name": {
+                          "type": "string",
+                          "title": "函数名称",
+                          "description": "函数中文名称。",
+                          "example": "矩阵乘法函数"
+                        },
+                        "cluster_id": {
+                          "type": "string",
+                          "title": "执行中心ID",
+                          "description": "函数实际执行中心。",
+                          "example": "changsha"
+                        },
+                        "status": {
+                          "type": "string",
+                          "title": "调用状态",
+                          "description": "函数调用当前状态。",
+                          "enum": [
+                            "pending",
+                            "queued",
+                            "running",
+                            "success",
+                            "failed",
+                            "stopped"
+                          ],
+                          "example": "running"
+                        },
+                        "progress": {
+                          "type": "number",
+                          "title": "执行进度",
+                          "description": "函数调用整体完成百分比。",
+                          "example": 68
+                        },
+                        "execution_mode": {
+                          "type": "string",
+                          "title": "执行模式",
+                          "description": "函数调用执行模式。",
+                          "enum": [
+                            "real",
+                            "simulated",
+                            "replay"
+                          ],
+                          "example": "simulated"
+                        },
+                        "instance_id": {
+                          "type": "string",
+                          "title": "函数实例ID",
+                          "description": "实际承载本次调用的容器/微服务实例 ID。",
+                          "example": "fn-matrix-changsha-02"
+                        },
+                        "start_time": {
+                          "type": "string",
+                          "title": "开始时间",
+                          "description": "函数实际开始时间。",
+                          "example": "2026-08-11T10:30:00+08:00"
+                        },
+                        "end_time": {
+                          "type": "string",
+                          "title": "结束时间",
+                          "description": "函数结束时间；运行中为空字符串。",
+                          "example": ""
+                        },
+                        "elapsed_ms": {
+                          "type": "integer",
+                          "title": "已运行时长",
+                          "description": "函数当前累计执行时间，单位 ms。",
+                          "example": 842
+                        },
+                        "result_path": {
+                          "type": "string",
+                          "title": "结果路径",
+                          "description": "函数输出结果的全局文件路径。",
+                          "example": "gfs://results/function/demo-001/result.npy"
+                        },
+                        "source_type": {
+                          "type": "string",
+                          "title": "数据来源类型",
+                          "description": "real 或 simulated。",
+                          "enum": [
+                            "real",
+                            "simulated"
+                          ],
+                          "example": "simulated"
+                        }
+                      },
+                      "example": {
+                        "invocation_id": "INV-20260811-0001",
+                        "function_id": "fn-matrix-multiply",
+                        "function_name": "矩阵乘法函数",
+                        "cluster_id": "changsha",
+                        "status": "running",
+                        "progress": 68,
+                        "execution_mode": "simulated",
+                        "instance_id": "fn-matrix-changsha-02",
+                        "start_time": "2026-08-11T10:30:00+08:00",
+                        "end_time": "",
+                        "elapsed_ms": 842,
+                        "result_path": "gfs://results/function/demo-001/result.npy",
+                        "source_type": "simulated"
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T12:40:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "invocation_id": "INV-20260811-0001",
+                    "function_id": "fn-matrix-multiply",
+                    "function_name": "矩阵乘法函数",
+                    "cluster_id": "changsha",
+                    "status": "running",
+                    "progress": 68,
+                    "execution_mode": "simulated",
+                    "instance_id": "fn-matrix-changsha-02",
+                    "start_time": "2026-08-11T10:30:00+08:00",
+                    "end_time": "",
+                    "elapsed_ms": 842,
+                    "result_path": "gfs://results/function/demo-001/result.npy",
+                    "source_type": "simulated"
+                  },
+                  "timestamp": "2026-08-11T12:40:00+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/multicenter/invocations/{invocation_id}/trace": {
+      "get": {
+        "summary": "查询多中心函数调用链路",
+        "deprecated": false,
+        "description": "查询 API 网关、函数注册中心、全局调度器、中心代理、SLURM 适配器和函数运行时等链路节点，用于跨中心调用过程可视化。",
+        "operationId": "getFunctionInvocationTrace",
+        "tags": [
+          "函数注册与部署"
+        ],
+        "parameters": [
+          {
+            "name": "invocation_id",
+            "in": "path",
+            "description": "函数调用实例唯一标识。",
+            "required": true,
+            "example": "INV-20260811-0001",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "函数调用链路追踪",
+                      "properties": {
+                        "invocation_id": {
+                          "type": "string",
+                          "title": "调用实例ID",
+                          "description": "函数调用唯一标识。",
+                          "example": "INV-20260811-0001"
+                        },
+                        "trace_id": {
+                          "type": "string",
+                          "title": "链路追踪ID",
+                          "description": "分布式调用链路 Trace ID。",
+                          "example": "TRACE-8f4c12"
+                        },
+                        "total_latency_ms": {
+                          "type": "number",
+                          "title": "总链路耗时",
+                          "description": "从 API 接入到函数执行的累计链路耗时，单位 ms。",
+                          "example": 38.6
+                        },
+                        "source_type": {
+                          "type": "string",
+                          "title": "数据来源类型",
+                          "description": "real 或 simulated。",
+                          "enum": [
+                            "real",
+                            "simulated"
+                          ],
+                          "example": "simulated"
+                        },
+                        "spans": {
+                          "type": "array",
+                          "title": "链路节点",
+                          "description": "函数调用经过的各平台组件。",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "seq": {
+                                "type": "integer",
+                                "title": "链路序号",
+                                "description": "调用链路节点顺序。",
+                                "example": 1
+                              },
+                              "component": {
+                                "type": "string",
+                                "title": "组件编码",
+                                "description": "平台组件英文编码。",
+                                "example": "api-gateway"
+                              },
+                              "name": {
+                                "type": "string",
+                                "title": "组件名称",
+                                "description": "平台组件中文名称。",
+                                "example": "API网关"
+                              },
+                              "cluster_id": {
+                                "type": "string",
+                                "title": "所在中心ID",
+                                "description": "组件执行所在中心；全局组件可返回 global。",
+                                "example": "global"
+                              },
+                              "status": {
+                                "type": "string",
+                                "title": "执行状态",
+                                "description": "该链路节点执行状态。",
+                                "enum": [
+                                  "pending",
+                                  "running",
+                                  "success",
+                                  "failed"
+                                ],
+                                "example": "success"
+                              },
+                              "latency_ms": {
+                                "type": "number",
+                                "title": "节点耗时",
+                                "description": "该链路节点耗时，单位 ms。",
+                                "example": 4.8
+                              },
+                              "start_time": {
+                                "type": "string",
+                                "title": "开始时间",
+                                "description": "链路节点开始时间。",
+                                "example": "2026-08-11T10:30:00.100+08:00"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "example": {
+                        "invocation_id": "INV-20260811-0001",
+                        "trace_id": "TRACE-8f4c12",
+                        "total_latency_ms": 38.6,
+                        "source_type": "simulated",
+                        "spans": [
+                          {
+                            "seq": 1,
+                            "component": "api-gateway",
+                            "name": "API网关",
+                            "cluster_id": "global",
+                            "status": "success",
+                            "latency_ms": 4.8,
+                            "start_time": "2026-08-11T10:30:00.100+08:00"
+                          },
+                          {
+                            "seq": 2,
+                            "component": "function-registry",
+                            "name": "函数注册中心",
+                            "cluster_id": "global",
+                            "status": "success",
+                            "latency_ms": 2.1,
+                            "start_time": "2026-08-11T10:30:00.105+08:00"
+                          },
+                          {
+                            "seq": 3,
+                            "component": "global-scheduler",
+                            "name": "全局调度器",
+                            "cluster_id": "global",
+                            "status": "success",
+                            "latency_ms": 6.4,
+                            "start_time": "2026-08-11T10:30:00.107+08:00"
+                          },
+                          {
+                            "seq": 4,
+                            "component": "center-agent",
+                            "name": "长沙中心代理",
+                            "cluster_id": "changsha",
+                            "status": "success",
+                            "latency_ms": 13.2,
+                            "start_time": "2026-08-11T10:30:00.114+08:00"
+                          },
+                          {
+                            "seq": 5,
+                            "component": "slurm-adapter",
+                            "name": "SLURM适配器",
+                            "cluster_id": "changsha",
+                            "status": "success",
+                            "latency_ms": 7.6,
+                            "start_time": "2026-08-11T10:30:00.127+08:00"
+                          },
+                          {
+                            "seq": 6,
+                            "component": "function-runtime",
+                            "name": "函数运行时",
+                            "cluster_id": "changsha",
+                            "status": "running",
+                            "latency_ms": 4.5,
+                            "start_time": "2026-08-11T10:30:00.135+08:00"
+                          }
+                        ]
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T12:40:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "invocation_id": "INV-20260811-0001",
+                    "trace_id": "TRACE-8f4c12",
+                    "total_latency_ms": 38.6,
+                    "source_type": "simulated",
+                    "spans": [
+                      {
+                        "seq": 1,
+                        "component": "api-gateway",
+                        "name": "API网关",
+                        "cluster_id": "global",
+                        "status": "success",
+                        "latency_ms": 4.8,
+                        "start_time": "2026-08-11T10:30:00.100+08:00"
+                      },
+                      {
+                        "seq": 2,
+                        "component": "function-registry",
+                        "name": "函数注册中心",
+                        "cluster_id": "global",
+                        "status": "success",
+                        "latency_ms": 2.1,
+                        "start_time": "2026-08-11T10:30:00.105+08:00"
+                      },
+                      {
+                        "seq": 3,
+                        "component": "global-scheduler",
+                        "name": "全局调度器",
+                        "cluster_id": "global",
+                        "status": "success",
+                        "latency_ms": 6.4,
+                        "start_time": "2026-08-11T10:30:00.107+08:00"
+                      },
+                      {
+                        "seq": 4,
+                        "component": "center-agent",
+                        "name": "长沙中心代理",
+                        "cluster_id": "changsha",
+                        "status": "success",
+                        "latency_ms": 13.2,
+                        "start_time": "2026-08-11T10:30:00.114+08:00"
+                      },
+                      {
+                        "seq": 5,
+                        "component": "slurm-adapter",
+                        "name": "SLURM适配器",
+                        "cluster_id": "changsha",
+                        "status": "success",
+                        "latency_ms": 7.6,
+                        "start_time": "2026-08-11T10:30:00.127+08:00"
+                      },
+                      {
+                        "seq": 6,
+                        "component": "function-runtime",
+                        "name": "函数运行时",
+                        "cluster_id": "changsha",
+                        "status": "running",
+                        "latency_ms": 4.5,
+                        "start_time": "2026-08-11T10:30:00.135+08:00"
+                      }
+                    ]
+                  },
+                  "timestamp": "2026-08-11T12:40:00+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/multicenter/workloads": {
+      "get": {
+        "summary": "获取函数工作负载列表",
+        "deprecated": false,
+        "description": "获取函数/微服务工作负载在各计算中心的期望副本、就绪副本和资源利用情况。",
+        "operationId": "getMulticenterWorkloads",
+        "tags": [
+          "工作负载管理"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "array",
+                      "title": "工作负载列表",
+                      "description": "函数及微服务工作负载集合。",
+                      "items": {
+                        "type": "object",
+                        "title": "函数工作负载",
+                        "properties": {
+                          "workload_id": {
+                            "type": "string",
+                            "title": "工作负载ID",
+                            "description": "函数/微服务工作负载唯一标识。",
+                            "example": "WL-FN-MATRIX"
+                          },
+                          "function_id": {
+                            "type": "string",
+                            "title": "函数ID",
+                            "description": "关联函数服务 ID。",
+                            "example": "fn-matrix-multiply"
+                          },
+                          "name": {
+                            "type": "string",
+                            "title": "工作负载名称",
+                            "description": "工作负载中文名称。",
+                            "example": "矩阵乘法函数工作负载"
+                          },
+                          "status": {
+                            "type": "string",
+                            "title": "工作负载状态",
+                            "description": "工作负载整体状态。",
+                            "enum": [
+                              "running",
+                              "degraded",
+                              "stopped",
+                              "error"
+                            ],
+                            "example": "running"
+                          },
+                          "source_type": {
+                            "type": "string",
+                            "title": "数据来源类型",
+                            "description": "real 或 simulated。",
+                            "enum": [
+                              "real",
+                              "simulated"
+                            ],
+                            "example": "simulated"
+                          },
+                          "instances": {
+                            "type": "array",
+                            "title": "中心实例分布",
+                            "description": "函数实例在各中心的副本及资源状态。",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "cluster_id": {
+                                  "type": "string",
+                                  "title": "计算中心ID",
+                                  "description": "实例所在中心。",
+                                  "example": "changsha"
+                                },
+                                "desired_replicas": {
+                                  "type": "integer",
+                                  "title": "期望副本数",
+                                  "description": "当前配置期望副本数量。",
+                                  "example": 2
+                                },
+                                "ready_replicas": {
+                                  "type": "integer",
+                                  "title": "就绪副本数",
+                                  "description": "当前已就绪副本数量。",
+                                  "example": 2
+                                },
+                                "cpu_utilization": {
+                                  "type": "number",
+                                  "title": "CPU利用率",
+                                  "description": "该中心工作负载平均 CPU 利用率。",
+                                  "example": 62
+                                },
+                                "memory_utilization": {
+                                  "type": "number",
+                                  "title": "内存利用率",
+                                  "description": "该中心工作负载平均内存利用率。",
+                                  "example": 48
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T12:40:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": [
+                    {
+                      "workload_id": "WL-FN-MATRIX",
+                      "function_id": "fn-matrix-multiply",
+                      "name": "矩阵乘法函数工作负载",
+                      "status": "running",
+                      "source_type": "simulated",
+                      "instances": [
+                        {
+                          "cluster_id": "changsha",
+                          "desired_replicas": 2,
+                          "ready_replicas": 2,
+                          "cpu_utilization": 62,
+                          "memory_utilization": 48
+                        },
+                        {
+                          "cluster_id": "guangzhou",
+                          "desired_replicas": 1,
+                          "ready_replicas": 1,
+                          "cpu_utilization": 51,
+                          "memory_utilization": 43
+                        },
+                        {
+                          "cluster_id": "kunshan",
+                          "desired_replicas": 2,
+                          "ready_replicas": 2,
+                          "cpu_utilization": 70,
+                          "memory_utilization": 55
+                        },
+                        {
+                          "cluster_id": "jinan",
+                          "desired_replicas": 0,
+                          "ready_replicas": 0,
+                          "cpu_utilization": 0,
+                          "memory_utilization": 0
+                        }
+                      ]
+                    },
+                    {
+                      "workload_id": "WL-FN-FFT",
+                      "function_id": "fn-fft",
+                      "name": "FFT函数工作负载",
+                      "status": "running",
+                      "source_type": "simulated",
+                      "instances": [
+                        {
+                          "cluster_id": "changsha",
+                          "desired_replicas": 1,
+                          "ready_replicas": 1,
+                          "cpu_utilization": 44,
+                          "memory_utilization": 35
+                        },
+                        {
+                          "cluster_id": "guangzhou",
+                          "desired_replicas": 1,
+                          "ready_replicas": 1,
+                          "cpu_utilization": 47,
+                          "memory_utilization": 38
+                        },
+                        {
+                          "cluster_id": "kunshan",
+                          "desired_replicas": 1,
+                          "ready_replicas": 0,
+                          "cpu_utilization": 0,
+                          "memory_utilization": 0
+                        },
+                        {
+                          "cluster_id": "jinan",
+                          "desired_replicas": 0,
+                          "ready_replicas": 0,
+                          "cpu_utilization": 0,
+                          "memory_utilization": 0
+                        }
+                      ]
+                    }
+                  ],
+                  "timestamp": "2026-08-11T12:40:00+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/multicenter/workloads/{workload_id}/scale": {
+      "post": {
+        "summary": "调整中心工作负载副本数",
+        "deprecated": false,
+        "description": "对指定函数/微服务工作负载执行扩容或缩容，用于展示容器自动扩缩容能力。",
+        "operationId": "scaleMulticenterWorkload",
+        "tags": [
+          "工作负载管理"
+        ],
+        "parameters": [
+          {
+            "name": "workload_id",
+            "in": "path",
+            "description": "函数/微服务工作负载唯一标识。",
+            "required": true,
+            "example": "WL-FN-MATRIX",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "title": "工作负载扩缩容请求",
+                "description": "调整指定工作负载在目标中心的实例副本数量。",
+                "required": [
+                  "cluster_id",
+                  "replicas",
+                  "reason"
+                ],
+                "properties": {
+                  "cluster_id": {
+                    "type": "string",
+                    "title": "计算中心ID",
+                    "description": "需要扩缩容的目标计算中心。",
+                    "example": "changsha"
+                  },
+                  "replicas": {
+                    "type": "integer",
+                    "title": "目标副本数",
+                    "description": "扩缩容后的期望实例副本数量。",
+                    "minimum": 0,
+                    "example": 4
+                  },
+                  "reason": {
+                    "type": "string",
+                    "title": "调整原因",
+                    "description": "本次扩缩容操作原因。",
+                    "example": "load-test"
+                  }
+                },
+                "example": {
+                  "cluster_id": "changsha",
+                  "replicas": 4,
+                  "reason": "load-test"
+                }
+              },
+              "example": {
+                "cluster_id": "changsha",
+                "replicas": 4,
+                "reason": "load-test"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "扩缩容操作结果",
+                      "properties": {
+                        "workload_id": {
+                          "type": "string",
+                          "title": "工作负载ID",
+                          "description": "被调整的工作负载 ID。",
+                          "example": "WL-FN-MATRIX"
+                        },
+                        "cluster_id": {
+                          "type": "string",
+                          "title": "计算中心ID",
+                          "description": "执行扩缩容的目标中心。",
+                          "example": "changsha"
+                        },
+                        "previous_replicas": {
+                          "type": "integer",
+                          "title": "原副本数",
+                          "description": "扩缩容前副本数量。",
+                          "example": 2
+                        },
+                        "target_replicas": {
+                          "type": "integer",
+                          "title": "目标副本数",
+                          "description": "扩缩容后的目标副本数量。",
+                          "example": 4
+                        },
+                        "status": {
+                          "type": "string",
+                          "title": "操作状态",
+                          "description": "扩缩容操作当前状态。",
+                          "enum": [
+                            "accepted",
+                            "scaling",
+                            "success",
+                            "failed"
+                          ],
+                          "example": "scaling"
+                        },
+                        "source_type": {
+                          "type": "string",
+                          "title": "数据来源类型",
+                          "description": "real 或 simulated。",
+                          "enum": [
+                            "real",
+                            "simulated"
+                          ],
+                          "example": "simulated"
+                        }
+                      },
+                      "example": {
+                        "workload_id": "WL-FN-MATRIX",
+                        "cluster_id": "changsha",
+                        "previous_replicas": 2,
+                        "target_replicas": 4,
+                        "status": "scaling",
+                        "source_type": "simulated"
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T12:40:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "workload_id": "WL-FN-MATRIX",
+                    "cluster_id": "changsha",
+                    "previous_replicas": 2,
+                    "target_replicas": 4,
+                    "status": "scaling",
+                    "source_type": "simulated"
+                  },
+                  "timestamp": "2026-08-11T12:40:00+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/multicenter/workloads/{workload_id}/migrate": {
+      "post": {
+        "summary": "发起跨中心工作负载迁移",
+        "deprecated": false,
+        "description": "将指定容器/微服务实例从源中心迁移到目标中心，可使用检查点恢复任务，用于展示多中心容错和迁移能力。",
+        "operationId": "migrateMulticenterWorkload",
+        "tags": [
+          "跨中心迁移"
+        ],
+        "parameters": [
+          {
+            "name": "workload_id",
+            "in": "path",
+            "description": "函数/微服务工作负载唯一标识。",
+            "required": true,
+            "example": "WL-FN-MATRIX",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "title": "跨中心工作负载迁移请求",
+                "description": "将指定函数/微服务实例从源计算中心迁移到目标计算中心。",
+                "required": [
+                  "from_cluster",
+                  "to_cluster",
+                  "instance_ids",
+                  "reason"
+                ],
+                "properties": {
+                  "from_cluster": {
+                    "type": "string",
+                    "title": "源计算中心ID",
+                    "description": "迁移前实例所在计算中心。",
+                    "example": "jinan"
+                  },
+                  "to_cluster": {
+                    "type": "string",
+                    "title": "目标计算中心ID",
+                    "description": "迁移后实例目标计算中心。",
+                    "example": "changsha"
+                  },
+                  "instance_ids": {
+                    "type": "array",
+                    "title": "迁移实例列表",
+                    "description": "需要迁移的容器/微服务实例 ID 列表。",
+                    "items": {
+                      "type": "string",
+                      "title": "实例ID",
+                      "description": "待迁移实例唯一标识。",
+                      "example": "fn-matrix-jinan-01"
+                    }
+                  },
+                  "reason": {
+                    "type": "string",
+                    "title": "迁移原因",
+                    "description": "触发跨中心迁移的原因。",
+                    "example": "source-center-degraded"
+                  },
+                  "checkpoint": {
+                    "type": "boolean",
+                    "title": "是否使用检查点",
+                    "description": "是否通过检查点恢复任务状态。",
+                    "example": true
+                  }
+                },
+                "example": {
+                  "from_cluster": "jinan",
+                  "to_cluster": "changsha",
+                  "instance_ids": [
+                    "fn-matrix-jinan-01"
+                  ],
+                  "reason": "source-center-degraded",
+                  "checkpoint": true
+                }
+              },
+              "example": {
+                "from_cluster": "jinan",
+                "to_cluster": "changsha",
+                "instance_ids": [
+                  "fn-matrix-jinan-01"
+                ],
+                "reason": "source-center-degraded",
+                "checkpoint": true
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "迁移任务创建结果",
+                      "properties": {
+                        "migration_id": {
+                          "type": "string",
+                          "title": "迁移任务ID",
+                          "description": "跨中心迁移任务唯一标识。",
+                          "example": "MIG-20260811-0001"
+                        },
+                        "workload_id": {
+                          "type": "string",
+                          "title": "工作负载ID",
+                          "description": "被迁移工作负载 ID。",
+                          "example": "WL-FN-MATRIX"
+                        },
+                        "from_cluster": {
+                          "type": "string",
+                          "title": "源计算中心ID",
+                          "description": "迁移源中心。",
+                          "example": "jinan"
+                        },
+                        "to_cluster": {
+                          "type": "string",
+                          "title": "目标计算中心ID",
+                          "description": "迁移目标中心。",
+                          "example": "changsha"
+                        },
+                        "status": {
+                          "type": "string",
+                          "title": "迁移状态",
+                          "description": "迁移任务当前状态。",
+                          "enum": [
+                            "pending",
+                            "migrating",
+                            "success",
+                            "failed"
+                          ],
+                          "example": "migrating"
+                        },
+                        "source_type": {
+                          "type": "string",
+                          "title": "数据来源类型",
+                          "description": "real 或 simulated。",
+                          "enum": [
+                            "real",
+                            "simulated"
+                          ],
+                          "example": "simulated"
+                        }
+                      },
+                      "example": {
+                        "migration_id": "MIG-20260811-0001",
+                        "workload_id": "WL-FN-MATRIX",
+                        "from_cluster": "jinan",
+                        "to_cluster": "changsha",
+                        "status": "migrating",
+                        "source_type": "simulated"
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T12:40:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "migration_id": "MIG-20260811-0001",
+                    "workload_id": "WL-FN-MATRIX",
+                    "from_cluster": "jinan",
+                    "to_cluster": "changsha",
+                    "status": "migrating",
+                    "source_type": "simulated"
+                  },
+                  "timestamp": "2026-08-11T12:40:00+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/multicenter/migrations/{migration_id}": {
+      "get": {
+        "summary": "查询跨中心工作负载迁移状态",
+        "deprecated": false,
+        "description": "查询跨中心迁移进度和事件时间线，包括源中心异常、迁移触发、检查点加载、目标实例启动和任务恢复等过程。",
+        "operationId": "getMulticenterMigration",
+        "tags": [
+          "跨中心迁移"
+        ],
+        "parameters": [
+          {
+            "name": "migration_id",
+            "in": "path",
+            "description": "跨中心迁移任务唯一标识。",
+            "required": true,
+            "example": "MIG-20260811-0001",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "跨中心迁移状态",
+                      "properties": {
+                        "migration_id": {
+                          "type": "string",
+                          "title": "迁移任务ID",
+                          "description": "迁移任务唯一标识。",
+                          "example": "MIG-20260811-0001"
+                        },
+                        "workload_id": {
+                          "type": "string",
+                          "title": "工作负载ID",
+                          "description": "被迁移工作负载 ID。",
+                          "example": "WL-FN-MATRIX"
+                        },
+                        "status": {
+                          "type": "string",
+                          "title": "迁移状态",
+                          "description": "迁移任务当前状态。",
+                          "enum": [
+                            "pending",
+                            "migrating",
+                            "success",
+                            "failed"
+                          ],
+                          "example": "migrating"
+                        },
+                        "progress": {
+                          "type": "number",
+                          "title": "迁移进度",
+                          "description": "迁移流程整体完成百分比。",
+                          "example": 75
+                        },
+                        "from_cluster": {
+                          "type": "string",
+                          "title": "源计算中心ID",
+                          "description": "迁移源中心。",
+                          "example": "jinan"
+                        },
+                        "to_cluster": {
+                          "type": "string",
+                          "title": "目标计算中心ID",
+                          "description": "迁移目标中心。",
+                          "example": "changsha"
+                        },
+                        "source_type": {
+                          "type": "string",
+                          "title": "数据来源类型",
+                          "description": "real 或 simulated。",
+                          "enum": [
+                            "real",
+                            "simulated"
+                          ],
+                          "example": "simulated"
+                        },
+                        "start_time": {
+                          "type": "string",
+                          "title": "开始时间",
+                          "description": "迁移任务开始时间。",
+                          "example": "2026-08-11T10:45:00+08:00"
+                        },
+                        "end_time": {
+                          "type": "string",
+                          "title": "结束时间",
+                          "description": "迁移完成时间；运行中为空字符串。",
+                          "example": ""
+                        },
+                        "events": {
+                          "type": "array",
+                          "title": "迁移事件",
+                          "description": "迁移过程中产生的关键事件，用于前端时间线展示。",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "seq": {
+                                "type": "integer",
+                                "title": "事件序号",
+                                "description": "迁移事件顺序。",
+                                "example": 1
+                              },
+                              "event": {
+                                "type": "string",
+                                "title": "事件编码",
+                                "description": "迁移事件英文编码。",
+                                "example": "source_unavailable"
+                              },
+                              "name": {
+                                "type": "string",
+                                "title": "事件名称",
+                                "description": "迁移事件中文名称。",
+                                "example": "源中心状态异常"
+                              },
+                              "status": {
+                                "type": "string",
+                                "title": "事件状态",
+                                "description": "该迁移事件执行状态。",
+                                "enum": [
+                                  "pending",
+                                  "running",
+                                  "success",
+                                  "failed"
+                                ],
+                                "example": "success"
+                              },
+                              "timestamp": {
+                                "type": "string",
+                                "title": "事件时间",
+                                "description": "迁移事件发生时间。",
+                                "example": "2026-08-11T10:45:00+08:00"
+                              },
+                              "message": {
+                                "type": "string",
+                                "title": "事件说明",
+                                "description": "迁移事件详细说明。",
+                                "example": "检测到济南中心状态降级。"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "example": {
+                        "migration_id": "MIG-20260811-0001",
+                        "workload_id": "WL-FN-MATRIX",
+                        "status": "migrating",
+                        "progress": 75,
+                        "from_cluster": "jinan",
+                        "to_cluster": "changsha",
+                        "source_type": "simulated",
+                        "start_time": "2026-08-11T10:45:00+08:00",
+                        "end_time": "",
+                        "events": [
+                          {
+                            "seq": 1,
+                            "event": "source_unavailable",
+                            "name": "源中心状态异常",
+                            "status": "success",
+                            "timestamp": "2026-08-11T10:45:00+08:00",
+                            "message": "检测到济南中心状态降级。"
+                          },
+                          {
+                            "seq": 2,
+                            "event": "migration_triggered",
+                            "name": "触发跨中心迁移",
+                            "status": "success",
+                            "timestamp": "2026-08-11T10:45:02+08:00",
+                            "message": "全局调度器选择长沙作为目标中心。"
+                          },
+                          {
+                            "seq": 3,
+                            "event": "checkpoint_loaded",
+                            "name": "加载检查点",
+                            "status": "success",
+                            "timestamp": "2026-08-11T10:45:05+08:00",
+                            "message": "已在目标中心加载任务检查点。"
+                          },
+                          {
+                            "seq": 4,
+                            "event": "target_instance_started",
+                            "name": "目标实例启动",
+                            "status": "success",
+                            "timestamp": "2026-08-11T10:45:08+08:00",
+                            "message": "长沙中心新实例已启动。"
+                          },
+                          {
+                            "seq": 5,
+                            "event": "task_resumed",
+                            "name": "任务恢复执行",
+                            "status": "running",
+                            "timestamp": "2026-08-11T10:45:10+08:00",
+                            "message": "业务任务正在目标实例恢复执行。"
+                          }
+                        ]
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T12:40:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "migration_id": "MIG-20260811-0001",
+                    "workload_id": "WL-FN-MATRIX",
+                    "status": "migrating",
+                    "progress": 75,
+                    "from_cluster": "jinan",
+                    "to_cluster": "changsha",
+                    "source_type": "simulated",
+                    "start_time": "2026-08-11T10:45:00+08:00",
+                    "end_time": "",
+                    "events": [
+                      {
+                        "seq": 1,
+                        "event": "source_unavailable",
+                        "name": "源中心状态异常",
+                        "status": "success",
+                        "timestamp": "2026-08-11T10:45:00+08:00",
+                        "message": "检测到济南中心状态降级。"
+                      },
+                      {
+                        "seq": 2,
+                        "event": "migration_triggered",
+                        "name": "触发跨中心迁移",
+                        "status": "success",
+                        "timestamp": "2026-08-11T10:45:02+08:00",
+                        "message": "全局调度器选择长沙作为目标中心。"
+                      },
+                      {
+                        "seq": 3,
+                        "event": "checkpoint_loaded",
+                        "name": "加载检查点",
+                        "status": "success",
+                        "timestamp": "2026-08-11T10:45:05+08:00",
+                        "message": "已在目标中心加载任务检查点。"
+                      },
+                      {
+                        "seq": 4,
+                        "event": "target_instance_started",
+                        "name": "目标实例启动",
+                        "status": "success",
+                        "timestamp": "2026-08-11T10:45:08+08:00",
+                        "message": "长沙中心新实例已启动。"
+                      },
+                      {
+                        "seq": 5,
+                        "event": "task_resumed",
+                        "name": "任务恢复执行",
+                        "status": "running",
+                        "timestamp": "2026-08-11T10:45:10+08:00",
+                        "message": "业务任务正在目标实例恢复执行。"
+                      }
+                    ]
+                  },
+                  "timestamp": "2026-08-11T12:40:00+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    }
+  },
+  "components": {
+    "schemas": {},
+    "responses": {},
+    "securitySchemes": {}
+  },
+  "servers": [],
+  "security": []
+}
