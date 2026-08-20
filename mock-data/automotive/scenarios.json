@@ -1,0 +1,21 @@
+{
+  "code": 200,
+  "message": "success",
+  "data": [
+    {
+      "id": "vehicle-crash",
+      "name": "整车碰撞仿真",
+      "category": "汽车仿真",
+      "description": "基于 LS-DYNA 的整车碰撞仿真示范，覆盖模型导入、网格检查、接触/材料/边界条件设置、区域分解、并行显式求解与安全指标验证全流程，展示整车级大规模显式动力学并行求解能力。",
+      "status": "available"
+    },
+    {
+      "id": "fatigue-life",
+      "name": "结构疲劳寿命预测",
+      "category": "汽车仿真",
+      "description": "基于有限元疲劳分析的汽车结构疲劳寿命预测示范，结合载荷谱输入与材料 S-N 曲线，评估车身与底盘关键结构件的疲劳损伤与寿命分布。",
+      "status": "available"
+    }
+  ],
+  "timestamp": "2026-08-11T12:00:00+08:00"
+}

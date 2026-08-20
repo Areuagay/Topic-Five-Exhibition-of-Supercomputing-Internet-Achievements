@@ -1,0 +1,33 @@
+{
+  "code": 200,
+  "message": "success",
+  "data": {
+    "swarm-coordination": {
+      "dimensions": [
+        { "key": "simulation_speed", "name": "仿真速度", "unit": "step/s" },
+        { "key": "mission_completion_rate", "name": "任务完成率", "unit": "%" },
+        { "key": "collision_rate", "name": "碰撞率", "unit": "%" },
+        { "key": "parallel_efficiency", "name": "并行效率", "unit": "%" }
+      ],
+      "series": [
+        { "name": "本方案（512核）", "simulation_speed": 480, "mission_completion_rate": 93.2, "collision_rate": 0.2, "parallel_efficiency": 92 },
+        { "name": "基准方案（128核）", "simulation_speed": 260, "mission_completion_rate": 86.5, "collision_rate": 1.1, "parallel_efficiency": 85 },
+        { "name": "单机方案（16核）", "simulation_speed": 42, "mission_completion_rate": 71.3, "collision_rate": 3.6, "parallel_efficiency": 100 }
+      ]
+    },
+    "path-planning": {
+      "dimensions": [
+        { "key": "simulation_speed", "name": "规划吞吐量", "unit": "条/min" },
+        { "key": "mission_completion_rate", "name": "避障成功率", "unit": "%" },
+        { "key": "collision_rate", "name": "冲突率", "unit": "%" },
+        { "key": "parallel_efficiency", "name": "并行效率", "unit": "%" }
+      ],
+      "series": [
+        { "name": "本方案（256核）", "simulation_speed": 860, "mission_completion_rate": 98.6, "collision_rate": 0.4, "parallel_efficiency": 89 },
+        { "name": "基准方案（64核）", "simulation_speed": 312, "mission_completion_rate": 93.8, "collision_rate": 1.6, "parallel_efficiency": 82 },
+        { "name": "串行方案", "simulation_speed": 54, "mission_completion_rate": 90.2, "collision_rate": 2.8, "parallel_efficiency": 100 }
+      ]
+    }
+  },
+  "timestamp": "2026-08-11T12:00:00+08:00"
+}

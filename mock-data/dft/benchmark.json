@@ -1,0 +1,55 @@
+{
+  "code": 200,
+  "message": "success",
+  "data": {
+    "band-dos": {
+      "dimensions": [
+        { "key": "walltime", "name": "总耗时", "unit": "s" },
+        { "key": "parallel_efficiency", "name": "并行效率", "unit": "%" },
+        { "key": "energy_accuracy", "name": "能量精度", "unit": "Ry" },
+        { "key": "speedup", "name": "加速比", "unit": "x" }
+      ],
+      "series": [
+        {
+          "name": "跨中心方案",
+          "walltime": 1560,
+          "parallel_efficiency": 78,
+          "energy_accuracy": 3.2e-7,
+          "speedup": 3.2
+        },
+        {
+          "name": "单中心基准",
+          "walltime": 4992,
+          "parallel_efficiency": 100,
+          "energy_accuracy": 3.2e-7,
+          "speedup": 1.0
+        }
+      ]
+    },
+    "high-throughput-screening": {
+      "dimensions": [
+        { "key": "throughput", "name": "材料吞吐量", "unit": "个/h" },
+        { "key": "walltime", "name": "总耗时", "unit": "h" },
+        { "key": "parallel_efficiency", "name": "并行效率", "unit": "%" },
+        { "key": "convergence_rate", "name": "收敛率", "unit": "%" }
+      ],
+      "series": [
+        {
+          "name": "跨中心方案",
+          "throughput": 42,
+          "walltime": 23.8,
+          "parallel_efficiency": 74,
+          "convergence_rate": 96.2
+        },
+        {
+          "name": "单中心基准",
+          "throughput": 11,
+          "walltime": 90.9,
+          "parallel_efficiency": 100,
+          "convergence_rate": 96.2
+        }
+      ]
+    }
+  },
+  "timestamp": "2026-08-11T10:00:00+08:00"
+}

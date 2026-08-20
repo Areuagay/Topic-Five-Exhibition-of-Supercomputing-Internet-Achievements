@@ -1,0 +1,111 @@
+{
+  "code": 200,
+  "message": "success",
+  "data": {
+    "virtual-screening": {
+      "fields": [
+        {
+          "name": "target_name",
+          "label": "靶点名称",
+          "type": "string",
+          "unit": "",
+          "required": true,
+          "default_value": "EGFR"
+        },
+        {
+          "name": "compound_count",
+          "label": "化合物数量",
+          "type": "integer",
+          "unit": "个",
+          "required": true,
+          "default_value": "1000000"
+        },
+        {
+          "name": "top_n",
+          "label": "Top-N候选数",
+          "type": "integer",
+          "unit": "个",
+          "required": true,
+          "default_value": "20"
+        },
+        {
+          "name": "docking_engine",
+          "label": "对接引擎",
+          "type": "select",
+          "unit": "",
+          "required": true,
+          "default_value": "AutoDock-Vina"
+        },
+        {
+          "name": "exhaustiveness",
+          "label": "搜索强度",
+          "type": "integer",
+          "unit": "",
+          "required": true,
+          "default_value": "8"
+        },
+        {
+          "name": "shard_count",
+          "label": "分片数量",
+          "type": "integer",
+          "unit": "",
+          "required": true,
+          "default_value": "4"
+        }
+      ]
+    },
+    "admet-prediction": {
+      "fields": [
+        {
+          "name": "compound_file",
+          "label": "化合物文件",
+          "type": "string",
+          "unit": "",
+          "required": true,
+          "default_value": "candidates.sdf"
+        },
+        {
+          "name": "molecule_count",
+          "label": "分子数量",
+          "type": "integer",
+          "unit": "个",
+          "required": true,
+          "default_value": "12000"
+        },
+        {
+          "name": "property_types",
+          "label": "预测性质类型",
+          "type": "array",
+          "unit": "",
+          "required": true,
+          "default_value": "absorption,metabolism,toxicity"
+        },
+        {
+          "name": "model_version",
+          "label": "模型版本",
+          "type": "select",
+          "unit": "",
+          "required": true,
+          "default_value": "v2.1"
+        },
+        {
+          "name": "batch_size",
+          "label": "批处理大小",
+          "type": "integer",
+          "unit": "个",
+          "required": true,
+          "default_value": "1024"
+        },
+        {
+          "name": "shard_count",
+          "label": "分片数量",
+          "type": "integer",
+          "unit": "",
+          "required": true,
+          "default_value": "4"
+        }
+      ]
+    }
+  },
+  "timestamp": "2026-08-11T10:00:00+08:00"
+}

@@ -1,0 +1,185 @@
+{
+  "code": 200,
+  "message": "success",
+  "data": {
+    "run_id": "UAV-20260811-0001",
+    "scenario_id": "swarm-coordination",
+    "scenario_name": "千架无人机集群协同控制",
+    "status": "running",
+    "progress": 62,
+    "execution_mode": "simulated",
+    "cluster_id": "changsha",
+    "cluster_name": "长沙天河新一代",
+    "job_id": "210019",
+    "current_stage": "simulation",
+    "start_time": "2026-08-11T09:00:00+08:00",
+    "end_time": "",
+    "elapsed_seconds": 5400,
+    "nodes": 8,
+    "cpu_cores": 512,
+    "gpu_count": 0,
+    "memory_gb": 2048,
+    "core_hours": 768.0,
+    "source_type": "simulated",
+    "workflow": {
+      "nodes": [
+        {
+          "id": "init",
+          "name": "场景初始化",
+          "status": "success",
+          "progress": 100,
+          "cluster_id": "changsha"
+        },
+        {
+          "id": "topology",
+          "name": "通信拓扑构建",
+          "status": "success",
+          "progress": 100,
+          "cluster_id": "changsha"
+        },
+        {
+          "id": "assignment",
+          "name": "任务分配",
+          "status": "success",
+          "progress": 100,
+          "cluster_id": "changsha"
+        },
+        {
+          "id": "control",
+          "name": "协同控制求解",
+          "status": "success",
+          "progress": 100,
+          "cluster_id": "changsha"
+        },
+        {
+          "id": "simulation",
+          "name": "多智能体动力学仿真",
+          "status": "running",
+          "progress": 62,
+          "cluster_id": "changsha"
+        },
+        {
+          "id": "collision",
+          "name": "碰撞检测",
+          "status": "running",
+          "progress": 62,
+          "cluster_id": "changsha"
+        },
+        {
+          "id": "statistics",
+          "name": "任务统计",
+          "status": "pending",
+          "progress": 0,
+          "cluster_id": "changsha"
+        },
+        {
+          "id": "output",
+          "name": "结果输出",
+          "status": "pending",
+          "progress": 0,
+          "cluster_id": "changsha"
+        }
+      ],
+      "edges": [
+        { "source": "init", "target": "topology" },
+        { "source": "topology", "target": "assignment" },
+        { "source": "assignment", "target": "control" },
+        { "source": "control", "target": "simulation" },
+        { "source": "simulation", "target": "collision" },
+        { "source": "collision", "target": "statistics" },
+        { "source": "statistics", "target": "output" }
+      ]
+    },
+    "metrics": {
+      "progress": 62,
+      "metrics": [
+        { "name": "simulation_step", "label": "当前仿真步", "value": 3100, "total": 5000, "unit": "step" },
+        { "name": "active_uavs", "label": "当前无人机数", "value": 1000, "total": 1000, "unit": "架" },
+        { "name": "mission_completion_rate", "label": "任务完成率", "value": 63.5, "total": 100, "unit": "%" },
+        { "name": "collision_count", "label": "碰撞次数", "value": 1, "total": 0, "unit": "次" },
+        { "name": "formation_error", "label": "编队误差", "value": 0.83, "total": 0, "unit": "m" },
+        { "name": "simulation_speed", "label": "仿真速度", "value": 480, "total": 0, "unit": "step/s" },
+        { "name": "cpu_utilization", "label": "CPU利用率", "value": 89, "total": 100, "unit": "%" }
+      ],
+      "cluster_summary": {
+        "active_uavs": 1000,
+        "completed_uavs": 635,
+        "collision_count": 1,
+        "average_formation_error": 0.83
+      }
+    },
+    "logs": {
+      "next_offset": 7,
+      "has_more": true,
+      "lines": [
+        {
+          "seq": 1,
+          "timestamp": "2026-08-11T09:00:02+08:00",
+          "level": "info",
+          "cluster_id": "changsha",
+          "message": "任务提交成功，作业ID 210019，分配节点 8 个（512 核）"
+        },
+        {
+          "seq": 2,
+          "timestamp": "2026-08-11T09:01:30+08:00",
+          "level": "info",
+          "cluster_id": "changsha",
+          "message": "场景初始化完成：地形网格加载，任务目标区域 3 个，编队阵型 V 形"
+        },
+        {
+          "seq": 3,
+          "timestamp": "2026-08-11T09:02:10+08:00",
+          "level": "info",
+          "cluster_id": "changsha",
+          "message": "通信拓扑构建完成：小世界拓扑，平均度数 8，通信时延 12ms"
+        },
+        {
+          "seq": 4,
+          "timestamp": "2026-08-11T09:02:40+08:00",
+          "level": "info",
+          "cluster_id": "changsha",
+          "message": "任务分配完成：匈牙利算法，1000 架无人机分配到 3 个目标任务"
+        },
+        {
+          "seq": 5,
+          "timestamp": "2026-08-11T09:03:00+08:00",
+          "level": "info",
+          "cluster_id": "changsha",
+          "message": "一致性控制求解启动，编队误差收敛至 0.83m，进入多智能体动力学仿真"
+        },
+        {
+          "seq": 6,
+          "timestamp": "2026-08-11T10:28:00+08:00",
+          "level": "info",
+          "cluster_id": "changsha",
+          "message": "仿真步 3100/5000，任务完成率 63.5%，碰撞 1 次，仿真速度 480 step/s"
+        }
+      ]
+    },
+    "artifacts": [
+      {
+        "id": "ART-UAV-001",
+        "name": "trajectory_partial.json",
+        "type": "dataset",
+        "format": "json",
+        "size": 15728640,
+        "storage_path": "gfs://results/UAV-20260811-0001/trajectory_partial.json",
+        "preview_url": "",
+        "download_url": "/api/v1/files/ART-UAV-001/download",
+        "created_at": "2026-08-11T10:28:00+08:00"
+      },
+      {
+        "id": "ART-UAV-002",
+        "name": "formation_error_curve.png",
+        "type": "image",
+        "format": "png",
+        "size": 1048576,
+        "storage_path": "gfs://results/UAV-20260811-0001/formation_error_curve.png",
+        "preview_url": "/api/v1/files/ART-UAV-002/preview",
+        "download_url": "/api/v1/files/ART-UAV-002/download",
+        "created_at": "2026-08-11T10:28:10+08:00"
+      }
+    ]
+  },
+  "timestamp": "2026-08-11T10:28:30+08:00"
+}

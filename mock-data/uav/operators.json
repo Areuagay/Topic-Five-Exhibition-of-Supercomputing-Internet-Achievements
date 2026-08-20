@@ -1,0 +1,52 @@
+{
+  "code": 200,
+  "message": "success",
+  "data": [
+    {
+      "name": "consensus-control",
+      "version": "1.2.0",
+      "runtime_type": "container",
+      "runtime": "docker://registry.uav.example/consensus-control:1.2.0",
+      "handler": "main.run_consensus",
+      "cpu_cores": 512,
+      "gpu_count": 0,
+      "memory_mb": 1048576,
+      "mpi_enabled": true,
+      "mpi_command": "mpirun -np 64 run_consensus",
+      "status": "registered",
+      "description": "无人机集群分布式一致性控制算子，支持大规模编队保持与协同任务分配。",
+      "registered_at": "2026-08-01T08:00:00+08:00"
+    },
+    {
+      "name": "path-planning",
+      "version": "2.0.1",
+      "runtime_type": "container",
+      "runtime": "docker://registry.uav.example/path-planning:2.0.1",
+      "handler": "main.run_planning",
+      "cpu_cores": 256,
+      "gpu_count": 0,
+      "memory_mb": 524288,
+      "mpi_enabled": true,
+      "mpi_command": "mpirun -np 32 run_planning",
+      "status": "registered",
+      "description": "航迹规划算子，基于 RRT* 与 A* 混合算法支持三维避障规划。",
+      "registered_at": "2026-08-01T08:05:00+08:00"
+    },
+    {
+      "name": "collision-detection",
+      "version": "1.0.3",
+      "runtime_type": "container",
+      "runtime": "docker://registry.uav.example/collision-detection:1.0.3",
+      "handler": "main.run_detection",
+      "cpu_cores": 256,
+      "gpu_count": 0,
+      "memory_mb": 262144,
+      "mpi_enabled": true,
+      "mpi_command": "mpirun -np 32 run_detection",
+      "status": "registered",
+      "description": "大规模无人机碰撞检测算子，基于空间索引并行检测。",
+      "registered_at": "2026-08-02T08:00:00+08:00"
+    }
+  ],
+  "timestamp": "2026-08-11T12:00:00+08:00"
+}

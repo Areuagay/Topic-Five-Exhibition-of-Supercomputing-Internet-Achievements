@@ -1,0 +1,59 @@
+{
+  "code": 200,
+  "message": "success",
+  "data": [
+    {
+      "id": "wave-propagation",
+      "name": "地震波传播模拟",
+      "category": "地球动力学",
+      "description": "基于有限差分方法进行三维地震波传播并行模拟，支持多介质速度模型与震源参数配置",
+      "summary_metrics": [
+        { "label": "网格规模", "value": "2048^3", "unit": "格点" },
+        { "label": "并行规模", "value": "512", "unit": "核" },
+        { "label": "计算加速", "value": "7.2", "unit": "x" }
+      ],
+      "supported_clusters": ["changsha", "guangzhou"],
+      "tech_stack": ["有限差分", "MPI", "OpenMP", "HDF5", "SLURM"],
+      "background": "地震波传播模拟涉及三维大规模速度模型与长时间步进计算，单机内存与算力均难以支撑，需要大规模并行求解。",
+      "method": "采用高阶有限差分格式离散弹性波/声波方程，使用域分解与 MPI/OpenMP 混合并行完成时间步进求解。",
+      "architecture": ["模型导入", "网格划分", "时间步进求解", "波场快照提取", "可视化后处理"],
+      "operators": [
+        { "id": "fd-wave-solver", "name": "有限差分波动方程求解器" },
+        { "id": "fft-operator", "name": "FFT快速傅里叶变换" },
+        { "id": "sparse-matrix", "name": "稀疏矩阵运算" }
+      ],
+      "highlights": [
+        { "label": "网格规模", "value": "2048", "unit": "格点" },
+        { "label": "并行效率", "value": "84", "unit": "%" },
+        { "label": "单步耗时", "value": "0.82", "unit": "s" }
+      ]
+    },
+    {
+      "id": "tectonic-evolution",
+      "name": "板块构造数值模拟",
+      "category": "地球动力学",
+      "description": "利用有限元方法模拟岩石圈热-力学耦合演化过程，研究大陆碰撞与俯冲带构造",
+      "summary_metrics": [
+        { "label": "网格规模", "value": "8.6M", "unit": "单元" },
+        { "label": "并行规模", "value": "1024", "unit": "核" },
+        { "label": "计算加速", "value": "9.4", "unit": "x" }
+      ],
+      "supported_clusters": ["changsha", "kunshan"],
+      "tech_stack": ["有限元", "PETSc", "MPI", "Paraview", "SLURM"],
+      "background": "板块构造演化跨越百万年时间尺度，热-力学耦合非线性强，需在超算上开展高分辨率长时间数值模拟。",
+      "method": "采用有限元方法离散热-力学耦合方程组，结合自适应时间步长与 Newton 迭代求解非线性系统。",
+      "architecture": ["几何建模", "网格剖分", "热-力学耦合求解", "自适应时间推进", "后处理与可视化"],
+      "operators": [
+        { "id": "fem-pde-solver", "name": "偏微分方程求解器（FEM）" },
+        { "id": "nonlinear-solver", "name": "非线性方程求解器" },
+        { "id": "fft-operator", "name": "FFT快速傅里叶变换" }
+      ],
+      "highlights": [
+        { "label": "单元规模", "value": "8.6", "unit": "M" },
+        { "label": "时间跨度", "value": "50", "unit": "Ma" },
+        { "label": "并行效率", "value": "89", "unit": "%" }
+      ]
+    }
+  ],
+  "timestamp": "2026-08-11T10:00:00+08:00"
+}

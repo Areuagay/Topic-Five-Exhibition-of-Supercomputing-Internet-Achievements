@@ -1,0 +1,180 @@
+{
+  "code": 200,
+  "message": "success",
+  "data": {
+    "run_id": "GEO-20260811-0010",
+    "scenario_id": "tectonic-evolution",
+    "scenario_name": "板块构造数值模拟",
+    "status": "success",
+    "progress": 100,
+    "execution_mode": "simulated",
+    "cluster_id": "changsha",
+    "cluster_name": "长沙天河新一代",
+    "job_id": "209916",
+    "current_stage": "completed",
+    "start_time": "2026-08-09T22:00:00+08:00",
+    "end_time": "2026-08-10T07:40:00+08:00",
+    "elapsed_seconds": 34800,
+    "nodes": 16,
+    "cpu_cores": 1024,
+    "gpu_count": 0,
+    "memory_gb": 8192,
+    "core_hours": 9898.7,
+    "source_type": "simulated",
+    "workflow": {
+      "nodes": [
+        {
+          "id": "prepare",
+          "name": "数据预处理",
+          "status": "success",
+          "progress": 100,
+          "cluster_id": "changsha"
+        },
+        {
+          "id": "partition",
+          "name": "网格划分与域分解",
+          "status": "success",
+          "progress": 100,
+          "cluster_id": "changsha"
+        },
+        {
+          "id": "solver",
+          "name": "并行求解",
+          "status": "success",
+          "progress": 100,
+          "cluster_id": "changsha"
+        },
+        {
+          "id": "post",
+          "name": "结果后处理",
+          "status": "success",
+          "progress": 100,
+          "cluster_id": "changsha"
+        }
+      ],
+      "edges": [
+        { "source": "prepare", "target": "partition" },
+        { "source": "partition", "target": "solver" },
+        { "source": "solver", "target": "post" }
+      ]
+    },
+    "metrics": {
+      "progress": 100,
+      "metrics": [
+        { "name": "time_step", "label": "当前时间步", "value": 5000, "total": 5000, "unit": "" },
+        { "name": "nonlinear_iter", "label": "Newton迭代", "value": 4, "total": 0, "unit": "次" },
+        { "name": "step_time", "label": "单步耗时", "value": 1.12, "total": 0, "unit": "s" },
+        { "name": "cpu_utilization", "label": "CPU利用率", "value": 92, "total": 100, "unit": "%" }
+      ]
+    },
+    "logs": {
+      "next_offset": 9,
+      "has_more": false,
+      "lines": [
+        {
+          "seq": 1,
+          "timestamp": "2026-08-09T22:00:02+08:00",
+          "level": "info",
+          "cluster_id": "changsha",
+          "message": "任务提交成功，作业ID 209916，分配节点 16 个（1024 核）"
+        },
+        {
+          "seq": 2,
+          "timestamp": "2026-08-09T22:01:10+08:00",
+          "level": "info",
+          "cluster_id": "changsha",
+          "message": "初始板块几何与物性参数加载完成（粘度分层、密度场、初始速度场）"
+        },
+        {
+          "seq": 3,
+          "timestamp": "2026-08-09T22:04:33+08:00",
+          "level": "info",
+          "cluster_id": "changsha",
+          "message": "非结构网格生成：3500 万单元，完成 16 域分解，负载均衡度 0.97"
+        },
+        {
+          "seq": 4,
+          "timestamp": "2026-08-09T22:05:00+08:00",
+          "level": "info",
+          "cluster_id": "changsha",
+          "message": "开始耦合求解：动量守恒 + 能量守恒 + 热-力学耦合迭代"
+        },
+        {
+          "seq": 5,
+          "timestamp": "2026-08-10T05:12:30+08:00",
+          "level": "info",
+          "cluster_id": "changsha",
+          "message": "时间步 4000/5000 完成，平均 Newton 迭代 4 次收敛"
+        },
+        {
+          "seq": 6,
+          "timestamp": "2026-08-10T07:32:00+08:00",
+          "level": "info",
+          "cluster_id": "changsha",
+          "message": "全部 5000 时间步完成，输出板块演化场快照（速度场、应力场、温度场）"
+        },
+        {
+          "seq": 7,
+          "timestamp": "2026-08-10T07:36:20+08:00",
+          "level": "info",
+          "cluster_id": "changsha",
+          "message": "后处理完成：生成动画与统计报告，结果归档至全局文件系统"
+        },
+        {
+          "seq": 8,
+          "timestamp": "2026-08-10T07:40:00+08:00",
+          "level": "info",
+          "cluster_id": "changsha",
+          "message": "任务成功结束，累计核时 9898.7 核时"
+        }
+      ]
+    },
+    "artifacts": [
+      {
+        "id": "ART-GEO-010",
+        "name": "tectonic_evolution.mp4",
+        "type": "video",
+        "format": "mp4",
+        "size": 52428800,
+        "storage_path": "gfs://results/GEO-20260811-0010/tectonic_evolution.mp4",
+        "preview_url": "/api/v1/files/ART-GEO-010/preview",
+        "download_url": "/api/v1/files/ART-GEO-010/download",
+        "created_at": "2026-08-10T07:37:00+08:00"
+      },
+      {
+        "id": "ART-GEO-011",
+        "name": "velocity_field_final.png",
+        "type": "image",
+        "format": "png",
+        "size": 1892351,
+        "storage_path": "gfs://results/GEO-20260811-0010/velocity_field_final.png",
+        "preview_url": "/api/v1/files/ART-GEO-011/preview",
+        "download_url": "/api/v1/files/ART-GEO-011/download",
+        "created_at": "2026-08-10T07:35:30+08:00"
+      },
+      {
+        "id": "ART-GEO-012",
+        "name": "stress_field_snapshot_5000.vti",
+        "type": "dataset",
+        "format": "vti",
+        "size": 104857600,
+        "storage_path": "gfs://results/GEO-20260811-0010/stress_field_snapshot_5000.vti",
+        "preview_url": "",
+        "download_url": "/api/v1/files/ART-GEO-012/download",
+        "created_at": "2026-08-10T07:33:00+08:00"
+      },
+      {
+        "id": "ART-GEO-013",
+        "name": "simulation_report.pdf",
+        "type": "report",
+        "format": "pdf",
+        "size": 4587520,
+        "storage_path": "gfs://results/GEO-20260811-0010/simulation_report.pdf",
+        "preview_url": "/api/v1/files/ART-GEO-013/preview",
+        "download_url": "/api/v1/files/ART-GEO-013/download",
+        "created_at": "2026-08-10T07:39:00+08:00"
+      }
+    ]
+  },
+  "timestamp": "2026-08-10T07:40:02+08:00"
+}

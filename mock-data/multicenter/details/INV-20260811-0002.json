@@ -1,0 +1,27 @@
+{
+  "code": 200,
+  "message": "success",
+  "data": {
+    "invocation_id": "INV-20260811-0002",
+    "function_id": "fn-matrix-multiply",
+    "function_name": "矩阵乘法函数",
+    "cluster_id": "guangzhou",
+    "status": "success",
+    "source_type": "simulated",
+    "instance_id": "fn-matrix-guangzhou-01",
+    "start_time": "2026-08-11T09:15:00+08:00",
+    "end_time": "2026-08-11T09:15:02+08:00",
+    "trace_id": "TRACE-5a2d77",
+    "total_latency_ms": 42.1,
+    "args": { "matrix_size": "4096x4096", "blocks": 2 },
+    "spans": [
+      { "seq": 1, "component": "api-gateway", "name": "API网关", "cluster_id": "global", "status": "success", "latency_ms": 5.2, "start_time": "2026-08-11T09:15:00.000+08:00" },
+      { "seq": 2, "component": "function-registry", "name": "函数注册中心", "cluster_id": "global", "status": "success", "latency_ms": 2.4, "start_time": "2026-08-11T09:15:00.005+08:00" },
+      { "seq": 3, "component": "global-scheduler", "name": "全局调度器", "cluster_id": "global", "status": "success", "latency_ms": 7.1, "start_time": "2026-08-11T09:15:00.008+08:00" },
+      { "seq": 4, "component": "center-agent", "name": "广州中心代理", "cluster_id": "guangzhou", "status": "success", "latency_ms": 14.8, "start_time": "2026-08-11T09:15:00.015+08:00" },
+      { "seq": 5, "component": "slurm-adapter", "name": "SLURM适配器", "cluster_id": "guangzhou", "status": "success", "latency_ms": 8.1, "start_time": "2026-08-11T09:15:00.030+08:00" },
+      { "seq": 6, "component": "function-runtime", "name": "函数运行时", "cluster_id": "guangzhou", "status": "success", "latency_ms": 4.5, "start_time": "2026-08-11T09:15:00.038+08:00" }
+    ]
+  },
+  "timestamp": "2026-08-11T09:15:03+08:00"
+}

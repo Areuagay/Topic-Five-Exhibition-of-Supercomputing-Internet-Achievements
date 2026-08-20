@@ -1,0 +1,57 @@
+{
+  "code": 200,
+  "message": "success",
+  "data": {
+    "band-dos": {
+      "id": "band-dos",
+      "name": "材料能带结构与态密度计算",
+      "category": "第一性原理材料计算",
+      "description": "基于密度泛函理论（DFT）的材料电子结构计算，输出能带结构与态密度，支持半导体、金属等材料性质分析。",
+      "summary_metrics": [
+        { "label": "SCF迭代次数", "value": 18, "unit": "次" },
+        { "label": "总能量", "value": -108.324, "unit": "Ry" },
+        { "label": "K点数量", "value": 240, "unit": "个" }
+      ],
+      "supported_clusters": ["changsha", "guangzhou", "kunshan", "jinan"],
+      "tech_stack": ["Quantum-Espresso", "VASP", "Wannier90", "MPI"],
+      "background": "能带结构与态密度是判断材料导电性、光学性质与稳定性的核心依据。依托超算互联网多中心并行，将 k 点与能带路径计算拆分调度，显著缩短电子结构计算周期。",
+      "method": "先进行结构优化与 SCF 自洽场计算获得收敛电荷密度，再沿高对称路径计算能带、对不可约布里渊区积分获得态密度，最终由后处理节点生成能带图与态密度图。",
+      "architecture": ["结构优化", "SCF自洽场计算", "能带计算", "态密度计算", "后处理"],
+      "operators": [
+        { "id": "band-dos-post", "name": "能带与态密度后处理算子" },
+        { "id": "scf-solver", "name": "SCF自洽场求解算子" }
+      ],
+      "highlights": [
+        { "label": "并行加速比", "value": 3.2, "unit": "x" },
+        { "label": "计算耗时", "value": 1560, "unit": "s" },
+        { "label": "能量收敛精度", "value": 3.2e-7, "unit": "Ry" }
+      ]
+    },
+    "high-throughput-screening": {
+      "id": "high-throughput-screening",
+      "name": "高通量材料筛选",
+      "category": "第一性原理材料计算",
+      "description": "面向大规模材料数据库的高通量第一性原理计算，批量评估材料稳定性与电子性质，加速新材料发现。",
+      "summary_metrics": [
+        { "label": "材料总数", "value": 1000, "unit": "个" },
+        { "label": "吞吐量", "value": 42, "unit": "个/h" },
+        { "label": "候选材料", "value": 37, "unit": "个" }
+      ],
+      "supported_clusters": ["changsha", "guangzhou", "kunshan", "jinan"],
+      "tech_stack": ["Quantum-Espresso", "pymatgen", "Materials Project", "MPI"],
+      "background": "传统材料筛选依赖人工逐一计算，效率低下。通过超算互联网将材料数据库批量分片调度至多中心并行执行 DFT 计算，实现千级材料的快速筛选与稳定性排序。",
+      "method": "从材料数据库批量读取结构，分片调度至多中心并行执行结构优化与 SCF 计算，汇总能量与带隙数据，按稳定性判据筛选出候选材料。",
+      "architecture": ["材料库分片", "批量结构优化", "批量SCF计算", "结果汇总", "候选筛选"],
+      "operators": [
+        { "id": "band-dos-post", "name": "能带与态密度后处理算子" },
+        { "id": "high-throughput-runner", "name": "高通量批处理算子" }
+      ],
+      "highlights": [
+        { "label": "材料吞吐量", "value": 42, "unit": "个/h" },
+        { "label": "并行加速比", "value": 3.8, "unit": "x" },
+        { "label": "候选命中率", "value": 3.7, "unit": "%" }
+      ]
+    }
+  },
+  "timestamp": "2026-08-11T10:00:00+08:00"
+}

@@ -1,0 +1,195 @@
+{
+  "code": 200,
+  "message": "success",
+  "data": {
+    "run_id": "DRUG-20260811-0001",
+    "scenario_id": "virtual-screening",
+    "scenario_name": "百万级化合物库虚拟筛选",
+    "status": "running",
+    "progress": 76,
+    "execution_mode": "simulated",
+    "cluster_id": "changsha",
+    "cluster_name": "长沙天河新一代",
+    "job_id": "DRUG-JOB-58210",
+    "current_stage": "multi-center-docking",
+    "start_time": "2026-08-11T09:20:00+08:00",
+    "end_time": "",
+    "elapsed_seconds": 104.4,
+    "nodes": 16,
+    "cpu_cores": 1024,
+    "gpu_count": 0,
+    "memory_gb": 4096,
+    "core_hours": 118.4,
+    "source_type": "simulated",
+    "workflow": {
+      "nodes": [
+        {
+          "id": "prepare",
+          "name": "靶点与配体准备",
+          "status": "success",
+          "progress": 100,
+          "cluster_id": "changsha"
+        },
+        {
+          "id": "ligand-preprocess",
+          "name": "配体库预处理",
+          "status": "success",
+          "progress": 100,
+          "cluster_id": "changsha"
+        },
+        {
+          "id": "shard",
+          "name": "化合物库分片",
+          "status": "success",
+          "progress": 100,
+          "cluster_id": "changsha"
+        },
+        {
+          "id": "docking",
+          "name": "跨中心并行分子对接",
+          "status": "running",
+          "progress": 76,
+          "cluster_id": "multi-center"
+        },
+        {
+          "id": "merge",
+          "name": "对接结果汇总",
+          "status": "pending",
+          "progress": 0,
+          "cluster_id": "changsha"
+        },
+        {
+          "id": "property",
+          "name": "分子属性评价",
+          "status": "pending",
+          "progress": 0,
+          "cluster_id": "changsha"
+        },
+        {
+          "id": "topn",
+          "name": "Top-N候选筛选",
+          "status": "pending",
+          "progress": 0,
+          "cluster_id": "changsha"
+        },
+        {
+          "id": "report",
+          "name": "报告生成",
+          "status": "pending",
+          "progress": 0,
+          "cluster_id": "changsha"
+        }
+      ],
+      "edges": [
+        { "source": "prepare", "target": "ligand-preprocess" },
+        { "source": "ligand-preprocess", "target": "shard" },
+        { "source": "shard", "target": "docking" },
+        { "source": "docking", "target": "merge" },
+        { "source": "merge", "target": "property" },
+        { "source": "property", "target": "topn" },
+        { "source": "topn", "target": "report" }
+      ]
+    },
+    "metrics": {
+      "progress": 76,
+      "metrics": [
+        { "name": "completed_compounds", "label": "已完成分子数", "value": 7600, "total": 10000, "unit": "个" },
+        { "name": "throughput", "label": "筛选吞吐量", "value": 72.8, "total": 0, "unit": "compound/s" },
+        { "name": "best_docking_score", "label": "最佳对接分数", "value": -11.4, "total": 0, "unit": "kcal/mol" },
+        { "name": "failed_compounds", "label": "失败分子数", "value": 23, "total": 0, "unit": "个" }
+      ],
+      "cluster_progress": [
+        { "cluster_id": "changsha", "completed": 1900, "total": 2500, "throughput": 18.2, "status": "running" },
+        { "cluster_id": "guangzhou", "completed": 1900, "total": 2500, "throughput": 17.9, "status": "running" },
+        { "cluster_id": "kunshan", "completed": 2100, "total": 2500, "throughput": 20.2, "status": "running" },
+        { "cluster_id": "jinan", "completed": 1700, "total": 2500, "throughput": 16.5, "status": "running" }
+      ],
+      "score_summary": {
+        "best_score": -11.4,
+        "average_score": -7.8,
+        "median_score": -7.6,
+        "qualified_count": 286
+      }
+    },
+    "logs": {
+      "next_offset": 8,
+      "has_more": true,
+      "lines": [
+        {
+          "seq": 1,
+          "timestamp": "2026-08-11T09:20:02+08:00",
+          "level": "info",
+          "cluster_id": "changsha",
+          "message": "任务提交成功，作业ID DRUG-JOB-58210，靶点 EGFR，化合物库 10000 个（演示子集）"
+        },
+        {
+          "seq": 2,
+          "timestamp": "2026-08-11T09:20:08+08:00",
+          "level": "info",
+          "cluster_id": "changsha",
+          "message": "靶点准备完成：EGFR 晶体结构 1M17 已加载，活性口袋坐标已确定"
+        },
+        {
+          "seq": 3,
+          "timestamp": "2026-08-11T09:20:15+08:00",
+          "level": "info",
+          "cluster_id": "changsha",
+          "message": "配体库预处理完成：10000 个分子完成加氢、电荷分配，异常分子剔除 12 个"
+        },
+        {
+          "seq": 4,
+          "timestamp": "2026-08-11T09:20:20+08:00",
+          "level": "info",
+          "cluster_id": "changsha",
+          "message": "化合物库分片完成：4 片均匀划分，调度至长沙/广州/昆山/济南四中心"
+        },
+        {
+          "seq": 5,
+          "timestamp": "2026-08-11T09:21:00+08:00",
+          "level": "info",
+          "cluster_id": "multi-center",
+          "message": "跨中心并行分子对接启动，AutoDock-Vina exhaustiveness=8"
+        },
+        {
+          "seq": 6,
+          "timestamp": "2026-08-11T09:21:30+08:00",
+          "level": "info",
+          "cluster_id": "kunshan",
+          "message": "completed=2100/2500 throughput=20.2 compound/s"
+        },
+        {
+          "seq": 7,
+          "timestamp": "2026-08-11T09:21:30+08:00",
+          "level": "info",
+          "cluster_id": "guangzhou",
+          "message": "completed=1900/2500 throughput=17.9 compound/s"
+        }
+      ]
+    },
+    "artifacts": [
+      {
+        "id": "ART-DRUG-001",
+        "name": "top_candidates.sdf",
+        "type": "dataset",
+        "format": "sdf",
+        "size": 4194304,
+        "storage_path": "gfs://results/DRUG-20260811-0001/top_candidates.sdf",
+        "preview_url": "",
+        "download_url": "/api/v1/files/ART-DRUG-001/download",
+        "created_at": "2026-08-11T09:21:50+08:00"
+      },
+      {
+        "id": "ART-DRUG-002",
+        "name": "docking_scores.csv",
+        "type": "dataset",
+        "format": "csv",
+        "size": 1246241,
+        "storage_path": "gfs://results/DRUG-20260811-0001/docking_scores.csv",
+        "preview_url": "/api/v1/files/ART-DRUG-002/preview",
+        "download_url": "/api/v1/files/ART-DRUG-002/download",
+        "created_at": "2026-08-11T09:21:55+08:00"
+      }
+    ]
+  },
+  "timestamp": "2026-08-11T09:21:55+08:00"
+}

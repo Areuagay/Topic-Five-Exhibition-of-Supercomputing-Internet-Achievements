@@ -1,0 +1,180 @@
+{
+  "code": 200,
+  "message": "success",
+  "data": {
+    "run_id": "LLM-20260811-0001",
+    "scenario_id": "llm-pretraining",
+    "scenario_name": "大语言模型分布式预训练",
+    "status": "running",
+    "progress": 42,
+    "execution_mode": "simulated",
+    "cluster_id": "kunshan",
+    "cluster_name": "昆山昆仑",
+    "job_id": "45201",
+    "current_stage": "train",
+    "start_time": "2026-08-11T09:30:00+08:00",
+    "end_time": "",
+    "elapsed_seconds": 5400,
+    "nodes": 16,
+    "cpu_cores": 1536,
+    "gpu_count": 128,
+    "memory_gb": 32768,
+    "core_hours": 2304.0,
+    "source_type": "simulated",
+    "workflow": {
+      "nodes": [
+        {
+          "id": "prepare",
+          "name": "训练数据检查",
+          "status": "success",
+          "progress": 100,
+          "cluster_id": "kunshan"
+        },
+        {
+          "id": "shard",
+          "name": "数据分片",
+          "status": "success",
+          "progress": 100,
+          "cluster_id": "kunshan"
+        },
+        {
+          "id": "init",
+          "name": "模型初始化",
+          "status": "success",
+          "progress": 100,
+          "cluster_id": "kunshan"
+        },
+        {
+          "id": "train",
+          "name": "分布式训练",
+          "status": "running",
+          "progress": 42,
+          "cluster_id": "kunshan"
+        },
+        {
+          "id": "checkpoint",
+          "name": "Checkpoint保存",
+          "status": "pending",
+          "progress": 0,
+          "cluster_id": "kunshan"
+        },
+        {
+          "id": "evaluate",
+          "name": "模型评估",
+          "status": "pending",
+          "progress": 0,
+          "cluster_id": "kunshan"
+        }
+      ],
+      "edges": [
+        { "source": "prepare", "target": "shard" },
+        { "source": "shard", "target": "init" },
+        { "source": "init", "target": "train" },
+        { "source": "train", "target": "checkpoint" },
+        { "source": "checkpoint", "target": "evaluate" }
+      ]
+    },
+    "metrics": {
+      "progress": 42,
+      "metrics": [
+        { "name": "step", "label": "训练步数", "value": 4200, "total": 10000, "unit": "step" },
+        { "name": "loss", "label": "Loss", "value": 2.314, "total": 0, "unit": "" },
+        { "name": "learning_rate", "label": "学习率", "value": 8e-05, "total": 0, "unit": "" },
+        { "name": "tokens_per_second", "label": "训练吞吐量", "value": 18420, "total": 0, "unit": "tokens/s" },
+        { "name": "gpu_utilization", "label": "GPU利用率", "value": 92, "total": 100, "unit": "%" },
+        { "name": "gpu_memory", "label": "GPU显存使用率", "value": 87, "total": 100, "unit": "%" },
+        { "name": "communication_overhead", "label": "通信开销", "value": 14.2, "total": 100, "unit": "%" }
+      ],
+      "gpu_metrics": [
+        { "gpu_id": "gpu-0", "utilization": 94, "memory_utilization": 88, "temperature": 67 },
+        { "gpu_id": "gpu-1", "utilization": 91, "memory_utilization": 87, "temperature": 65 },
+        { "gpu_id": "gpu-2", "utilization": 93, "memory_utilization": 86, "temperature": 66 },
+        { "gpu_id": "gpu-3", "utilization": 90, "memory_utilization": 88, "temperature": 64 },
+        { "gpu_id": "gpu-4", "utilization": 92, "memory_utilization": 89, "temperature": 68 },
+        { "gpu_id": "gpu-5", "utilization": 89, "memory_utilization": 85, "temperature": 63 },
+        { "gpu_id": "gpu-6", "utilization": 93, "memory_utilization": 87, "temperature": 66 },
+        { "gpu_id": "gpu-7", "utilization": 91, "memory_utilization": 88, "temperature": 65 }
+      ]
+    },
+    "logs": {
+      "next_offset": 8,
+      "has_more": true,
+      "lines": [
+        {
+          "seq": 1,
+          "timestamp": "2026-08-11T09:30:02+08:00",
+          "level": "info",
+          "cluster_id": "kunshan",
+          "message": "任务提交成功，作业ID 45201，分配节点 16 个（128 卡 A800）"
+        },
+        {
+          "seq": 2,
+          "timestamp": "2026-08-11T09:31:20+08:00",
+          "level": "info",
+          "cluster_id": "kunshan",
+          "message": "训练数据集校验通过：1.2T tokens，完成去重与 Tokenization"
+        },
+        {
+          "seq": 3,
+          "timestamp": "2026-08-11T09:32:45+08:00",
+          "level": "info",
+          "cluster_id": "kunshan",
+          "message": "数据分片完成：DP=2，TP=4，PP=2，共 128 卡 3D 并行拓扑就绪"
+        },
+        {
+          "seq": 4,
+          "timestamp": "2026-08-11T09:34:10+08:00",
+          "level": "info",
+          "cluster_id": "kunshan",
+          "message": "模型初始化完成：demo-transformer 14B 参数，随机初始化权重"
+        },
+        {
+          "seq": 5,
+          "timestamp": "2026-08-11T09:34:30+08:00",
+          "level": "info",
+          "cluster_id": "kunshan",
+          "message": "分布式训练启动，学习率 8e-05，NCCL 通信域建立完成"
+        },
+        {
+          "seq": 6,
+          "timestamp": "2026-08-11T10:58:00+08:00",
+          "level": "info",
+          "cluster_id": "kunshan",
+          "message": "训练步 4200/10000，Loss 2.314，吞吐 18420 tokens/s，GPU 利用率 92%"
+        },
+        {
+          "seq": 7,
+          "timestamp": "2026-08-11T10:58:30+08:00",
+          "level": "debug",
+          "cluster_id": "kunshan",
+          "message": "通信开销 14.2%，梯度平均耗时 0.18s/step，无 NCCL 超时"
+        }
+      ]
+    },
+    "artifacts": [
+      {
+        "id": "ART-LLM-001",
+        "name": "checkpoint-4200",
+        "type": "checkpoint",
+        "format": "directory",
+        "size": 42949672960,
+        "storage_path": "gfs://results/LLM-20260811-0001/checkpoint-4200",
+        "preview_url": "",
+        "download_url": "/api/v1/files/ART-LLM-001/download",
+        "created_at": "2026-08-11T10:58:00+08:00"
+      },
+      {
+        "id": "ART-LLM-002",
+        "name": "training_curve_4200.png",
+        "type": "image",
+        "format": "png",
+        "size": 524288,
+        "storage_path": "gfs://results/LLM-20260811-0001/training_curve_4200.png",
+        "preview_url": "/api/v1/files/ART-LLM-002/preview",
+        "download_url": "/api/v1/files/ART-LLM-002/download",
+        "created_at": "2026-08-11T10:58:05+08:00"
+      }
+    ]
+  },
+  "timestamp": "2026-08-11T10:58:35+08:00"
+}

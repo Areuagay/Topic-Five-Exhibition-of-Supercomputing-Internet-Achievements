@@ -1,0 +1,40 @@
+{
+  "code": 200,
+  "message": "success",
+  "data": {
+    "clusters": ["changsha", "guangzhou", "kunshan", "jinan"],
+    "functions": [
+      {
+        "function_id": "fn-matrix-multiply",
+        "function_name": "矩阵乘法函数",
+        "deployments": [
+          { "cluster_id": "changsha", "replicas": 2, "status": "running" },
+          { "cluster_id": "guangzhou", "replicas": 1, "status": "running" },
+          { "cluster_id": "kunshan", "replicas": 2, "status": "running" },
+          { "cluster_id": "jinan", "replicas": 0, "status": "not-deployed" }
+        ]
+      },
+      {
+        "function_id": "fn-fft",
+        "function_name": "FFT函数",
+        "deployments": [
+          { "cluster_id": "changsha", "replicas": 1, "status": "running" },
+          { "cluster_id": "guangzhou", "replicas": 1, "status": "running" },
+          { "cluster_id": "kunshan", "replicas": 1, "status": "degraded" },
+          { "cluster_id": "jinan", "replicas": 1, "status": "running" }
+        ]
+      },
+      {
+        "function_id": "fn-file-convert",
+        "function_name": "文件格式转换函数",
+        "deployments": [
+          { "cluster_id": "changsha", "replicas": 1, "status": "running" },
+          { "cluster_id": "guangzhou", "replicas": 1, "status": "running" },
+          { "cluster_id": "kunshan", "replicas": 0, "status": "not-deployed" },
+          { "cluster_id": "jinan", "replicas": 1, "status": "running" }
+        ]
+      }
+    ]
+  },
+  "timestamp": "2026-08-11T12:40:00+08:00"
+}

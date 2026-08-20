@@ -1,0 +1,21 @@
+{
+  "code": 200,
+  "message": "success",
+  "data": {
+    "nodes": [
+      { "id": "changsha", "name": "长沙天河新一代", "status": "online", "source_type": "simulated" },
+      { "id": "guangzhou", "name": "广州天河二号", "status": "online", "source_type": "simulated" },
+      { "id": "kunshan", "name": "昆山昆仑", "status": "degraded", "source_type": "simulated" },
+      { "id": "jinan", "name": "济南神威蓝光", "status": "online", "source_type": "simulated" }
+    ],
+    "links": [
+      { "source": "changsha", "target": "guangzhou", "status": "online", "latency_ms": 18.6, "bandwidth_mbps": 8200, "packet_loss_percent": 0.02 },
+      { "source": "changsha", "target": "kunshan", "status": "online", "latency_ms": 23.4, "bandwidth_mbps": 7600, "packet_loss_percent": 0.03 },
+      { "source": "changsha", "target": "jinan", "status": "degraded", "latency_ms": 31.8, "bandwidth_mbps": 4200, "packet_loss_percent": 0.12 },
+      { "source": "guangzhou", "target": "kunshan", "status": "online", "latency_ms": 27.5, "bandwidth_mbps": 7100, "packet_loss_percent": 0.04 },
+      { "source": "guangzhou", "target": "jinan", "status": "online", "latency_ms": 29.2, "bandwidth_mbps": 6800, "packet_loss_percent": 0.05 },
+      { "source": "kunshan", "target": "jinan", "status": "online", "latency_ms": 32.4, "bandwidth_mbps": 6300, "packet_loss_percent": 0.06 }
+    ]
+  },
+  "timestamp": "2026-08-11T12:40:00+08:00"
+}

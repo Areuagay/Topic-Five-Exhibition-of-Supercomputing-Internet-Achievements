@@ -1,0 +1,183 @@
+{
+  "code": 200,
+  "message": "success",
+  "data": {
+    "run_id": "DFT-20260811-0001",
+    "scenario_id": "band-dos",
+    "scenario_name": "材料能带结构与态密度计算",
+    "status": "running",
+    "progress": 54,
+    "execution_mode": "simulated",
+    "cluster_id": "changsha",
+    "cluster_name": "长沙天河新一代",
+    "job_id": "DFT-SLURM-71429",
+    "current_stage": "scf",
+    "start_time": "2026-08-11T09:00:00+08:00",
+    "end_time": "",
+    "elapsed_seconds": 842.4,
+    "nodes": 8,
+    "cpu_cores": 512,
+    "gpu_count": 0,
+    "memory_gb": 1024,
+    "core_hours": 479.4,
+    "source_type": "simulated",
+    "workflow": {
+      "nodes": [
+        {
+          "id": "structure",
+          "name": "结构读取与检查",
+          "status": "success",
+          "progress": 100,
+          "cluster_id": "changsha"
+        },
+        {
+          "id": "pseudo",
+          "name": "赝势与参数准备",
+          "status": "success",
+          "progress": 100,
+          "cluster_id": "changsha"
+        },
+        {
+          "id": "relax",
+          "name": "结构优化",
+          "status": "success",
+          "progress": 100,
+          "cluster_id": "changsha"
+        },
+        {
+          "id": "scf",
+          "name": "SCF自洽场计算",
+          "status": "running",
+          "progress": 54,
+          "cluster_id": "changsha"
+        },
+        {
+          "id": "band",
+          "name": "能带计算",
+          "status": "pending",
+          "progress": 0,
+          "cluster_id": "changsha"
+        },
+        {
+          "id": "dos",
+          "name": "态密度计算",
+          "status": "pending",
+          "progress": 0,
+          "cluster_id": "changsha"
+        },
+        {
+          "id": "post",
+          "name": "电子结构后处理",
+          "status": "pending",
+          "progress": 0,
+          "cluster_id": "changsha"
+        }
+      ],
+      "edges": [
+        { "source": "structure", "target": "pseudo" },
+        { "source": "pseudo", "target": "relax" },
+        { "source": "relax", "target": "scf" },
+        { "source": "scf", "target": "band" },
+        { "source": "band", "target": "dos" },
+        { "source": "dos", "target": "post" }
+      ]
+    },
+    "metrics": {
+      "progress": 54,
+      "metrics": [
+        { "name": "scf_iteration", "label": "SCF迭代次数", "value": 10, "total": 18, "unit": "次" },
+        { "name": "total_energy", "label": "总能量", "value": -108.31, "total": 0, "unit": "Ry" },
+        { "name": "energy_delta", "label": "能量变化", "value": 0.0011, "total": 0, "unit": "Ry" },
+        { "name": "scf_converged", "label": "SCF收敛状态", "value": 0, "total": 1, "unit": "" },
+        { "name": "kpoint_progress", "label": "K点计算进度", "value": 130, "total": 240, "unit": "个" },
+        { "name": "cpu_utilization", "label": "CPU利用率", "value": 92, "total": 100, "unit": "%" }
+      ],
+      "scf_series": [
+        { "iteration": 1, "total_energy": -107.812, "energy_delta": 0.128 },
+        { "iteration": 5, "total_energy": -108.21, "energy_delta": 0.012 },
+        { "iteration": 10, "total_energy": -108.31, "energy_delta": 0.0011 }
+      ],
+      "batch_progress": {
+        "total_materials": 0,
+        "completed_materials": 0,
+        "converged_materials": 0,
+        "failed_materials": 0,
+        "materials_per_hour": 0,
+        "qualified_candidates": 0
+      }
+    },
+    "logs": {
+      "next_offset": 7,
+      "has_more": true,
+      "lines": [
+        {
+          "seq": 1,
+          "timestamp": "2026-08-11T09:00:02+08:00",
+          "level": "info",
+          "cluster_id": "changsha",
+          "message": "任务提交成功，作业ID DFT-SLURM-71429，材料 Si（金刚石结构）"
+        },
+        {
+          "seq": 2,
+          "timestamp": "2026-08-11T09:00:10+08:00",
+          "level": "info",
+          "cluster_id": "changsha",
+          "message": "结构读取完成：晶格常数 5.43 Å，原子数 2，对称性 Fd-3m"
+        },
+        {
+          "seq": 3,
+          "timestamp": "2026-08-11T09:00:20+08:00",
+          "level": "info",
+          "cluster_id": "changsha",
+          "message": "赝势准备完成：PAW 赝势，截断能 60 Ry，K点网格 6x6x6"
+        },
+        {
+          "seq": 4,
+          "timestamp": "2026-08-11T09:01:00+08:00",
+          "level": "info",
+          "cluster_id": "changsha",
+          "message": "结构优化完成：收敛至 0.01 Ry/Bohr，晶格常数变化 <0.1%"
+        },
+        {
+          "seq": 5,
+          "timestamp": "2026-08-11T09:01:30+08:00",
+          "level": "info",
+          "cluster_id": "changsha",
+          "message": "SCF自洽场计算启动，阈值 1e-6 Ry"
+        },
+        {
+          "seq": 6,
+          "timestamp": "2026-08-11T09:14:00+08:00",
+          "level": "info",
+          "cluster_id": "changsha",
+          "message": "iteration=10 total_energy=-108.3100 Ry delta=1.1e-3"
+        }
+      ]
+    },
+    "artifacts": [
+      {
+        "id": "ART-DFT-001",
+        "name": "scf_charge_density.dat",
+        "type": "dataset",
+        "format": "dat",
+        "size": 10485760,
+        "storage_path": "gfs://results/DFT-20260811-0001/scf_charge_density.dat",
+        "preview_url": "",
+        "download_url": "/api/v1/files/ART-DFT-001/download",
+        "created_at": "2026-08-11T09:14:00+08:00"
+      },
+      {
+        "id": "ART-DFT-002",
+        "name": "scf_convergence.png",
+        "type": "image",
+        "format": "png",
+        "size": 1048576,
+        "storage_path": "gfs://results/DFT-20260811-0001/scf_convergence.png",
+        "preview_url": "/api/v1/files/ART-DFT-002/preview",
+        "download_url": "/api/v1/files/ART-DFT-002/download",
+        "created_at": "2026-08-11T09:14:10+08:00"
+      }
+    ]
+  },
+  "timestamp": "2026-08-11T09:14:10+08:00"
+}

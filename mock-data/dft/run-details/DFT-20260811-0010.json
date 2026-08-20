@@ -1,0 +1,210 @@
+{
+  "code": 200,
+  "message": "success",
+  "data": {
+    "run_id": "DFT-20260811-0010",
+    "scenario_id": "high-throughput-screening",
+    "scenario_name": "高通量材料筛选",
+    "status": "success",
+    "progress": 100,
+    "execution_mode": "simulated",
+    "cluster_id": "guangzhou",
+    "cluster_name": "广州天河二号",
+    "job_id": "DFT-SLURM-71438",
+    "current_stage": "completed",
+    "start_time": "2026-08-10T14:00:00+08:00",
+    "end_time": "2026-08-11T01:48:00+08:00",
+    "elapsed_seconds": 42480.0,
+    "nodes": 16,
+    "cpu_cores": 1024,
+    "gpu_count": 0,
+    "memory_gb": 2048,
+    "core_hours": 24172.8,
+    "source_type": "simulated",
+    "workflow": {
+      "nodes": [
+        {
+          "id": "structure",
+          "name": "结构读取与检查",
+          "status": "success",
+          "progress": 100,
+          "cluster_id": "changsha"
+        },
+        {
+          "id": "pseudo",
+          "name": "赝势与参数准备",
+          "status": "success",
+          "progress": 100,
+          "cluster_id": "changsha"
+        },
+        {
+          "id": "relax",
+          "name": "结构优化",
+          "status": "success",
+          "progress": 100,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "id": "scf",
+          "name": "SCF自洽场计算",
+          "status": "success",
+          "progress": 100,
+          "cluster_id": "multi-center"
+        },
+        {
+          "id": "band",
+          "name": "能带计算",
+          "status": "success",
+          "progress": 100,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "id": "dos",
+          "name": "态密度计算",
+          "status": "success",
+          "progress": 100,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "id": "post",
+          "name": "电子结构后处理",
+          "status": "success",
+          "progress": 100,
+          "cluster_id": "guangzhou"
+        }
+      ],
+      "edges": [
+        { "source": "structure", "target": "pseudo" },
+        { "source": "pseudo", "target": "relax" },
+        { "source": "relax", "target": "scf" },
+        { "source": "scf", "target": "band" },
+        { "source": "band", "target": "dos" },
+        { "source": "dos", "target": "post" }
+      ]
+    },
+    "metrics": {
+      "progress": 100,
+      "metrics": [
+        { "name": "scf_iteration", "label": "SCF迭代次数", "value": 18, "total": 18, "unit": "次" },
+        { "name": "total_energy", "label": "总能量", "value": -108.324, "total": 0, "unit": "Ry" },
+        { "name": "energy_delta", "label": "能量变化", "value": 3.2e-7, "total": 0, "unit": "Ry" },
+        { "name": "scf_converged", "label": "SCF收敛状态", "value": 1, "total": 1, "unit": "" },
+        { "name": "kpoint_progress", "label": "K点计算进度", "value": 1000, "total": 1000, "unit": "个" },
+        { "name": "cpu_utilization", "label": "CPU利用率", "value": 92, "total": 100, "unit": "%" }
+      ],
+      "scf_series": [
+        { "iteration": 1, "total_energy": -107.812, "energy_delta": 0.128 },
+        { "iteration": 5, "total_energy": -108.21, "energy_delta": 0.012 },
+        { "iteration": 10, "total_energy": -108.31, "energy_delta": 0.0011 },
+        { "iteration": 15, "total_energy": -108.3238, "energy_delta": 1.5e-5 },
+        { "iteration": 18, "total_energy": -108.324, "energy_delta": 3.2e-7 }
+      ],
+      "batch_progress": {
+        "total_materials": 1000,
+        "completed_materials": 1000,
+        "converged_materials": 962,
+        "failed_materials": 38,
+        "materials_per_hour": 42,
+        "qualified_candidates": 37
+      }
+    },
+    "logs": {
+      "next_offset": 9,
+      "has_more": false,
+      "lines": [
+        {
+          "seq": 1,
+          "timestamp": "2026-08-10T14:00:02+08:00",
+          "level": "info",
+          "cluster_id": "guangzhou",
+          "message": "任务提交成功，作业ID DFT-SLURM-71438，材料库 1000 个（MP 子集）"
+        },
+        {
+          "seq": 2,
+          "timestamp": "2026-08-10T14:00:15+08:00",
+          "level": "info",
+          "cluster_id": "changsha",
+          "message": "材料库分片完成：4 片各 250 个，调度至长沙/广州/昆山/济南"
+        },
+        {
+          "seq": 3,
+          "timestamp": "2026-08-10T14:01:00+08:00",
+          "level": "info",
+          "cluster_id": "guangzhou",
+          "message": "批量结构优化启动：并行 1024 核，赝势 PAW，K点 4x4x4"
+        },
+        {
+          "seq": 4,
+          "timestamp": "2026-08-10T22:00:00+08:00",
+          "level": "info",
+          "cluster_id": "kunshan",
+          "message": "completed=250/250 收敛率 96.4% 吞吐量 42 个/h"
+        },
+        {
+          "seq": 5,
+          "timestamp": "2026-08-10T23:00:00+08:00",
+          "level": "info",
+          "cluster_id": "jinan",
+          "message": "completed=250/250 收敛率 95.6% 吞吐量 41 个/h"
+        },
+        {
+          "seq": 6,
+          "timestamp": "2026-08-11T00:30:00+08:00",
+          "level": "info",
+          "cluster_id": "guangzhou",
+          "message": "批量 SCF 计算完成：1000 个材料总能量与带隙计算完成"
+        },
+        {
+          "seq": 7,
+          "timestamp": "2026-08-11T01:30:00+08:00",
+          "level": "info",
+          "cluster_id": "guangzhou",
+          "message": "结果汇总完成：收敛 962 个，失败 38 个，按稳定性判据排序"
+        },
+        {
+          "seq": 8,
+          "timestamp": "2026-08-11T01:48:00+08:00",
+          "level": "info",
+          "cluster_id": "guangzhou",
+          "message": "任务完成：筛选出 37 个候选材料（带隙≥1.5eV），报告已生成"
+        }
+      ]
+    },
+    "artifacts": [
+      {
+        "id": "ART-DFT-021",
+        "name": "screening_results.csv",
+        "type": "dataset",
+        "format": "csv",
+        "size": 4194304,
+        "storage_path": "gfs://results/DFT-20260811-0010/screening_results.csv",
+        "preview_url": "/api/v1/files/ART-DFT-021/preview",
+        "download_url": "/api/v1/files/ART-DFT-021/download",
+        "created_at": "2026-08-11T01:48:00+08:00"
+      },
+      {
+        "id": "ART-DFT-022",
+        "name": "bandgap_distribution.png",
+        "type": "image",
+        "format": "png",
+        "size": 1572864,
+        "storage_path": "gfs://results/DFT-20260811-0010/bandgap_distribution.png",
+        "preview_url": "/api/v1/files/ART-DFT-022/preview",
+        "download_url": "/api/v1/files/ART-DFT-022/download",
+        "created_at": "2026-08-11T01:48:10+08:00"
+      },
+      {
+        "id": "ART-DFT-023",
+        "name": "screening_report.pdf",
+        "type": "report",
+        "format": "pdf",
+        "size": 2097152,
+        "storage_path": "gfs://results/DFT-20260811-0010/screening_report.pdf",
+        "preview_url": "/api/v1/files/ART-DFT-023/preview",
+        "download_url": "/api/v1/files/ART-DFT-023/download",
+        "created_at": "2026-08-11T01:48:15+08:00"
+      }
+    ]
+  },
+  "timestamp": "2026-08-11T01:48:15+08:00"
+}

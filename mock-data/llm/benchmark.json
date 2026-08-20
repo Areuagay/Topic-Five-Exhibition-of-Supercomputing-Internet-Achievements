@@ -1,0 +1,33 @@
+{
+  "code": 200,
+  "message": "success",
+  "data": {
+    "llm-pretraining": {
+      "dimensions": [
+        { "key": "throughput", "name": "训练吞吐量", "unit": "tokens/s" },
+        { "key": "gpu_utilization", "name": "GPU利用率", "unit": "%" },
+        { "key": "communication_overhead", "name": "通信开销", "unit": "%" },
+        { "key": "scaling_efficiency", "name": "扩展效率", "unit": "%" }
+      ],
+      "series": [
+        { "name": "本方案（3D并行）", "throughput": 18420, "gpu_utilization": 92, "communication_overhead": 14.2, "scaling_efficiency": 88 },
+        { "name": "基准方案（数据并行）", "throughput": 12860, "gpu_utilization": 78, "communication_overhead": 23.5, "scaling_efficiency": 64 },
+        { "name": "传统方案（单机多卡）", "throughput": 6130, "gpu_utilization": 71, "communication_overhead": 9.8, "scaling_efficiency": 100 }
+      ]
+    },
+    "pinn-acceleration": {
+      "dimensions": [
+        { "key": "throughput", "name": "训练吞吐量", "unit": "sample/s" },
+        { "key": "walltime", "name": "求解耗时", "unit": "min" },
+        { "key": "parallel_efficiency", "name": "并行效率", "unit": "%" },
+        { "key": "failure_rate", "name": "失败率", "unit": "%" }
+      ],
+      "series": [
+        { "name": "本方案（8卡并行）", "throughput": 24500, "walltime": 18, "parallel_efficiency": 92, "failure_rate": 0.5 },
+        { "name": "基准方案（单卡）", "throughput": 3520, "walltime": 126, "parallel_efficiency": 100, "failure_rate": 0.8 },
+        { "name": "传统方案（CPU求解）", "throughput": 0, "walltime": 765, "parallel_efficiency": 0, "failure_rate": 2.1 }
+      ]
+    }
+  },
+  "timestamp": "2026-08-11T12:00:00+08:00"
+}

@@ -1,0 +1,21 @@
+{
+  "code": 200,
+  "message": "success",
+  "data": [
+    {
+      "id": "swarm-coordination",
+      "name": "千架无人机集群协同控制",
+      "category": "无人机协同",
+      "description": "千架无人机集群协同控制示范，覆盖场景初始化、通信拓扑构建、任务分配、分布式一致性协同控制、多智能体动力学仿真与碰撞检测全流程，展示大规模集群协同调度与仿真能力。",
+      "status": "available"
+    },
+    {
+      "id": "path-planning",
+      "name": "航迹规划与避障",
+      "category": "无人机协同",
+      "description": "无人机航迹规划与避障示范，结合三维环境建模与分布式规划算法，为集群中每架无人机规划安全高效的飞行航迹。",
+      "status": "available"
+    }
+  ],
+  "timestamp": "2026-08-11T12:00:00+08:00"
+}

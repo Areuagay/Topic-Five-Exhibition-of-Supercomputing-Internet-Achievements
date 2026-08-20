@@ -1,0 +1,43 @@
+{
+  "code": 200,
+  "message": "success",
+  "data": [
+    {
+      "id": "fn-matrix-multiply",
+      "name": "矩阵乘法函数",
+      "version": "1.0",
+      "runtime_type": "container",
+      "runtime": "docker://registry.multi.example/fn-matrix-multiply:1.0",
+      "handler": "main.multiply",
+      "description": "大规模矩阵乘法函数，支持跨中心分块并行计算。",
+      "status": "active",
+      "source_type": "simulated",
+      "registered_at": "2026-08-01T08:00:00+08:00"
+    },
+    {
+      "id": "fn-fft",
+      "name": "FFT函数",
+      "version": "2.3",
+      "runtime_type": "container",
+      "runtime": "docker://registry.multi.example/fn-fft:2.3",
+      "handler": "main.fft",
+      "description": "大规模快速傅里叶变换函数，支持多维 FFT 与频域分析。",
+      "status": "active",
+      "source_type": "simulated",
+      "registered_at": "2026-08-01T08:05:00+08:00"
+    },
+    {
+      "id": "fn-file-convert",
+      "name": "文件格式转换函数",
+      "version": "1.2",
+      "runtime_type": "container",
+      "runtime": "docker://registry.multi.example/fn-file-convert:1.2",
+      "handler": "main.convert",
+      "description": "跨格式文件转换函数，支持多种科学计算数据格式互转。",
+      "status": "active",
+      "source_type": "simulated",
+      "registered_at": "2026-08-01T08:10:00+08:00"
+    }
+  ],
+  "timestamp": "2026-08-11T12:40:00+08:00"
+}

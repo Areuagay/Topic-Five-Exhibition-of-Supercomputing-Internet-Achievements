@@ -1,0 +1,178 @@
+{
+  "code": 200,
+  "message": "success",
+  "data": {
+    "run_id": "AUTO-20260811-0001",
+    "scenario_id": "vehicle-crash",
+    "scenario_name": "整车碰撞仿真",
+    "status": "running",
+    "progress": 68,
+    "execution_mode": "simulated",
+    "cluster_id": "changsha",
+    "cluster_name": "长沙天河新一代",
+    "job_id": "210011",
+    "current_stage": "solver",
+    "start_time": "2026-08-11T09:00:00+08:00",
+    "end_time": "",
+    "elapsed_seconds": 4320,
+    "nodes": 16,
+    "cpu_cores": 1024,
+    "gpu_count": 0,
+    "memory_gb": 4096,
+    "core_hours": 1228.8,
+    "source_type": "simulated",
+    "workflow": {
+      "nodes": [
+        {
+          "id": "model-import",
+          "name": "模型导入",
+          "status": "success",
+          "progress": 100,
+          "cluster_id": "changsha"
+        },
+        {
+          "id": "model-check",
+          "name": "网格与模型检查",
+          "status": "success",
+          "progress": 100,
+          "cluster_id": "changsha"
+        },
+        {
+          "id": "boundary",
+          "name": "接触/材料/边界条件",
+          "status": "success",
+          "progress": 100,
+          "cluster_id": "changsha"
+        },
+        {
+          "id": "partition",
+          "name": "区域分解",
+          "status": "success",
+          "progress": 100,
+          "cluster_id": "changsha"
+        },
+        {
+          "id": "solver",
+          "name": "并行显式求解",
+          "status": "running",
+          "progress": 68,
+          "cluster_id": "changsha"
+        },
+        {
+          "id": "post",
+          "name": "结果后处理",
+          "status": "pending",
+          "progress": 0,
+          "cluster_id": "changsha"
+        },
+        {
+          "id": "validate",
+          "name": "安全指标验证",
+          "status": "pending",
+          "progress": 0,
+          "cluster_id": "changsha"
+        }
+      ],
+      "edges": [
+        { "source": "model-import", "target": "model-check" },
+        { "source": "model-check", "target": "boundary" },
+        { "source": "boundary", "target": "partition" },
+        { "source": "partition", "target": "solver" },
+        { "source": "solver", "target": "post" },
+        { "source": "post", "target": "validate" }
+      ]
+    },
+    "metrics": {
+      "progress": 68,
+      "metrics": [
+        { "name": "simulation_time", "label": "当前仿真时间", "value": 0.102, "total": 0.15, "unit": "s" },
+        { "name": "kinetic_energy", "label": "动能", "value": 241.4, "total": 0, "unit": "kJ" },
+        { "name": "internal_energy", "label": "内能", "value": 196.8, "total": 0, "unit": "kJ" },
+        { "name": "hourglass_energy_ratio", "label": "沙漏能占比", "value": 3.1, "total": 100, "unit": "%" },
+        { "name": "total_energy_error", "label": "总能量误差", "value": 2.8, "total": 100, "unit": "%" },
+        { "name": "peak_acceleration", "label": "加速度峰值", "value": 32.1, "total": 0, "unit": "g" },
+        { "name": "cpu_utilization", "label": "CPU利用率", "value": 88, "total": 100, "unit": "%" }
+      ],
+      "energy_series": [
+        { "time": 0, "kinetic": 320, "internal": 8, "hourglass": 0.4 },
+        { "time": 0.03, "kinetic": 294.2, "internal": 41.1, "hourglass": 1.8 },
+        { "time": 0.06, "kinetic": 271.3, "internal": 88.5, "hourglass": 4.9 },
+        { "time": 0.09, "kinetic": 248.6, "internal": 163.8, "hourglass": 7.2 },
+        { "time": 0.102, "kinetic": 241.4, "internal": 196.8, "hourglass": 8 }
+      ]
+    },
+    "logs": {
+      "next_offset": 7,
+      "has_more": true,
+      "lines": [
+        {
+          "seq": 1,
+          "timestamp": "2026-08-11T09:00:02+08:00",
+          "level": "info",
+          "cluster_id": "changsha",
+          "message": "任务提交成功，作业ID 210011，分配节点 16 个（1024 核）"
+        },
+        {
+          "seq": 2,
+          "timestamp": "2026-08-11T09:01:40+08:00",
+          "level": "info",
+          "cluster_id": "changsha",
+          "message": "整车模型导入完成：1200 万单元，读取 d3plot 几何与材料卡片"
+        },
+        {
+          "seq": 3,
+          "timestamp": "2026-08-11T09:03:10+08:00",
+          "level": "info",
+          "cluster_id": "changsha",
+          "message": "网格质量检查通过：最小雅可比 0.72，负体积单元 0 个"
+        },
+        {
+          "seq": 4,
+          "timestamp": "2026-08-11T09:04:20+08:00",
+          "level": "info",
+          "cluster_id": "changsha",
+          "message": "接触/材料/边界条件设置完成：48 个接触对，壁障刚性墙定义完毕"
+        },
+        {
+          "seq": 5,
+          "timestamp": "2026-08-11T09:05:00+08:00",
+          "level": "info",
+          "cluster_id": "changsha",
+          "message": "区域分解完成：METIS 16 分区，负载均衡度 0.95"
+        },
+        {
+          "seq": 6,
+          "timestamp": "2026-08-11T09:05:30+08:00",
+          "level": "info",
+          "cluster_id": "changsha",
+          "message": "并行显式求解启动，时间步 1.2e-6s，仿真时长 0.15s，当前进度 68%"
+        }
+      ]
+    },
+    "artifacts": [
+      {
+        "id": "ART-AUTO-001",
+        "name": "stress_partial.png",
+        "type": "image",
+        "format": "png",
+        "size": 3145728,
+        "storage_path": "gfs://results/AUTO-20260811-0001/stress_partial.png",
+        "preview_url": "/api/v1/files/ART-AUTO-001/preview",
+        "download_url": "/api/v1/files/ART-AUTO-001/download",
+        "created_at": "2026-08-11T10:11:00+08:00"
+      },
+      {
+        "id": "ART-AUTO-002",
+        "name": "energy_partial.csv",
+        "type": "dataset",
+        "format": "csv",
+        "size": 2097152,
+        "storage_path": "gfs://results/AUTO-20260811-0001/energy_partial.csv",
+        "preview_url": "",
+        "download_url": "/api/v1/files/ART-AUTO-002/download",
+        "created_at": "2026-08-11T10:11:30+08:00"
+      }
+    ]
+  },
+  "timestamp": "2026-08-11T10:12:05+08:00"
+}

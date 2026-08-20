@@ -1,0 +1,59 @@
+{
+  "code": 200,
+  "message": "success",
+  "data": {
+    "virtual-screening": {
+      "id": "virtual-screening",
+      "name": "百万级化合物库虚拟筛选",
+      "category": "虚拟药物筛选",
+      "description": "面向百万级化合物库的跨中心虚拟筛选，通过分片并行与多中心协同，实现大规模分子对接与候选化合物快速发现。",
+      "summary_metrics": [
+        { "label": "化合物库规模", "value": "100万", "unit": "个" },
+        { "label": "筛选吞吐量", "value": 72.8, "unit": "compound/s" },
+        { "label": "最佳对接分数", "value": -11.4, "unit": "kcal/mol" }
+      ],
+      "supported_clusters": ["changsha", "guangzhou", "kunshan", "jinan"],
+      "tech_stack": ["AutoDock-Vina", "OpenBabel", "RDKit", "MPI"],
+      "background": "传统单中心虚拟筛选受限于算力规模，百万级化合物库完整筛选耗时数天。依托超算互联网将化合物库分片调度至长沙、广州、昆山、济南四个中心并行对接，将筛选周期压缩至小时级。",
+      "method": "将化合物库按化学空间均匀分片，各中心独立执行分子对接，主中心（长沙）完成对接结果汇总、打分排序与 Top-N 候选筛选，最终输出候选化合物与对接报告。",
+      "architecture": ["化合物库分片", "跨中心并行对接", "打分汇总", "Top-N筛选"],
+      "operators": [
+        { "id": "molecular-docking", "name": "分子对接算子" },
+        { "id": "score-merge", "name": "打分汇总算子" },
+        { "id": "admet-predict", "name": "ADMET性质预测算子" }
+      ],
+      "highlights": [
+        { "label": "吞吐量提升", "value": "3.4x", "unit": "倍" },
+        { "label": "筛选周期", "value": 137.4, "unit": "s" },
+        { "label": "并行效率", "value": 82, "unit": "%" }
+      ]
+    },
+    "admet-prediction": {
+      "id": "admet-prediction",
+      "name": "药物分子ADMET性质预测",
+      "category": "虚拟药物筛选",
+      "description": "对候选药物分子进行吸收、分布、代谢、排泄与毒性（ADMET）性质预测，辅助药物设计与毒性风险评估。",
+      "summary_metrics": [
+        { "label": "预测分子数", "value": 12000, "unit": "个" },
+        { "label": "预测吞吐量", "value": 42.5, "unit": "mol/s" },
+        { "label": "达标率", "value": 78.3, "unit": "%" }
+      ],
+      "supported_clusters": ["changsha", "guangzhou", "kunshan", "jinan"],
+      "tech_stack": ["DeepDILI", "Tox21", "RDKit", "PyTorch"],
+      "background": "药物分子的 ADMET 性质直接关系候选化合物成药性与安全性。借助超算互联网跨中心并行预测，对虚拟筛选产出的候选分子批量开展吸收、代谢、毒性等性质评估，为药物设计提供决策依据。",
+      "method": "基于预训练的 ADMET 预测模型（吸收/代谢/毒性多任务），将候选分子分片调度至多中心并行推理，汇总各中心预测结果并按成药性规则（Lipinski 五规则等）生成评估报告。",
+      "architecture": ["分子特征化", "跨中心并行推理", "性质汇总", "成药性评估"],
+      "operators": [
+        { "id": "molecular-docking", "name": "分子对接算子" },
+        { "id": "admet-predict", "name": "ADMET性质预测算子" },
+        { "id": "property-report", "name": "性质报告生成算子" }
+      ],
+      "highlights": [
+        { "label": "预测吞吐量", "value": 42.5, "unit": "mol/s" },
+        { "label": "达标率", "value": 78.3, "unit": "%" },
+        { "label": "并行加速比", "value": 3.1, "unit": "x" }
+      ]
+    }
+  },
+  "timestamp": "2026-08-11T10:00:00+08:00"
+}

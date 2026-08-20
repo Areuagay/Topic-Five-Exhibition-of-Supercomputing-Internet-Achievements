@@ -1,0 +1,194 @@
+{
+  "code": 200,
+  "message": "success",
+  "data": {
+    "run_id": "LLM-20260811-0010",
+    "scenario_id": "pinn-acceleration",
+    "scenario_name": "科学计算AI加速（PINN）",
+    "status": "success",
+    "progress": 100,
+    "execution_mode": "simulated",
+    "cluster_id": "kunshan",
+    "cluster_name": "昆山昆仑",
+    "job_id": "45210",
+    "current_stage": "completed",
+    "start_time": "2026-08-10T15:00:00+08:00",
+    "end_time": "2026-08-10T15:38:00+08:00",
+    "elapsed_seconds": 2280,
+    "nodes": 4,
+    "cpu_cores": 384,
+    "gpu_count": 32,
+    "memory_gb": 8192,
+    "core_hours": 243.2,
+    "source_type": "simulated",
+    "workflow": {
+      "nodes": [
+        {
+          "id": "prepare",
+          "name": "训练数据检查",
+          "status": "success",
+          "progress": 100,
+          "cluster_id": "kunshan"
+        },
+        {
+          "id": "shard",
+          "name": "数据分片",
+          "status": "success",
+          "progress": 100,
+          "cluster_id": "kunshan"
+        },
+        {
+          "id": "init",
+          "name": "模型初始化",
+          "status": "success",
+          "progress": 100,
+          "cluster_id": "kunshan"
+        },
+        {
+          "id": "train",
+          "name": "分布式训练",
+          "status": "success",
+          "progress": 100,
+          "cluster_id": "kunshan"
+        },
+        {
+          "id": "checkpoint",
+          "name": "Checkpoint保存",
+          "status": "success",
+          "progress": 100,
+          "cluster_id": "kunshan"
+        },
+        {
+          "id": "evaluate",
+          "name": "模型评估",
+          "status": "success",
+          "progress": 100,
+          "cluster_id": "kunshan"
+        }
+      ],
+      "edges": [
+        { "source": "prepare", "target": "shard" },
+        { "source": "shard", "target": "init" },
+        { "source": "init", "target": "train" },
+        { "source": "train", "target": "checkpoint" },
+        { "source": "checkpoint", "target": "evaluate" }
+      ]
+    },
+    "metrics": {
+      "progress": 100,
+      "metrics": [
+        { "name": "step", "label": "训练步数", "value": 20000, "total": 20000, "unit": "step" },
+        { "name": "loss", "label": "Loss", "value": 8.6e-06, "total": 0, "unit": "" },
+        { "name": "learning_rate", "label": "学习率", "value": 1e-04, "total": 0, "unit": "" },
+        { "name": "tokens_per_second", "label": "训练吞吐量", "value": 25100, "total": 0, "unit": "sample/s" },
+        { "name": "gpu_utilization", "label": "GPU利用率", "value": 90, "total": 100, "unit": "%" },
+        { "name": "gpu_memory", "label": "GPU显存使用率", "value": 84, "total": 100, "unit": "%" },
+        { "name": "communication_overhead", "label": "通信开销", "value": 8.9, "total": 100, "unit": "%" }
+      ],
+      "gpu_metrics": [
+        { "gpu_id": "gpu-0", "utilization": 91, "memory_utilization": 85, "temperature": 62 },
+        { "gpu_id": "gpu-1", "utilization": 89, "memory_utilization": 84, "temperature": 61 },
+        { "gpu_id": "gpu-2", "utilization": 92, "memory_utilization": 86, "temperature": 63 },
+        { "gpu_id": "gpu-3", "utilization": 88, "memory_utilization": 83, "temperature": 60 }
+      ]
+    },
+    "logs": {
+      "next_offset": 9,
+      "has_more": false,
+      "lines": [
+        {
+          "seq": 1,
+          "timestamp": "2026-08-10T15:00:02+08:00",
+          "level": "info",
+          "cluster_id": "kunshan",
+          "message": "任务提交成功，作业ID 45210，分配节点 4 个（32 卡 A800）"
+        },
+        {
+          "seq": 2,
+          "timestamp": "2026-08-10T15:00:40+08:00",
+          "level": "info",
+          "cluster_id": "kunshan",
+          "message": "Burgers 方程求解域与边界条件解析完成，采样点 100 万"
+        },
+        {
+          "seq": 3,
+          "timestamp": "2026-08-10T15:01:20+08:00",
+          "level": "info",
+          "cluster_id": "kunshan",
+          "message": "MLP 网络初始化：8 层 x 128 神经元，自动微分图构建完成"
+        },
+        {
+          "seq": 4,
+          "timestamp": "2026-08-10T15:01:30+08:00",
+          "level": "info",
+          "cluster_id": "kunshan",
+          "message": "并行训练启动：32 卡数据并行，自适应残差采样（RAR）开启"
+        },
+        {
+          "seq": 5,
+          "timestamp": "2026-08-10T15:19:00+08:00",
+          "level": "info",
+          "cluster_id": "kunshan",
+          "message": "训练步 12000/20000，物理残差 1.8e-04，与解析解偏差 2.1e-03"
+        },
+        {
+          "seq": 6,
+          "timestamp": "2026-08-10T15:33:00+08:00",
+          "level": "info",
+          "cluster_id": "kunshan",
+          "message": "训练收敛：Loss 8.6e-06，残差 1.2e-05，完成 Checkpoint 保存"
+        },
+        {
+          "seq": 7,
+          "timestamp": "2026-08-10T15:35:00+08:00",
+          "level": "info",
+          "cluster_id": "kunshan",
+          "message": "评估完成：与经典数值解对比，最大相对误差 0.86%，加速比 42.5x"
+        },
+        {
+          "seq": 8,
+          "timestamp": "2026-08-10T15:38:00+08:00",
+          "level": "info",
+          "cluster_id": "kunshan",
+          "message": "任务成功结束，累计核时 243.2 核时"
+        }
+      ]
+    },
+    "artifacts": [
+      {
+        "id": "ART-LLM-010",
+        "name": "pinn_solution_field.png",
+        "type": "image",
+        "format": "png",
+        "size": 1048576,
+        "storage_path": "gfs://results/LLM-20260811-0010/pinn_solution_field.png",
+        "preview_url": "/api/v1/files/ART-LLM-010/preview",
+        "download_url": "/api/v1/files/ART-LLM-010/download",
+        "created_at": "2026-08-10T15:35:30+08:00"
+      },
+      {
+        "id": "ART-LLM-011",
+        "name": "pinn-model-final",
+        "type": "model",
+        "format": "safetensors",
+        "size": 52428800,
+        "storage_path": "gfs://results/LLM-20260811-0010/pinn-model-final",
+        "preview_url": "",
+        "download_url": "/api/v1/files/ART-LLM-011/download",
+        "created_at": "2026-08-10T15:33:00+08:00"
+      },
+      {
+        "id": "ART-LLM-012",
+        "name": "pinn_eval_report.pdf",
+        "type": "report",
+        "format": "pdf",
+        "size": 2097152,
+        "storage_path": "gfs://results/LLM-20260811-0010/pinn_eval_report.pdf",
+        "preview_url": "/api/v1/files/ART-LLM-012/preview",
+        "download_url": "/api/v1/files/ART-LLM-012/download",
+        "created_at": "2026-08-10T15:37:00+08:00"
+      }
+    ]
+  },
+  "timestamp": "2026-08-10T15:38:02+08:00"
+}

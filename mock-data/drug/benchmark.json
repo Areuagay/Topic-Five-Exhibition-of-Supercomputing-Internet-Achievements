@@ -1,0 +1,55 @@
+{
+  "code": 200,
+  "message": "success",
+  "data": {
+    "virtual-screening": {
+      "dimensions": [
+        { "key": "throughput", "name": "筛选吞吐量", "unit": "compound/s" },
+        { "key": "walltime", "name": "总耗时", "unit": "s" },
+        { "key": "parallel_efficiency", "name": "并行效率", "unit": "%" },
+        { "key": "failure_rate", "name": "失败率", "unit": "%" }
+      ],
+      "series": [
+        {
+          "name": "跨中心方案",
+          "throughput": 72.8,
+          "walltime": 137.4,
+          "parallel_efficiency": 82,
+          "failure_rate": 0.4
+        },
+        {
+          "name": "单中心基准",
+          "throughput": 21.6,
+          "walltime": 463,
+          "parallel_efficiency": 100,
+          "failure_rate": 0.5
+        }
+      ]
+    },
+    "admet-prediction": {
+      "dimensions": [
+        { "key": "throughput", "name": "预测吞吐量", "unit": "mol/s" },
+        { "key": "walltime", "name": "总耗时", "unit": "s" },
+        { "key": "parallel_efficiency", "name": "并行效率", "unit": "%" },
+        { "key": "accuracy", "name": "预测准确率", "unit": "%" }
+      ],
+      "series": [
+        {
+          "name": "跨中心方案",
+          "throughput": 42.5,
+          "walltime": 282.4,
+          "parallel_efficiency": 76,
+          "accuracy": 94.2
+        },
+        {
+          "name": "单中心基准",
+          "throughput": 13.7,
+          "walltime": 875.9,
+          "parallel_efficiency": 100,
+          "accuracy": 94.2
+        }
+      ]
+    }
+  },
+  "timestamp": "2026-08-11T10:00:00+08:00"
+}

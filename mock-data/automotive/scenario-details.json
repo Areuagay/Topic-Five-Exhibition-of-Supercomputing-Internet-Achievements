@@ -1,0 +1,72 @@
+{
+  "code": 200,
+  "message": "success",
+  "data": [
+    {
+      "id": "vehicle-crash",
+      "name": "整车碰撞仿真",
+      "category": "汽车仿真",
+      "description": "基于 LS-DYNA 的整车碰撞仿真示范，覆盖模型导入、网格检查、接触/材料/边界条件设置、区域分解、并行显式求解与安全指标验证全流程。",
+      "summary_metrics": [
+        { "label": "单元规模", "value": "1200万", "unit": "单元" },
+        { "label": "仿真耗时", "value": 102, "unit": "min" },
+        { "label": "加速度峰值", "value": 32.1, "unit": "g" },
+        { "label": "总能量误差", "value": 2.8, "unit": "%" }
+      ],
+      "supported_clusters": ["changsha", "guangzhou", "kunshan"],
+      "tech_stack": ["LS-DYNA", "MPI", "OpenMP", "Slurm", "HyperMesh"],
+      "background": "整车碰撞仿真涉及千万级单元与复杂接触，需大规模并行显式求解；平台通过区域分解与负载均衡实现整车级仿真高效运行。",
+      "method": "采用 LS-DYNA 显式动力学求解，MPI 区域分解并行，配合接触算法与质量缩放控制，输出能量守恒、加速度与变形等安全指标。",
+      "architecture": [
+        "前处理：模型导入与网格质量检查",
+        "接触定义：自接触与罚函数接触",
+        "区域分解：METIS 负载均衡分区",
+        "并行求解：MPI 显式时间步进",
+        "后处理：能量曲线与安全指标验证"
+      ],
+      "operators": [
+        { "id": "crash-solver", "name": "碰撞与冲击仿真算子" },
+        { "id": "structural-mechanics", "name": "结构力学求解器" },
+        { "id": "sparse-matrix", "name": "稀疏矩阵运算" }
+      ],
+      "highlights": [
+        { "label": "并行加速比", "value": 96, "unit": "x" },
+        { "label": "CPU利用率", "value": 88, "unit": "%" },
+        { "label": "总能量误差", "value": 2.8, "unit": "%" }
+      ]
+    },
+    {
+      "id": "fatigue-life",
+      "name": "结构疲劳寿命预测",
+      "category": "汽车仿真",
+      "description": "基于有限元疲劳分析的汽车结构疲劳寿命预测示范，结合载荷谱输入与材料 S-N 曲线，评估车身与底盘关键结构件的疲劳损伤与寿命分布。",
+      "summary_metrics": [
+        { "label": "最小寿命", "value": 2.4e5, "unit": "次" },
+        { "label": "损伤因子峰值", "value": 4.2, "unit": "" },
+        { "label": "分析耗时", "value": 45, "unit": "min" },
+        { "label": "CPU利用率", "value": 86, "unit": "%" }
+      ],
+      "supported_clusters": ["changsha", "jinan"],
+      "tech_stack": ["nCode DesignLife", "ABAQUS", "MPI", "Slurm"],
+      "background": "汽车结构件在复杂载荷谱下易发生疲劳失效，需结合有限元应力结果与疲劳损伤模型进行寿命预测，指导结构优化设计。",
+      "method": "提取有限元应力/应变历程，结合材料 S-N 曲线与 Miner 线性累积损伤准则，计算各节点损伤因子与疲劳寿命分布。",
+      "architecture": [
+        "载荷谱导入：时域载荷历程",
+        "应力提取：有限元静/动应力结果",
+        "损伤计算：Miner 累积损伤准则",
+        "并行分析：按载荷通道并行",
+        "寿命输出：寿命云图与报告"
+      ],
+      "operators": [
+        { "id": "structural-mechanics", "name": "结构力学求解器" },
+        { "id": "fatigue-analysis", "name": "疲劳分析算子" }
+      ],
+      "highlights": [
+        { "label": "分析效率", "value": 5.8, "unit": "x" },
+        { "label": "寿命预测精度", "value": 92, "unit": "%" },
+        { "label": "CPU利用率", "value": 86, "unit": "%" }
+      ]
+    }
+  ],
+  "timestamp": "2026-08-11T12:00:00+08:00"
+}

@@ -1,0 +1,111 @@
+{
+  "code": 200,
+  "message": "success",
+  "data": {
+    "band-dos": {
+      "fields": [
+        {
+          "name": "material_name",
+          "label": "材料名称",
+          "type": "string",
+          "unit": "",
+          "required": true,
+          "default_value": "Si"
+        },
+        {
+          "name": "crystal_structure",
+          "label": "晶体结构文件",
+          "type": "string",
+          "unit": "",
+          "required": true,
+          "default_value": "si.pos"
+        },
+        {
+          "name": "pseudo_type",
+          "label": "赝势类型",
+          "type": "select",
+          "unit": "",
+          "required": true,
+          "default_value": "PAW"
+        },
+        {
+          "name": "kpoint_grid",
+          "label": "K点网格",
+          "type": "string",
+          "unit": "",
+          "required": true,
+          "default_value": "6x6x6"
+        },
+        {
+          "name": "cutoff_energy",
+          "label": "截断能",
+          "type": "integer",
+          "unit": "Ry",
+          "required": true,
+          "default_value": "60"
+        },
+        {
+          "name": "scf_threshold",
+          "label": "SCF收敛阈值",
+          "type": "number",
+          "unit": "Ry",
+          "required": true,
+          "default_value": "1e-6"
+        }
+      ]
+    },
+    "high-throughput-screening": {
+      "fields": [
+        {
+          "name": "material_db",
+          "label": "材料数据库",
+          "type": "select",
+          "unit": "",
+          "required": true,
+          "default_value": "materials-project-subset"
+        },
+        {
+          "name": "material_count",
+          "label": "材料数量",
+          "type": "integer",
+          "unit": "个",
+          "required": true,
+          "default_value": "1000"
+        },
+        {
+          "name": "bandgap_threshold",
+          "label": "带隙阈值",
+          "type": "number",
+          "unit": "eV",
+          "required": true,
+          "default_value": "1.5"
+        },
+        {
+          "name": "pseudo_type",
+          "label": "赝势类型",
+          "type": "select",
+          "unit": "",
+          "required": true,
+          "default_value": "PAW"
+        },
+        {
+          "name": "kpoint_grid",
+          "label": "K点网格",
+          "type": "string",
+          "unit": "",
+          "required": true,
+          "default_value": "4x4x4"
+        },
+        {
+          "name": "shard_count",
+          "label": "分片数量",
+          "type": "integer",
+          "unit": "",
+          "required": true,
+          "default_value": "4"
+        }
+      ]
+    }
+  },
+  "timestamp": "2026-08-11T10:00:00+08:00"
+}
