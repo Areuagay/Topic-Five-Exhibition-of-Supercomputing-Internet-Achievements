@@ -74,35 +74,35 @@
         {
           "seq": 1,
           "timestamp": "2026-08-11T09:00:03+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "changsha",
           "message": "任务提交成功，作业ID 210001，分配节点 8 个（512 核）"
         },
         {
           "seq": 2,
           "timestamp": "2026-08-11T09:00:58+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "changsha",
           "message": "网格数据加载完成：4000x4000x200，域分解为 8x1x1 子块"
         },
         {
           "seq": 3,
           "timestamp": "2026-08-11T09:02:40+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "changsha",
           "message": "震源参数初始化：Ricker 子波，主频 5.0Hz，震源深度 15km"
         },
         {
           "seq": 4,
           "timestamp": "2026-08-11T09:03:15+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "changsha",
           "message": "进入时间步进求解，时间步长 dt=0.001s，总步数 10000"
         },
         {
           "seq": 5,
           "timestamp": "2026-08-11T10:18:00+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "changsha",
           "message": "时间步 6300/10000 完成，残差 1.20e-07，单步耗时 0.82s，预计剩余 46 分钟"
         }

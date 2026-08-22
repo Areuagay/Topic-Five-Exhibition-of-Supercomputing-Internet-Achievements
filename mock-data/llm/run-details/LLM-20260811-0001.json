@@ -103,49 +103,49 @@
         {
           "seq": 1,
           "timestamp": "2026-08-11T09:30:02+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "kunshan",
           "message": "任务提交成功，作业ID 45201，分配节点 16 个（128 卡 A800）"
         },
         {
           "seq": 2,
           "timestamp": "2026-08-11T09:31:20+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "kunshan",
           "message": "训练数据集校验通过：1.2T tokens，完成去重与 Tokenization"
         },
         {
           "seq": 3,
           "timestamp": "2026-08-11T09:32:45+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "kunshan",
           "message": "数据分片完成：DP=2，TP=4，PP=2，共 128 卡 3D 并行拓扑就绪"
         },
         {
           "seq": 4,
           "timestamp": "2026-08-11T09:34:10+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "kunshan",
           "message": "模型初始化完成：demo-transformer 14B 参数，随机初始化权重"
         },
         {
           "seq": 5,
           "timestamp": "2026-08-11T09:34:30+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "kunshan",
           "message": "分布式训练启动，学习率 8e-05，NCCL 通信域建立完成"
         },
         {
           "seq": 6,
           "timestamp": "2026-08-11T10:58:00+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "kunshan",
           "message": "训练步 4200/10000，Loss 2.314，吞吐 18420 tokens/s，GPU 利用率 92%"
         },
         {
           "seq": 7,
           "timestamp": "2026-08-11T10:58:30+08:00",
-          "level": "debug",
+          "level": "DEBUG",
           "cluster_id": "kunshan",
           "message": "通信开销 14.2%，梯度平均耗时 0.18s/step，无 NCCL 超时"
         }

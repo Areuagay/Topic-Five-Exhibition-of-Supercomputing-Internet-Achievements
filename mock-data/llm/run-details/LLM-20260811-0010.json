@@ -99,56 +99,56 @@
         {
           "seq": 1,
           "timestamp": "2026-08-10T15:00:02+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "kunshan",
           "message": "任务提交成功，作业ID 45210，分配节点 4 个（32 卡 A800）"
         },
         {
           "seq": 2,
           "timestamp": "2026-08-10T15:00:40+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "kunshan",
           "message": "Burgers 方程求解域与边界条件解析完成，采样点 100 万"
         },
         {
           "seq": 3,
           "timestamp": "2026-08-10T15:01:20+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "kunshan",
           "message": "MLP 网络初始化：8 层 x 128 神经元，自动微分图构建完成"
         },
         {
           "seq": 4,
           "timestamp": "2026-08-10T15:01:30+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "kunshan",
           "message": "并行训练启动：32 卡数据并行，自适应残差采样（RAR）开启"
         },
         {
           "seq": 5,
           "timestamp": "2026-08-10T15:19:00+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "kunshan",
           "message": "训练步 12000/20000，物理残差 1.8e-04，与解析解偏差 2.1e-03"
         },
         {
           "seq": 6,
           "timestamp": "2026-08-10T15:33:00+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "kunshan",
           "message": "训练收敛：Loss 8.6e-06，残差 1.2e-05，完成 Checkpoint 保存"
         },
         {
           "seq": 7,
           "timestamp": "2026-08-10T15:35:00+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "kunshan",
           "message": "评估完成：与经典数值解对比，最大相对误差 0.86%，加速比 42.5x"
         },
         {
           "seq": 8,
           "timestamp": "2026-08-10T15:38:00+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "kunshan",
           "message": "任务成功结束，累计核时 243.2 核时"
         }

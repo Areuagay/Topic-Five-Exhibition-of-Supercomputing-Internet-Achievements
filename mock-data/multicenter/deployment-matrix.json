@@ -2,36 +2,41 @@
   "code": 200,
   "message": "success",
   "data": {
-    "clusters": ["changsha", "guangzhou", "kunshan", "jinan"],
+    "clusters": [
+      { "id": "changsha", "name": "长沙天河新一代" },
+      { "id": "guangzhou", "name": "广州天河二号" },
+      { "id": "kunshan", "name": "昆山昆仑" },
+      { "id": "jinan", "name": "济南神威蓝光" }
+    ],
     "functions": [
       {
         "function_id": "fn-matrix-multiply",
         "function_name": "矩阵乘法函数",
         "deployments": [
-          { "cluster_id": "changsha", "replicas": 2, "status": "running" },
-          { "cluster_id": "guangzhou", "replicas": 1, "status": "running" },
-          { "cluster_id": "kunshan", "replicas": 2, "status": "running" },
-          { "cluster_id": "jinan", "replicas": 0, "status": "not-deployed" }
+          { "cluster_id": "changsha", "replicas": 2, "status": "ready" },
+          { "cluster_id": "guangzhou", "replicas": 1, "status": "ready" },
+          { "cluster_id": "kunshan", "replicas": 2, "status": "ready" },
+          { "cluster_id": "jinan", "replicas": 0, "status": "offline" }
         ]
       },
       {
         "function_id": "fn-fft",
         "function_name": "FFT函数",
         "deployments": [
-          { "cluster_id": "changsha", "replicas": 1, "status": "running" },
-          { "cluster_id": "guangzhou", "replicas": 1, "status": "running" },
-          { "cluster_id": "kunshan", "replicas": 1, "status": "degraded" },
-          { "cluster_id": "jinan", "replicas": 1, "status": "running" }
+          { "cluster_id": "changsha", "replicas": 1, "status": "ready" },
+          { "cluster_id": "guangzhou", "replicas": 1, "status": "ready" },
+          { "cluster_id": "kunshan", "replicas": 1, "status": "deploying" },
+          { "cluster_id": "jinan", "replicas": 1, "status": "ready" }
         ]
       },
       {
         "function_id": "fn-file-convert",
         "function_name": "文件格式转换函数",
         "deployments": [
-          { "cluster_id": "changsha", "replicas": 1, "status": "running" },
-          { "cluster_id": "guangzhou", "replicas": 1, "status": "running" },
-          { "cluster_id": "kunshan", "replicas": 0, "status": "not-deployed" },
-          { "cluster_id": "jinan", "replicas": 1, "status": "running" }
+          { "cluster_id": "changsha", "replicas": 1, "status": "ready" },
+          { "cluster_id": "guangzhou", "replicas": 1, "status": "ready" },
+          { "cluster_id": "kunshan", "replicas": 0, "status": "offline" },
+          { "cluster_id": "jinan", "replicas": 1, "status": "ready" }
         ]
       }
     ]

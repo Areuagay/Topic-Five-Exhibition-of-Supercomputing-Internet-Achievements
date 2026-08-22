@@ -9,9 +9,9 @@
       "description": "基于 LS-DYNA 的整车碰撞仿真示范，覆盖模型导入、网格检查、接触/材料/边界条件设置、区域分解、并行显式求解与安全指标验证全流程。",
       "summary_metrics": [
         { "label": "单元规模", "value": "1200万", "unit": "单元" },
-        { "label": "仿真耗时", "value": 102, "unit": "min" },
-        { "label": "加速度峰值", "value": 32.1, "unit": "g" },
-        { "label": "总能量误差", "value": 2.8, "unit": "%" }
+        { "label": "仿真耗时", "value": "102", "unit": "min" },
+        { "label": "加速度峰值", "value": "32.1", "unit": "g" },
+        { "label": "总能量误差", "value": "2.8", "unit": "%" }
       ],
       "supported_clusters": ["changsha", "guangzhou", "kunshan"],
       "tech_stack": ["LS-DYNA", "MPI", "OpenMP", "Slurm", "HyperMesh"],
@@ -30,9 +30,9 @@
         { "id": "sparse-matrix", "name": "稀疏矩阵运算" }
       ],
       "highlights": [
-        { "label": "并行加速比", "value": 96, "unit": "x" },
-        { "label": "CPU利用率", "value": 88, "unit": "%" },
-        { "label": "总能量误差", "value": 2.8, "unit": "%" }
+        { "label": "并行加速比", "value": "96", "unit": "x" },
+        { "label": "CPU利用率", "value": "88", "unit": "%" },
+        { "label": "总能量误差", "value": "2.8", "unit": "%" }
       ]
     },
     {
@@ -41,10 +41,10 @@
       "category": "汽车仿真",
       "description": "基于有限元疲劳分析的汽车结构疲劳寿命预测示范，结合载荷谱输入与材料 S-N 曲线，评估车身与底盘关键结构件的疲劳损伤与寿命分布。",
       "summary_metrics": [
-        { "label": "最小寿命", "value": 2.4e5, "unit": "次" },
-        { "label": "损伤因子峰值", "value": 4.2, "unit": "" },
-        { "label": "分析耗时", "value": 45, "unit": "min" },
-        { "label": "CPU利用率", "value": 86, "unit": "%" }
+        { "label": "最小寿命", "value": "2.4e5", "unit": "次" },
+        { "label": "损伤因子峰值", "value": "4.2", "unit": "" },
+        { "label": "分析耗时", "value": "45", "unit": "min" },
+        { "label": "CPU利用率", "value": "86", "unit": "%" }
       ],
       "supported_clusters": ["changsha", "jinan"],
       "tech_stack": ["nCode DesignLife", "ABAQUS", "MPI", "Slurm"],
@@ -62,9 +62,9 @@
         { "id": "fatigue-analysis", "name": "疲劳分析算子" }
       ],
       "highlights": [
-        { "label": "分析效率", "value": 5.8, "unit": "x" },
-        { "label": "寿命预测精度", "value": 92, "unit": "%" },
-        { "label": "CPU利用率", "value": 86, "unit": "%" }
+        { "label": "分析效率", "value": "5.8", "unit": "x" },
+        { "label": "寿命预测精度", "value": "92", "unit": "%" },
+        { "label": "CPU利用率", "value": "86", "unit": "%" }
       ]
     }
   ],

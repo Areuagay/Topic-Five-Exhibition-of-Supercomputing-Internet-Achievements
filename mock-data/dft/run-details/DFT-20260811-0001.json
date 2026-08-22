@@ -14,7 +14,7 @@
     "current_stage": "scf",
     "start_time": "2026-08-11T09:00:00+08:00",
     "end_time": "",
-    "elapsed_seconds": 842.4,
+    "elapsed_seconds": 842,
     "nodes": 8,
     "cpu_cores": 512,
     "gpu_count": 0,
@@ -113,42 +113,42 @@
         {
           "seq": 1,
           "timestamp": "2026-08-11T09:00:02+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "changsha",
           "message": "任务提交成功，作业ID DFT-SLURM-71429，材料 Si（金刚石结构）"
         },
         {
           "seq": 2,
           "timestamp": "2026-08-11T09:00:10+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "changsha",
           "message": "结构读取完成：晶格常数 5.43 Å，原子数 2，对称性 Fd-3m"
         },
         {
           "seq": 3,
           "timestamp": "2026-08-11T09:00:20+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "changsha",
           "message": "赝势准备完成：PAW 赝势，截断能 60 Ry，K点网格 6x6x6"
         },
         {
           "seq": 4,
           "timestamp": "2026-08-11T09:01:00+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "changsha",
           "message": "结构优化完成：收敛至 0.01 Ry/Bohr，晶格常数变化 <0.1%"
         },
         {
           "seq": 5,
           "timestamp": "2026-08-11T09:01:30+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "changsha",
           "message": "SCF自洽场计算启动，阈值 1e-6 Ry"
         },
         {
           "seq": 6,
           "timestamp": "2026-08-11T09:14:00+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "changsha",
           "message": "iteration=10 total_energy=-108.3100 Ry delta=1.1e-3"
         }

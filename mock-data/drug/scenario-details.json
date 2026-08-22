@@ -9,8 +9,8 @@
       "description": "面向百万级化合物库的跨中心虚拟筛选，通过分片并行与多中心协同，实现大规模分子对接与候选化合物快速发现。",
       "summary_metrics": [
         { "label": "化合物库规模", "value": "100万", "unit": "个" },
-        { "label": "筛选吞吐量", "value": 72.8, "unit": "compound/s" },
-        { "label": "最佳对接分数", "value": -11.4, "unit": "kcal/mol" }
+        { "label": "筛选吞吐量", "value": "72.8", "unit": "compound/s" },
+        { "label": "最佳对接分数", "value": "-11.4", "unit": "kcal/mol" }
       ],
       "supported_clusters": ["changsha", "guangzhou", "kunshan", "jinan"],
       "tech_stack": ["AutoDock-Vina", "OpenBabel", "RDKit", "MPI"],
@@ -24,8 +24,8 @@
       ],
       "highlights": [
         { "label": "吞吐量提升", "value": "3.4x", "unit": "倍" },
-        { "label": "筛选周期", "value": 137.4, "unit": "s" },
-        { "label": "并行效率", "value": 82, "unit": "%" }
+        { "label": "筛选周期", "value": "137.4", "unit": "s" },
+        { "label": "并行效率", "value": "82", "unit": "%" }
       ]
     },
     "admet-prediction": {
@@ -34,9 +34,9 @@
       "category": "虚拟药物筛选",
       "description": "对候选药物分子进行吸收、分布、代谢、排泄与毒性（ADMET）性质预测，辅助药物设计与毒性风险评估。",
       "summary_metrics": [
-        { "label": "预测分子数", "value": 12000, "unit": "个" },
-        { "label": "预测吞吐量", "value": 42.5, "unit": "mol/s" },
-        { "label": "达标率", "value": 78.3, "unit": "%" }
+        { "label": "预测分子数", "value": "12000", "unit": "个" },
+        { "label": "预测吞吐量", "value": "42.5", "unit": "mol/s" },
+        { "label": "达标率", "value": "78.3", "unit": "%" }
       ],
       "supported_clusters": ["changsha", "guangzhou", "kunshan", "jinan"],
       "tech_stack": ["DeepDILI", "Tox21", "RDKit", "PyTorch"],
@@ -49,9 +49,9 @@
         { "id": "property-report", "name": "性质报告生成算子" }
       ],
       "highlights": [
-        { "label": "预测吞吐量", "value": 42.5, "unit": "mol/s" },
-        { "label": "达标率", "value": 78.3, "unit": "%" },
-        { "label": "并行加速比", "value": 3.1, "unit": "x" }
+        { "label": "预测吞吐量", "value": "42.5", "unit": "mol/s" },
+        { "label": "达标率", "value": "78.3", "unit": "%" },
+        { "label": "并行加速比", "value": "3.1", "unit": "x" }
       ]
     }
   },

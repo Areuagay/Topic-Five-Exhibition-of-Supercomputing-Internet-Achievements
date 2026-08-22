@@ -8,10 +8,10 @@
       "category": "无人机协同",
       "description": "千架无人机集群协同控制示范，覆盖场景初始化、通信拓扑构建、任务分配、分布式一致性协同控制、多智能体动力学仿真与碰撞检测全流程。",
       "summary_metrics": [
-        { "label": "无人机数量", "value": 1000, "unit": "架" },
-        { "label": "任务完成率", "value": 93.2, "unit": "%" },
-        { "label": "仿真速度", "value": 480, "unit": "step/s" },
-        { "label": "碰撞次数", "value": 2, "unit": "次" }
+        { "label": "无人机数量", "value": "1000", "unit": "架" },
+        { "label": "任务完成率", "value": "93.2", "unit": "%" },
+        { "label": "仿真速度", "value": "480", "unit": "step/s" },
+        { "label": "碰撞次数", "value": "2", "unit": "次" }
       ],
       "supported_clusters": ["changsha", "jinan", "kunshan"],
       "tech_stack": ["ROS2", "Gazebo", "MPI", "Slurm", "一致性控制算法"],
@@ -30,9 +30,9 @@
         { "id": "collision-detection", "name": "碰撞检测算子" }
       ],
       "highlights": [
-        { "label": "仿真速度", "value": 480, "unit": "step/s" },
-        { "label": "任务完成率", "value": 93.2, "unit": "%" },
-        { "label": "并行效率", "value": 92, "unit": "%" }
+        { "label": "仿真速度", "value": "480", "unit": "step/s" },
+        { "label": "任务完成率", "value": "93.2", "unit": "%" },
+        { "label": "并行效率", "value": "92", "unit": "%" }
       ]
     },
     {
@@ -41,10 +41,10 @@
       "category": "无人机协同",
       "description": "无人机航迹规划与避障示范，结合三维环境建模与分布式规划算法，为集群中每架无人机规划安全高效的飞行航迹。",
       "summary_metrics": [
-        { "label": "规划耗时", "value": 2.8, "unit": "s" },
-        { "label": "避障成功率", "value": 98.6, "unit": "%" },
-        { "label": "平均航迹长度", "value": 12.4, "unit": "km" },
-        { "label": "并行规划效率", "value": 89, "unit": "%" }
+        { "label": "规划耗时", "value": "2.8", "unit": "s" },
+        { "label": "避障成功率", "value": "98.6", "unit": "%" },
+        { "label": "平均航迹长度", "value": "12.4", "unit": "km" },
+        { "label": "并行规划效率", "value": "89", "unit": "%" }
       ],
       "supported_clusters": ["jinan", "changsha"],
       "tech_stack": ["A*算法", "RRT*", "MPI", "Slurm", "OctoMap"],
@@ -62,9 +62,9 @@
         { "id": "collision-detection", "name": "碰撞检测算子" }
       ],
       "highlights": [
-        { "label": "避障成功率", "value": 98.6, "unit": "%" },
-        { "label": "规划加速比", "value": 68, "unit": "x" },
-        { "label": "平均规划耗时", "value": 2.8, "unit": "s" }
+        { "label": "避障成功率", "value": "98.6", "unit": "%" },
+        { "label": "规划加速比", "value": "68", "unit": "x" },
+        { "label": "平均规划耗时", "value": "2.8", "unit": "s" }
       ]
     }
   ],

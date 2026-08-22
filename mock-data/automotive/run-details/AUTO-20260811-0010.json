@@ -101,49 +101,49 @@
         {
           "seq": 1,
           "timestamp": "2026-08-10T13:00:02+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "changsha",
           "message": "任务提交成功，作业ID 209910，分配节点 8 个（512 核）"
         },
         {
           "seq": 2,
           "timestamp": "2026-08-10T13:02:30+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "changsha",
           "message": "车身底架有限元模型导入完成：860 万节点，材料 S-N 曲线加载完毕"
         },
         {
           "seq": 3,
           "timestamp": "2026-08-10T13:04:00+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "changsha",
           "message": "载荷谱导入：8 通道时域载荷，等效 100 万次循环"
         },
         {
           "seq": 4,
           "timestamp": "2026-08-10T13:05:10+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "changsha",
           "message": "应力历程提取完成：结合有限元静力结果插值得到节点应力时间历程"
         },
         {
           "seq": 5,
           "timestamp": "2026-08-10T13:20:00+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "changsha",
           "message": "Miner 累积损伤计算完成：损伤因子峰值 4.2，位于后纵梁焊点区域"
         },
         {
           "seq": 6,
           "timestamp": "2026-08-10T13:30:00+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "changsha",
           "message": "疲劳寿命预测完成：最小寿命 2.4e5 次循环，低于设计目标，已标记高风险区域"
         },
         {
           "seq": 7,
           "timestamp": "2026-08-10T13:45:00+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "changsha",
           "message": "任务成功结束，输出寿命云图与分析报告，累计核时 384.0 核时"
         }

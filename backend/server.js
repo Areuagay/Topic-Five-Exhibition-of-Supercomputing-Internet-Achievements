@@ -87,43 +87,101 @@ function readJson(relPath) {
 }
 
 /**
- * 将去掉 /api/v1 前缀后的路径段映射为 mock-data 下的相对文件路径。
+ * 将去掉 /api/v1 前缀后的路径段解析为 mock-data 数据路由。
  *
  * 约定（与 docs/api OpenAPI 契约一致）：
- *   index                          -> index.json
- *   {domain}/scenarios             -> {domain}/scenarios.json
- *   {domain}/scenario-details      -> {domain}/scenario-details.json
- *   {domain}/params-schema         -> {domain}/params-schema.json
- *   {domain}/benchmark             -> {domain}/benchmark.json
- *   {domain}/operators             -> {domain}/operators.json
- *   {domain}/runs                  -> {domain}/runs.json
- *   {domain}/runs/{runId}          -> {domain}/run-details/{runId}.json
- *   multicenter/{resource}         -> multicenter/{resource}.json
- *   multicenter/invocations/{id}   -> multicenter/details/{id}.json
- *   multicenter/migrations/{id}    -> multicenter/details/{id}.json
+ *   index                                     -> index.json
+ *   {domain}/scenarios                        -> {domain}/scenarios.json
+ *   {domain}/scenarios/{scenarioId}           -> scenario-details.json 中 id 匹配的场景对象
+ *   {domain}/scenarios/{scenarioId}/params-schema -> params-schema.json 中该场景的子对象
+ *   {domain}/scenarios/{scenarioId}/benchmark -> benchmark.json 中该场景的子对象
+ *   {domain}/params-schema                    -> {domain}/params-schema.json
+ *   {domain}/benchmark                        -> {domain}/benchmark.json
+ *   {domain}/operators                        -> {domain}/operators.json
+ *   {domain}/runs                             -> {domain}/runs.json
+ *   {domain}/runs/{runId}                     -> {domain}/run-details/{runId}.json
+ *   {domain}/runs/{runId}/workflow            -> run-details 中 data.workflow
+ *   {domain}/runs/{runId}/metrics             -> run-details 中 data.metrics
+ *   {domain}/runs/{runId}/logs                -> run-details 中 data.logs
+ *   {domain}/runs/{runId}/artifacts           -> run-details 中 data.artifacts
+ *   multicenter/{resource}                    -> multicenter/{resource}.json
+ *   multicenter/invocations/{id}              -> multicenter/details/{id}.json
+ *   multicenter/migrations/{id}               -> multicenter/details/{id}.json
+ *
+ * 返回 { file, lookup? }：file 为 mock-data 下的相对文件路径，
+ * lookup 为可选的 data 提取指令（见 applyLookup）。
  */
 function resolveMockFile(parts) {
-  const [first, second, third] = parts
+  const [first, second, third, fourth] = parts
   if (!first) return null
 
   // 首页总览
-  if (first === 'index') return 'index.json'
+  if (first === 'index') return { file: 'index.json' }
 
   // 函数多中心联调
   if (first === 'multicenter') {
     if (!second) return null
     if ((second === 'invocations' || second === 'migrations') && third) {
-      return `multicenter/details/${third}.json`
+      return { file: `multicenter/details/${third}.json` }
     }
-    return `multicenter/${second}.json`
+    // multicenter/functions/deployment-matrix：部署矩阵独立文件
+    if (second === 'functions' && third === 'deployment-matrix') {
+      return { file: 'multicenter/deployment-matrix.json' }
+    }
+    return { file: `multicenter/${second}.json` }
   }
 
   // 学科域资源（geodynamics / llm / automotive / uav / drug / dft）
   if (!second) return null
-  if (second === 'runs') {
-    return third ? `${first}/run-details/${third}.json` : `${first}/runs.json`
+
+  if (second === 'scenarios') {
+    if (!third) return { file: `${first}/scenarios.json` }
+    // scenarios/{scenario_id}/params-schema | benchmark：按场景 id 提取子对象
+    if (fourth === 'params-schema' || fourth === 'benchmark') {
+      return { file: `${first}/${fourth}.json`, lookup: { type: 'object-key', key: third } }
+    }
+    // scenarios/{scenario_id}：从场景详情数组中按 id 提取单个场景
+    return { file: `${first}/scenario-details.json`, lookup: { type: 'array-item', field: 'id', key: third } }
   }
-  return `${first}/${second}.json`
+
+  if (second === 'runs') {
+    if (!third) return { file: `${first}/runs.json` }
+    // runs/{run_id}/workflow | metrics | logs | artifacts：从任务详情中提取子资源
+    if (fourth === 'workflow' || fourth === 'metrics' || fourth === 'logs' || fourth === 'artifacts') {
+      return { file: `${first}/run-details/${third}.json`, lookup: { type: 'run-sub', sub: fourth } }
+    }
+    // runs/{run_id}：任务详情
+    return { file: `${first}/run-details/${third}.json` }
+  }
+
+  return { file: `${first}/${second}.json` }
+}
+
+/**
+ * 按 lookup 指令从业务数据 data 中提取嵌套子资源。
+ * 返回 { value }；找不到时返回 { missing: 描述 }。
+ */
+function applyLookup(lookup, data) {
+  if (lookup.type === 'array-item') {
+    // 场景详情既可能是数组（geodynamics/llm/automotive/uav），
+    // 也可能是按场景 id 键控的对象（dft/drug），两种形态都需支持
+    let item
+    if (Array.isArray(data)) {
+      item = data.find((it) => it && it[lookup.field] === lookup.key)
+    } else if (data && typeof data === 'object' && lookup.key in data) {
+      item = data[lookup.key]
+    }
+    return item != null ? { value: item } : { missing: `${lookup.key} (${lookup.field})` }
+  }
+  if (lookup.type === 'object-key') {
+    const val = data && typeof data === 'object' && lookup.key in data ? data[lookup.key] : undefined
+    return val !== undefined ? { value: val } : { missing: lookup.key }
+  }
+  if (lookup.type === 'run-sub') {
+    const val = data && typeof data === 'object' && lookup.sub in data ? data[lookup.sub] : undefined
+    return val !== undefined ? { value: val } : { missing: lookup.sub }
+  }
+  return { value: data }
 }
 
 const server = createServer(async (req, res) => {
@@ -153,8 +211,8 @@ const server = createServer(async (req, res) => {
   // 读操作：GET 返回 mock-data 下的 JSON
   if (method === 'GET') {
     const parts = pathname.slice(API_PREFIX.length).split('/').filter(Boolean)
-    const rel = resolveMockFile(parts)
-    if (!rel) {
+    const route = resolveMockFile(parts)
+    if (!route) {
       sendJSON(res, 404, {
         code: 404,
         message: `API path not supported: ${pathname}`,
@@ -164,18 +222,39 @@ const server = createServer(async (req, res) => {
       return
     }
 
-    const payload = readJson(rel)
+    const payload = readJson(route.file)
     if (!payload) {
       sendJSON(res, 404, {
         code: 404,
-        message: `Mock data not found: ${rel}（数据目录：${MOCK_DATA_DIR}）`,
+        message: `Mock data not found: ${route.file}（数据目录：${MOCK_DATA_DIR}）`,
         data: null,
         timestamp: new Date().toISOString(),
       })
       return
     }
 
-    sendJSON(res, 200, payload)
+    // 按路径段提取嵌套资源（场景详情 / 参数 / 性能对比 / 工作流 / 指标 / 日志 / 结果文件）
+    let data = payload.data
+    if (route.lookup) {
+      const extracted = applyLookup(route.lookup, data)
+      if (extracted.missing) {
+        sendJSON(res, 404, {
+          code: 404,
+          message: `Resource not found: ${extracted.missing}`,
+          data: null,
+          timestamp: new Date().toISOString(),
+        })
+        return
+      }
+      data = extracted.value
+    }
+
+    sendJSON(res, 200, {
+      code: 200,
+      message: 'success',
+      data,
+      timestamp: payload.timestamp || new Date().toISOString(),
+    })
     return
   }
 

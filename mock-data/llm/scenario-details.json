@@ -9,9 +9,9 @@
       "description": "基于 Megatron-LM 框架的大语言模型分布式预训练示范，覆盖数据加载、模型并行初始化、分布式训练、Checkpoint 保存与模型评估全流程。",
       "summary_metrics": [
         { "label": "模型规模", "value": "14B", "unit": "参数" },
-        { "label": "训练吞吐量", "value": 18420, "unit": "tokens/s" },
-        { "label": "GPU利用率", "value": 92, "unit": "%" },
-        { "label": "通信开销", "value": 14.2, "unit": "%" }
+        { "label": "训练吞吐量", "value": "18420", "unit": "tokens/s" },
+        { "label": "GPU利用率", "value": "92", "unit": "%" },
+        { "label": "通信开销", "value": "14.2", "unit": "%" }
       ],
       "supported_clusters": ["kunshan", "changsha", "jinan"],
       "tech_stack": ["Megatron-LM", "PyTorch", "NCCL", "Slurm", "昆仑AI算力平台"],
@@ -30,9 +30,9 @@
         { "id": "ai-eval-perplexity", "name": "困惑度评估算子" }
       ],
       "highlights": [
-        { "label": "训练吞吐量", "value": 18420, "unit": "tokens/s" },
-        { "label": "GPU利用率", "value": 92, "unit": "%" },
-        { "label": "扩展效率", "value": 88, "unit": "%" }
+        { "label": "训练吞吐量", "value": "18420", "unit": "tokens/s" },
+        { "label": "GPU利用率", "value": "92", "unit": "%" },
+        { "label": "扩展效率", "value": "88", "unit": "%" }
       ]
     },
     {
@@ -41,10 +41,10 @@
       "category": "AI大模型",
       "description": "基于物理信息神经网络（PINN）求解偏微分方程，将物理约束嵌入损失函数，示范 AI 算子与并行框架在科学计算中的加速效果。",
       "summary_metrics": [
-        { "label": "求解残差", "value": 1.2e-05, "unit": "" },
-        { "label": "加速比", "value": 42.5, "unit": "x" },
-        { "label": "GPU利用率", "value": 88, "unit": "%" },
-        { "label": "收敛步数", "value": 8600, "unit": "step" }
+        { "label": "求解残差", "value": "1.2e-05", "unit": "" },
+        { "label": "加速比", "value": "42.5", "unit": "x" },
+        { "label": "GPU利用率", "value": "88", "unit": "%" },
+        { "label": "收敛步数", "value": "8600", "unit": "step" }
       ],
       "supported_clusters": ["kunshan", "changsha"],
       "tech_stack": ["DeepXDE", "PyTorch", "自动微分", "NCCL", "Slurm"],
@@ -63,9 +63,9 @@
         { "id": "ai-eval-pinn", "name": "PINN求解评估算子" }
       ],
       "highlights": [
-        { "label": "求解加速比", "value": 42.5, "unit": "x" },
-        { "label": "GPU利用率", "value": 88, "unit": "%" },
-        { "label": "残差收敛", "value": 1.2e-05, "unit": "" }
+        { "label": "求解加速比", "value": "42.5", "unit": "x" },
+        { "label": "GPU利用率", "value": "88", "unit": "%" },
+        { "label": "残差收敛", "value": "1.2e-05", "unit": "" }
       ]
     }
   ],

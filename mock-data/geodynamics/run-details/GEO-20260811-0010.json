@@ -74,56 +74,56 @@
         {
           "seq": 1,
           "timestamp": "2026-08-09T22:00:02+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "changsha",
           "message": "任务提交成功，作业ID 209916，分配节点 16 个（1024 核）"
         },
         {
           "seq": 2,
           "timestamp": "2026-08-09T22:01:10+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "changsha",
           "message": "初始板块几何与物性参数加载完成（粘度分层、密度场、初始速度场）"
         },
         {
           "seq": 3,
           "timestamp": "2026-08-09T22:04:33+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "changsha",
           "message": "非结构网格生成：3500 万单元，完成 16 域分解，负载均衡度 0.97"
         },
         {
           "seq": 4,
           "timestamp": "2026-08-09T22:05:00+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "changsha",
           "message": "开始耦合求解：动量守恒 + 能量守恒 + 热-力学耦合迭代"
         },
         {
           "seq": 5,
           "timestamp": "2026-08-10T05:12:30+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "changsha",
           "message": "时间步 4000/5000 完成，平均 Newton 迭代 4 次收敛"
         },
         {
           "seq": 6,
           "timestamp": "2026-08-10T07:32:00+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "changsha",
           "message": "全部 5000 时间步完成，输出板块演化场快照（速度场、应力场、温度场）"
         },
         {
           "seq": 7,
           "timestamp": "2026-08-10T07:36:20+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "changsha",
           "message": "后处理完成：生成动画与统计报告，结果归档至全局文件系统"
         },
         {
           "seq": 8,
           "timestamp": "2026-08-10T07:40:00+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "changsha",
           "message": "任务成功结束，累计核时 9898.7 核时"
         }

@@ -115,56 +115,56 @@
         {
           "seq": 1,
           "timestamp": "2026-08-10T13:00:02+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "changsha",
           "message": "任务提交成功，作业ID 210050，分配节点 8 个（512 核）"
         },
         {
           "seq": 2,
           "timestamp": "2026-08-10T13:00:40+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "changsha",
           "message": "场景初始化完成：三维地形 5km×5km，障碍物 42 个，目标点 8 个"
         },
         {
           "seq": 3,
           "timestamp": "2026-08-10T13:01:10+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "changsha",
           "message": "通信拓扑构建完成：星形拓扑，200 架无人机编组为 4 个飞行编队"
         },
         {
           "seq": 4,
           "timestamp": "2026-08-10T13:01:30+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "changsha",
           "message": "任务分配完成：K-means 聚类划分目标区域，每编队 50 架，任务量均衡"
         },
         {
           "seq": 5,
           "timestamp": "2026-08-10T13:02:00+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "changsha",
           "message": "协同控制求解完成：一致性控制收敛，编队误差稳定在 0.32m"
         },
         {
           "seq": 6,
           "timestamp": "2026-08-10T13:06:30+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "changsha",
           "message": "多智能体动力学仿真完成：5000 步，平均仿真速度 908 条/min"
         },
         {
           "seq": 7,
           "timestamp": "2026-08-10T13:24:00+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "changsha",
           "message": "碰撞检测完成：全程碰撞 0 次，最小安全距离 8.2m（阈值 5m）"
         },
         {
           "seq": 8,
           "timestamp": "2026-08-10T13:26:00+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "changsha",
           "message": "任务完成：航迹规划成功率 100%，任务完成率 98.6%，结果已归档"
         }

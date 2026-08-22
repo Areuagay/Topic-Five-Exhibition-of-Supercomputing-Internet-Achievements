@@ -14,7 +14,7 @@
     "current_stage": "completed",
     "start_time": "2026-08-10T14:00:00+08:00",
     "end_time": "2026-08-11T01:48:00+08:00",
-    "elapsed_seconds": 42480.0,
+    "elapsed_seconds": 42480,
     "nodes": 16,
     "cpu_cores": 1024,
     "gpu_count": 0,
@@ -115,56 +115,56 @@
         {
           "seq": 1,
           "timestamp": "2026-08-10T14:00:02+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "guangzhou",
           "message": "任务提交成功，作业ID DFT-SLURM-71438，材料库 1000 个（MP 子集）"
         },
         {
           "seq": 2,
           "timestamp": "2026-08-10T14:00:15+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "changsha",
           "message": "材料库分片完成：4 片各 250 个，调度至长沙/广州/昆山/济南"
         },
         {
           "seq": 3,
           "timestamp": "2026-08-10T14:01:00+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "guangzhou",
           "message": "批量结构优化启动：并行 1024 核，赝势 PAW，K点 4x4x4"
         },
         {
           "seq": 4,
           "timestamp": "2026-08-10T22:00:00+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "kunshan",
           "message": "completed=250/250 收敛率 96.4% 吞吐量 42 个/h"
         },
         {
           "seq": 5,
           "timestamp": "2026-08-10T23:00:00+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "jinan",
           "message": "completed=250/250 收敛率 95.6% 吞吐量 41 个/h"
         },
         {
           "seq": 6,
           "timestamp": "2026-08-11T00:30:00+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "guangzhou",
           "message": "批量 SCF 计算完成：1000 个材料总能量与带隙计算完成"
         },
         {
           "seq": 7,
           "timestamp": "2026-08-11T01:30:00+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "guangzhou",
           "message": "结果汇总完成：收敛 962 个，失败 38 个，按稳定性判据排序"
         },
         {
           "seq": 8,
           "timestamp": "2026-08-11T01:48:00+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "guangzhou",
           "message": "任务完成：筛选出 37 个候选材料（带隙≥1.5eV），报告已生成"
         }

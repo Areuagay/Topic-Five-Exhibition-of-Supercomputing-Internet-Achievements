@@ -14,7 +14,7 @@
     "current_stage": "completed",
     "start_time": "2026-08-10T15:00:00+08:00",
     "end_time": "2026-08-10T15:04:42+08:00",
-    "elapsed_seconds": 282.4,
+    "elapsed_seconds": 282,
     "nodes": 8,
     "cpu_cores": 512,
     "gpu_count": 4,
@@ -118,63 +118,63 @@
         {
           "seq": 1,
           "timestamp": "2026-08-10T15:00:02+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "guangzhou",
           "message": "任务提交成功，作业ID DRUG-JOB-58219，候选分子 12000 个"
         },
         {
           "seq": 2,
           "timestamp": "2026-08-10T15:00:15+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "changsha",
           "message": "配体库预处理完成：12000 个候选分子完成 3D 构象生成与特征化"
         },
         {
           "seq": 3,
           "timestamp": "2026-08-10T15:00:20+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "changsha",
           "message": "化合物库分片完成：4 片各 3000 个，调度至长沙/广州/昆山/济南"
         },
         {
           "seq": 4,
           "timestamp": "2026-08-10T15:01:00+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "multi-center",
           "message": "跨中心并行分子对接完成：最佳对接分数 -10.1 kcal/mol"
         },
         {
           "seq": 5,
           "timestamp": "2026-08-10T15:02:00+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "guangzhou",
           "message": "对接结果汇总完成：排序 12000 条，达标 286 条进入 ADMET 预测"
         },
         {
           "seq": 6,
           "timestamp": "2026-08-10T15:02:30+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "guangzhou",
           "message": "ADMET 性质预测启动：模型 v2.1，预测吸收/代谢/毒性，batch_size 1024"
         },
         {
           "seq": 7,
           "timestamp": "2026-08-10T15:04:00+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "kunshan",
           "message": "completed=3000/3000 预测吞吐量 10.8 mol/s"
         },
         {
           "seq": 8,
           "timestamp": "2026-08-10T15:04:20+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "jinan",
           "message": "completed=3000/3000 预测吞吐量 10.4 mol/s"
         },
         {
           "seq": 9,
           "timestamp": "2026-08-10T15:04:42+08:00",
-          "level": "info",
+          "level": "INFO",
           "cluster_id": "guangzhou",
           "message": "任务完成：12000 个分子 ADMET 预测完成，达标率 78.3%，报告已生成"
         }

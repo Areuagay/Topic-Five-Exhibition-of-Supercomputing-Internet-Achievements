@@ -10,7 +10,7 @@
       "runtime": "docker://registry.multi.example/fn-matrix-multiply:1.0",
       "handler": "main.multiply",
       "description": "大规模矩阵乘法函数，支持跨中心分块并行计算。",
-      "status": "active",
+      "status": "ready",
       "source_type": "simulated",
       "registered_at": "2026-08-01T08:00:00+08:00"
     },
@@ -22,7 +22,7 @@
       "runtime": "docker://registry.multi.example/fn-fft:2.3",
       "handler": "main.fft",
       "description": "大规模快速傅里叶变换函数，支持多维 FFT 与频域分析。",
-      "status": "active",
+      "status": "ready",
       "source_type": "simulated",
       "registered_at": "2026-08-01T08:05:00+08:00"
     },
@@ -34,7 +34,7 @@
       "runtime": "docker://registry.multi.example/fn-file-convert:1.2",
       "handler": "main.convert",
       "description": "跨格式文件转换函数，支持多种科学计算数据格式互转。",
-      "status": "active",
+      "status": "ready",
       "source_type": "simulated",
       "registered_at": "2026-08-01T08:10:00+08:00"
     }
