@@ -10,6 +10,13 @@ export default defineNuxtConfig({
 
   css: ['~/assets/css/main.css'],
 
+  // 前后端分离：/api/v1/* 代理到本地模拟后端（backend/server.js，默认端口 3001）
+  // 接入真实后端时，仅需把 target 改为真实 API 网关地址（或配置 runtimeConfig.public.apiBase），
+  // 前端页面代码零改动
+  routeRules: {
+    '/api/v1/**': { proxy: 'http://localhost:3001/api/v1/**' },
+  },
+
   runtimeConfig: {
     public: {
       /**

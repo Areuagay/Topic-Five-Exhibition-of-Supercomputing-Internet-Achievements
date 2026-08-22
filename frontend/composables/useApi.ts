@@ -22,14 +22,14 @@ import type {
 /**
  * API 访问层。
  *
- * - 默认（apiBase 为空）：请求本服务 Nitro mock 端点 /api/...，由 server/api/[...path].ts
- *   读取 ../mock-data 返回模拟数据；
+ * - 默认（apiBase 为空）：请求本地模拟后端 /api/v1/...，由 nuxt.config.ts 的
+ *   routeRules.proxy 转发到 backend/server.js（默认端口 3001）；
  * - 接入真实后端：在 nuxt.config.ts 中配置 runtimeConfig.public.apiBase 指向真实 API
  *   网关（如 https://api.example.com/api/v1），前端代码零改动。
  */
 function baseURL(): string {
   const config = useRuntimeConfig()
-  return config.public.apiBase || '/api'
+  return config.public.apiBase || '/api/v1'
 }
 
 async function request<T>(path: string): Promise<T> {
@@ -46,16 +46,16 @@ export function useApi() {
     getIndex: () => request<IndexData>('/index'),
 
     // 学科域
-    getScenarios: (domain: string) => request<Scenario[]>(`/domains/${domain}/scenarios`),
+    getScenarios: (domain: string) => request<Scenario[]>(`/${domain}/scenarios`),
     getScenarioDetails: (domain: string) =>
-      request<ScenarioDetail[]>(`/domains/${domain}/scenario-details`),
+      request<ScenarioDetail[]>(`/${domain}/scenario-details`),
     getParamsSchemas: (domain: string) =>
-      request<ParamsSchemas>(`/domains/${domain}/params-schema`),
-    getBenchmarks: (domain: string) => request<Benchmark>(`/domains/${domain}/benchmark`),
-    getOperators: (domain: string) => request<Operator[]>(`/domains/${domain}/operators`),
-    getRuns: (domain: string) => request<Run[]>(`/domains/${domain}/runs`),
+      request<ParamsSchemas>(`/${domain}/params-schema`),
+    getBenchmarks: (domain: string) => request<Benchmark>(`/${domain}/benchmark`),
+    getOperators: (domain: string) => request<Operator[]>(`/${domain}/operators`),
+    getRuns: (domain: string) => request<Run[]>(`/${domain}/runs`),
     getRunDetail: (domain: string, runId: string) =>
-      request<RunDetail>(`/domains/${domain}/runs/${runId}`),
+      request<RunDetail>(`/${domain}/runs/${runId}`),
 
     // 函数多中心联调
     getClusters: () => request<MultiCluster[]>('/multicenter/clusters'),

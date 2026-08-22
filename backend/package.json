@@ -1,0 +1,14 @@
+{
+  "name": "topic5-backend-mock",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "课题五·超算互联网应用成果展 —— 本地模拟后端（零依赖，提供 /api/v1/* 接口，数据源为 ../mock-data）",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
