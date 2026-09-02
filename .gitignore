@@ -64,3 +64,12 @@ artifacts/generated/
 .pytest_cache/
 .coverage
 htmlcov/
+
+# ======================
+# Local Codex workspace
+# ======================
+/.legacy-preview-*/
+/.runtime-logs/
+/.superpowers/
+/docs/superpowers/
+/package-lock.json
