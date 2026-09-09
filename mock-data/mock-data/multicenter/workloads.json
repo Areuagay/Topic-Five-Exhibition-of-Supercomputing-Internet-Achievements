@@ -1,0 +1,46 @@
+{
+  "code": 200,
+  "message": "success",
+  "data": [
+    {
+      "workload_id": "WL-FN-MATRIX",
+      "function_id": "fn-matrix-multiply",
+      "name": "矩阵乘法函数工作负载",
+      "status": "running",
+      "source_type": "simulated",
+      "instances": [
+        { "cluster_id": "changsha", "desired_replicas": 2, "ready_replicas": 2, "cpu_utilization": 62, "memory_utilization": 48 },
+        { "cluster_id": "guangzhou", "desired_replicas": 1, "ready_replicas": 1, "cpu_utilization": 51, "memory_utilization": 43 },
+        { "cluster_id": "kunshan", "desired_replicas": 2, "ready_replicas": 2, "cpu_utilization": 70, "memory_utilization": 55 },
+        { "cluster_id": "jinan", "desired_replicas": 0, "ready_replicas": 0, "cpu_utilization": 0, "memory_utilization": 0 }
+      ]
+    },
+    {
+      "workload_id": "WL-FN-FFT",
+      "function_id": "fn-fft",
+      "name": "FFT函数工作负载",
+      "status": "running",
+      "source_type": "simulated",
+      "instances": [
+        { "cluster_id": "changsha", "desired_replicas": 1, "ready_replicas": 1, "cpu_utilization": 44, "memory_utilization": 35 },
+        { "cluster_id": "guangzhou", "desired_replicas": 1, "ready_replicas": 1, "cpu_utilization": 47, "memory_utilization": 38 },
+        { "cluster_id": "kunshan", "desired_replicas": 1, "ready_replicas": 1, "cpu_utilization": 58, "memory_utilization": 46 },
+        { "cluster_id": "jinan", "desired_replicas": 1, "ready_replicas": 1, "cpu_utilization": 39, "memory_utilization": 33 }
+      ]
+    },
+    {
+      "workload_id": "WL-FN-CONVERT",
+      "function_id": "fn-file-convert",
+      "name": "文件格式转换函数工作负载",
+      "status": "running",
+      "source_type": "simulated",
+      "instances": [
+        { "cluster_id": "changsha", "desired_replicas": 1, "ready_replicas": 1, "cpu_utilization": 23, "memory_utilization": 31 },
+        { "cluster_id": "guangzhou", "desired_replicas": 1, "ready_replicas": 1, "cpu_utilization": 26, "memory_utilization": 29 },
+        { "cluster_id": "kunshan", "desired_replicas": 0, "ready_replicas": 0, "cpu_utilization": 0, "memory_utilization": 0 },
+        { "cluster_id": "jinan", "desired_replicas": 1, "ready_replicas": 1, "cpu_utilization": 21, "memory_utilization": 27 }
+      ]
+    }
+  ],
+  "timestamp": "2026-08-11T12:40:00+08:00"
+}

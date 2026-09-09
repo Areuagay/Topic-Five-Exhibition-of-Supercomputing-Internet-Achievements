@@ -1,0 +1,951 @@
+{
+  "source_type": "simulated",
+  "residual_series": [
+    {
+      "iteration": 1,
+      "residual": 0.0689726145,
+      "step_time": 0.7584
+    },
+    {
+      "iteration": 2,
+      "residual": 0.0586620699,
+      "step_time": 0.7982
+    },
+    {
+      "iteration": 3,
+      "residual": 0.056502601,
+      "step_time": 0.7868
+    },
+    {
+      "iteration": 4,
+      "residual": 0.0488361574,
+      "step_time": 0.8196
+    },
+    {
+      "iteration": 5,
+      "residual": 0.0401157044,
+      "step_time": 0.8017
+    },
+    {
+      "iteration": 6,
+      "residual": 0.0348221984,
+      "step_time": 0.8663
+    },
+    {
+      "iteration": 7,
+      "residual": 0.0328780423,
+      "step_time": 0.7974
+    },
+    {
+      "iteration": 8,
+      "residual": 0.0270014894,
+      "step_time": 0.7909
+    },
+    {
+      "iteration": 9,
+      "residual": 0.0230480386,
+      "step_time": 0.8068
+    },
+    {
+      "iteration": 10,
+      "residual": 0.0216060882,
+      "step_time": 0.8729
+    },
+    {
+      "iteration": 11,
+      "residual": 0.0191885201,
+      "step_time": 0.7958
+    },
+    {
+      "iteration": 12,
+      "residual": 0.0164755903,
+      "step_time": 0.7878
+    },
+    {
+      "iteration": 13,
+      "residual": 0.0142207107,
+      "step_time": 0.8335
+    },
+    {
+      "iteration": 14,
+      "residual": 0.0122732091,
+      "step_time": 0.803
+    },
+    {
+      "iteration": 15,
+      "residual": 0.0107858909,
+      "step_time": 0.8248
+    },
+    {
+      "iteration": 16,
+      "residual": 0.0096054212,
+      "step_time": 0.8092
+    },
+    {
+      "iteration": 17,
+      "residual": 0.008201327,
+      "step_time": 0.8517
+    },
+    {
+      "iteration": 18,
+      "residual": 0.0074121378,
+      "step_time": 0.83
+    },
+    {
+      "iteration": 19,
+      "residual": 0.0064715845,
+      "step_time": 0.7336
+    },
+    {
+      "iteration": 20,
+      "residual": 0.0055628585,
+      "step_time": 0.8546
+    },
+    {
+      "iteration": 21,
+      "residual": 0.0048662488,
+      "step_time": 0.819
+    },
+    {
+      "iteration": 22,
+      "residual": 0.0043415453,
+      "step_time": 0.8258
+    },
+    {
+      "iteration": 23,
+      "residual": 0.0038494763,
+      "step_time": 0.8079
+    },
+    {
+      "iteration": 24,
+      "residual": 0.0033026204,
+      "step_time": 0.8562
+    },
+    {
+      "iteration": 25,
+      "residual": 0.0029402144,
+      "step_time": 0.7978
+    },
+    {
+      "iteration": 26,
+      "residual": 0.0025202851,
+      "step_time": 0.8361
+    },
+    {
+      "iteration": 27,
+      "residual": 0.0021652258,
+      "step_time": 0.8218
+    },
+    {
+      "iteration": 28,
+      "residual": 0.0020430995,
+      "step_time": 0.7891
+    },
+    {
+      "iteration": 29,
+      "residual": 0.0016216319,
+      "step_time": 0.8532
+    },
+    {
+      "iteration": 30,
+      "residual": 0.0014840671,
+      "step_time": 0.8567
+    },
+    {
+      "iteration": 31,
+      "residual": 0.0013002746,
+      "step_time": 0.7896
+    },
+    {
+      "iteration": 32,
+      "residual": 0.0010617246,
+      "step_time": 0.8084
+    },
+    {
+      "iteration": 33,
+      "residual": 0.0010010992,
+      "step_time": 0.7865
+    },
+    {
+      "iteration": 34,
+      "residual": 0.0008457507,
+      "step_time": 0.7776
+    },
+    {
+      "iteration": 35,
+      "residual": 0.0007355799,
+      "step_time": 0.7214
+    },
+    {
+      "iteration": 36,
+      "residual": 0.0006683701,
+      "step_time": 0.804
+    },
+    {
+      "iteration": 37,
+      "residual": 0.0005545575,
+      "step_time": 0.7799
+    },
+    {
+      "iteration": 38,
+      "residual": 0.0005115196,
+      "step_time": 0.8402
+    },
+    {
+      "iteration": 39,
+      "residual": 0.0004407481,
+      "step_time": 0.8322
+    },
+    {
+      "iteration": 40,
+      "residual": 0.0003868442,
+      "step_time": 0.8551
+    }
+  ],
+  "seismogram_series": [
+    {
+      "time": 0.0,
+      "amplitude": 0.00682
+    },
+    {
+      "time": 0.0503,
+      "amplitude": -0.02733
+    },
+    {
+      "time": 0.1006,
+      "amplitude": 0.01122
+    },
+    {
+      "time": 0.1509,
+      "amplitude": -0.00749
+    },
+    {
+      "time": 0.2013,
+      "amplitude": 0.00089
+    },
+    {
+      "time": 0.2516,
+      "amplitude": -0.00053
+    },
+    {
+      "time": 0.3019,
+      "amplitude": -0.02001
+    },
+    {
+      "time": 0.3522,
+      "amplitude": -0.01468
+    },
+    {
+      "time": 0.4025,
+      "amplitude": -0.03876
+    },
+    {
+      "time": 0.4528,
+      "amplitude": 0.01909
+    },
+    {
+      "time": 0.5031,
+      "amplitude": 0.04269
+    },
+    {
+      "time": 0.5535,
+      "amplitude": -0.0084
+    },
+    {
+      "time": 0.6038,
+      "amplitude": -0.00868
+    },
+    {
+      "time": 0.6541,
+      "amplitude": -0.01191
+    },
+    {
+      "time": 0.7044,
+      "amplitude": -0.01239
+    },
+    {
+      "time": 0.7547,
+      "amplitude": 0.00719
+    },
+    {
+      "time": 0.805,
+      "amplitude": -0.00654
+    },
+    {
+      "time": 0.8553,
+      "amplitude": 0.01496
+    },
+    {
+      "time": 0.9057,
+      "amplitude": 0.00588
+    },
+    {
+      "time": 0.956,
+      "amplitude": -0.0112
+    },
+    {
+      "time": 1.0063,
+      "amplitude": 0.0224
+    },
+    {
+      "time": 1.0566,
+      "amplitude": -0.03391
+    },
+    {
+      "time": 1.1069,
+      "amplitude": -0.40483
+    },
+    {
+      "time": 1.1572,
+      "amplitude": 0.11336
+    },
+    {
+      "time": 1.2075,
+      "amplitude": 0.9655
+    },
+    {
+      "time": 1.2579,
+      "amplitude": -0.24352
+    },
+    {
+      "time": 1.3082,
+      "amplitude": -0.18573
+    },
+    {
+      "time": 1.3585,
+      "amplitude": -0.01615
+    },
+    {
+      "time": 1.4088,
+      "amplitude": 0.0161
+    },
+    {
+      "time": 1.4591,
+      "amplitude": -0.00305
+    },
+    {
+      "time": 1.5094,
+      "amplitude": 0.03156
+    },
+    {
+      "time": 1.5597,
+      "amplitude": 0.00858
+    },
+    {
+      "time": 1.6101,
+      "amplitude": -0.01408
+    },
+    {
+      "time": 1.6604,
+      "amplitude": 0.01942
+    },
+    {
+      "time": 1.7107,
+      "amplitude": 0.01571
+    },
+    {
+      "time": 1.761,
+      "amplitude": -0.00695
+    },
+    {
+      "time": 1.8113,
+      "amplitude": -0.0145
+    },
+    {
+      "time": 1.8616,
+      "amplitude": 0.01055
+    },
+    {
+      "time": 1.9119,
+      "amplitude": -0.03668
+    },
+    {
+      "time": 1.9623,
+      "amplitude": 0.00603
+    },
+    {
+      "time": 2.0126,
+      "amplitude": -0.03171
+    },
+    {
+      "time": 2.0629,
+      "amplitude": 0.01129
+    },
+    {
+      "time": 2.1132,
+      "amplitude": 0.03005
+    },
+    {
+      "time": 2.1635,
+      "amplitude": 0.00528
+    },
+    {
+      "time": 2.2138,
+      "amplitude": -0.00943
+    },
+    {
+      "time": 2.2642,
+      "amplitude": 0.04017
+    },
+    {
+      "time": 2.3145,
+      "amplitude": -0.00481
+    },
+    {
+      "time": 2.3648,
+      "amplitude": -0.00241
+    },
+    {
+      "time": 2.4151,
+      "amplitude": 0.03266
+    },
+    {
+      "time": 2.4654,
+      "amplitude": 0.01587
+    },
+    {
+      "time": 2.5157,
+      "amplitude": -0.0244
+    },
+    {
+      "time": 2.566,
+      "amplitude": -0.02565
+    },
+    {
+      "time": 2.6164,
+      "amplitude": -0.07491
+    },
+    {
+      "time": 2.6667,
+      "amplitude": -0.22354
+    },
+    {
+      "time": 2.717,
+      "amplitude": -0.17099
+    },
+    {
+      "time": 2.7673,
+      "amplitude": 0.39012
+    },
+    {
+      "time": 2.8176,
+      "amplitude": 0.44018
+    },
+    {
+      "time": 2.8679,
+      "amplitude": -0.03803
+    },
+    {
+      "time": 2.9182,
+      "amplitude": -0.20012
+    },
+    {
+      "time": 2.9686,
+      "amplitude": -0.03755
+    },
+    {
+      "time": 3.0189,
+      "amplitude": -0.03105
+    },
+    {
+      "time": 3.0692,
+      "amplitude": 0.02344
+    },
+    {
+      "time": 3.1195,
+      "amplitude": 0.00704
+    },
+    {
+      "time": 3.1698,
+      "amplitude": -0.01882
+    },
+    {
+      "time": 3.2201,
+      "amplitude": 0.03095
+    },
+    {
+      "time": 3.2704,
+      "amplitude": 0.00851
+    },
+    {
+      "time": 3.3208,
+      "amplitude": 0.0016
+    },
+    {
+      "time": 3.3711,
+      "amplitude": 2e-05
+    },
+    {
+      "time": 3.4214,
+      "amplitude": 0.02844
+    },
+    {
+      "time": 3.4717,
+      "amplitude": -0.00047
+    },
+    {
+      "time": 3.522,
+      "amplitude": -0.00222
+    },
+    {
+      "time": 3.5723,
+      "amplitude": 0.00577
+    },
+    {
+      "time": 3.6226,
+      "amplitude": 0.03716
+    },
+    {
+      "time": 3.673,
+      "amplitude": 0.0302
+    },
+    {
+      "time": 3.7233,
+      "amplitude": -0.00401
+    },
+    {
+      "time": 3.7736,
+      "amplitude": 0.00459
+    },
+    {
+      "time": 3.8239,
+      "amplitude": 0.01274
+    },
+    {
+      "time": 3.8742,
+      "amplitude": 0.00505
+    },
+    {
+      "time": 3.9245,
+      "amplitude": 0.01118
+    },
+    {
+      "time": 3.9748,
+      "amplitude": -0.02117
+    },
+    {
+      "time": 4.0252,
+      "amplitude": -0.02506
+    },
+    {
+      "time": 4.0755,
+      "amplitude": 0.00613
+    },
+    {
+      "time": 4.1258,
+      "amplitude": 0.01356
+    },
+    {
+      "time": 4.1761,
+      "amplitude": 0.00892
+    },
+    {
+      "time": 4.2264,
+      "amplitude": -0.00153
+    },
+    {
+      "time": 4.2767,
+      "amplitude": -0.02605
+    },
+    {
+      "time": 4.327,
+      "amplitude": -0.06689
+    },
+    {
+      "time": 4.3774,
+      "amplitude": -0.08185
+    },
+    {
+      "time": 4.4277,
+      "amplitude": -0.12653
+    },
+    {
+      "time": 4.478,
+      "amplitude": -0.05487
+    },
+    {
+      "time": 4.5283,
+      "amplitude": 0.11579
+    },
+    {
+      "time": 4.5786,
+      "amplitude": 0.26632
+    },
+    {
+      "time": 4.6289,
+      "amplitude": 0.23287
+    },
+    {
+      "time": 4.6792,
+      "amplitude": 0.04579
+    },
+    {
+      "time": 4.7296,
+      "amplitude": -0.09933
+    },
+    {
+      "time": 4.7799,
+      "amplitude": -0.0702
+    },
+    {
+      "time": 4.8302,
+      "amplitude": -0.06806
+    },
+    {
+      "time": 4.8805,
+      "amplitude": -0.0146
+    },
+    {
+      "time": 4.9308,
+      "amplitude": 0.0005
+    },
+    {
+      "time": 4.9811,
+      "amplitude": -0.00734
+    },
+    {
+      "time": 5.0314,
+      "amplitude": -0.02704
+    },
+    {
+      "time": 5.0818,
+      "amplitude": 0.0277
+    },
+    {
+      "time": 5.1321,
+      "amplitude": -0.04358
+    },
+    {
+      "time": 5.1824,
+      "amplitude": 0.01391
+    },
+    {
+      "time": 5.2327,
+      "amplitude": -0.0107
+    },
+    {
+      "time": 5.283,
+      "amplitude": 0.00351
+    },
+    {
+      "time": 5.3333,
+      "amplitude": -0.00664
+    },
+    {
+      "time": 5.3836,
+      "amplitude": -0.01277
+    },
+    {
+      "time": 5.434,
+      "amplitude": -0.01264
+    },
+    {
+      "time": 5.4843,
+      "amplitude": 0.00605
+    },
+    {
+      "time": 5.5346,
+      "amplitude": -0.00719
+    },
+    {
+      "time": 5.5849,
+      "amplitude": 0.01778
+    },
+    {
+      "time": 5.6352,
+      "amplitude": -0.042
+    },
+    {
+      "time": 5.6855,
+      "amplitude": 0.00278
+    },
+    {
+      "time": 5.7358,
+      "amplitude": -0.00474
+    },
+    {
+      "time": 5.7862,
+      "amplitude": 0.04464
+    },
+    {
+      "time": 5.8365,
+      "amplitude": 0.01206
+    },
+    {
+      "time": 5.8868,
+      "amplitude": 0.01024
+    },
+    {
+      "time": 5.9371,
+      "amplitude": 0.0285
+    },
+    {
+      "time": 5.9874,
+      "amplitude": -0.01578
+    },
+    {
+      "time": 6.0377,
+      "amplitude": -0.01693
+    },
+    {
+      "time": 6.0881,
+      "amplitude": 0.01129
+    },
+    {
+      "time": 6.1384,
+      "amplitude": -0.01193
+    },
+    {
+      "time": 6.1887,
+      "amplitude": 0.0335
+    },
+    {
+      "time": 6.239,
+      "amplitude": 0.00872
+    },
+    {
+      "time": 6.2893,
+      "amplitude": -0.0185
+    },
+    {
+      "time": 6.3396,
+      "amplitude": 0.00787
+    },
+    {
+      "time": 6.3899,
+      "amplitude": 0.02621
+    },
+    {
+      "time": 6.4403,
+      "amplitude": 0.00055
+    },
+    {
+      "time": 6.4906,
+      "amplitude": -0.02828
+    },
+    {
+      "time": 6.5409,
+      "amplitude": -0.007
+    },
+    {
+      "time": 6.5912,
+      "amplitude": -0.04686
+    },
+    {
+      "time": 6.6415,
+      "amplitude": 0.0033
+    },
+    {
+      "time": 6.6918,
+      "amplitude": -0.01307
+    },
+    {
+      "time": 6.7421,
+      "amplitude": -0.03301
+    },
+    {
+      "time": 6.7925,
+      "amplitude": 0.00409
+    },
+    {
+      "time": 6.8428,
+      "amplitude": 0.02195
+    },
+    {
+      "time": 6.8931,
+      "amplitude": 0.02557
+    },
+    {
+      "time": 6.9434,
+      "amplitude": 0.00674
+    },
+    {
+      "time": 6.9937,
+      "amplitude": -0.03028
+    },
+    {
+      "time": 7.044,
+      "amplitude": 0.03396
+    },
+    {
+      "time": 7.0943,
+      "amplitude": -0.00298
+    },
+    {
+      "time": 7.1447,
+      "amplitude": -0.02815
+    },
+    {
+      "time": 7.195,
+      "amplitude": 0.00166
+    },
+    {
+      "time": 7.2453,
+      "amplitude": 0.01427
+    },
+    {
+      "time": 7.2956,
+      "amplitude": -0.00394
+    },
+    {
+      "time": 7.3459,
+      "amplitude": -0.02262
+    },
+    {
+      "time": 7.3962,
+      "amplitude": 0.01204
+    },
+    {
+      "time": 7.4465,
+      "amplitude": 0.01208
+    },
+    {
+      "time": 7.4969,
+      "amplitude": -0.01529
+    },
+    {
+      "time": 7.5472,
+      "amplitude": 0.02357
+    },
+    {
+      "time": 7.5975,
+      "amplitude": -0.00447
+    },
+    {
+      "time": 7.6478,
+      "amplitude": -0.01931
+    },
+    {
+      "time": 7.6981,
+      "amplitude": -0.03605
+    },
+    {
+      "time": 7.7484,
+      "amplitude": 0.01937
+    },
+    {
+      "time": 7.7987,
+      "amplitude": 0.01705
+    },
+    {
+      "time": 7.8491,
+      "amplitude": 0.0343
+    },
+    {
+      "time": 7.8994,
+      "amplitude": 0.03717
+    },
+    {
+      "time": 7.9497,
+      "amplitude": 0.00162
+    },
+    {
+      "time": 8.0,
+      "amplitude": 0.004
+    }
+  ],
+  "wavefield_frames": [
+    {
+      "step": 1,
+      "simulation_time": 0.15,
+      "preview_url": "/api/v1/files/ART-GEO-W001/preview",
+      "artifact_id": "ART-GEO-W001"
+    },
+    {
+      "step": 2,
+      "simulation_time": 0.3,
+      "preview_url": "/api/v1/files/ART-GEO-W002/preview",
+      "artifact_id": "ART-GEO-W002"
+    },
+    {
+      "step": 3,
+      "simulation_time": 0.45,
+      "preview_url": "/api/v1/files/ART-GEO-W003/preview",
+      "artifact_id": "ART-GEO-W003"
+    },
+    {
+      "step": 4,
+      "simulation_time": 0.6,
+      "preview_url": "/api/v1/files/ART-GEO-W004/preview",
+      "artifact_id": "ART-GEO-W004"
+    },
+    {
+      "step": 5,
+      "simulation_time": 0.75,
+      "preview_url": "/api/v1/files/ART-GEO-W005/preview",
+      "artifact_id": "ART-GEO-W005"
+    },
+    {
+      "step": 6,
+      "simulation_time": 0.9,
+      "preview_url": "/api/v1/files/ART-GEO-W006/preview",
+      "artifact_id": "ART-GEO-W006"
+    },
+    {
+      "step": 7,
+      "simulation_time": 1.05,
+      "preview_url": "/api/v1/files/ART-GEO-W007/preview",
+      "artifact_id": "ART-GEO-W007"
+    },
+    {
+      "step": 8,
+      "simulation_time": 1.2,
+      "preview_url": "/api/v1/files/ART-GEO-W008/preview",
+      "artifact_id": "ART-GEO-W008"
+    },
+    {
+      "step": 9,
+      "simulation_time": 1.35,
+      "preview_url": "/api/v1/files/ART-GEO-W009/preview",
+      "artifact_id": "ART-GEO-W009"
+    },
+    {
+      "step": 10,
+      "simulation_time": 1.5,
+      "preview_url": "/api/v1/files/ART-GEO-W010/preview",
+      "artifact_id": "ART-GEO-W010"
+    }
+  ],
+  "domain_partitions": [
+    {
+      "partition_id": 0,
+      "cells": 1985659,
+      "cores": 64
+    },
+    {
+      "partition_id": 1,
+      "cells": 2010415,
+      "cores": 64
+    },
+    {
+      "partition_id": 2,
+      "cells": 1989535,
+      "cores": 64
+    },
+    {
+      "partition_id": 3,
+      "cells": 2029780,
+      "cores": 64
+    },
+    {
+      "partition_id": 4,
+      "cells": 2010478,
+      "cores": 64
+    },
+    {
+      "partition_id": 5,
+      "cells": 2026494,
+      "cores": 64
+    },
+    {
+      "partition_id": 6,
+      "cells": 1994079,
+      "cores": 64
+    },
+    {
+      "partition_id": 7,
+      "cells": 1988354,
+      "cores": 64
+    }
+  ]
+}

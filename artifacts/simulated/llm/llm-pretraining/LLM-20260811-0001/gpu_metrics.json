@@ -1,0 +1,77 @@
+{
+  "source_type": "simulated",
+  "gpu_metrics": [
+    {
+      "gpu_id": 0,
+      "utilization": 91.14,
+      "memory_utilization": 88.11,
+      "temperature": 71.5
+    },
+    {
+      "gpu_id": 1,
+      "utilization": 91.12,
+      "memory_utilization": 90.3,
+      "temperature": 66.2
+    },
+    {
+      "gpu_id": 2,
+      "utilization": 89.79,
+      "memory_utilization": 84.24,
+      "temperature": 65.9
+    },
+    {
+      "gpu_id": 3,
+      "utilization": 85.46,
+      "memory_utilization": 91.43,
+      "temperature": 67.6
+    },
+    {
+      "gpu_id": 4,
+      "utilization": 91.13,
+      "memory_utilization": 83.68,
+      "temperature": 66.6
+    },
+    {
+      "gpu_id": 5,
+      "utilization": 94.68,
+      "memory_utilization": 86.9,
+      "temperature": 69.5
+    },
+    {
+      "gpu_id": 6,
+      "utilization": 90.1,
+      "memory_utilization": 92.24,
+      "temperature": 74.4
+    },
+    {
+      "gpu_id": 7,
+      "utilization": 89.36,
+      "memory_utilization": 84.36,
+      "temperature": 74.2
+    },
+    {
+      "gpu_id": 8,
+      "utilization": 93.96,
+      "memory_utilization": 82.37,
+      "temperature": 66.5
+    },
+    {
+      "gpu_id": 9,
+      "utilization": 86.41,
+      "memory_utilization": 89.32,
+      "temperature": 69.8
+    },
+    {
+      "gpu_id": 10,
+      "utilization": 96.0,
+      "memory_utilization": 81.78,
+      "temperature": 68.8
+    },
+    {
+      "gpu_id": 11,
+      "utilization": 89.92,
+      "memory_utilization": 79.85,
+      "temperature": 69.2
+    }
+  ]
+}

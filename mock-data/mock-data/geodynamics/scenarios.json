@@ -1,0 +1,21 @@
+{
+  "code": 200,
+  "message": "success",
+  "data": [
+    {
+      "id": "wave-propagation",
+      "name": "地震波传播模拟",
+      "category": "地球动力学",
+      "description": "基于有限差分法的三维地震波传播模拟，用于地震灾害评估与地下结构探测",
+      "status": "available"
+    },
+    {
+      "id": "tectonic-evolution",
+      "name": "板块构造数值模拟",
+      "category": "地球动力学",
+      "description": "利用有限元方法模拟岩石圈热-力学演化过程",
+      "status": "available"
+    }
+  ],
+  "timestamp": "2026-08-11T10:00:00+08:00"
+}

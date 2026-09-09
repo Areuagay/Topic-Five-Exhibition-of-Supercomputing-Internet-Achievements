@@ -1,0 +1,29 @@
+{
+  "code": 200,
+  "message": "success",
+  "data": {
+    "migration_id": "MIG-20260811-0002",
+    "workload_id": "WL-FN-FFT",
+    "function_id": "fn-fft",
+    "function_name": "FFT函数",
+    "status": "success",
+    "progress": 100,
+    "from_cluster": "kunshan",
+    "from_cluster_name": "昆山昆仑",
+    "to_cluster": "guangzhou",
+    "to_cluster_name": "广州天河二号",
+    "source_type": "simulated",
+    "start_time": "2026-08-11T09:00:00+08:00",
+    "end_time": "2026-08-11T09:00:12+08:00",
+    "reason": "昆山中心负载过高（CPU利用率 74%），触发负载均衡迁移",
+    "transferred_replicas": 1,
+    "total_size_mb": 512,
+    "events": [
+      { "seq": 1, "event": "load_balancing", "name": "负载均衡调度", "status": "success", "timestamp": "2026-08-11T09:00:00+08:00", "detail": "检测到昆山中心 CPU 利用率超过阈值，选择广州中心作为迁移目标" },
+      { "seq": 2, "event": "migration_started", "name": "迁移启动", "status": "success", "timestamp": "2026-08-11T09:00:02+08:00", "detail": "FFT 函数实例 WL-FN-FFT 迁移启动，目标实例数 1" },
+      { "seq": 3, "event": "state_transfer", "name": "状态数据迁移", "status": "success", "timestamp": "2026-08-11T09:00:08+08:00", "detail": "512MB 状态数据经专线迁移完成，平均带宽 85MB/s" },
+      { "seq": 4, "event": "migration_completed", "name": "迁移完成", "status": "success", "timestamp": "2026-08-11T09:00:12+08:00", "detail": "新实例就绪，请求路由已切换至广州中心，旧实例回收" }
+    ]
+  },
+  "timestamp": "2026-08-11T09:00:12+08:00"
+}

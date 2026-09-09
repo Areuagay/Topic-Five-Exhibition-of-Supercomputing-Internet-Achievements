@@ -1,0 +1,3068 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "课题五-大规模无人机协同仿真接口",
+    "description": "Apifox 导入兼容版。包含 13 个接口、中文接口名称、接口说明、请求/响应示例、字段中文名（title）、字段说明（description）和 Mock 规则（x-apifox-mock）。覆盖千架无人机集群协同控制与航迹规划和避障两个场景。",
+    "version": "1.2.0"
+  },
+  "tags": [
+    {
+      "name": "场景管理"
+    },
+    {
+      "name": "任务运行"
+    },
+    {
+      "name": "运行监控与结果"
+    },
+    {
+      "name": "算子管理",
+      "description": "算子库函数注册、调用与状态管理接口。"
+    }
+  ],
+  "paths": {
+    "/api/v1/uav/scenarios": {
+      "get": {
+        "summary": "获取大规模无人机协同仿真场景列表",
+        "deprecated": false,
+        "description": "获取无人机协同领域下的两个示范应用入口。",
+        "operationId": "getUAVScenarios",
+        "tags": [
+          "场景管理"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "array",
+                      "title": "无人机仿真场景列表",
+                      "description": "无人机协同仿真场景集合。",
+                      "items": {
+                        "type": "object",
+                        "title": "无人机仿真场景摘要",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "title": "场景ID",
+                            "description": "无人机协同仿真场景唯一标识。",
+                            "example": "swarm-coordination"
+                          },
+                          "name": {
+                            "type": "string",
+                            "title": "场景名称",
+                            "description": "无人机协同仿真场景中文名称。",
+                            "example": "千架无人机集群协同控制"
+                          },
+                          "category": {
+                            "type": "string",
+                            "title": "所属领域",
+                            "description": "应用所属领域。",
+                            "example": "无人机协同"
+                          },
+                          "description": {
+                            "type": "string",
+                            "title": "场景简介",
+                            "description": "应用入口卡片简介。",
+                            "example": "面向大规模无人机集群的分布式协同控制与任务分配仿真"
+                          },
+                          "status": {
+                            "type": "string",
+                            "title": "可用状态",
+                            "description": "场景当前可用状态。",
+                            "enum": [
+                              "available",
+                              "unavailable",
+                              "developing"
+                            ],
+                            "example": "available"
+                          }
+                        }
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T11:40:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": [
+                    {
+                      "id": "swarm-coordination",
+                      "name": "千架无人机集群协同控制",
+                      "category": "无人机协同",
+                      "description": "面向大规模无人机集群的分布式协同控制与任务分配仿真",
+                      "status": "available"
+                    },
+                    {
+                      "id": "path-planning",
+                      "name": "航迹规划与避障",
+                      "category": "无人机协同",
+                      "description": "复杂三维环境下的无人机航迹规划、避障与路径优化仿真",
+                      "status": "available"
+                    }
+                  ],
+                  "timestamp": "2026-08-11T11:40:00+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/uav/scenarios/{scenario_id}": {
+      "get": {
+        "summary": "获取大规模无人机协同仿真场景详情",
+        "deprecated": false,
+        "description": "获取场景说明、摘要指标、支持集群、技术栈、流程、关联算子和成果亮点。",
+        "operationId": "getUAVScenarioDetail",
+        "tags": [
+          "场景管理"
+        ],
+        "parameters": [
+          {
+            "name": "scenario_id",
+            "in": "path",
+            "description": "无人机仿真场景唯一标识：swarm-coordination=千架无人机集群协同控制；path-planning=航迹规划与避障。",
+            "required": true,
+            "example": "swarm-coordination",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "swarm-coordination",
+                "path-planning"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "无人机仿真场景详情",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "title": "场景ID",
+                          "description": "无人机协同仿真场景唯一标识。",
+                          "example": "swarm-coordination"
+                        },
+                        "name": {
+                          "type": "string",
+                          "title": "场景名称",
+                          "description": "场景中文名称。",
+                          "example": "千架无人机集群协同控制"
+                        },
+                        "category": {
+                          "type": "string",
+                          "title": "所属领域",
+                          "description": "应用所属领域。",
+                          "example": "无人机协同"
+                        },
+                        "description": {
+                          "type": "string",
+                          "title": "场景简介",
+                          "description": "详情页场景说明。",
+                          "example": "基于分布式一致性算法的大规模无人机集群编队控制与任务分配仿真"
+                        },
+                        "summary_metrics": {
+                          "type": "array",
+                          "title": "摘要指标",
+                          "description": "详情页顶部摘要指标。",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "label": {
+                                "type": "string",
+                                "title": "指标名称",
+                                "description": "摘要指标中文名称。",
+                                "example": "无人机规模"
+                              },
+                              "value": {
+                                "type": "string",
+                                "title": "指标值",
+                                "description": "摘要指标展示值。",
+                                "example": "1000"
+                              },
+                              "unit": {
+                                "type": "string",
+                                "title": "指标单位",
+                                "description": "摘要指标单位。",
+                                "example": "架"
+                              }
+                            }
+                          }
+                        },
+                        "supported_clusters": {
+                          "type": "array",
+                          "title": "支持计算中心",
+                          "description": "支持该场景运行的计算中心 ID。",
+                          "items": {
+                            "type": "string",
+                            "title": "计算中心ID",
+                            "description": "计算中心唯一标识。",
+                            "example": "changsha"
+                          }
+                        },
+                        "tech_stack": {
+                          "type": "array",
+                          "title": "技术栈",
+                          "description": "应用核心技术与软件栈。",
+                          "items": {
+                            "type": "string",
+                            "title": "技术名称",
+                            "description": "技术栈条目。",
+                            "example": "MPI"
+                          }
+                        },
+                        "background": {
+                          "type": "string",
+                          "title": "问题背景",
+                          "description": "无人机协同仿真问题背景说明。",
+                          "example": "大规模无人机集群协同控制涉及海量智能体状态更新、通信拓扑维护和任务协同，计算与通信开销较大。"
+                        },
+                        "method": {
+                          "type": "string",
+                          "title": "计算方法",
+                          "description": "主要计算方法说明。",
+                          "example": "采用分布式一致性控制、多智能体动力学仿真和并行任务分解实现大规模无人机集群协同计算。"
+                        },
+                        "architecture": {
+                          "type": "array",
+                          "title": "技术流程",
+                          "description": "应用技术流程步骤。",
+                          "items": {
+                            "type": "string",
+                            "title": "流程步骤",
+                            "description": "技术流程节点名称。",
+                            "example": "场景初始化"
+                          }
+                        },
+                        "operators": {
+                          "type": "array",
+                          "title": "关联算子",
+                          "description": "该应用关联的函数/算子。",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "title": "算子ID",
+                                "description": "算子唯一标识。",
+                                "example": "blockmesh"
+                              },
+                              "name": {
+                                "type": "string",
+                                "title": "算子名称",
+                                "description": "算子中文名称。",
+                                "example": "块网格生成算子"
+                              }
+                            }
+                          }
+                        },
+                        "highlights": {
+                          "type": "array",
+                          "title": "成果亮点",
+                          "description": "详情页成果亮点。",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "label": {
+                                "type": "string",
+                                "title": "亮点名称",
+                                "description": "亮点指标中文名称。",
+                                "example": "协同规模"
+                              },
+                              "value": {
+                                "type": "string",
+                                "title": "亮点数值",
+                                "description": "亮点指标展示值。",
+                                "example": "1000"
+                              },
+                              "unit": {
+                                "type": "string",
+                                "title": "亮点单位",
+                                "description": "亮点指标单位。",
+                                "example": "架"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "example": {
+                        "id": "swarm-coordination",
+                        "name": "千架无人机集群协同控制",
+                        "category": "无人机协同",
+                        "description": "基于分布式一致性算法的大规模无人机集群编队控制与任务分配仿真",
+                        "summary_metrics": [
+                          {
+                            "label": "无人机规模",
+                            "value": "1000",
+                            "unit": "架"
+                          },
+                          {
+                            "label": "任务完成率",
+                            "value": "93.2",
+                            "unit": "%"
+                          },
+                          {
+                            "label": "编队误差",
+                            "value": "0.83",
+                            "unit": "m"
+                          }
+                        ],
+                        "supported_clusters": [
+                          "changsha",
+                          "guangzhou",
+                          "kunshan"
+                        ],
+                        "tech_stack": [
+                          "MPI",
+                          "多智能体仿真",
+                          "分布式一致性算法",
+                          "图搜索",
+                          "强化学习",
+                          "SLURM"
+                        ],
+                        "background": "大规模无人机集群协同控制涉及海量智能体状态更新、通信拓扑维护和任务协同，计算与通信开销较大。",
+                        "method": "采用分布式一致性控制、多智能体动力学仿真和并行任务分解实现大规模无人机集群协同计算。",
+                        "architecture": [
+                          "场景初始化",
+                          "通信拓扑构建",
+                          "任务分配",
+                          "协同控制求解",
+                          "多智能体动力学仿真",
+                          "碰撞检测",
+                          "任务统计",
+                          "结果输出"
+                        ],
+                        "operators": [
+                          {
+                            "id": "consensus-control",
+                            "name": "分布式一致性控制算子"
+                          },
+                          {
+                            "id": "path-planning",
+                            "name": "航迹规划算子"
+                          },
+                          {
+                            "id": "collision-detection",
+                            "name": "碰撞检测算子"
+                          }
+                        ],
+                        "highlights": [
+                          {
+                            "label": "协同规模",
+                            "value": "1000",
+                            "unit": "架"
+                          },
+                          {
+                            "label": "任务完成率",
+                            "value": "93.2",
+                            "unit": "%"
+                          },
+                          {
+                            "label": "规划耗时",
+                            "value": "1.8",
+                            "unit": "s"
+                          }
+                        ]
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T11:40:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "id": "swarm-coordination",
+                    "name": "千架无人机集群协同控制",
+                    "category": "无人机协同",
+                    "description": "基于分布式一致性算法的大规模无人机集群编队控制与任务分配仿真",
+                    "summary_metrics": [
+                      {
+                        "label": "无人机规模",
+                        "value": "1000",
+                        "unit": "架"
+                      },
+                      {
+                        "label": "任务完成率",
+                        "value": "93.2",
+                        "unit": "%"
+                      },
+                      {
+                        "label": "编队误差",
+                        "value": "0.83",
+                        "unit": "m"
+                      }
+                    ],
+                    "supported_clusters": [
+                      "changsha",
+                      "guangzhou",
+                      "kunshan"
+                    ],
+                    "tech_stack": [
+                      "MPI",
+                      "多智能体仿真",
+                      "分布式一致性算法",
+                      "图搜索",
+                      "强化学习",
+                      "SLURM"
+                    ],
+                    "background": "大规模无人机集群协同控制涉及海量智能体状态更新、通信拓扑维护和任务协同，计算与通信开销较大。",
+                    "method": "采用分布式一致性控制、多智能体动力学仿真和并行任务分解实现大规模无人机集群协同计算。",
+                    "architecture": [
+                      "场景初始化",
+                      "通信拓扑构建",
+                      "任务分配",
+                      "协同控制求解",
+                      "多智能体动力学仿真",
+                      "碰撞检测",
+                      "任务统计",
+                      "结果输出"
+                    ],
+                    "operators": [
+                      {
+                        "id": "blockmesh",
+                        "name": "块网格生成算子"
+                      },
+                      {
+                        "id": "checkmesh",
+                        "name": "网格质量检查算子"
+                      },
+                      {
+                        "id": "decomposepar",
+                        "name": "并行分解算子"
+                      },
+                      {
+                        "id": "incompressible-driftflux",
+                        "name": "不可压缩漂移通量求解算子"
+                      },
+                      {
+                        "id": "postprocess",
+                        "name": "后处理算子"
+                      },
+                      {
+                        "id": "foam-to-vtk",
+                        "name": "场数据转VTK后处理算子"
+                      }
+                    ],
+                    "highlights": [
+                      {
+                        "label": "协同规模",
+                        "value": "1000",
+                        "unit": "架"
+                      },
+                      {
+                        "label": "任务完成率",
+                        "value": "93.2",
+                        "unit": "%"
+                      },
+                      {
+                        "label": "规划耗时",
+                        "value": "1.8",
+                        "unit": "s"
+                      }
+                    ]
+                  },
+                  "timestamp": "2026-08-11T11:40:00+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/uav/scenarios/{scenario_id}/params-schema": {
+      "get": {
+        "summary": "获取大规模无人机协同仿真参数定义",
+        "deprecated": false,
+        "description": "获取当前场景可配置参数，供前端动态生成仿真参数表单。",
+        "operationId": "getUAVParamsSchema",
+        "tags": [
+          "场景管理"
+        ],
+        "parameters": [
+          {
+            "name": "scenario_id",
+            "in": "path",
+            "description": "无人机仿真场景唯一标识：swarm-coordination=千架无人机集群协同控制；path-planning=航迹规划与避障。",
+            "required": true,
+            "example": "swarm-coordination",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "swarm-coordination",
+                "path-planning"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "无人机仿真参数定义",
+                      "properties": {
+                        "fields": {
+                          "type": "array",
+                          "title": "参数列表",
+                          "description": "当前无人机仿真场景可配置参数。",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string",
+                                "title": "参数英文名",
+                                "description": "参数唯一英文编码。",
+                                "example": "uav_count"
+                              },
+                              "label": {
+                                "type": "string",
+                                "title": "参数中文名",
+                                "description": "前端展示中文名称。",
+                                "example": "无人机数量"
+                              },
+                              "type": {
+                                "type": "string",
+                                "title": "参数类型",
+                                "description": "表单参数数据类型。",
+                                "example": "integer"
+                              },
+                              "unit": {
+                                "type": "string",
+                                "title": "参数单位",
+                                "description": "参数单位，可为空。",
+                                "example": "架"
+                              },
+                              "required": {
+                                "type": "boolean",
+                                "title": "是否必填",
+                                "description": "提交任务时是否必须提供。",
+                                "example": true
+                              },
+                              "default_value": {
+                                "type": "string",
+                                "title": "默认值",
+                                "description": "参数默认值，以字符串形式用于通用渲染。",
+                                "example": "1000"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "example": {
+                        "fields": [
+                          {
+                            "name": "uav_count",
+                            "label": "无人机数量",
+                            "type": "integer",
+                            "unit": "架",
+                            "required": true,
+                            "default_value": "1000"
+                          },
+                          {
+                            "name": "simulation_steps",
+                            "label": "仿真步数",
+                            "type": "integer",
+                            "unit": "step",
+                            "required": true,
+                            "default_value": "20000"
+                          },
+                          {
+                            "name": "communication_topology",
+                            "label": "通信拓扑",
+                            "type": "select",
+                            "unit": "",
+                            "required": true,
+                            "default_value": "mesh"
+                          },
+                          {
+                            "name": "control_algorithm",
+                            "label": "协同控制算法",
+                            "type": "select",
+                            "unit": "",
+                            "required": true,
+                            "default_value": "distributed-consensus"
+                          },
+                          {
+                            "name": "environment_disturbance",
+                            "label": "环境扰动",
+                            "type": "boolean",
+                            "unit": "",
+                            "required": true,
+                            "default_value": "true"
+                          }
+                        ]
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T11:40:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "fields": [
+                      {
+                        "name": "operator",
+                        "label": "算子选择",
+                        "type": "select",
+                        "unit": "",
+                        "required": true,
+                        "default_value": "blockmesh",
+                        "description": "选择要执行的算子库函数，与后端 /action/invoke 对齐。"
+                      },
+                      {
+                        "name": "uav_count",
+                        "label": "无人机数量",
+                        "type": "integer",
+                        "unit": "架",
+                        "required": true,
+                        "default_value": "1000"
+                      },
+                      {
+                        "name": "simulation_steps",
+                        "label": "仿真步数",
+                        "type": "integer",
+                        "unit": "step",
+                        "required": true,
+                        "default_value": "20000"
+                      },
+                      {
+                        "name": "communication_topology",
+                        "label": "通信拓扑",
+                        "type": "select",
+                        "unit": "",
+                        "required": true,
+                        "default_value": "mesh"
+                      },
+                      {
+                        "name": "control_algorithm",
+                        "label": "协同控制算法",
+                        "type": "select",
+                        "unit": "",
+                        "required": true,
+                        "default_value": "distributed-consensus"
+                      },
+                      {
+                        "name": "environment_disturbance",
+                        "label": "环境扰动",
+                        "type": "boolean",
+                        "unit": "",
+                        "required": true,
+                        "default_value": "true"
+                      }
+                    ]
+                  },
+                  "timestamp": "2026-08-11T11:40:00+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/uav/scenarios/{scenario_id}/benchmark": {
+      "get": {
+        "summary": "获取大规模无人机协同仿真性能对比数据",
+        "deprecated": false,
+        "description": "获取仿真速度、任务完成率、碰撞率和并行效率等性能对比数据。",
+        "operationId": "getUAVBenchmark",
+        "tags": [
+          "场景管理"
+        ],
+        "parameters": [
+          {
+            "name": "scenario_id",
+            "in": "path",
+            "description": "无人机仿真场景唯一标识：swarm-coordination=千架无人机集群协同控制；path-planning=航迹规划与避障。",
+            "required": true,
+            "example": "swarm-coordination",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "swarm-coordination",
+                "path-planning"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "无人机协同仿真性能对比数据",
+                      "properties": {
+                        "dimensions": {
+                          "type": "array",
+                          "title": "对比维度",
+                          "description": "参与性能对比的指标维度。",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "key": {
+                                "type": "string",
+                                "title": "维度编码",
+                                "description": "性能指标英文编码。",
+                                "example": "simulation_speed"
+                              },
+                              "name": {
+                                "type": "string",
+                                "title": "维度名称",
+                                "description": "性能指标中文名称。",
+                                "example": "仿真速度"
+                              },
+                              "unit": {
+                                "type": "string",
+                                "title": "维度单位",
+                                "description": "指标单位。",
+                                "example": "step/s"
+                              }
+                            }
+                          }
+                        },
+                        "series": {
+                          "type": "array",
+                          "title": "对比序列",
+                          "description": "不同方案的性能指标。",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string",
+                                "title": "方案名称",
+                                "description": "对比方案中文名称。",
+                                "example": "本方案"
+                              },
+                              "simulation_speed": {
+                                "type": "number",
+                                "title": "仿真速度",
+                                "description": "单位时间完成的仿真步数。",
+                                "example": 480
+                              },
+                              "mission_completion_rate": {
+                                "type": "number",
+                                "title": "任务完成率",
+                                "description": "无人机群任务完成比例。",
+                                "example": 93.2
+                              },
+                              "collision_rate": {
+                                "type": "number",
+                                "title": "碰撞率",
+                                "description": "发生碰撞的无人机占比。",
+                                "example": 0.2
+                              },
+                              "parallel_efficiency": {
+                                "type": "number",
+                                "title": "并行效率",
+                                "description": "多核/多节点并行效率。",
+                                "example": 84
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "example": {
+                        "dimensions": [
+                          {
+                            "key": "simulation_speed",
+                            "name": "仿真速度",
+                            "unit": "step/s"
+                          },
+                          {
+                            "key": "mission_completion_rate",
+                            "name": "任务完成率",
+                            "unit": "%"
+                          },
+                          {
+                            "key": "collision_rate",
+                            "name": "碰撞率",
+                            "unit": "%"
+                          },
+                          {
+                            "key": "parallel_efficiency",
+                            "name": "并行效率",
+                            "unit": "%"
+                          }
+                        ],
+                        "series": [
+                          {
+                            "name": "本方案",
+                            "simulation_speed": 480,
+                            "mission_completion_rate": 93.2,
+                            "collision_rate": 0.2,
+                            "parallel_efficiency": 84
+                          },
+                          {
+                            "name": "基准方案",
+                            "simulation_speed": 260,
+                            "mission_completion_rate": 86.5,
+                            "collision_rate": 1.1,
+                            "parallel_efficiency": 62
+                          }
+                        ]
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T11:40:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "dimensions": [
+                      {
+                        "key": "simulation_speed",
+                        "name": "仿真速度",
+                        "unit": "step/s"
+                      },
+                      {
+                        "key": "mission_completion_rate",
+                        "name": "任务完成率",
+                        "unit": "%"
+                      },
+                      {
+                        "key": "collision_rate",
+                        "name": "碰撞率",
+                        "unit": "%"
+                      },
+                      {
+                        "key": "parallel_efficiency",
+                        "name": "并行效率",
+                        "unit": "%"
+                      }
+                    ],
+                    "series": [
+                      {
+                        "name": "本方案",
+                        "simulation_speed": 480,
+                        "mission_completion_rate": 93.2,
+                        "collision_rate": 0.2,
+                        "parallel_efficiency": 84
+                      },
+                      {
+                        "name": "基准方案",
+                        "simulation_speed": 260,
+                        "mission_completion_rate": 86.5,
+                        "collision_rate": 1.1,
+                        "parallel_efficiency": 62
+                      }
+                    ]
+                  },
+                  "timestamp": "2026-08-11T11:40:00+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/uav/scenarios/{scenario_id}/runs": {
+      "post": {
+        "summary": "创建大规模无人机协同仿真任务",
+        "deprecated": false,
+        "description": "创建千架无人机集群协同控制或航迹规划与避障任务。",
+        "operationId": "createUAVRun",
+        "tags": [
+          "任务运行"
+        ],
+        "parameters": [
+          {
+            "name": "scenario_id",
+            "in": "path",
+            "description": "无人机仿真场景唯一标识：swarm-coordination=千架无人机集群协同控制；path-planning=航迹规划与避障。",
+            "required": true,
+            "example": "swarm-coordination",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "swarm-coordination",
+                "path-planning"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "title": "无人机协同仿真任务创建请求",
+                "description": "创建千架无人机集群协同控制或航迹规划与避障任务的请求体。",
+                "required": [
+                  "execution_mode",
+                  "cluster_policy",
+                  "parameters",
+                  "resources",
+                  "operator"
+                ],
+                "properties": {
+                  "execution_mode": {
+                    "type": "string",
+                    "title": "执行模式",
+                    "description": "real=真实程序/超算；simulated=本地模拟；replay=历史日志/结果回放。",
+                    "enum": [
+                      "real",
+                      "simulated",
+                      "replay"
+                    ],
+                    "example": "real"
+                  },
+                  "cluster_policy": {
+                    "type": "string",
+                    "title": "集群调度策略",
+                    "description": "auto=自动选择；manual=手动选择；multi-center=多中心协同。",
+                    "enum": [
+                      "auto",
+                      "manual",
+                      "multi-center"
+                    ],
+                    "example": "auto"
+                  },
+                  "preferred_clusters": {
+                    "type": "array",
+                    "title": "优选计算中心",
+                    "description": "优先尝试调度的计算中心 ID。",
+                    "items": {
+                      "type": "string",
+                      "title": "计算中心ID",
+                      "description": "计算中心唯一标识。",
+                      "example": "changsha"
+                    }
+                  },
+                  "input_files": {
+                    "type": "array",
+                    "title": "输入文件列表",
+                    "description": "地图、障碍物、任务区域、无人机初始状态等输入数据路径。",
+                    "items": {
+                      "type": "string",
+                      "title": "输入文件路径",
+                      "description": "全局文件系统或对象存储中的文件路径。",
+                      "example": "gfs://demo/uav/scenario.json"
+                    }
+                  },
+                  "parameters": {
+                    "type": "object",
+                    "title": "无人机协同仿真参数",
+                    "description": "无人机数量、仿真步数、通信拓扑和协同控制算法等专业参数。",
+                    "required": [
+                      "uav_count",
+                      "simulation_steps",
+                      "communication_topology",
+                      "control_algorithm",
+                      "environment_disturbance"
+                    ],
+                    "properties": {
+                      "uav_count": {
+                        "type": "integer",
+                        "title": "无人机数量",
+                        "description": "参与本次仿真的无人机总数量。",
+                        "example": 1000
+                      },
+                      "simulation_steps": {
+                        "type": "integer",
+                        "title": "仿真步数",
+                        "description": "本次仿真的总时间步数量。",
+                        "example": 20000
+                      },
+                      "communication_topology": {
+                        "type": "string",
+                        "title": "通信拓扑",
+                        "description": "无人机之间的通信拓扑结构。",
+                        "enum": [
+                          "mesh",
+                          "ring",
+                          "star",
+                          "dynamic"
+                        ],
+                        "example": "mesh"
+                      },
+                      "control_algorithm": {
+                        "type": "string",
+                        "title": "协同控制算法",
+                        "description": "用于编队或协同控制的算法。",
+                        "enum": [
+                          "distributed-consensus",
+                          "leader-follower",
+                          "formation-control",
+                          "reinforcement-learning"
+                        ],
+                        "example": "distributed-consensus"
+                      },
+                      "environment_disturbance": {
+                        "type": "boolean",
+                        "title": "环境扰动",
+                        "description": "是否启用风场、噪声等外部扰动。",
+                        "example": true
+                      }
+                    }
+                  },
+                  "resources": {
+                    "type": "object",
+                    "title": "资源需求",
+                    "description": "任务申请的计算资源。",
+                    "required": [
+                      "nodes",
+                      "cpu_cores"
+                    ],
+                    "properties": {
+                      "nodes": {
+                        "type": "integer",
+                        "title": "计算节点数",
+                        "description": "申请的计算节点数量。",
+                        "example": 4
+                      },
+                      "cpu_cores": {
+                        "type": "integer",
+                        "title": "CPU 核数",
+                        "description": "任务申请的 CPU 总核数。",
+                        "example": 256
+                      },
+                      "gpu_count": {
+                        "type": "integer",
+                        "title": "GPU/加速卡数量",
+                        "description": "任务申请的 GPU/DCU/DSP 数量。",
+                        "example": 0
+                      },
+                      "memory_gb": {
+                        "type": "integer",
+                        "title": "内存容量",
+                        "description": "申请总内存，单位 GB。",
+                        "example": 512
+                      }
+                    }
+                  },
+                  "operator": {
+                    "type": "string",
+                    "title": "算子选择",
+                    "description": "选择要执行的算子库函数，如 blockmesh。",
+                    "example": "blockmesh"
+                  }
+                },
+                "example": {
+                  "execution_mode": "real",
+                  "cluster_policy": "auto",
+                  "preferred_clusters": [
+                    "changsha"
+                  ],
+                  "input_files": [
+                    "gfs://demo/uav/scenario.json",
+                    "gfs://demo/uav/obstacles.json"
+                  ],
+                  "parameters": {
+                    "uav_count": 1000,
+                    "simulation_steps": 20000,
+                    "communication_topology": "mesh",
+                    "control_algorithm": "distributed-consensus",
+                    "environment_disturbance": true
+                  },
+                  "resources": {
+                    "nodes": 4,
+                    "cpu_cores": 256,
+                    "gpu_count": 0,
+                    "memory_gb": 512
+                  }
+                }
+              },
+              "example": {
+                "execution_mode": "real",
+                "cluster_policy": "auto",
+                "preferred_clusters": [
+                  "changsha"
+                ],
+                "input_files": [
+                  "gfs://demo/uav/scenario.json",
+                  "gfs://demo/uav/obstacles.json"
+                ],
+                "parameters": {
+                  "uav_count": 1000,
+                  "simulation_steps": 20000,
+                  "communication_topology": "mesh",
+                  "control_algorithm": "distributed-consensus",
+                  "environment_disturbance": true
+                },
+                "resources": {
+                  "nodes": 4,
+                  "cpu_cores": 256,
+                  "gpu_count": 0,
+                  "memory_gb": 512
+                },
+                "operator": "blockmesh"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "任务创建结果",
+                      "properties": {
+                        "run_id": {
+                          "type": "string",
+                          "title": "运行实例ID",
+                          "description": "本次无人机仿真任务运行实例唯一标识。",
+                          "example": "UAV-20260811-0001"
+                        },
+                        "status": {
+                          "type": "string",
+                          "title": "任务状态",
+                          "description": "任务当前状态。",
+                          "enum": [
+                            "pending",
+                            "queued",
+                            "running",
+                            "success",
+                            "failed",
+                            "stopped",
+                            "migrating"
+                          ],
+                          "example": "queued"
+                        },
+                        "cluster_id": {
+                          "type": "string",
+                          "title": "计算中心ID",
+                          "description": "任务被调度到的计算中心。",
+                          "example": "changsha"
+                        },
+                        "job_id": {
+                          "type": "string",
+                          "title": "调度作业ID",
+                          "description": "底层 SLURM/任务调度系统作业 ID。",
+                          "example": "UAV-SLURM-48127"
+                        }
+                      },
+                      "example": {
+                        "run_id": "UAV-20260811-0001",
+                        "status": "queued",
+                        "cluster_id": "changsha",
+                        "job_id": "UAV-SLURM-48127"
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T11:40:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "run_id": "UAV-20260811-0001",
+                    "status": "queued",
+                    "cluster_id": "changsha",
+                    "job_id": "UAV-SLURM-48127",
+                    "operator": "blockmesh"
+                  },
+                  "timestamp": "2026-08-11T11:40:00+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/uav/runs/{run_id}": {
+      "get": {
+        "summary": "查询大规模无人机协同仿真任务状态",
+        "deprecated": false,
+        "description": "查询仿真进度、当前阶段、运行中心、资源配置和累计核时。",
+        "operationId": "getUAVRun",
+        "tags": [
+          "任务运行"
+        ],
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "description": "无人机协同仿真任务运行实例唯一标识。",
+            "required": true,
+            "example": "UAV-20260811-0001",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "无人机仿真任务状态",
+                      "properties": {
+                        "run_id": {
+                          "type": "string",
+                          "title": "运行实例ID",
+                          "description": "任务运行实例唯一标识。",
+                          "example": "UAV-20260811-0001"
+                        },
+                        "scenario_id": {
+                          "type": "string",
+                          "title": "场景ID",
+                          "description": "当前任务所属无人机仿真场景。",
+                          "example": "swarm-coordination"
+                        },
+                        "status": {
+                          "type": "string",
+                          "title": "任务状态",
+                          "description": "当前任务生命周期状态。",
+                          "enum": [
+                            "pending",
+                            "queued",
+                            "running",
+                            "success",
+                            "failed",
+                            "stopped",
+                            "migrating"
+                          ],
+                          "example": "running"
+                        },
+                        "progress": {
+                          "type": "number",
+                          "title": "任务进度",
+                          "description": "任务整体完成百分比。",
+                          "example": 72
+                        },
+                        "execution_mode": {
+                          "type": "string",
+                          "title": "执行模式",
+                          "description": "任务实际执行模式。",
+                          "enum": [
+                            "real",
+                            "simulated",
+                            "replay"
+                          ],
+                          "example": "real"
+                        },
+                        "cluster_id": {
+                          "type": "string",
+                          "title": "计算中心ID",
+                          "description": "当前任务运行中心。",
+                          "example": "changsha"
+                        },
+                        "cluster_name": {
+                          "type": "string",
+                          "title": "计算中心名称",
+                          "description": "当前运行中心中文名称。",
+                          "example": "天河新一代"
+                        },
+                        "job_id": {
+                          "type": "string",
+                          "title": "调度作业ID",
+                          "description": "SLURM/任务调度作业 ID。",
+                          "example": "UAV-SLURM-48127"
+                        },
+                        "current_stage": {
+                          "type": "string",
+                          "title": "当前阶段",
+                          "description": "当前正在执行的无人机仿真工作流阶段。",
+                          "example": "multi-agent-simulation"
+                        },
+                        "start_time": {
+                          "type": "string",
+                          "title": "开始时间",
+                          "description": "无人机仿真任务开始时间。",
+                          "example": "2026-08-11T09:10:00+08:00"
+                        },
+                        "end_time": {
+                          "type": "string",
+                          "title": "结束时间",
+                          "description": "任务结束时间，运行中返回空字符串。",
+                          "example": ""
+                        },
+                        "elapsed_seconds": {
+                          "type": "integer",
+                          "title": "已运行时长",
+                          "description": "任务累计运行秒数。",
+                          "example": 3200
+                        },
+                        "nodes": {
+                          "type": "integer",
+                          "title": "计算节点数",
+                          "description": "任务使用节点数。",
+                          "example": 4
+                        },
+                        "cpu_cores": {
+                          "type": "integer",
+                          "title": "CPU 核数",
+                          "description": "任务使用 CPU 总核数。",
+                          "example": 256
+                        },
+                        "gpu_count": {
+                          "type": "integer",
+                          "title": "GPU 数量",
+                          "description": "任务使用 GPU/加速卡数量。",
+                          "example": 0
+                        },
+                        "memory_gb": {
+                          "type": "integer",
+                          "title": "内存容量",
+                          "description": "任务使用/申请内存 GB。",
+                          "example": 512
+                        },
+                        "core_hours": {
+                          "type": "number",
+                          "title": "累计核时",
+                          "description": "截至当前统计的累计 core-hours。",
+                          "example": 227.6
+                        }
+                      },
+                      "example": {
+                        "run_id": "UAV-20260811-0001",
+                        "scenario_id": "swarm-coordination",
+                        "status": "running",
+                        "progress": 72,
+                        "execution_mode": "real",
+                        "cluster_id": "changsha",
+                        "cluster_name": "天河新一代",
+                        "job_id": "UAV-SLURM-48127",
+                        "current_stage": "multi-agent-simulation",
+                        "start_time": "2026-08-11T09:10:00+08:00",
+                        "end_time": "",
+                        "elapsed_seconds": 3200,
+                        "nodes": 4,
+                        "cpu_cores": 256,
+                        "gpu_count": 0,
+                        "memory_gb": 512,
+                        "core_hours": 227.6
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T11:40:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "run_id": "UAV-20260811-0001",
+                    "scenario_id": "swarm-coordination",
+                    "status": "running",
+                    "progress": 72,
+                    "execution_mode": "real",
+                    "cluster_id": "changsha",
+                    "cluster_name": "天河新一代",
+                    "job_id": "UAV-SLURM-48127",
+                    "current_stage": "multi-agent-simulation",
+                    "start_time": "2026-08-11T09:10:00+08:00",
+                    "end_time": "",
+                    "elapsed_seconds": 3200,
+                    "nodes": 4,
+                    "cpu_cores": 256,
+                    "gpu_count": 0,
+                    "memory_gb": 512,
+                    "core_hours": 227.6
+                  },
+                  "timestamp": "2026-08-11T11:40:00+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/uav/runs/{run_id}/stop": {
+      "post": {
+        "summary": "停止大规模无人机协同仿真任务",
+        "deprecated": false,
+        "description": "停止 pending、queued 或 running 状态的无人机协同仿真任务。",
+        "operationId": "stopUAVRun",
+        "tags": [
+          "任务运行"
+        ],
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "description": "无人机协同仿真任务运行实例唯一标识。",
+            "required": true,
+            "example": "UAV-20260811-0001",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "停止无人机仿真任务结果",
+                      "properties": {
+                        "run_id": {
+                          "type": "string",
+                          "title": "运行实例ID",
+                          "description": "被停止的任务 ID。",
+                          "example": "UAV-20260811-0001"
+                        },
+                        "status": {
+                          "type": "string",
+                          "title": "任务状态",
+                          "description": "停止后固定为 stopped。",
+                          "enum": [
+                            "stopped"
+                          ],
+                          "example": "stopped"
+                        }
+                      },
+                      "example": {
+                        "run_id": "UAV-20260811-0001",
+                        "status": "stopped"
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T11:40:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "run_id": "UAV-20260811-0001",
+                    "status": "stopped"
+                  },
+                  "timestamp": "2026-08-11T11:40:00+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/uav/runs/{run_id}/workflow": {
+      "get": {
+        "summary": "查询大规模无人机协同仿真工作流",
+        "deprecated": false,
+        "description": "查询场景初始化、通信拓扑、任务分配、协同控制、动力学仿真、碰撞检测、统计和结果输出等 DAG 节点。",
+        "operationId": "getUAVWorkflow",
+        "tags": [
+          "运行监控与结果"
+        ],
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "description": "无人机协同仿真任务运行实例唯一标识。",
+            "required": true,
+            "example": "UAV-20260811-0001",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "无人机协同仿真工作流",
+                      "properties": {
+                        "nodes": {
+                          "type": "array",
+                          "title": "工作流节点",
+                          "description": "无人机协同仿真 DAG 节点。",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "title": "节点ID",
+                                "description": "工作流节点唯一标识。",
+                                "example": "simulation"
+                              },
+                              "name": {
+                                "type": "string",
+                                "title": "节点名称",
+                                "description": "工作流节点中文名称。",
+                                "example": "多智能体动力学仿真"
+                              },
+                              "status": {
+                                "type": "string",
+                                "title": "节点状态",
+                                "description": "节点当前状态。",
+                                "enum": [
+                                  "pending",
+                                  "queued",
+                                  "running",
+                                  "success",
+                                  "failed",
+                                  "stopped"
+                                ],
+                                "example": "running"
+                              },
+                              "progress": {
+                                "type": "number",
+                                "title": "节点进度",
+                                "description": "节点完成百分比。",
+                                "example": 72
+                              },
+                              "cluster_id": {
+                                "type": "string",
+                                "title": "执行中心ID",
+                                "description": "执行当前节点的计算中心。",
+                                "example": "changsha"
+                              }
+                            }
+                          }
+                        },
+                        "edges": {
+                          "type": "array",
+                          "title": "工作流连线",
+                          "description": "DAG 节点依赖关系。",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "source": {
+                                "type": "string",
+                                "title": "源节点",
+                                "description": "前置节点 ID。",
+                                "example": "control"
+                              },
+                              "target": {
+                                "type": "string",
+                                "title": "目标节点",
+                                "description": "后置节点 ID。",
+                                "example": "simulation"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "example": {
+                        "nodes": [
+                          {
+                            "id": "init",
+                            "name": "场景初始化",
+                            "status": "success",
+                            "progress": 100,
+                            "cluster_id": "changsha"
+                          },
+                          {
+                            "id": "topology",
+                            "name": "通信拓扑构建",
+                            "status": "success",
+                            "progress": 100,
+                            "cluster_id": "changsha"
+                          },
+                          {
+                            "id": "assignment",
+                            "name": "任务分配",
+                            "status": "success",
+                            "progress": 100,
+                            "cluster_id": "changsha"
+                          },
+                          {
+                            "id": "control",
+                            "name": "协同控制求解",
+                            "status": "success",
+                            "progress": 100,
+                            "cluster_id": "changsha"
+                          },
+                          {
+                            "id": "simulation",
+                            "name": "多智能体动力学仿真",
+                            "status": "running",
+                            "progress": 72,
+                            "cluster_id": "changsha"
+                          },
+                          {
+                            "id": "collision",
+                            "name": "碰撞检测",
+                            "status": "running",
+                            "progress": 72,
+                            "cluster_id": "changsha"
+                          },
+                          {
+                            "id": "statistics",
+                            "name": "任务统计",
+                            "status": "pending",
+                            "progress": 0,
+                            "cluster_id": "changsha"
+                          },
+                          {
+                            "id": "output",
+                            "name": "结果输出",
+                            "status": "pending",
+                            "progress": 0,
+                            "cluster_id": "changsha"
+                          }
+                        ],
+                        "edges": [
+                          {
+                            "source": "init",
+                            "target": "topology"
+                          },
+                          {
+                            "source": "topology",
+                            "target": "assignment"
+                          },
+                          {
+                            "source": "assignment",
+                            "target": "control"
+                          },
+                          {
+                            "source": "control",
+                            "target": "simulation"
+                          },
+                          {
+                            "source": "simulation",
+                            "target": "collision"
+                          },
+                          {
+                            "source": "collision",
+                            "target": "statistics"
+                          },
+                          {
+                            "source": "statistics",
+                            "target": "output"
+                          }
+                        ]
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T11:40:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "nodes": [
+                      {
+                        "id": "init",
+                        "name": "场景初始化",
+                        "status": "success",
+                        "progress": 100,
+                        "cluster_id": "changsha"
+                      },
+                      {
+                        "id": "topology",
+                        "name": "通信拓扑构建",
+                        "status": "success",
+                        "progress": 100,
+                        "cluster_id": "changsha"
+                      },
+                      {
+                        "id": "assignment",
+                        "name": "任务分配",
+                        "status": "success",
+                        "progress": 100,
+                        "cluster_id": "changsha"
+                      },
+                      {
+                        "id": "control",
+                        "name": "协同控制求解",
+                        "status": "success",
+                        "progress": 100,
+                        "cluster_id": "changsha"
+                      },
+                      {
+                        "id": "simulation",
+                        "name": "多智能体动力学仿真",
+                        "status": "running",
+                        "progress": 72,
+                        "cluster_id": "changsha"
+                      },
+                      {
+                        "id": "collision",
+                        "name": "碰撞检测",
+                        "status": "running",
+                        "progress": 72,
+                        "cluster_id": "changsha"
+                      },
+                      {
+                        "id": "statistics",
+                        "name": "任务统计",
+                        "status": "pending",
+                        "progress": 0,
+                        "cluster_id": "changsha"
+                      },
+                      {
+                        "id": "output",
+                        "name": "结果输出",
+                        "status": "pending",
+                        "progress": 0,
+                        "cluster_id": "changsha"
+                      }
+                    ],
+                    "edges": [
+                      {
+                        "source": "init",
+                        "target": "topology"
+                      },
+                      {
+                        "source": "topology",
+                        "target": "assignment"
+                      },
+                      {
+                        "source": "assignment",
+                        "target": "control"
+                      },
+                      {
+                        "source": "control",
+                        "target": "simulation"
+                      },
+                      {
+                        "source": "simulation",
+                        "target": "collision"
+                      },
+                      {
+                        "source": "collision",
+                        "target": "statistics"
+                      },
+                      {
+                        "source": "statistics",
+                        "target": "output"
+                      }
+                    ]
+                  },
+                  "timestamp": "2026-08-11T11:40:00+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/uav/runs/{run_id}/metrics": {
+      "get": {
+        "summary": "查询大规模无人机协同仿真运行指标",
+        "deprecated": false,
+        "description": "查询仿真步数、活跃无人机数、任务完成率、碰撞次数、编队误差、仿真速度和资源利用率。",
+        "operationId": "getUAVMetrics",
+        "tags": [
+          "运行监控与结果"
+        ],
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "description": "无人机协同仿真任务运行实例唯一标识。",
+            "required": true,
+            "example": "UAV-20260811-0001",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "无人机仿真运行指标",
+                      "properties": {
+                        "progress": {
+                          "type": "number",
+                          "title": "任务进度",
+                          "description": "无人机仿真任务整体完成百分比。",
+                          "example": 72
+                        },
+                        "metrics": {
+                          "type": "array",
+                          "title": "专业指标列表",
+                          "description": "日志解析或仿真程序输出的结构化指标。",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string",
+                                "title": "指标编码",
+                                "description": "指标英文编码。",
+                                "example": "mission_completion_rate"
+                              },
+                              "label": {
+                                "type": "string",
+                                "title": "指标中文名",
+                                "description": "前端展示名称。",
+                                "example": "任务完成率"
+                              },
+                              "value": {
+                                "type": "number",
+                                "title": "指标值",
+                                "description": "当前指标数值。",
+                                "example": 93.2
+                              },
+                              "total": {
+                                "type": "number",
+                                "title": "指标总值",
+                                "description": "具有进度含义时的总量；无总量返回 0。",
+                                "example": 100
+                              },
+                              "unit": {
+                                "type": "string",
+                                "title": "指标单位",
+                                "description": "指标展示单位，无单位返回空字符串。",
+                                "example": "%"
+                              }
+                            }
+                          }
+                        },
+                        "cluster_summary": {
+                          "type": "object",
+                          "title": "集群统计摘要",
+                          "description": "无人机群体运行状态的聚合统计。",
+                          "properties": {
+                            "active_uavs": {
+                              "type": "integer",
+                              "title": "活跃无人机数",
+                              "description": "当前仍处于活跃状态的无人机数量。",
+                              "example": 1000
+                            },
+                            "completed_uavs": {
+                              "type": "integer",
+                              "title": "已完成任务无人机数",
+                              "description": "已完成任务的无人机数量。",
+                              "example": 932
+                            },
+                            "collision_count": {
+                              "type": "integer",
+                              "title": "碰撞次数",
+                              "description": "仿真累计碰撞事件数量。",
+                              "example": 2
+                            },
+                            "average_formation_error": {
+                              "type": "number",
+                              "title": "平均编队误差",
+                              "description": "无人机群平均编队位置误差，单位 m。",
+                              "example": 0.83
+                            }
+                          }
+                        }
+                      },
+                      "example": {
+                        "progress": 72,
+                        "metrics": [
+                          {
+                            "name": "simulation_step",
+                            "label": "当前仿真步",
+                            "value": 14400,
+                            "total": 20000,
+                            "unit": "step"
+                          },
+                          {
+                            "name": "active_uavs",
+                            "label": "当前无人机数",
+                            "value": 1000,
+                            "total": 1000,
+                            "unit": "架"
+                          },
+                          {
+                            "name": "mission_completion_rate",
+                            "label": "任务完成率",
+                            "value": 93.2,
+                            "total": 100,
+                            "unit": "%"
+                          },
+                          {
+                            "name": "collision_count",
+                            "label": "碰撞次数",
+                            "value": 2,
+                            "total": 0,
+                            "unit": "次"
+                          },
+                          {
+                            "name": "formation_error",
+                            "label": "编队误差",
+                            "value": 0.83,
+                            "total": 0,
+                            "unit": "m"
+                          },
+                          {
+                            "name": "simulation_speed",
+                            "label": "仿真速度",
+                            "value": 480,
+                            "total": 0,
+                            "unit": "step/s"
+                          },
+                          {
+                            "name": "cpu_utilization",
+                            "label": "CPU利用率",
+                            "value": 85,
+                            "total": 100,
+                            "unit": "%"
+                          }
+                        ],
+                        "cluster_summary": {
+                          "active_uavs": 1000,
+                          "completed_uavs": 932,
+                          "collision_count": 2,
+                          "average_formation_error": 0.83
+                        }
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T11:40:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "progress": 72,
+                    "metrics": [
+                      {
+                        "name": "simulation_step",
+                        "label": "当前仿真步",
+                        "value": 14400,
+                        "total": 20000,
+                        "unit": "step"
+                      },
+                      {
+                        "name": "active_uavs",
+                        "label": "当前无人机数",
+                        "value": 1000,
+                        "total": 1000,
+                        "unit": "架"
+                      },
+                      {
+                        "name": "mission_completion_rate",
+                        "label": "任务完成率",
+                        "value": 93.2,
+                        "total": 100,
+                        "unit": "%"
+                      },
+                      {
+                        "name": "collision_count",
+                        "label": "碰撞次数",
+                        "value": 2,
+                        "total": 0,
+                        "unit": "次"
+                      },
+                      {
+                        "name": "formation_error",
+                        "label": "编队误差",
+                        "value": 0.83,
+                        "total": 0,
+                        "unit": "m"
+                      },
+                      {
+                        "name": "simulation_speed",
+                        "label": "仿真速度",
+                        "value": 480,
+                        "total": 0,
+                        "unit": "step/s"
+                      },
+                      {
+                        "name": "cpu_utilization",
+                        "label": "CPU利用率",
+                        "value": 85,
+                        "total": 100,
+                        "unit": "%"
+                      }
+                    ],
+                    "cluster_summary": {
+                      "active_uavs": 1000,
+                      "completed_uavs": 932,
+                      "collision_count": 2,
+                      "average_formation_error": 0.83
+                    }
+                  },
+                  "timestamp": "2026-08-11T11:40:00+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/uav/runs/{run_id}/logs": {
+      "get": {
+        "summary": "查询大规模无人机协同仿真运行日志",
+        "deprecated": false,
+        "description": "增量查询无人机仿真程序原始日志。",
+        "operationId": "getUAVLogs",
+        "tags": [
+          "运行监控与结果"
+        ],
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "description": "无人机协同仿真任务运行实例唯一标识。",
+            "required": true,
+            "example": "UAV-20260811-0001",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "日志起始偏移量。",
+            "required": false,
+            "example": 0,
+            "schema": {
+              "type": "integer",
+              "default": 0
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "单次最大返回日志条数。",
+            "required": false,
+            "example": 200,
+            "schema": {
+              "type": "integer",
+              "default": 200
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "无人机仿真运行日志",
+                      "properties": {
+                        "next_offset": {
+                          "type": "integer",
+                          "title": "下一偏移量",
+                          "description": "下一次查询应使用的 offset。",
+                          "example": 5
+                        },
+                        "has_more": {
+                          "type": "boolean",
+                          "title": "是否还有日志",
+                          "description": "是否还有尚未返回的日志。",
+                          "example": false
+                        },
+                        "lines": {
+                          "type": "array",
+                          "title": "日志行",
+                          "description": "无人机仿真原始日志集合。",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "seq": {
+                                "type": "integer",
+                                "title": "日志序号",
+                                "description": "日志递增序号。",
+                                "example": 1
+                              },
+                              "timestamp": {
+                                "type": "string",
+                                "title": "日志时间",
+                                "description": "日志产生时间。",
+                                "example": "2026-08-11T09:10:01+08:00"
+                              },
+                              "level": {
+                                "type": "string",
+                                "title": "日志级别",
+                                "description": "DEBUG/INFO/WARN/ERROR。",
+                                "enum": [
+                                  "DEBUG",
+                                  "INFO",
+                                  "WARN",
+                                  "ERROR"
+                                ],
+                                "example": "INFO"
+                              },
+                              "message": {
+                                "type": "string",
+                                "title": "日志内容",
+                                "description": "仿真程序原始日志文本。",
+                                "example": "Swarm simulation initialized"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "example": {
+                        "next_offset": 5,
+                        "has_more": false,
+                        "lines": [
+                          {
+                            "seq": 1,
+                            "timestamp": "2026-08-11T09:10:01+08:00",
+                            "level": "INFO",
+                            "message": "Swarm simulation initialized, uav_count=1000"
+                          },
+                          {
+                            "seq": 2,
+                            "timestamp": "2026-08-11T09:10:05+08:00",
+                            "level": "INFO",
+                            "message": "Communication topology built: mesh"
+                          },
+                          {
+                            "seq": 3,
+                            "timestamp": "2026-08-11T09:42:10+08:00",
+                            "level": "INFO",
+                            "message": "simulation_step=14300 completion_rate=92.8% collisions=2"
+                          },
+                          {
+                            "seq": 4,
+                            "timestamp": "2026-08-11T09:42:12+08:00",
+                            "level": "INFO",
+                            "message": "simulation_step=14400 completion_rate=93.2% collisions=2"
+                          },
+                          {
+                            "seq": 5,
+                            "timestamp": "2026-08-11T09:42:12+08:00",
+                            "level": "INFO",
+                            "message": "formation_error=0.83m"
+                          }
+                        ]
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T11:40:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "next_offset": 5,
+                    "has_more": false,
+                    "lines": [
+                      {
+                        "seq": 1,
+                        "timestamp": "2026-08-11T09:10:01+08:00",
+                        "level": "INFO",
+                        "message": "Swarm simulation initialized, uav_count=1000"
+                      },
+                      {
+                        "seq": 2,
+                        "timestamp": "2026-08-11T09:10:05+08:00",
+                        "level": "INFO",
+                        "message": "Communication topology built: mesh"
+                      },
+                      {
+                        "seq": 3,
+                        "timestamp": "2026-08-11T09:42:10+08:00",
+                        "level": "INFO",
+                        "message": "simulation_step=14300 completion_rate=92.8% collisions=2"
+                      },
+                      {
+                        "seq": 4,
+                        "timestamp": "2026-08-11T09:42:12+08:00",
+                        "level": "INFO",
+                        "message": "simulation_step=14400 completion_rate=93.2% collisions=2"
+                      },
+                      {
+                        "seq": 5,
+                        "timestamp": "2026-08-11T09:42:12+08:00",
+                        "level": "INFO",
+                        "message": "formation_error=0.83m"
+                      }
+                    ]
+                  },
+                  "timestamp": "2026-08-11T11:40:00+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/uav/runs/{run_id}/artifacts": {
+      "get": {
+        "summary": "查询大规模无人机协同仿真结果文件",
+        "deprecated": false,
+        "description": "查询三维航迹数据、仿真动画、任务统计、航迹规划结果等文件。",
+        "operationId": "getUAVArtifacts",
+        "tags": [
+          "运行监控与结果"
+        ],
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "description": "无人机协同仿真任务运行实例唯一标识。",
+            "required": true,
+            "example": "UAV-20260811-0001",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "array",
+                      "title": "无人机仿真结果文件列表",
+                      "description": "无人机协同仿真任务产生的结果文件。",
+                      "items": {
+                        "type": "object",
+                        "title": "无人机仿真结果文件",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "title": "结果文件ID",
+                            "description": "结果文件唯一标识。",
+                            "example": "ART-UAV-001"
+                          },
+                          "name": {
+                            "type": "string",
+                            "title": "文件名称",
+                            "description": "结果文件名称。",
+                            "example": "trajectory.json"
+                          },
+                          "type": {
+                            "type": "string",
+                            "title": "结果类型",
+                            "description": "结果文件用途类型。",
+                            "enum": [
+                              "dataset",
+                              "image",
+                              "video",
+                              "model",
+                              "checkpoint",
+                              "report",
+                              "archive",
+                              "log",
+                              "other"
+                            ],
+                            "example": "dataset"
+                          },
+                          "format": {
+                            "type": "string",
+                            "title": "文件格式",
+                            "description": "结果文件扩展格式。",
+                            "example": "json"
+                          },
+                          "size": {
+                            "type": "integer",
+                            "title": "文件大小",
+                            "description": "文件字节数。",
+                            "example": 18244321
+                          },
+                          "storage_path": {
+                            "type": "string",
+                            "title": "存储路径",
+                            "description": "全局文件系统或对象存储路径。",
+                            "example": "gfs://results/UAV-20260811-0001/trajectory.json"
+                          },
+                          "preview_url": {
+                            "type": "string",
+                            "title": "预览地址",
+                            "description": "前端预览接口地址；不支持时返回空字符串。",
+                            "example": "/api/v1/files/ART-UAV-001/preview"
+                          },
+                          "download_url": {
+                            "type": "string",
+                            "title": "下载地址",
+                            "description": "文件下载接口地址。",
+                            "example": "/api/v1/files/ART-UAV-001/download"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "title": "生成时间",
+                            "description": "结果文件生成时间。",
+                            "example": "2026-08-11T10:00:00+08:00"
+                          }
+                        }
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T11:40:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": [
+                    {
+                      "id": "ART-UAV-001",
+                      "name": "trajectory.json",
+                      "type": "dataset",
+                      "format": "json",
+                      "size": 18244321,
+                      "storage_path": "gfs://results/UAV-20260811-0001/trajectory.json",
+                      "preview_url": "/api/v1/files/ART-UAV-001/preview",
+                      "download_url": "/api/v1/files/ART-UAV-001/download",
+                      "created_at": "2026-08-11T10:00:00+08:00"
+                    },
+                    {
+                      "id": "ART-UAV-002",
+                      "name": "trajectory.csv",
+                      "type": "dataset",
+                      "format": "csv",
+                      "size": 8142210,
+                      "storage_path": "gfs://results/UAV-20260811-0001/trajectory.csv",
+                      "preview_url": "/api/v1/files/ART-UAV-002/preview",
+                      "download_url": "/api/v1/files/ART-UAV-002/download",
+                      "created_at": "2026-08-11T10:00:02+08:00"
+                    },
+                    {
+                      "id": "ART-UAV-003",
+                      "name": "simulation.mp4",
+                      "type": "video",
+                      "format": "mp4",
+                      "size": 103809024,
+                      "storage_path": "gfs://results/UAV-20260811-0001/simulation.mp4",
+                      "preview_url": "/api/v1/files/ART-UAV-003/preview",
+                      "download_url": "/api/v1/files/ART-UAV-003/download",
+                      "created_at": "2026-08-11T10:00:04+08:00"
+                    },
+                    {
+                      "id": "ART-UAV-004",
+                      "name": "mission_statistics.json",
+                      "type": "report",
+                      "format": "json",
+                      "size": 45631,
+                      "storage_path": "gfs://results/UAV-20260811-0001/mission_statistics.json",
+                      "preview_url": "/api/v1/files/ART-UAV-004/preview",
+                      "download_url": "/api/v1/files/ART-UAV-004/download",
+                      "created_at": "2026-08-11T10:00:05+08:00"
+                    },
+                    {
+                      "id": "ART-UAV-005",
+                      "name": "path_3d.json",
+                      "type": "dataset",
+                      "format": "json",
+                      "size": 1268220,
+                      "storage_path": "gfs://results/UAV-20260811-0001/path_3d.json",
+                      "preview_url": "/api/v1/files/ART-UAV-005/preview",
+                      "download_url": "/api/v1/files/ART-UAV-005/download",
+                      "created_at": "2026-08-11T10:00:06+08:00"
+                    }
+                  ],
+                  "timestamp": "2026-08-11T11:40:00+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/uav/operators/register": {
+      "post": {
+        "summary": "注册大规模无人机协同仿真算子",
+        "deprecated": false,
+        "description": "将算子注册到统一函数平台，对齐后端 POST /action/create。注册后可通过算子调用接口执行。",
+        "operationId": "registerUavOperator",
+        "tags": [
+          "算子管理"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "title": "算子注册请求",
+                "description": "算子注册信息。",
+                "required": [
+                  "name",
+                  "version",
+                  "runtime_type",
+                  "runtime",
+                  "handler"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "title": "算子名称",
+                    "description": "算子唯一标识，与后端函数名一致（如 ai-train-megatron）。",
+                    "example": "ai-train-megatron"
+                  },
+                  "version": {
+                    "type": "string",
+                    "title": "算子版本",
+                    "description": "算子版本号。",
+                    "example": "v1"
+                  },
+                  "runtime_type": {
+                    "type": "string",
+                    "title": "运行时类型",
+                    "description": "docker/docker-run/singularity/instance 等。",
+                    "example": "docker"
+                  },
+                  "runtime": {
+                    "type": "string",
+                    "title": "运行镜像",
+                    "description": "镜像地址或运行时路径。",
+                    "example": "local/ai-operator/ai-train-megatron-server:20260629"
+                  },
+                  "runtime_args": {
+                    "type": "string",
+                    "title": "运行时参数",
+                    "description": "容器挂载、GPU 等运行时参数。",
+                    "example": "--gpus all"
+                  },
+                  "handler": {
+                    "type": "string",
+                    "title": "处理函数",
+                    "description": "容器内处理入口。",
+                    "example": "/invoke"
+                  },
+                  "cpu_cores": {
+                    "type": "integer",
+                    "title": "CPU核数",
+                    "description": "申请 CPU 核数。",
+                    "example": 8
+                  },
+                  "gpu_count": {
+                    "type": "integer",
+                    "title": "GPU数量",
+                    "description": "申请 GPU 数量。",
+                    "example": 1
+                  },
+                  "memory_mb": {
+                    "type": "integer",
+                    "title": "内存容量",
+                    "description": "申请内存，单位 MB。",
+                    "example": 24576
+                  },
+                  "env_vars": {
+                    "type": "object",
+                    "title": "环境变量",
+                    "description": "注入的环境变量。",
+                    "example": {}
+                  },
+                  "mpi_enabled": {
+                    "type": "boolean",
+                    "title": "是否启用MPI",
+                    "description": "是否启用 MPI 并行。",
+                    "example": false
+                  },
+                  "mpi_command": {
+                    "type": "string",
+                    "title": "MPI命令",
+                    "description": "MPI 启动命令。",
+                    "example": ""
+                  },
+                  "timeout_sec": {
+                    "type": "integer",
+                    "title": "超时时间",
+                    "description": "最大执行时间，单位 s。",
+                    "example": 3600
+                  }
+                },
+                "example": {
+                  "name": "ai-train-megatron",
+                  "version": "v1",
+                  "runtime_type": "docker",
+                  "runtime": "local/ai-operator/ai-train-megatron-server:20260629",
+                  "runtime_args": "--gpus all",
+                  "handler": "/invoke",
+                  "cpu_cores": 8,
+                  "gpu_count": 1,
+                  "memory_mb": 24576,
+                  "env_vars": {},
+                  "mpi_enabled": false,
+                  "mpi_command": "",
+                  "timeout_sec": 3600
+                }
+              },
+              "example": {
+                "name": "ai-train-megatron",
+                "version": "v1",
+                "runtime_type": "docker",
+                "runtime": "local/ai-operator/ai-train-megatron-server:20260629",
+                "runtime_args": "--gpus all",
+                "handler": "/invoke",
+                "cpu_cores": 8,
+                "gpu_count": 1,
+                "memory_mb": 24576,
+                "env_vars": {},
+                "mpi_enabled": false,
+                "mpi_command": "",
+                "timeout_sec": 3600
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回的文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "算子注册结果",
+                      "properties": {
+                        "operator_id": {
+                          "type": "string",
+                          "title": "算子ID",
+                          "description": "注册后的算子唯一标识。",
+                          "example": "ai-train-megatron"
+                        },
+                        "name": {
+                          "type": "string",
+                          "title": "算子名称",
+                          "description": "算子函数名。",
+                          "example": "ai-train-megatron"
+                        },
+                        "version": {
+                          "type": "string",
+                          "title": "算子版本",
+                          "description": "算子版本号。",
+                          "example": "v1"
+                        },
+                        "status": {
+                          "type": "string",
+                          "title": "注册状态",
+                          "description": "注册结果状态。",
+                          "example": "registered"
+                        }
+                      },
+                      "example": {
+                        "operator_id": "ai-train-megatron",
+                        "name": "ai-train-megatron",
+                        "version": "v1",
+                        "status": "registered"
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T12:00:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "operator_id": "ai-train-megatron",
+                    "name": "ai-train-megatron",
+                    "version": "v1",
+                    "status": "registered"
+                  },
+                  "timestamp": "2026-08-11T12:00:00+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/uav/operators/{name}/{version}/invoke": {
+      "post": {
+        "summary": "调用大规模无人机协同仿真算子",
+        "deprecated": false,
+        "description": "按算子名与版本调用算子，对齐后端 POST /action/invoke。JSON 协议（workDir/args）。",
+        "operationId": "invokeUavOperator",
+        "tags": [
+          "算子管理"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "算子函数名。",
+            "required": true,
+            "example": "ai-train-megatron",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "description": "算子版本号。",
+            "required": true,
+            "example": "v1",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "title": "算子调用请求",
+                "description": "算子输入参数。",
+                "properties": {
+                  "work_dir": {
+                    "type": "string",
+                    "title": "工作目录",
+                    "description": "算子工作目录（如 OpenFOAM case 目录）。",
+                    "example": "/public/home/demo/case"
+                  },
+                  "args": {
+                    "type": "string",
+                    "title": "命令行参数",
+                    "description": "传递给算子的命令行参数。",
+                    "example": "-parallel"
+                  }
+                },
+                "example": {
+                  "work_dir": "/public/home/demo/case",
+                  "args": "-parallel"
+                }
+              },
+              "example": {
+                "work_dir": "/public/home/demo/case",
+                "args": "-parallel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回的文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "算子调用结果",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "title": "调用状态",
+                          "description": "算子执行状态。",
+                          "example": "success"
+                        },
+                        "metrics": {
+                          "type": "string",
+                          "title": "指标摘要",
+                          "description": "JSON 格式的指标摘要。",
+                          "example": "{\"loss\": 0.02}"
+                        },
+                        "artifact_dir": {
+                          "type": "string",
+                          "title": "产物目录",
+                          "description": "结果产物输出目录。",
+                          "example": "/runs/demo/artifacts"
+                        }
+                      },
+                      "example": {
+                        "status": "success",
+                        "metrics": "{\"loss\": 0.02}",
+                        "artifact_dir": "/runs/demo/artifacts"
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T12:00:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "status": "success",
+                    "metrics": "{\"loss\": 0.02}",
+                    "artifact_dir": "/runs/demo/artifacts"
+                  },
+                  "timestamp": "2026-08-11T12:00:00+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    }
+  },
+  "components": {
+    "schemas": {},
+    "responses": {},
+    "securitySchemes": {}
+  },
+  "servers": [],
+  "security": []
+}

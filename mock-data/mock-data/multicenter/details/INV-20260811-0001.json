@@ -1,0 +1,27 @@
+{
+  "code": 200,
+  "message": "success",
+  "data": {
+    "invocation_id": "INV-20260811-0001",
+    "function_id": "fn-matrix-multiply",
+    "function_name": "矩阵乘法函数",
+    "cluster_id": "changsha",
+    "status": "running",
+    "source_type": "simulated",
+    "instance_id": "fn-matrix-changsha-02",
+    "start_time": "2026-08-11T10:30:00+08:00",
+    "end_time": "",
+    "trace_id": "TRACE-8f4c12",
+    "total_latency_ms": 38.6,
+    "args": { "matrix_size": "8192x8192", "blocks": 4 },
+    "spans": [
+      { "seq": 1, "component": "api-gateway", "name": "API网关", "cluster_id": "global", "status": "success", "latency_ms": 4.8, "start_time": "2026-08-11T10:30:00.100+08:00" },
+      { "seq": 2, "component": "function-registry", "name": "函数注册中心", "cluster_id": "global", "status": "success", "latency_ms": 2.1, "start_time": "2026-08-11T10:30:00.105+08:00" },
+      { "seq": 3, "component": "global-scheduler", "name": "全局调度器", "cluster_id": "global", "status": "success", "latency_ms": 6.4, "start_time": "2026-08-11T10:30:00.107+08:00" },
+      { "seq": 4, "component": "center-agent", "name": "长沙中心代理", "cluster_id": "changsha", "status": "success", "latency_ms": 13.2, "start_time": "2026-08-11T10:30:00.114+08:00" },
+      { "seq": 5, "component": "slurm-adapter", "name": "SLURM适配器", "cluster_id": "changsha", "status": "success", "latency_ms": 7.6, "start_time": "2026-08-11T10:30:00.127+08:00" },
+      { "seq": 6, "component": "function-runtime", "name": "函数运行时", "cluster_id": "changsha", "status": "running", "latency_ms": 4.5, "start_time": "2026-08-11T10:30:00.135+08:00" }
+    ]
+  },
+  "timestamp": "2026-08-11T10:30:02+08:00"
+}

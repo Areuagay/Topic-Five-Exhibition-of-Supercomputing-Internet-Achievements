@@ -81,31 +81,803 @@
         }
       ],
       "edges": [
-        { "source": "init", "target": "topology" },
-        { "source": "topology", "target": "assignment" },
-        { "source": "assignment", "target": "control" },
-        { "source": "control", "target": "simulation" },
-        { "source": "simulation", "target": "collision" },
-        { "source": "collision", "target": "statistics" },
-        { "source": "statistics", "target": "output" }
+        {
+          "source": "init",
+          "target": "topology"
+        },
+        {
+          "source": "topology",
+          "target": "assignment"
+        },
+        {
+          "source": "assignment",
+          "target": "control"
+        },
+        {
+          "source": "control",
+          "target": "simulation"
+        },
+        {
+          "source": "simulation",
+          "target": "collision"
+        },
+        {
+          "source": "collision",
+          "target": "statistics"
+        },
+        {
+          "source": "statistics",
+          "target": "output"
+        }
       ]
     },
     "metrics": {
       "progress": 100,
       "metrics": [
-        { "name": "simulation_step", "label": "当前仿真步", "value": 5000, "total": 5000, "unit": "step" },
-        { "name": "active_uavs", "label": "当前无人机数", "value": 200, "total": 200, "unit": "架" },
-        { "name": "mission_completion_rate", "label": "任务完成率", "value": 98.6, "total": 100, "unit": "%" },
-        { "name": "collision_count", "label": "碰撞次数", "value": 0, "total": 0, "unit": "次" },
-        { "name": "formation_error", "label": "编队误差", "value": 0.32, "total": 0, "unit": "m" },
-        { "name": "simulation_speed", "label": "仿真速度", "value": 908, "total": 0, "unit": "条/min" },
-        { "name": "cpu_utilization", "label": "CPU利用率", "value": 89, "total": 100, "unit": "%" }
+        {
+          "name": "simulation_step",
+          "label": "当前仿真步",
+          "value": 5000,
+          "total": 5000,
+          "unit": "step"
+        },
+        {
+          "name": "active_uavs",
+          "label": "当前无人机数",
+          "value": 200,
+          "total": 200,
+          "unit": "架"
+        },
+        {
+          "name": "mission_completion_rate",
+          "label": "任务完成率",
+          "value": 98.6,
+          "total": 100,
+          "unit": "%"
+        },
+        {
+          "name": "collision_count",
+          "label": "碰撞次数",
+          "value": 0,
+          "total": 0,
+          "unit": "次"
+        },
+        {
+          "name": "formation_error",
+          "label": "编队误差",
+          "value": 0.32,
+          "total": 0,
+          "unit": "m"
+        },
+        {
+          "name": "simulation_speed",
+          "label": "仿真速度",
+          "value": 908,
+          "total": 0,
+          "unit": "条/min"
+        },
+        {
+          "name": "cpu_utilization",
+          "label": "CPU利用率",
+          "value": 89,
+          "total": 100,
+          "unit": "%"
+        }
       ],
       "cluster_summary": {
         "active_uavs": 200,
         "completed_uavs": 200,
         "collision_count": 0,
         "average_formation_error": 0.32
+      },
+      "domain_data": {
+        "source_type": "simulated",
+        "execution_mode": "simulated",
+        "scenario_id": "path-planning",
+        "environment": {
+          "width": 100,
+          "height": 100,
+          "start": [
+            5,
+            5
+          ],
+          "goal": [
+            92,
+            90
+          ],
+          "obstacles": [
+            {
+              "type": "rectangle",
+              "x": 20,
+              "y": 10,
+              "w": 12,
+              "h": 30
+            },
+            {
+              "type": "rectangle",
+              "x": 45,
+              "y": 40,
+              "w": 18,
+              "h": 10
+            },
+            {
+              "type": "rectangle",
+              "x": 70,
+              "y": 15,
+              "w": 10,
+              "h": 25
+            },
+            {
+              "type": "circle",
+              "cx": 35,
+              "cy": 70,
+              "r": 8
+            },
+            {
+              "type": "circle",
+              "cx": 60,
+              "cy": 75,
+              "r": 7
+            },
+            {
+              "type": "rectangle",
+              "x": 10,
+              "y": 55,
+              "w": 15,
+              "h": 8
+            },
+            {
+              "type": "rectangle",
+              "x": 78,
+              "y": 55,
+              "w": 8,
+              "h": 20
+            },
+            {
+              "type": "circle",
+              "cx": 50,
+              "cy": 20,
+              "r": 6
+            }
+          ]
+        },
+        "best_path": [
+          {
+            "x": 5.0,
+            "y": 5.0
+          },
+          {
+            "x": 6.0,
+            "y": 6.0
+          },
+          {
+            "x": 7.0,
+            "y": 7.0
+          },
+          {
+            "x": 8.0,
+            "y": 8.0
+          },
+          {
+            "x": 9.0,
+            "y": 9.0
+          },
+          {
+            "x": 10.0,
+            "y": 10.0
+          },
+          {
+            "x": 11.0,
+            "y": 11.0
+          },
+          {
+            "x": 12.0,
+            "y": 12.0
+          },
+          {
+            "x": 13.0,
+            "y": 13.0
+          },
+          {
+            "x": 14.0,
+            "y": 14.0
+          },
+          {
+            "x": 15.0,
+            "y": 15.0
+          },
+          {
+            "x": 16.0,
+            "y": 16.0
+          },
+          {
+            "x": 17.0,
+            "y": 17.0
+          },
+          {
+            "x": 18.0,
+            "y": 18.0
+          },
+          {
+            "x": 18.0,
+            "y": 19.0
+          },
+          {
+            "x": 18.0,
+            "y": 20.0
+          },
+          {
+            "x": 18.0,
+            "y": 21.0
+          },
+          {
+            "x": 18.0,
+            "y": 22.0
+          },
+          {
+            "x": 18.0,
+            "y": 23.0
+          },
+          {
+            "x": 18.0,
+            "y": 24.0
+          },
+          {
+            "x": 18.0,
+            "y": 25.0
+          },
+          {
+            "x": 18.0,
+            "y": 26.0
+          },
+          {
+            "x": 18.0,
+            "y": 27.0
+          },
+          {
+            "x": 18.0,
+            "y": 28.0
+          },
+          {
+            "x": 18.0,
+            "y": 29.0
+          },
+          {
+            "x": 18.0,
+            "y": 30.0
+          },
+          {
+            "x": 18.0,
+            "y": 31.0
+          },
+          {
+            "x": 19.0,
+            "y": 32.0
+          },
+          {
+            "x": 19.0,
+            "y": 33.0
+          },
+          {
+            "x": 19.0,
+            "y": 34.0
+          },
+          {
+            "x": 19.0,
+            "y": 35.0
+          },
+          {
+            "x": 19.0,
+            "y": 36.0
+          },
+          {
+            "x": 19.0,
+            "y": 37.0
+          },
+          {
+            "x": 19.0,
+            "y": 38.0
+          },
+          {
+            "x": 19.0,
+            "y": 39.0
+          },
+          {
+            "x": 20.0,
+            "y": 40.0
+          },
+          {
+            "x": 21.0,
+            "y": 41.0
+          },
+          {
+            "x": 22.0,
+            "y": 42.0
+          },
+          {
+            "x": 23.0,
+            "y": 43.0
+          },
+          {
+            "x": 24.0,
+            "y": 44.0
+          },
+          {
+            "x": 25.0,
+            "y": 45.0
+          },
+          {
+            "x": 26.0,
+            "y": 46.0
+          },
+          {
+            "x": 27.0,
+            "y": 47.0
+          },
+          {
+            "x": 28.0,
+            "y": 48.0
+          },
+          {
+            "x": 29.0,
+            "y": 49.0
+          },
+          {
+            "x": 30.0,
+            "y": 50.0
+          },
+          {
+            "x": 31.0,
+            "y": 51.0
+          },
+          {
+            "x": 32.0,
+            "y": 52.0
+          },
+          {
+            "x": 33.0,
+            "y": 53.0
+          },
+          {
+            "x": 34.0,
+            "y": 54.0
+          },
+          {
+            "x": 35.0,
+            "y": 55.0
+          },
+          {
+            "x": 36.0,
+            "y": 56.0
+          },
+          {
+            "x": 37.0,
+            "y": 57.0
+          },
+          {
+            "x": 38.0,
+            "y": 58.0
+          },
+          {
+            "x": 39.0,
+            "y": 59.0
+          },
+          {
+            "x": 40.0,
+            "y": 60.0
+          },
+          {
+            "x": 41.0,
+            "y": 61.0
+          },
+          {
+            "x": 42.0,
+            "y": 62.0
+          },
+          {
+            "x": 43.0,
+            "y": 63.0
+          },
+          {
+            "x": 44.0,
+            "y": 64.0
+          },
+          {
+            "x": 45.0,
+            "y": 65.0
+          },
+          {
+            "x": 46.0,
+            "y": 66.0
+          },
+          {
+            "x": 47.0,
+            "y": 67.0
+          },
+          {
+            "x": 48.0,
+            "y": 67.0
+          },
+          {
+            "x": 49.0,
+            "y": 67.0
+          },
+          {
+            "x": 50.0,
+            "y": 67.0
+          },
+          {
+            "x": 51.0,
+            "y": 67.0
+          },
+          {
+            "x": 52.0,
+            "y": 67.0
+          },
+          {
+            "x": 53.0,
+            "y": 67.0
+          },
+          {
+            "x": 54.0,
+            "y": 67.0
+          },
+          {
+            "x": 55.0,
+            "y": 67.0
+          },
+          {
+            "x": 56.0,
+            "y": 67.0
+          },
+          {
+            "x": 57.0,
+            "y": 67.0
+          },
+          {
+            "x": 58.0,
+            "y": 67.0
+          },
+          {
+            "x": 59.0,
+            "y": 67.0
+          },
+          {
+            "x": 60.0,
+            "y": 67.0
+          },
+          {
+            "x": 61.0,
+            "y": 67.0
+          },
+          {
+            "x": 62.0,
+            "y": 67.0
+          },
+          {
+            "x": 63.0,
+            "y": 68.0
+          },
+          {
+            "x": 64.0,
+            "y": 69.0
+          },
+          {
+            "x": 65.0,
+            "y": 70.0
+          },
+          {
+            "x": 66.0,
+            "y": 71.0
+          },
+          {
+            "x": 67.0,
+            "y": 72.0
+          },
+          {
+            "x": 68.0,
+            "y": 73.0
+          },
+          {
+            "x": 69.0,
+            "y": 74.0
+          },
+          {
+            "x": 70.0,
+            "y": 75.0
+          },
+          {
+            "x": 71.0,
+            "y": 76.0
+          },
+          {
+            "x": 72.0,
+            "y": 77.0
+          },
+          {
+            "x": 73.0,
+            "y": 78.0
+          },
+          {
+            "x": 74.0,
+            "y": 79.0
+          },
+          {
+            "x": 75.0,
+            "y": 80.0
+          },
+          {
+            "x": 76.0,
+            "y": 81.0
+          },
+          {
+            "x": 77.0,
+            "y": 82.0
+          },
+          {
+            "x": 78.0,
+            "y": 83.0
+          },
+          {
+            "x": 79.0,
+            "y": 84.0
+          },
+          {
+            "x": 80.0,
+            "y": 85.0
+          },
+          {
+            "x": 81.0,
+            "y": 85.0
+          },
+          {
+            "x": 82.0,
+            "y": 85.0
+          },
+          {
+            "x": 83.0,
+            "y": 86.0
+          },
+          {
+            "x": 84.0,
+            "y": 86.0
+          },
+          {
+            "x": 85.0,
+            "y": 87.0
+          },
+          {
+            "x": 86.0,
+            "y": 87.0
+          },
+          {
+            "x": 87.0,
+            "y": 88.0
+          },
+          {
+            "x": 88.0,
+            "y": 88.0
+          },
+          {
+            "x": 89.0,
+            "y": 89.0
+          },
+          {
+            "x": 90.0,
+            "y": 89.0
+          },
+          {
+            "x": 91.0,
+            "y": 90.0
+          },
+          {
+            "x": 92.0,
+            "y": 90.0
+          }
+        ],
+        "cost_series": [
+          {
+            "iteration": 1,
+            "best_cost": 123.925,
+            "average_cost": 135.968
+          },
+          {
+            "iteration": 2,
+            "best_cost": 118.398,
+            "average_cost": 130.059
+          },
+          {
+            "iteration": 3,
+            "best_cost": 114.373,
+            "average_cost": 126.033
+          },
+          {
+            "iteration": 4,
+            "best_cost": 110.36,
+            "average_cost": 121.306
+          },
+          {
+            "iteration": 5,
+            "best_cost": 105.602,
+            "average_cost": 116.939
+          },
+          {
+            "iteration": 6,
+            "best_cost": 102.781,
+            "average_cost": 114.399
+          },
+          {
+            "iteration": 7,
+            "best_cost": 100.437,
+            "average_cost": 111.001
+          },
+          {
+            "iteration": 8,
+            "best_cost": 97.315,
+            "average_cost": 107.468
+          },
+          {
+            "iteration": 9,
+            "best_cost": 94.702,
+            "average_cost": 105.062
+          },
+          {
+            "iteration": 10,
+            "best_cost": 92.957,
+            "average_cost": 103.9
+          },
+          {
+            "iteration": 11,
+            "best_cost": 90.577,
+            "average_cost": 100.523
+          },
+          {
+            "iteration": 12,
+            "best_cost": 88.427,
+            "average_cost": 98.168
+          },
+          {
+            "iteration": 13,
+            "best_cost": 86.577,
+            "average_cost": 96.44
+          },
+          {
+            "iteration": 14,
+            "best_cost": 85.762,
+            "average_cost": 95.742
+          },
+          {
+            "iteration": 15,
+            "best_cost": 84.129,
+            "average_cost": 93.45
+          },
+          {
+            "iteration": 16,
+            "best_cost": 83.87,
+            "average_cost": 94.228
+          },
+          {
+            "iteration": 17,
+            "best_cost": 81.834,
+            "average_cost": 91.468
+          },
+          {
+            "iteration": 18,
+            "best_cost": 80.631,
+            "average_cost": 89.614
+          },
+          {
+            "iteration": 19,
+            "best_cost": 80.242,
+            "average_cost": 89.252
+          },
+          {
+            "iteration": 20,
+            "best_cost": 79.45,
+            "average_cost": 88.333
+          },
+          {
+            "iteration": 21,
+            "best_cost": 78.842,
+            "average_cost": 87.594
+          },
+          {
+            "iteration": 22,
+            "best_cost": 77.643,
+            "average_cost": 86.301
+          },
+          {
+            "iteration": 23,
+            "best_cost": 77.426,
+            "average_cost": 86.127
+          },
+          {
+            "iteration": 24,
+            "best_cost": 75.755,
+            "average_cost": 85.046
+          },
+          {
+            "iteration": 25,
+            "best_cost": 76.708,
+            "average_cost": 85.25
+          },
+          {
+            "iteration": 26,
+            "best_cost": 76.138,
+            "average_cost": 85.218
+          },
+          {
+            "iteration": 27,
+            "best_cost": 75.113,
+            "average_cost": 84.169
+          },
+          {
+            "iteration": 28,
+            "best_cost": 75.165,
+            "average_cost": 84.044
+          },
+          {
+            "iteration": 29,
+            "best_cost": 74.105,
+            "average_cost": 83.319
+          },
+          {
+            "iteration": 30,
+            "best_cost": 74.033,
+            "average_cost": 82.538
+          },
+          {
+            "iteration": 31,
+            "best_cost": 74.18,
+            "average_cost": 83.138
+          },
+          {
+            "iteration": 32,
+            "best_cost": 73.975,
+            "average_cost": 83.049
+          },
+          {
+            "iteration": 33,
+            "best_cost": 73.192,
+            "average_cost": 81.976
+          },
+          {
+            "iteration": 34,
+            "best_cost": 73.506,
+            "average_cost": 82.259
+          },
+          {
+            "iteration": 35,
+            "best_cost": 73.581,
+            "average_cost": 81.939
+          },
+          {
+            "iteration": 36,
+            "best_cost": 72.176,
+            "average_cost": 80.611
+          },
+          {
+            "iteration": 37,
+            "best_cost": 72.352,
+            "average_cost": 81.187
+          },
+          {
+            "iteration": 38,
+            "best_cost": 72.14,
+            "average_cost": 81.144
+          },
+          {
+            "iteration": 39,
+            "best_cost": 72.232,
+            "average_cost": 81.239
+          },
+          {
+            "iteration": 40,
+            "best_cost": 72.156,
+            "average_cost": 80.729
+          }
+        ],
+        "path_preview": "/api/v1/files/ART-UAV-PIMG1/preview"
       }
     },
     "logs": {
@@ -225,8 +997,753 @@
         "preview_url": "",
         "download_url": "/api/v1/files/ART-UAV-015/download",
         "created_at": "2026-08-10T13:26:10+08:00"
+      },
+      {
+        "id": "ART-UAV-PIMG1",
+        "name": "path_preview.png",
+        "type": "image",
+        "format": "png",
+        "size": 21455,
+        "storage_path": "artifacts/simulated/uav/path-planning/UAV-20260811-0010/path_preview.png",
+        "preview_url": "/api/v1/files/ART-UAV-PIMG1/preview",
+        "download_url": "/api/v1/files/ART-UAV-PIMG1/download",
+        "created_at": "2026-09-09T18:06:31+08:00",
+        "source_type": "simulated"
+      },
+      {
+        "id": "ART-UAV-PJSON1",
+        "name": "environment.json",
+        "type": "dataset",
+        "format": "json",
+        "size": 6525,
+        "storage_path": "artifacts/simulated/uav/path-planning/UAV-20260811-0010/environment.json",
+        "preview_url": "/api/v1/files/ART-UAV-PJSON1/preview",
+        "download_url": "/api/v1/files/ART-UAV-PJSON1/download",
+        "created_at": "2026-09-09T18:06:31+08:00",
+        "source_type": "simulated"
+      },
+      {
+        "id": "ART-UAV-PCSV1",
+        "name": "cost_series.csv",
+        "type": "dataset",
+        "format": "csv",
+        "size": 753,
+        "storage_path": "artifacts/simulated/uav/path-planning/UAV-20260811-0010/cost_series.csv",
+        "preview_url": "/api/v1/files/ART-UAV-PCSV1/preview",
+        "download_url": "/api/v1/files/ART-UAV-PCSV1/download",
+        "created_at": "2026-09-09T18:06:31+08:00",
+        "source_type": "simulated"
       }
-    ]
+    ],
+    "domain_data": {
+      "source_type": "simulated",
+      "execution_mode": "simulated",
+      "scenario_id": "path-planning",
+      "environment": {
+        "width": 100,
+        "height": 100,
+        "start": [
+          5,
+          5
+        ],
+        "goal": [
+          92,
+          90
+        ],
+        "obstacles": [
+          {
+            "type": "rectangle",
+            "x": 20,
+            "y": 10,
+            "w": 12,
+            "h": 30
+          },
+          {
+            "type": "rectangle",
+            "x": 45,
+            "y": 40,
+            "w": 18,
+            "h": 10
+          },
+          {
+            "type": "rectangle",
+            "x": 70,
+            "y": 15,
+            "w": 10,
+            "h": 25
+          },
+          {
+            "type": "circle",
+            "cx": 35,
+            "cy": 70,
+            "r": 8
+          },
+          {
+            "type": "circle",
+            "cx": 60,
+            "cy": 75,
+            "r": 7
+          },
+          {
+            "type": "rectangle",
+            "x": 10,
+            "y": 55,
+            "w": 15,
+            "h": 8
+          },
+          {
+            "type": "rectangle",
+            "x": 78,
+            "y": 55,
+            "w": 8,
+            "h": 20
+          },
+          {
+            "type": "circle",
+            "cx": 50,
+            "cy": 20,
+            "r": 6
+          }
+        ]
+      },
+      "best_path": [
+        {
+          "x": 5.0,
+          "y": 5.0
+        },
+        {
+          "x": 6.0,
+          "y": 6.0
+        },
+        {
+          "x": 7.0,
+          "y": 7.0
+        },
+        {
+          "x": 8.0,
+          "y": 8.0
+        },
+        {
+          "x": 9.0,
+          "y": 9.0
+        },
+        {
+          "x": 10.0,
+          "y": 10.0
+        },
+        {
+          "x": 11.0,
+          "y": 11.0
+        },
+        {
+          "x": 12.0,
+          "y": 12.0
+        },
+        {
+          "x": 13.0,
+          "y": 13.0
+        },
+        {
+          "x": 14.0,
+          "y": 14.0
+        },
+        {
+          "x": 15.0,
+          "y": 15.0
+        },
+        {
+          "x": 16.0,
+          "y": 16.0
+        },
+        {
+          "x": 17.0,
+          "y": 17.0
+        },
+        {
+          "x": 18.0,
+          "y": 18.0
+        },
+        {
+          "x": 18.0,
+          "y": 19.0
+        },
+        {
+          "x": 18.0,
+          "y": 20.0
+        },
+        {
+          "x": 18.0,
+          "y": 21.0
+        },
+        {
+          "x": 18.0,
+          "y": 22.0
+        },
+        {
+          "x": 18.0,
+          "y": 23.0
+        },
+        {
+          "x": 18.0,
+          "y": 24.0
+        },
+        {
+          "x": 18.0,
+          "y": 25.0
+        },
+        {
+          "x": 18.0,
+          "y": 26.0
+        },
+        {
+          "x": 18.0,
+          "y": 27.0
+        },
+        {
+          "x": 18.0,
+          "y": 28.0
+        },
+        {
+          "x": 18.0,
+          "y": 29.0
+        },
+        {
+          "x": 18.0,
+          "y": 30.0
+        },
+        {
+          "x": 18.0,
+          "y": 31.0
+        },
+        {
+          "x": 19.0,
+          "y": 32.0
+        },
+        {
+          "x": 19.0,
+          "y": 33.0
+        },
+        {
+          "x": 19.0,
+          "y": 34.0
+        },
+        {
+          "x": 19.0,
+          "y": 35.0
+        },
+        {
+          "x": 19.0,
+          "y": 36.0
+        },
+        {
+          "x": 19.0,
+          "y": 37.0
+        },
+        {
+          "x": 19.0,
+          "y": 38.0
+        },
+        {
+          "x": 19.0,
+          "y": 39.0
+        },
+        {
+          "x": 20.0,
+          "y": 40.0
+        },
+        {
+          "x": 21.0,
+          "y": 41.0
+        },
+        {
+          "x": 22.0,
+          "y": 42.0
+        },
+        {
+          "x": 23.0,
+          "y": 43.0
+        },
+        {
+          "x": 24.0,
+          "y": 44.0
+        },
+        {
+          "x": 25.0,
+          "y": 45.0
+        },
+        {
+          "x": 26.0,
+          "y": 46.0
+        },
+        {
+          "x": 27.0,
+          "y": 47.0
+        },
+        {
+          "x": 28.0,
+          "y": 48.0
+        },
+        {
+          "x": 29.0,
+          "y": 49.0
+        },
+        {
+          "x": 30.0,
+          "y": 50.0
+        },
+        {
+          "x": 31.0,
+          "y": 51.0
+        },
+        {
+          "x": 32.0,
+          "y": 52.0
+        },
+        {
+          "x": 33.0,
+          "y": 53.0
+        },
+        {
+          "x": 34.0,
+          "y": 54.0
+        },
+        {
+          "x": 35.0,
+          "y": 55.0
+        },
+        {
+          "x": 36.0,
+          "y": 56.0
+        },
+        {
+          "x": 37.0,
+          "y": 57.0
+        },
+        {
+          "x": 38.0,
+          "y": 58.0
+        },
+        {
+          "x": 39.0,
+          "y": 59.0
+        },
+        {
+          "x": 40.0,
+          "y": 60.0
+        },
+        {
+          "x": 41.0,
+          "y": 61.0
+        },
+        {
+          "x": 42.0,
+          "y": 62.0
+        },
+        {
+          "x": 43.0,
+          "y": 63.0
+        },
+        {
+          "x": 44.0,
+          "y": 64.0
+        },
+        {
+          "x": 45.0,
+          "y": 65.0
+        },
+        {
+          "x": 46.0,
+          "y": 66.0
+        },
+        {
+          "x": 47.0,
+          "y": 67.0
+        },
+        {
+          "x": 48.0,
+          "y": 67.0
+        },
+        {
+          "x": 49.0,
+          "y": 67.0
+        },
+        {
+          "x": 50.0,
+          "y": 67.0
+        },
+        {
+          "x": 51.0,
+          "y": 67.0
+        },
+        {
+          "x": 52.0,
+          "y": 67.0
+        },
+        {
+          "x": 53.0,
+          "y": 67.0
+        },
+        {
+          "x": 54.0,
+          "y": 67.0
+        },
+        {
+          "x": 55.0,
+          "y": 67.0
+        },
+        {
+          "x": 56.0,
+          "y": 67.0
+        },
+        {
+          "x": 57.0,
+          "y": 67.0
+        },
+        {
+          "x": 58.0,
+          "y": 67.0
+        },
+        {
+          "x": 59.0,
+          "y": 67.0
+        },
+        {
+          "x": 60.0,
+          "y": 67.0
+        },
+        {
+          "x": 61.0,
+          "y": 67.0
+        },
+        {
+          "x": 62.0,
+          "y": 67.0
+        },
+        {
+          "x": 63.0,
+          "y": 68.0
+        },
+        {
+          "x": 64.0,
+          "y": 69.0
+        },
+        {
+          "x": 65.0,
+          "y": 70.0
+        },
+        {
+          "x": 66.0,
+          "y": 71.0
+        },
+        {
+          "x": 67.0,
+          "y": 72.0
+        },
+        {
+          "x": 68.0,
+          "y": 73.0
+        },
+        {
+          "x": 69.0,
+          "y": 74.0
+        },
+        {
+          "x": 70.0,
+          "y": 75.0
+        },
+        {
+          "x": 71.0,
+          "y": 76.0
+        },
+        {
+          "x": 72.0,
+          "y": 77.0
+        },
+        {
+          "x": 73.0,
+          "y": 78.0
+        },
+        {
+          "x": 74.0,
+          "y": 79.0
+        },
+        {
+          "x": 75.0,
+          "y": 80.0
+        },
+        {
+          "x": 76.0,
+          "y": 81.0
+        },
+        {
+          "x": 77.0,
+          "y": 82.0
+        },
+        {
+          "x": 78.0,
+          "y": 83.0
+        },
+        {
+          "x": 79.0,
+          "y": 84.0
+        },
+        {
+          "x": 80.0,
+          "y": 85.0
+        },
+        {
+          "x": 81.0,
+          "y": 85.0
+        },
+        {
+          "x": 82.0,
+          "y": 85.0
+        },
+        {
+          "x": 83.0,
+          "y": 86.0
+        },
+        {
+          "x": 84.0,
+          "y": 86.0
+        },
+        {
+          "x": 85.0,
+          "y": 87.0
+        },
+        {
+          "x": 86.0,
+          "y": 87.0
+        },
+        {
+          "x": 87.0,
+          "y": 88.0
+        },
+        {
+          "x": 88.0,
+          "y": 88.0
+        },
+        {
+          "x": 89.0,
+          "y": 89.0
+        },
+        {
+          "x": 90.0,
+          "y": 89.0
+        },
+        {
+          "x": 91.0,
+          "y": 90.0
+        },
+        {
+          "x": 92.0,
+          "y": 90.0
+        }
+      ],
+      "cost_series": [
+        {
+          "iteration": 1,
+          "best_cost": 123.925,
+          "average_cost": 135.968
+        },
+        {
+          "iteration": 2,
+          "best_cost": 118.398,
+          "average_cost": 130.059
+        },
+        {
+          "iteration": 3,
+          "best_cost": 114.373,
+          "average_cost": 126.033
+        },
+        {
+          "iteration": 4,
+          "best_cost": 110.36,
+          "average_cost": 121.306
+        },
+        {
+          "iteration": 5,
+          "best_cost": 105.602,
+          "average_cost": 116.939
+        },
+        {
+          "iteration": 6,
+          "best_cost": 102.781,
+          "average_cost": 114.399
+        },
+        {
+          "iteration": 7,
+          "best_cost": 100.437,
+          "average_cost": 111.001
+        },
+        {
+          "iteration": 8,
+          "best_cost": 97.315,
+          "average_cost": 107.468
+        },
+        {
+          "iteration": 9,
+          "best_cost": 94.702,
+          "average_cost": 105.062
+        },
+        {
+          "iteration": 10,
+          "best_cost": 92.957,
+          "average_cost": 103.9
+        },
+        {
+          "iteration": 11,
+          "best_cost": 90.577,
+          "average_cost": 100.523
+        },
+        {
+          "iteration": 12,
+          "best_cost": 88.427,
+          "average_cost": 98.168
+        },
+        {
+          "iteration": 13,
+          "best_cost": 86.577,
+          "average_cost": 96.44
+        },
+        {
+          "iteration": 14,
+          "best_cost": 85.762,
+          "average_cost": 95.742
+        },
+        {
+          "iteration": 15,
+          "best_cost": 84.129,
+          "average_cost": 93.45
+        },
+        {
+          "iteration": 16,
+          "best_cost": 83.87,
+          "average_cost": 94.228
+        },
+        {
+          "iteration": 17,
+          "best_cost": 81.834,
+          "average_cost": 91.468
+        },
+        {
+          "iteration": 18,
+          "best_cost": 80.631,
+          "average_cost": 89.614
+        },
+        {
+          "iteration": 19,
+          "best_cost": 80.242,
+          "average_cost": 89.252
+        },
+        {
+          "iteration": 20,
+          "best_cost": 79.45,
+          "average_cost": 88.333
+        },
+        {
+          "iteration": 21,
+          "best_cost": 78.842,
+          "average_cost": 87.594
+        },
+        {
+          "iteration": 22,
+          "best_cost": 77.643,
+          "average_cost": 86.301
+        },
+        {
+          "iteration": 23,
+          "best_cost": 77.426,
+          "average_cost": 86.127
+        },
+        {
+          "iteration": 24,
+          "best_cost": 75.755,
+          "average_cost": 85.046
+        },
+        {
+          "iteration": 25,
+          "best_cost": 76.708,
+          "average_cost": 85.25
+        },
+        {
+          "iteration": 26,
+          "best_cost": 76.138,
+          "average_cost": 85.218
+        },
+        {
+          "iteration": 27,
+          "best_cost": 75.113,
+          "average_cost": 84.169
+        },
+        {
+          "iteration": 28,
+          "best_cost": 75.165,
+          "average_cost": 84.044
+        },
+        {
+          "iteration": 29,
+          "best_cost": 74.105,
+          "average_cost": 83.319
+        },
+        {
+          "iteration": 30,
+          "best_cost": 74.033,
+          "average_cost": 82.538
+        },
+        {
+          "iteration": 31,
+          "best_cost": 74.18,
+          "average_cost": 83.138
+        },
+        {
+          "iteration": 32,
+          "best_cost": 73.975,
+          "average_cost": 83.049
+        },
+        {
+          "iteration": 33,
+          "best_cost": 73.192,
+          "average_cost": 81.976
+        },
+        {
+          "iteration": 34,
+          "best_cost": 73.506,
+          "average_cost": 82.259
+        },
+        {
+          "iteration": 35,
+          "best_cost": 73.581,
+          "average_cost": 81.939
+        },
+        {
+          "iteration": 36,
+          "best_cost": 72.176,
+          "average_cost": 80.611
+        },
+        {
+          "iteration": 37,
+          "best_cost": 72.352,
+          "average_cost": 81.187
+        },
+        {
+          "iteration": 38,
+          "best_cost": 72.14,
+          "average_cost": 81.144
+        },
+        {
+          "iteration": 39,
+          "best_cost": 72.232,
+          "average_cost": 81.239
+        },
+        {
+          "iteration": 40,
+          "best_cost": 72.156,
+          "average_cost": 80.729
+        }
+      ],
+      "path_preview": "/api/v1/files/ART-UAV-PIMG1/preview"
+    }
   },
   "timestamp": "2026-08-10T13:26:30+08:00"
 }

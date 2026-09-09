@@ -81,34 +81,347 @@
         }
       ],
       "edges": [
-        { "source": "prepare", "target": "ligand-preprocess" },
-        { "source": "ligand-preprocess", "target": "shard" },
-        { "source": "shard", "target": "docking" },
-        { "source": "docking", "target": "merge" },
-        { "source": "merge", "target": "property" },
-        { "source": "property", "target": "topn" },
-        { "source": "topn", "target": "report" }
+        {
+          "source": "prepare",
+          "target": "ligand-preprocess"
+        },
+        {
+          "source": "ligand-preprocess",
+          "target": "shard"
+        },
+        {
+          "source": "shard",
+          "target": "docking"
+        },
+        {
+          "source": "docking",
+          "target": "merge"
+        },
+        {
+          "source": "merge",
+          "target": "property"
+        },
+        {
+          "source": "property",
+          "target": "topn"
+        },
+        {
+          "source": "topn",
+          "target": "report"
+        }
       ]
     },
     "metrics": {
       "progress": 76,
       "metrics": [
-        { "name": "completed_compounds", "label": "已完成分子数", "value": 7600, "total": 10000, "unit": "个" },
-        { "name": "throughput", "label": "筛选吞吐量", "value": 72.8, "total": 0, "unit": "compound/s" },
-        { "name": "best_docking_score", "label": "最佳对接分数", "value": -11.4, "total": 0, "unit": "kcal/mol" },
-        { "name": "failed_compounds", "label": "失败分子数", "value": 23, "total": 0, "unit": "个" }
+        {
+          "name": "completed_compounds",
+          "label": "已完成分子数",
+          "value": 7600,
+          "total": 10000,
+          "unit": "个"
+        },
+        {
+          "name": "throughput",
+          "label": "筛选吞吐量",
+          "value": 72.8,
+          "total": 0,
+          "unit": "compound/s"
+        },
+        {
+          "name": "best_docking_score",
+          "label": "最佳对接分数",
+          "value": -11.4,
+          "total": 0,
+          "unit": "kcal/mol"
+        },
+        {
+          "name": "failed_compounds",
+          "label": "失败分子数",
+          "value": 23,
+          "total": 0,
+          "unit": "个"
+        }
       ],
       "cluster_progress": [
-        { "cluster_id": "changsha", "completed": 1900, "total": 2500, "throughput": 18.2, "status": "running" },
-        { "cluster_id": "guangzhou", "completed": 1900, "total": 2500, "throughput": 17.9, "status": "running" },
-        { "cluster_id": "kunshan", "completed": 2100, "total": 2500, "throughput": 20.2, "status": "running" },
-        { "cluster_id": "jinan", "completed": 1700, "total": 2500, "throughput": 16.5, "status": "running" }
+        {
+          "cluster_id": "changsha",
+          "completed": 1900,
+          "total": 2500,
+          "throughput": 18.2,
+          "status": "running"
+        },
+        {
+          "cluster_id": "guangzhou",
+          "completed": 1900,
+          "total": 2500,
+          "throughput": 17.9,
+          "status": "running"
+        },
+        {
+          "cluster_id": "kunshan",
+          "completed": 2100,
+          "total": 2500,
+          "throughput": 20.2,
+          "status": "running"
+        },
+        {
+          "cluster_id": "jinan",
+          "completed": 1700,
+          "total": 2500,
+          "throughput": 16.5,
+          "status": "running"
+        }
       ],
       "score_summary": {
-        "best_score": -11.4,
-        "average_score": -7.8,
-        "median_score": -7.6,
-        "qualified_count": 286
+        "best_score": -12.5,
+        "average_score": -7.64,
+        "median_score": -7.56,
+        "qualified_count": 733
+      },
+      "domain_data": {
+        "source_type": "simulated",
+        "execution_mode": "simulated",
+        "scenario_id": "virtual-screening",
+        "screening_funnel": {
+          "input": 1000000,
+          "preprocessed": 820000,
+          "docked": 210000,
+          "property_passed": 18500,
+          "top_n": 50
+        },
+        "score_distribution": [
+          {
+            "min": -12.5,
+            "max": -12.025,
+            "count": 4
+          },
+          {
+            "min": -12.025,
+            "max": -11.55,
+            "count": 26
+          },
+          {
+            "min": -11.55,
+            "max": -11.075,
+            "count": 75
+          },
+          {
+            "min": -11.075,
+            "max": -10.6,
+            "count": 77
+          },
+          {
+            "min": -10.6,
+            "max": -10.125,
+            "count": 74
+          },
+          {
+            "min": -10.125,
+            "max": -9.65,
+            "count": 138
+          },
+          {
+            "min": -9.65,
+            "max": -9.175,
+            "count": 224
+          },
+          {
+            "min": -9.175,
+            "max": -8.7,
+            "count": 381
+          },
+          {
+            "min": -8.7,
+            "max": -8.225,
+            "count": 573
+          },
+          {
+            "min": -8.225,
+            "max": -7.75,
+            "count": 727
+          },
+          {
+            "min": -7.75,
+            "max": -7.275,
+            "count": 756
+          },
+          {
+            "min": -7.275,
+            "max": -6.8,
+            "count": 738
+          },
+          {
+            "min": -6.8,
+            "max": -6.325,
+            "count": 604
+          },
+          {
+            "min": -6.325,
+            "max": -5.85,
+            "count": 398
+          },
+          {
+            "min": -5.85,
+            "max": -5.375,
+            "count": 229
+          },
+          {
+            "min": -5.375,
+            "max": -4.9,
+            "count": 101
+          },
+          {
+            "min": -4.9,
+            "max": -4.425,
+            "count": 50
+          },
+          {
+            "min": -4.425,
+            "max": -3.95,
+            "count": 20
+          },
+          {
+            "min": -3.95,
+            "max": -3.475,
+            "count": 4
+          },
+          {
+            "min": -3.475,
+            "max": -3.0,
+            "count": 1
+          }
+        ],
+        "top_candidates": [
+          {
+            "rank": 1,
+            "compound_id": "SIM-CMPD-0001",
+            "docking_score": -12.5,
+            "molecular_weight": 314.4,
+            "logp": 3.6,
+            "preview_url": "/api/v1/files/ART-DRUG-VC01/preview"
+          },
+          {
+            "rank": 2,
+            "compound_id": "SIM-CMPD-0002",
+            "docking_score": -12.154,
+            "molecular_weight": 448.1,
+            "logp": 2.18,
+            "preview_url": "/api/v1/files/ART-DRUG-VC02/preview"
+          },
+          {
+            "rank": 3,
+            "compound_id": "SIM-CMPD-0003",
+            "docking_score": -12.089,
+            "molecular_weight": 331.1,
+            "logp": 1.94,
+            "preview_url": "/api/v1/files/ART-DRUG-VC03/preview"
+          },
+          {
+            "rank": 4,
+            "compound_id": "SIM-CMPD-0004",
+            "docking_score": -12.036,
+            "molecular_weight": 352.5,
+            "logp": 4.29,
+            "preview_url": "/api/v1/files/ART-DRUG-VC04/preview"
+          },
+          {
+            "rank": 5,
+            "compound_id": "SIM-CMPD-0005",
+            "docking_score": -11.983,
+            "molecular_weight": 353.2,
+            "logp": 1.09,
+            "preview_url": "/api/v1/files/ART-DRUG-VC05/preview"
+          },
+          {
+            "rank": 6,
+            "compound_id": "SIM-CMPD-0006",
+            "docking_score": -11.922,
+            "molecular_weight": 277.4,
+            "logp": 3.09,
+            "preview_url": "/api/v1/files/ART-DRUG-VC06/preview"
+          },
+          {
+            "rank": 7,
+            "compound_id": "SIM-CMPD-0007",
+            "docking_score": -11.921,
+            "molecular_weight": 433.9,
+            "logp": 2.29,
+            "preview_url": "/api/v1/files/ART-DRUG-VC07/preview"
+          },
+          {
+            "rank": 8,
+            "compound_id": "SIM-CMPD-0008",
+            "docking_score": -11.886,
+            "molecular_weight": 369.7,
+            "logp": 3.4,
+            "preview_url": "/api/v1/files/ART-DRUG-VC08/preview"
+          },
+          {
+            "rank": 9,
+            "compound_id": "SIM-CMPD-0009",
+            "docking_score": -11.852,
+            "molecular_weight": 350.8,
+            "logp": 4.07,
+            "preview_url": "/api/v1/files/ART-DRUG-VC09/preview"
+          },
+          {
+            "rank": 10,
+            "compound_id": "SIM-CMPD-0010",
+            "docking_score": -11.736,
+            "molecular_weight": 313.1,
+            "logp": 2.17,
+            "preview_url": "/api/v1/files/ART-DRUG-VC10/preview"
+          },
+          {
+            "rank": 11,
+            "compound_id": "SIM-CMPD-0011",
+            "docking_score": -11.725,
+            "molecular_weight": 314.3,
+            "logp": 4.38,
+            "preview_url": "/api/v1/files/ART-DRUG-VC11/preview"
+          },
+          {
+            "rank": 12,
+            "compound_id": "SIM-CMPD-0012",
+            "docking_score": -11.715,
+            "molecular_weight": 223.8,
+            "logp": 1.11,
+            "preview_url": "/api/v1/files/ART-DRUG-VC12/preview"
+          },
+          {
+            "rank": 13,
+            "compound_id": "SIM-CMPD-0013",
+            "docking_score": -11.705,
+            "molecular_weight": 399.9,
+            "logp": 3.99,
+            "preview_url": "/api/v1/files/ART-DRUG-VC13/preview"
+          },
+          {
+            "rank": 14,
+            "compound_id": "SIM-CMPD-0014",
+            "docking_score": -11.704,
+            "molecular_weight": 310.4,
+            "logp": 2.72,
+            "preview_url": "/api/v1/files/ART-DRUG-VC14/preview"
+          },
+          {
+            "rank": 15,
+            "compound_id": "SIM-CMPD-0015",
+            "docking_score": -11.699,
+            "molecular_weight": 283.2,
+            "logp": 3.33,
+            "preview_url": "/api/v1/files/ART-DRUG-VC15/preview"
+          },
+          {
+            "rank": 16,
+            "compound_id": "SIM-CMPD-0016",
+            "docking_score": -11.674,
+            "molecular_weight": 453.6,
+            "logp": 2.14,
+            "preview_url": "/api/v1/files/ART-DRUG-VC16/preview"
+          }
+        ]
       }
     },
     "logs": {
@@ -188,8 +501,456 @@
         "preview_url": "/api/v1/files/ART-DRUG-002/preview",
         "download_url": "/api/v1/files/ART-DRUG-002/download",
         "created_at": "2026-08-11T09:21:55+08:00"
+      },
+      {
+        "id": "ART-DRUG-VC01",
+        "name": "compound_001.png",
+        "type": "image",
+        "format": "png",
+        "size": 17489,
+        "storage_path": "artifacts/simulated/drug/virtual-screening/DRUG-20260811-0001/compound_001.png",
+        "preview_url": "/api/v1/files/ART-DRUG-VC01/preview",
+        "download_url": "/api/v1/files/ART-DRUG-VC01/download",
+        "created_at": "2026-09-09T18:06:01+08:00",
+        "source_type": "simulated"
+      },
+      {
+        "id": "ART-DRUG-VC02",
+        "name": "compound_002.png",
+        "type": "image",
+        "format": "png",
+        "size": 22741,
+        "storage_path": "artifacts/simulated/drug/virtual-screening/DRUG-20260811-0001/compound_002.png",
+        "preview_url": "/api/v1/files/ART-DRUG-VC02/preview",
+        "download_url": "/api/v1/files/ART-DRUG-VC02/download",
+        "created_at": "2026-09-09T18:06:01+08:00",
+        "source_type": "simulated"
+      },
+      {
+        "id": "ART-DRUG-VC03",
+        "name": "compound_003.png",
+        "type": "image",
+        "format": "png",
+        "size": 19490,
+        "storage_path": "artifacts/simulated/drug/virtual-screening/DRUG-20260811-0001/compound_003.png",
+        "preview_url": "/api/v1/files/ART-DRUG-VC03/preview",
+        "download_url": "/api/v1/files/ART-DRUG-VC03/download",
+        "created_at": "2026-09-09T18:06:01+08:00",
+        "source_type": "simulated"
+      },
+      {
+        "id": "ART-DRUG-VC04",
+        "name": "compound_004.png",
+        "type": "image",
+        "format": "png",
+        "size": 16570,
+        "storage_path": "artifacts/simulated/drug/virtual-screening/DRUG-20260811-0001/compound_004.png",
+        "preview_url": "/api/v1/files/ART-DRUG-VC04/preview",
+        "download_url": "/api/v1/files/ART-DRUG-VC04/download",
+        "created_at": "2026-09-09T18:06:01+08:00",
+        "source_type": "simulated"
+      },
+      {
+        "id": "ART-DRUG-VC05",
+        "name": "compound_005.png",
+        "type": "image",
+        "format": "png",
+        "size": 20431,
+        "storage_path": "artifacts/simulated/drug/virtual-screening/DRUG-20260811-0001/compound_005.png",
+        "preview_url": "/api/v1/files/ART-DRUG-VC05/preview",
+        "download_url": "/api/v1/files/ART-DRUG-VC05/download",
+        "created_at": "2026-09-09T18:06:01+08:00",
+        "source_type": "simulated"
+      },
+      {
+        "id": "ART-DRUG-VC06",
+        "name": "compound_006.png",
+        "type": "image",
+        "format": "png",
+        "size": 17267,
+        "storage_path": "artifacts/simulated/drug/virtual-screening/DRUG-20260811-0001/compound_006.png",
+        "preview_url": "/api/v1/files/ART-DRUG-VC06/preview",
+        "download_url": "/api/v1/files/ART-DRUG-VC06/download",
+        "created_at": "2026-09-09T18:06:01+08:00",
+        "source_type": "simulated"
+      },
+      {
+        "id": "ART-DRUG-VC07",
+        "name": "compound_007.png",
+        "type": "image",
+        "format": "png",
+        "size": 31550,
+        "storage_path": "artifacts/simulated/drug/virtual-screening/DRUG-20260811-0001/compound_007.png",
+        "preview_url": "/api/v1/files/ART-DRUG-VC07/preview",
+        "download_url": "/api/v1/files/ART-DRUG-VC07/download",
+        "created_at": "2026-09-09T18:06:01+08:00",
+        "source_type": "simulated"
+      },
+      {
+        "id": "ART-DRUG-VC08",
+        "name": "compound_008.png",
+        "type": "image",
+        "format": "png",
+        "size": 23304,
+        "storage_path": "artifacts/simulated/drug/virtual-screening/DRUG-20260811-0001/compound_008.png",
+        "preview_url": "/api/v1/files/ART-DRUG-VC08/preview",
+        "download_url": "/api/v1/files/ART-DRUG-VC08/download",
+        "created_at": "2026-09-09T18:06:01+08:00",
+        "source_type": "simulated"
+      },
+      {
+        "id": "ART-DRUG-VC09",
+        "name": "compound_009.png",
+        "type": "image",
+        "format": "png",
+        "size": 26972,
+        "storage_path": "artifacts/simulated/drug/virtual-screening/DRUG-20260811-0001/compound_009.png",
+        "preview_url": "/api/v1/files/ART-DRUG-VC09/preview",
+        "download_url": "/api/v1/files/ART-DRUG-VC09/download",
+        "created_at": "2026-09-09T18:06:01+08:00",
+        "source_type": "simulated"
+      },
+      {
+        "id": "ART-DRUG-VC10",
+        "name": "compound_010.png",
+        "type": "image",
+        "format": "png",
+        "size": 19104,
+        "storage_path": "artifacts/simulated/drug/virtual-screening/DRUG-20260811-0001/compound_010.png",
+        "preview_url": "/api/v1/files/ART-DRUG-VC10/preview",
+        "download_url": "/api/v1/files/ART-DRUG-VC10/download",
+        "created_at": "2026-09-09T18:06:02+08:00",
+        "source_type": "simulated"
+      },
+      {
+        "id": "ART-DRUG-VC11",
+        "name": "compound_011.png",
+        "type": "image",
+        "format": "png",
+        "size": 18613,
+        "storage_path": "artifacts/simulated/drug/virtual-screening/DRUG-20260811-0001/compound_011.png",
+        "preview_url": "/api/v1/files/ART-DRUG-VC11/preview",
+        "download_url": "/api/v1/files/ART-DRUG-VC11/download",
+        "created_at": "2026-09-09T18:06:02+08:00",
+        "source_type": "simulated"
+      },
+      {
+        "id": "ART-DRUG-VC12",
+        "name": "compound_012.png",
+        "type": "image",
+        "format": "png",
+        "size": 22030,
+        "storage_path": "artifacts/simulated/drug/virtual-screening/DRUG-20260811-0001/compound_012.png",
+        "preview_url": "/api/v1/files/ART-DRUG-VC12/preview",
+        "download_url": "/api/v1/files/ART-DRUG-VC12/download",
+        "created_at": "2026-09-09T18:06:02+08:00",
+        "source_type": "simulated"
+      },
+      {
+        "id": "ART-DRUG-VC13",
+        "name": "compound_013.png",
+        "type": "image",
+        "format": "png",
+        "size": 18313,
+        "storage_path": "artifacts/simulated/drug/virtual-screening/DRUG-20260811-0001/compound_013.png",
+        "preview_url": "/api/v1/files/ART-DRUG-VC13/preview",
+        "download_url": "/api/v1/files/ART-DRUG-VC13/download",
+        "created_at": "2026-09-09T18:06:02+08:00",
+        "source_type": "simulated"
+      },
+      {
+        "id": "ART-DRUG-VC14",
+        "name": "compound_014.png",
+        "type": "image",
+        "format": "png",
+        "size": 20204,
+        "storage_path": "artifacts/simulated/drug/virtual-screening/DRUG-20260811-0001/compound_014.png",
+        "preview_url": "/api/v1/files/ART-DRUG-VC14/preview",
+        "download_url": "/api/v1/files/ART-DRUG-VC14/download",
+        "created_at": "2026-09-09T18:06:02+08:00",
+        "source_type": "simulated"
+      },
+      {
+        "id": "ART-DRUG-VC15",
+        "name": "compound_015.png",
+        "type": "image",
+        "format": "png",
+        "size": 13616,
+        "storage_path": "artifacts/simulated/drug/virtual-screening/DRUG-20260811-0001/compound_015.png",
+        "preview_url": "/api/v1/files/ART-DRUG-VC15/preview",
+        "download_url": "/api/v1/files/ART-DRUG-VC15/download",
+        "created_at": "2026-09-09T18:06:02+08:00",
+        "source_type": "simulated"
+      },
+      {
+        "id": "ART-DRUG-VC16",
+        "name": "compound_016.png",
+        "type": "image",
+        "format": "png",
+        "size": 18327,
+        "storage_path": "artifacts/simulated/drug/virtual-screening/DRUG-20260811-0001/compound_016.png",
+        "preview_url": "/api/v1/files/ART-DRUG-VC16/preview",
+        "download_url": "/api/v1/files/ART-DRUG-VC16/download",
+        "created_at": "2026-09-09T18:06:02+08:00",
+        "source_type": "simulated"
+      },
+      {
+        "id": "ART-DRUG-VCSV1",
+        "name": "top_candidates.csv",
+        "type": "dataset",
+        "format": "csv",
+        "size": 1221,
+        "storage_path": "artifacts/simulated/drug/virtual-screening/DRUG-20260811-0001/top_candidates.csv",
+        "preview_url": "/api/v1/files/ART-DRUG-VCSV1/preview",
+        "download_url": "/api/v1/files/ART-DRUG-VCSV1/download",
+        "created_at": "2026-09-09T18:06:02+08:00",
+        "source_type": "simulated"
       }
-    ]
+    ],
+    "domain_data": {
+      "source_type": "simulated",
+      "execution_mode": "simulated",
+      "scenario_id": "virtual-screening",
+      "screening_funnel": {
+        "input": 1000000,
+        "preprocessed": 820000,
+        "docked": 210000,
+        "property_passed": 18500,
+        "top_n": 50
+      },
+      "score_distribution": [
+        {
+          "min": -12.5,
+          "max": -12.025,
+          "count": 4
+        },
+        {
+          "min": -12.025,
+          "max": -11.55,
+          "count": 26
+        },
+        {
+          "min": -11.55,
+          "max": -11.075,
+          "count": 75
+        },
+        {
+          "min": -11.075,
+          "max": -10.6,
+          "count": 77
+        },
+        {
+          "min": -10.6,
+          "max": -10.125,
+          "count": 74
+        },
+        {
+          "min": -10.125,
+          "max": -9.65,
+          "count": 138
+        },
+        {
+          "min": -9.65,
+          "max": -9.175,
+          "count": 224
+        },
+        {
+          "min": -9.175,
+          "max": -8.7,
+          "count": 381
+        },
+        {
+          "min": -8.7,
+          "max": -8.225,
+          "count": 573
+        },
+        {
+          "min": -8.225,
+          "max": -7.75,
+          "count": 727
+        },
+        {
+          "min": -7.75,
+          "max": -7.275,
+          "count": 756
+        },
+        {
+          "min": -7.275,
+          "max": -6.8,
+          "count": 738
+        },
+        {
+          "min": -6.8,
+          "max": -6.325,
+          "count": 604
+        },
+        {
+          "min": -6.325,
+          "max": -5.85,
+          "count": 398
+        },
+        {
+          "min": -5.85,
+          "max": -5.375,
+          "count": 229
+        },
+        {
+          "min": -5.375,
+          "max": -4.9,
+          "count": 101
+        },
+        {
+          "min": -4.9,
+          "max": -4.425,
+          "count": 50
+        },
+        {
+          "min": -4.425,
+          "max": -3.95,
+          "count": 20
+        },
+        {
+          "min": -3.95,
+          "max": -3.475,
+          "count": 4
+        },
+        {
+          "min": -3.475,
+          "max": -3.0,
+          "count": 1
+        }
+      ],
+      "top_candidates": [
+        {
+          "rank": 1,
+          "compound_id": "SIM-CMPD-0001",
+          "docking_score": -12.5,
+          "molecular_weight": 314.4,
+          "logp": 3.6,
+          "preview_url": "/api/v1/files/ART-DRUG-VC01/preview"
+        },
+        {
+          "rank": 2,
+          "compound_id": "SIM-CMPD-0002",
+          "docking_score": -12.154,
+          "molecular_weight": 448.1,
+          "logp": 2.18,
+          "preview_url": "/api/v1/files/ART-DRUG-VC02/preview"
+        },
+        {
+          "rank": 3,
+          "compound_id": "SIM-CMPD-0003",
+          "docking_score": -12.089,
+          "molecular_weight": 331.1,
+          "logp": 1.94,
+          "preview_url": "/api/v1/files/ART-DRUG-VC03/preview"
+        },
+        {
+          "rank": 4,
+          "compound_id": "SIM-CMPD-0004",
+          "docking_score": -12.036,
+          "molecular_weight": 352.5,
+          "logp": 4.29,
+          "preview_url": "/api/v1/files/ART-DRUG-VC04/preview"
+        },
+        {
+          "rank": 5,
+          "compound_id": "SIM-CMPD-0005",
+          "docking_score": -11.983,
+          "molecular_weight": 353.2,
+          "logp": 1.09,
+          "preview_url": "/api/v1/files/ART-DRUG-VC05/preview"
+        },
+        {
+          "rank": 6,
+          "compound_id": "SIM-CMPD-0006",
+          "docking_score": -11.922,
+          "molecular_weight": 277.4,
+          "logp": 3.09,
+          "preview_url": "/api/v1/files/ART-DRUG-VC06/preview"
+        },
+        {
+          "rank": 7,
+          "compound_id": "SIM-CMPD-0007",
+          "docking_score": -11.921,
+          "molecular_weight": 433.9,
+          "logp": 2.29,
+          "preview_url": "/api/v1/files/ART-DRUG-VC07/preview"
+        },
+        {
+          "rank": 8,
+          "compound_id": "SIM-CMPD-0008",
+          "docking_score": -11.886,
+          "molecular_weight": 369.7,
+          "logp": 3.4,
+          "preview_url": "/api/v1/files/ART-DRUG-VC08/preview"
+        },
+        {
+          "rank": 9,
+          "compound_id": "SIM-CMPD-0009",
+          "docking_score": -11.852,
+          "molecular_weight": 350.8,
+          "logp": 4.07,
+          "preview_url": "/api/v1/files/ART-DRUG-VC09/preview"
+        },
+        {
+          "rank": 10,
+          "compound_id": "SIM-CMPD-0010",
+          "docking_score": -11.736,
+          "molecular_weight": 313.1,
+          "logp": 2.17,
+          "preview_url": "/api/v1/files/ART-DRUG-VC10/preview"
+        },
+        {
+          "rank": 11,
+          "compound_id": "SIM-CMPD-0011",
+          "docking_score": -11.725,
+          "molecular_weight": 314.3,
+          "logp": 4.38,
+          "preview_url": "/api/v1/files/ART-DRUG-VC11/preview"
+        },
+        {
+          "rank": 12,
+          "compound_id": "SIM-CMPD-0012",
+          "docking_score": -11.715,
+          "molecular_weight": 223.8,
+          "logp": 1.11,
+          "preview_url": "/api/v1/files/ART-DRUG-VC12/preview"
+        },
+        {
+          "rank": 13,
+          "compound_id": "SIM-CMPD-0013",
+          "docking_score": -11.705,
+          "molecular_weight": 399.9,
+          "logp": 3.99,
+          "preview_url": "/api/v1/files/ART-DRUG-VC13/preview"
+        },
+        {
+          "rank": 14,
+          "compound_id": "SIM-CMPD-0014",
+          "docking_score": -11.704,
+          "molecular_weight": 310.4,
+          "logp": 2.72,
+          "preview_url": "/api/v1/files/ART-DRUG-VC14/preview"
+        },
+        {
+          "rank": 15,
+          "compound_id": "SIM-CMPD-0015",
+          "docking_score": -11.699,
+          "molecular_weight": 283.2,
+          "logp": 3.33,
+          "preview_url": "/api/v1/files/ART-DRUG-VC15/preview"
+        },
+        {
+          "rank": 16,
+          "compound_id": "SIM-CMPD-0016",
+          "docking_score": -11.674,
+          "molecular_weight": 453.6,
+          "logp": 2.14,
+          "preview_url": "/api/v1/files/ART-DRUG-VC16/preview"
+        }
+      ]
+    }
   },
   "timestamp": "2026-08-11T09:21:55+08:00"
 }

@@ -1,0 +1,43 @@
+{
+  "code": 200,
+  "message": "success",
+  "data": {
+    "vehicle-crash": {
+      "fields": [
+        {
+          "name": "operator",
+          "label": "算子选择",
+          "type": "select",
+          "unit": "",
+          "required": true,
+          "default_value": "crash-solver",
+          "description": "选择要执行的算子库函数，与后端 /action/invoke 对齐。"
+        },
+        { "name": "collision_type", "label": "碰撞类型", "type": "select", "unit": "", "required": true, "default_value": "frontal" },
+        { "name": "collision_speed", "label": "碰撞速度", "type": "number", "unit": "km/h", "required": true, "default_value": "50" },
+        { "name": "solver", "label": "求解器", "type": "select", "unit": "", "required": true, "default_value": "LS-DYNA" },
+        { "name": "simulation_time", "label": "仿真时长", "type": "number", "unit": "s", "required": true, "default_value": "0.15" },
+        { "name": "output_interval", "label": "结果输出间隔", "type": "number", "unit": "s", "required": true, "default_value": "0.001" }
+      ]
+    },
+    "fatigue-life": {
+      "fields": [
+        {
+          "name": "operator",
+          "label": "算子选择",
+          "type": "select",
+          "unit": "",
+          "required": true,
+          "default_value": "fatigue-analysis",
+          "description": "选择要执行的算子库函数，与后端 /action/invoke 对齐。"
+        },
+        { "name": "material", "label": "材料类型", "type": "select", "unit": "", "required": true, "default_value": "steel" },
+        { "name": "load_channels", "label": "载荷通道数", "type": "integer", "unit": "", "required": true, "default_value": "8" },
+        { "name": "analysis_type", "label": "分析类型", "type": "select", "unit": "", "required": true, "default_value": "strain-life" },
+        { "name": "loading_cycles", "label": "载荷循环次数", "type": "integer", "unit": "次", "required": true, "default_value": "1000000" },
+        { "name": "safety_factor", "label": "安全系数", "type": "number", "unit": "", "required": true, "default_value": "1.5" }
+      ]
+    }
+  },
+  "timestamp": "2026-08-11T12:00:00+08:00"
+}

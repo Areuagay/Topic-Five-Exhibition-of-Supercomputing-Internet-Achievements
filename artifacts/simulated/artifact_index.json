@@ -1,0 +1,558 @@
+{
+  "source_type": "simulated",
+  "artifacts": {
+    "ART-GEO-W001": {
+      "path": "artifacts/simulated/geodynamics/wave-propagation/GEO-20260811-0001/wavefield_000.png",
+      "name": "wavefield_000.png",
+      "type": "image",
+      "format": "png",
+      "size": 33950,
+      "source_type": "simulated"
+    },
+    "ART-GEO-W002": {
+      "path": "artifacts/simulated/geodynamics/wave-propagation/GEO-20260811-0001/wavefield_001.png",
+      "name": "wavefield_001.png",
+      "type": "image",
+      "format": "png",
+      "size": 33930,
+      "source_type": "simulated"
+    },
+    "ART-GEO-W003": {
+      "path": "artifacts/simulated/geodynamics/wave-propagation/GEO-20260811-0001/wavefield_002.png",
+      "name": "wavefield_002.png",
+      "type": "image",
+      "format": "png",
+      "size": 34224,
+      "source_type": "simulated"
+    },
+    "ART-GEO-W004": {
+      "path": "artifacts/simulated/geodynamics/wave-propagation/GEO-20260811-0001/wavefield_003.png",
+      "name": "wavefield_003.png",
+      "type": "image",
+      "format": "png",
+      "size": 34351,
+      "source_type": "simulated"
+    },
+    "ART-GEO-W005": {
+      "path": "artifacts/simulated/geodynamics/wave-propagation/GEO-20260811-0001/wavefield_004.png",
+      "name": "wavefield_004.png",
+      "type": "image",
+      "format": "png",
+      "size": 34167,
+      "source_type": "simulated"
+    },
+    "ART-GEO-W006": {
+      "path": "artifacts/simulated/geodynamics/wave-propagation/GEO-20260811-0001/wavefield_005.png",
+      "name": "wavefield_005.png",
+      "type": "image",
+      "format": "png",
+      "size": 34198,
+      "source_type": "simulated"
+    },
+    "ART-GEO-W007": {
+      "path": "artifacts/simulated/geodynamics/wave-propagation/GEO-20260811-0001/wavefield_006.png",
+      "name": "wavefield_006.png",
+      "type": "image",
+      "format": "png",
+      "size": 33828,
+      "source_type": "simulated"
+    },
+    "ART-GEO-W008": {
+      "path": "artifacts/simulated/geodynamics/wave-propagation/GEO-20260811-0001/wavefield_007.png",
+      "name": "wavefield_007.png",
+      "type": "image",
+      "format": "png",
+      "size": 33461,
+      "source_type": "simulated"
+    },
+    "ART-GEO-W009": {
+      "path": "artifacts/simulated/geodynamics/wave-propagation/GEO-20260811-0001/wavefield_008.png",
+      "name": "wavefield_008.png",
+      "type": "image",
+      "format": "png",
+      "size": 34143,
+      "source_type": "simulated"
+    },
+    "ART-GEO-W010": {
+      "path": "artifacts/simulated/geodynamics/wave-propagation/GEO-20260811-0001/wavefield_009.png",
+      "name": "wavefield_009.png",
+      "type": "image",
+      "format": "png",
+      "size": 33377,
+      "source_type": "simulated"
+    },
+    "ART-GEO-WCSV1": {
+      "path": "artifacts/simulated/geodynamics/wave-propagation/GEO-20260811-0001/residual_series.csv",
+      "name": "residual_series.csv",
+      "type": "dataset",
+      "format": "csv",
+      "size": 974,
+      "source_type": "simulated"
+    },
+    "ART-GEO-WCSV2": {
+      "path": "artifacts/simulated/geodynamics/wave-propagation/GEO-20260811-0001/seismogram_series.csv",
+      "name": "seismogram_series.csv",
+      "type": "dataset",
+      "format": "csv",
+      "size": 2608,
+      "source_type": "simulated"
+    },
+    "ART-GEO-TT01": {
+      "path": "artifacts/simulated/geodynamics/tectonic-evolution/GEO-20260811-0010/temperature_field_000.png",
+      "name": "temperature_field_000.png",
+      "type": "image",
+      "format": "png",
+      "size": 33082,
+      "source_type": "simulated"
+    },
+    "ART-GEO-TV01": {
+      "path": "artifacts/simulated/geodynamics/tectonic-evolution/GEO-20260811-0010/velocity_field_000.png",
+      "name": "velocity_field_000.png",
+      "type": "image",
+      "format": "png",
+      "size": 55529,
+      "source_type": "simulated"
+    },
+    "ART-GEO-TT02": {
+      "path": "artifacts/simulated/geodynamics/tectonic-evolution/GEO-20260811-0010/temperature_field_001.png",
+      "name": "temperature_field_001.png",
+      "type": "image",
+      "format": "png",
+      "size": 33335,
+      "source_type": "simulated"
+    },
+    "ART-GEO-TV02": {
+      "path": "artifacts/simulated/geodynamics/tectonic-evolution/GEO-20260811-0010/velocity_field_001.png",
+      "name": "velocity_field_001.png",
+      "type": "image",
+      "format": "png",
+      "size": 55723,
+      "source_type": "simulated"
+    },
+    "ART-GEO-TT03": {
+      "path": "artifacts/simulated/geodynamics/tectonic-evolution/GEO-20260811-0010/temperature_field_002.png",
+      "name": "temperature_field_002.png",
+      "type": "image",
+      "format": "png",
+      "size": 33297,
+      "source_type": "simulated"
+    },
+    "ART-GEO-TV03": {
+      "path": "artifacts/simulated/geodynamics/tectonic-evolution/GEO-20260811-0010/velocity_field_002.png",
+      "name": "velocity_field_002.png",
+      "type": "image",
+      "format": "png",
+      "size": 55758,
+      "source_type": "simulated"
+    },
+    "ART-GEO-TT04": {
+      "path": "artifacts/simulated/geodynamics/tectonic-evolution/GEO-20260811-0010/temperature_field_003.png",
+      "name": "temperature_field_003.png",
+      "type": "image",
+      "format": "png",
+      "size": 33353,
+      "source_type": "simulated"
+    },
+    "ART-GEO-TV04": {
+      "path": "artifacts/simulated/geodynamics/tectonic-evolution/GEO-20260811-0010/velocity_field_003.png",
+      "name": "velocity_field_003.png",
+      "type": "image",
+      "format": "png",
+      "size": 55615,
+      "source_type": "simulated"
+    },
+    "ART-GEO-TT05": {
+      "path": "artifacts/simulated/geodynamics/tectonic-evolution/GEO-20260811-0010/temperature_field_004.png",
+      "name": "temperature_field_004.png",
+      "type": "image",
+      "format": "png",
+      "size": 33235,
+      "source_type": "simulated"
+    },
+    "ART-GEO-TV05": {
+      "path": "artifacts/simulated/geodynamics/tectonic-evolution/GEO-20260811-0010/velocity_field_004.png",
+      "name": "velocity_field_004.png",
+      "type": "image",
+      "format": "png",
+      "size": 55687,
+      "source_type": "simulated"
+    },
+    "ART-GEO-TT06": {
+      "path": "artifacts/simulated/geodynamics/tectonic-evolution/GEO-20260811-0010/temperature_field_005.png",
+      "name": "temperature_field_005.png",
+      "type": "image",
+      "format": "png",
+      "size": 33385,
+      "source_type": "simulated"
+    },
+    "ART-GEO-TV06": {
+      "path": "artifacts/simulated/geodynamics/tectonic-evolution/GEO-20260811-0010/velocity_field_005.png",
+      "name": "velocity_field_005.png",
+      "type": "image",
+      "format": "png",
+      "size": 55827,
+      "source_type": "simulated"
+    },
+    "ART-GEO-TT07": {
+      "path": "artifacts/simulated/geodynamics/tectonic-evolution/GEO-20260811-0010/temperature_field_006.png",
+      "name": "temperature_field_006.png",
+      "type": "image",
+      "format": "png",
+      "size": 33106,
+      "source_type": "simulated"
+    },
+    "ART-GEO-TV07": {
+      "path": "artifacts/simulated/geodynamics/tectonic-evolution/GEO-20260811-0010/velocity_field_006.png",
+      "name": "velocity_field_006.png",
+      "type": "image",
+      "format": "png",
+      "size": 55597,
+      "source_type": "simulated"
+    },
+    "ART-GEO-TT08": {
+      "path": "artifacts/simulated/geodynamics/tectonic-evolution/GEO-20260811-0010/temperature_field_007.png",
+      "name": "temperature_field_007.png",
+      "type": "image",
+      "format": "png",
+      "size": 33341,
+      "source_type": "simulated"
+    },
+    "ART-GEO-TV08": {
+      "path": "artifacts/simulated/geodynamics/tectonic-evolution/GEO-20260811-0010/velocity_field_007.png",
+      "name": "velocity_field_007.png",
+      "type": "image",
+      "format": "png",
+      "size": 55852,
+      "source_type": "simulated"
+    },
+    "ART-GEO-TCSV1": {
+      "path": "artifacts/simulated/geodynamics/tectonic-evolution/GEO-20260811-0010/temperature_series.csv",
+      "name": "temperature_series.csv",
+      "type": "dataset",
+      "format": "csv",
+      "size": 1129,
+      "source_type": "simulated"
+    },
+    "ART-LLM-PCSV1": {
+      "path": "artifacts/simulated/llm/llm-pretraining/LLM-20260811-0001/training_series.csv",
+      "name": "training_series.csv",
+      "type": "dataset",
+      "format": "csv",
+      "size": 3614,
+      "source_type": "simulated"
+    },
+    "ART-LLM-PJSON1": {
+      "path": "artifacts/simulated/llm/llm-pretraining/LLM-20260811-0001/gpu_metrics.json",
+      "name": "gpu_metrics.json",
+      "type": "dataset",
+      "format": "json",
+      "size": 1583,
+      "source_type": "simulated"
+    },
+    "ART-LLM-NIMG1": {
+      "path": "artifacts/simulated/llm/pinn-acceleration/LLM-20260811-0010/residual_heatmap.png",
+      "name": "residual_heatmap.png",
+      "type": "image",
+      "format": "png",
+      "size": 26176,
+      "source_type": "simulated"
+    },
+    "ART-LLM-NCSV1": {
+      "path": "artifacts/simulated/llm/pinn-acceleration/LLM-20260811-0010/pinn_training_series.csv",
+      "name": "pinn_training_series.csv",
+      "type": "dataset",
+      "format": "csv",
+      "size": 2815,
+      "source_type": "simulated"
+    },
+    "ART-LLM-NJSON1": {
+      "path": "artifacts/simulated/llm/pinn-acceleration/LLM-20260811-0010/residual_field.json",
+      "name": "residual_field.json",
+      "type": "dataset",
+      "format": "json",
+      "size": 22556,
+      "source_type": "simulated"
+    },
+    "ART-AUTO-C01": {
+      "path": "artifacts/simulated/automotive/vehicle-crash/AUTO-20260811-0001/stress_front.png",
+      "name": "stress_front.png",
+      "type": "image",
+      "format": "png",
+      "size": 10384,
+      "source_type": "simulated"
+    },
+    "ART-AUTO-C02": {
+      "path": "artifacts/simulated/automotive/vehicle-crash/AUTO-20260811-0001/stress_middle.png",
+      "name": "stress_middle.png",
+      "type": "image",
+      "format": "png",
+      "size": 10610,
+      "source_type": "simulated"
+    },
+    "ART-AUTO-C03": {
+      "path": "artifacts/simulated/automotive/vehicle-crash/AUTO-20260811-0001/stress_final.png",
+      "name": "stress_final.png",
+      "type": "image",
+      "format": "png",
+      "size": 10115,
+      "source_type": "simulated"
+    },
+    "ART-AUTO-CCSV1": {
+      "path": "artifacts/simulated/automotive/vehicle-crash/AUTO-20260811-0001/energy_series.csv",
+      "name": "energy_series.csv",
+      "type": "dataset",
+      "format": "csv",
+      "size": 6200,
+      "source_type": "simulated"
+    },
+    "ART-AUTO-FIMG1": {
+      "path": "artifacts/simulated/automotive/fatigue-life/AUTO-20260811-0010/damage_map.png",
+      "name": "damage_map.png",
+      "type": "image",
+      "format": "png",
+      "size": 31318,
+      "source_type": "simulated"
+    },
+    "ART-AUTO-FCSV1": {
+      "path": "artifacts/simulated/automotive/fatigue-life/AUTO-20260811-0010/damage_series.csv",
+      "name": "damage_series.csv",
+      "type": "dataset",
+      "format": "csv",
+      "size": 1114,
+      "source_type": "simulated"
+    },
+    "ART-UAV-SJSON1": {
+      "path": "artifacts/simulated/uav/swarm-coordination/UAV-20260811-0001/trajectory_samples.json",
+      "name": "trajectory_samples.json",
+      "type": "dataset",
+      "format": "json",
+      "size": 334323,
+      "source_type": "simulated"
+    },
+    "ART-UAV-SCSV1": {
+      "path": "artifacts/simulated/uav/swarm-coordination/UAV-20260811-0001/formation_series.csv",
+      "name": "formation_series.csv",
+      "type": "dataset",
+      "format": "csv",
+      "size": 1168,
+      "source_type": "simulated"
+    },
+    "ART-UAV-PIMG1": {
+      "path": "artifacts/simulated/uav/path-planning/UAV-20260811-0010/path_preview.png",
+      "name": "path_preview.png",
+      "type": "image",
+      "format": "png",
+      "size": 21455,
+      "source_type": "simulated"
+    },
+    "ART-UAV-PJSON1": {
+      "path": "artifacts/simulated/uav/path-planning/UAV-20260811-0010/environment.json",
+      "name": "environment.json",
+      "type": "dataset",
+      "format": "json",
+      "size": 6525,
+      "source_type": "simulated"
+    },
+    "ART-UAV-PCSV1": {
+      "path": "artifacts/simulated/uav/path-planning/UAV-20260811-0010/cost_series.csv",
+      "name": "cost_series.csv",
+      "type": "dataset",
+      "format": "csv",
+      "size": 753,
+      "source_type": "simulated"
+    },
+    "ART-DRUG-VC01": {
+      "path": "artifacts/simulated/drug/virtual-screening/DRUG-20260811-0001/compound_001.png",
+      "name": "compound_001.png",
+      "type": "image",
+      "format": "png",
+      "size": 17489,
+      "source_type": "simulated"
+    },
+    "ART-DRUG-VC02": {
+      "path": "artifacts/simulated/drug/virtual-screening/DRUG-20260811-0001/compound_002.png",
+      "name": "compound_002.png",
+      "type": "image",
+      "format": "png",
+      "size": 22741,
+      "source_type": "simulated"
+    },
+    "ART-DRUG-VC03": {
+      "path": "artifacts/simulated/drug/virtual-screening/DRUG-20260811-0001/compound_003.png",
+      "name": "compound_003.png",
+      "type": "image",
+      "format": "png",
+      "size": 19490,
+      "source_type": "simulated"
+    },
+    "ART-DRUG-VC04": {
+      "path": "artifacts/simulated/drug/virtual-screening/DRUG-20260811-0001/compound_004.png",
+      "name": "compound_004.png",
+      "type": "image",
+      "format": "png",
+      "size": 16570,
+      "source_type": "simulated"
+    },
+    "ART-DRUG-VC05": {
+      "path": "artifacts/simulated/drug/virtual-screening/DRUG-20260811-0001/compound_005.png",
+      "name": "compound_005.png",
+      "type": "image",
+      "format": "png",
+      "size": 20431,
+      "source_type": "simulated"
+    },
+    "ART-DRUG-VC06": {
+      "path": "artifacts/simulated/drug/virtual-screening/DRUG-20260811-0001/compound_006.png",
+      "name": "compound_006.png",
+      "type": "image",
+      "format": "png",
+      "size": 17267,
+      "source_type": "simulated"
+    },
+    "ART-DRUG-VC07": {
+      "path": "artifacts/simulated/drug/virtual-screening/DRUG-20260811-0001/compound_007.png",
+      "name": "compound_007.png",
+      "type": "image",
+      "format": "png",
+      "size": 31550,
+      "source_type": "simulated"
+    },
+    "ART-DRUG-VC08": {
+      "path": "artifacts/simulated/drug/virtual-screening/DRUG-20260811-0001/compound_008.png",
+      "name": "compound_008.png",
+      "type": "image",
+      "format": "png",
+      "size": 23304,
+      "source_type": "simulated"
+    },
+    "ART-DRUG-VC09": {
+      "path": "artifacts/simulated/drug/virtual-screening/DRUG-20260811-0001/compound_009.png",
+      "name": "compound_009.png",
+      "type": "image",
+      "format": "png",
+      "size": 26972,
+      "source_type": "simulated"
+    },
+    "ART-DRUG-VC10": {
+      "path": "artifacts/simulated/drug/virtual-screening/DRUG-20260811-0001/compound_010.png",
+      "name": "compound_010.png",
+      "type": "image",
+      "format": "png",
+      "size": 19104,
+      "source_type": "simulated"
+    },
+    "ART-DRUG-VC11": {
+      "path": "artifacts/simulated/drug/virtual-screening/DRUG-20260811-0001/compound_011.png",
+      "name": "compound_011.png",
+      "type": "image",
+      "format": "png",
+      "size": 18613,
+      "source_type": "simulated"
+    },
+    "ART-DRUG-VC12": {
+      "path": "artifacts/simulated/drug/virtual-screening/DRUG-20260811-0001/compound_012.png",
+      "name": "compound_012.png",
+      "type": "image",
+      "format": "png",
+      "size": 22030,
+      "source_type": "simulated"
+    },
+    "ART-DRUG-VC13": {
+      "path": "artifacts/simulated/drug/virtual-screening/DRUG-20260811-0001/compound_013.png",
+      "name": "compound_013.png",
+      "type": "image",
+      "format": "png",
+      "size": 18313,
+      "source_type": "simulated"
+    },
+    "ART-DRUG-VC14": {
+      "path": "artifacts/simulated/drug/virtual-screening/DRUG-20260811-0001/compound_014.png",
+      "name": "compound_014.png",
+      "type": "image",
+      "format": "png",
+      "size": 20204,
+      "source_type": "simulated"
+    },
+    "ART-DRUG-VC15": {
+      "path": "artifacts/simulated/drug/virtual-screening/DRUG-20260811-0001/compound_015.png",
+      "name": "compound_015.png",
+      "type": "image",
+      "format": "png",
+      "size": 13616,
+      "source_type": "simulated"
+    },
+    "ART-DRUG-VC16": {
+      "path": "artifacts/simulated/drug/virtual-screening/DRUG-20260811-0001/compound_016.png",
+      "name": "compound_016.png",
+      "type": "image",
+      "format": "png",
+      "size": 18327,
+      "source_type": "simulated"
+    },
+    "ART-DRUG-VCSV1": {
+      "path": "artifacts/simulated/drug/virtual-screening/DRUG-20260811-0001/top_candidates.csv",
+      "name": "top_candidates.csv",
+      "type": "dataset",
+      "format": "csv",
+      "size": 1221,
+      "source_type": "simulated"
+    },
+    "ART-DRUG-ACSV1": {
+      "path": "artifacts/simulated/drug/admet-prediction/DRUG-20260811-0010/candidate_properties.csv",
+      "name": "candidate_properties.csv",
+      "type": "dataset",
+      "format": "csv",
+      "size": 2063,
+      "source_type": "simulated"
+    },
+    "ART-DRUG-AJSON1": {
+      "path": "artifacts/simulated/drug/admet-prediction/DRUG-20260811-0010/admet_summary.json",
+      "name": "admet_summary.json",
+      "type": "dataset",
+      "format": "json",
+      "size": 5417,
+      "source_type": "simulated"
+    },
+    "ART-DFT-BIMG1": {
+      "path": "artifacts/simulated/dft/band-dos/DFT-20260811-0001/band_structure.png",
+      "name": "band_structure.png",
+      "type": "image",
+      "format": "png",
+      "size": 66253,
+      "source_type": "simulated"
+    },
+    "ART-DFT-BCSV1": {
+      "path": "artifacts/simulated/dft/band-dos/DFT-20260811-0001/scf_series.csv",
+      "name": "scf_series.csv",
+      "type": "dataset",
+      "format": "csv",
+      "size": 555,
+      "source_type": "simulated"
+    },
+    "ART-DFT-BJSON1": {
+      "path": "artifacts/simulated/dft/band-dos/DFT-20260811-0001/band_structure.json",
+      "name": "band_structure.json",
+      "type": "dataset",
+      "format": "json",
+      "size": 18675,
+      "source_type": "simulated"
+    },
+    "ART-DFT-HCSV1": {
+      "path": "artifacts/simulated/dft/high-throughput-screening/DFT-20260811-0010/materials.csv",
+      "name": "materials.csv",
+      "type": "dataset",
+      "format": "csv",
+      "size": 10748,
+      "source_type": "simulated"
+    },
+    "ART-DFT-HJSON1": {
+      "path": "artifacts/simulated/dft/high-throughput-screening/DFT-20260811-0010/batch_summary.json",
+      "name": "batch_summary.json",
+      "type": "dataset",
+      "format": "json",
+      "size": 4251,
+      "source_type": "simulated"
+    }
+  },
+  "updated_at": "2026-09-09T18:06:31+08:00"
+}

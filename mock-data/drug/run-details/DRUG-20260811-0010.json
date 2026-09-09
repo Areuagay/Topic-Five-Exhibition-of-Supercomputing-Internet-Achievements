@@ -81,34 +81,740 @@
         }
       ],
       "edges": [
-        { "source": "prepare", "target": "ligand-preprocess" },
-        { "source": "ligand-preprocess", "target": "shard" },
-        { "source": "shard", "target": "docking" },
-        { "source": "docking", "target": "merge" },
-        { "source": "merge", "target": "property" },
-        { "source": "property", "target": "topn" },
-        { "source": "topn", "target": "report" }
+        {
+          "source": "prepare",
+          "target": "ligand-preprocess"
+        },
+        {
+          "source": "ligand-preprocess",
+          "target": "shard"
+        },
+        {
+          "source": "shard",
+          "target": "docking"
+        },
+        {
+          "source": "docking",
+          "target": "merge"
+        },
+        {
+          "source": "merge",
+          "target": "property"
+        },
+        {
+          "source": "property",
+          "target": "topn"
+        },
+        {
+          "source": "topn",
+          "target": "report"
+        }
       ]
     },
     "metrics": {
       "progress": 100,
       "metrics": [
-        { "name": "completed_compounds", "label": "已完成分子数", "value": 12000, "total": 12000, "unit": "个" },
-        { "name": "throughput", "label": "预测吞吐量", "value": 42.5, "total": 0, "unit": "mol/s" },
-        { "name": "best_docking_score", "label": "最佳对接分数", "value": -10.1, "total": 0, "unit": "kcal/mol" },
-        { "name": "failed_compounds", "label": "失败分子数", "value": 6, "total": 0, "unit": "个" }
+        {
+          "name": "completed_compounds",
+          "label": "已完成分子数",
+          "value": 12000,
+          "total": 12000,
+          "unit": "个"
+        },
+        {
+          "name": "throughput",
+          "label": "预测吞吐量",
+          "value": 42.5,
+          "total": 0,
+          "unit": "mol/s"
+        },
+        {
+          "name": "best_docking_score",
+          "label": "最佳对接分数",
+          "value": -10.1,
+          "total": 0,
+          "unit": "kcal/mol"
+        },
+        {
+          "name": "failed_compounds",
+          "label": "失败分子数",
+          "value": 6,
+          "total": 0,
+          "unit": "个"
+        }
       ],
       "cluster_progress": [
-        { "cluster_id": "changsha", "completed": 3000, "total": 3000, "throughput": 10.7, "status": "success" },
-        { "cluster_id": "guangzhou", "completed": 3000, "total": 3000, "throughput": 10.6, "status": "success" },
-        { "cluster_id": "kunshan", "completed": 3000, "total": 3000, "throughput": 10.8, "status": "success" },
-        { "cluster_id": "jinan", "completed": 3000, "total": 3000, "throughput": 10.4, "status": "success" }
+        {
+          "cluster_id": "changsha",
+          "completed": 3000,
+          "total": 3000,
+          "throughput": 10.7,
+          "status": "success"
+        },
+        {
+          "cluster_id": "guangzhou",
+          "completed": 3000,
+          "total": 3000,
+          "throughput": 10.6,
+          "status": "success"
+        },
+        {
+          "cluster_id": "kunshan",
+          "completed": 3000,
+          "total": 3000,
+          "throughput": 10.8,
+          "status": "success"
+        },
+        {
+          "cluster_id": "jinan",
+          "completed": 3000,
+          "total": 3000,
+          "throughput": 10.4,
+          "status": "success"
+        }
       ],
       "score_summary": {
         "best_score": -10.1,
         "average_score": -7.2,
         "median_score": -7.0,
         "qualified_count": 9396
+      },
+      "domain_data": {
+        "source_type": "simulated",
+        "execution_mode": "simulated",
+        "scenario_id": "admet-prediction",
+        "filter_rule": {
+          "toxicity_lt": 0.4,
+          "absorption_gt": 0.5,
+          "distribution_gt": 0.4
+        },
+        "admet_summary": {
+          "total": 36,
+          "passed": 7,
+          "failed": 29
+        },
+        "candidate_properties": [
+          {
+            "compound_id": "SIM-ADMET-001",
+            "absorption": 0.6312,
+            "distribution": 0.3128,
+            "metabolism": 0.8374,
+            "excretion": 0.2646,
+            "toxicity": 0.4518,
+            "passed": false
+          },
+          {
+            "compound_id": "SIM-ADMET-002",
+            "absorption": 0.7805,
+            "distribution": 0.8937,
+            "metabolism": 0.3783,
+            "excretion": 0.6603,
+            "toxicity": 0.0272,
+            "passed": true
+          },
+          {
+            "compound_id": "SIM-ADMET-003",
+            "absorption": 0.2191,
+            "distribution": 0.5248,
+            "metabolism": 0.2456,
+            "excretion": 0.591,
+            "toxicity": 0.1934,
+            "passed": false
+          },
+          {
+            "compound_id": "SIM-ADMET-004",
+            "absorption": 0.8902,
+            "distribution": 0.5196,
+            "metabolism": 0.3891,
+            "excretion": 0.7433,
+            "toxicity": 0.6845,
+            "passed": false
+          },
+          {
+            "compound_id": "SIM-ADMET-005",
+            "absorption": 0.4356,
+            "distribution": 0.651,
+            "metabolism": 0.4067,
+            "excretion": 0.7314,
+            "toxicity": 0.384,
+            "passed": false
+          },
+          {
+            "compound_id": "SIM-ADMET-006",
+            "absorption": 0.8078,
+            "distribution": 0.254,
+            "metabolism": 0.4751,
+            "excretion": 0.3554,
+            "toxicity": 0.0499,
+            "passed": false
+          },
+          {
+            "compound_id": "SIM-ADMET-007",
+            "absorption": 0.7432,
+            "distribution": 0.1466,
+            "metabolism": 0.8659,
+            "excretion": 0.4681,
+            "toxicity": 0.307,
+            "passed": false
+          },
+          {
+            "compound_id": "SIM-ADMET-008",
+            "absorption": 0.344,
+            "distribution": 0.5935,
+            "metabolism": 0.9239,
+            "excretion": 0.8785,
+            "toxicity": 0.314,
+            "passed": false
+          },
+          {
+            "compound_id": "SIM-ADMET-009",
+            "absorption": 0.2522,
+            "distribution": 0.616,
+            "metabolism": 0.4674,
+            "excretion": 0.2751,
+            "toxicity": 0.4321,
+            "passed": false
+          },
+          {
+            "compound_id": "SIM-ADMET-010",
+            "absorption": 0.2795,
+            "distribution": 0.8945,
+            "metabolism": 0.4389,
+            "excretion": 0.3515,
+            "toxicity": 0.1289,
+            "passed": false
+          },
+          {
+            "compound_id": "SIM-ADMET-011",
+            "absorption": 0.9163,
+            "distribution": 0.7805,
+            "metabolism": 0.647,
+            "excretion": 0.6509,
+            "toxicity": 0.2428,
+            "passed": true
+          },
+          {
+            "compound_id": "SIM-ADMET-012",
+            "absorption": 0.4386,
+            "distribution": 0.2888,
+            "metabolism": 0.5547,
+            "excretion": 0.6572,
+            "toxicity": 0.1266,
+            "passed": false
+          },
+          {
+            "compound_id": "SIM-ADMET-013",
+            "absorption": 0.5887,
+            "distribution": 0.3771,
+            "metabolism": 0.4434,
+            "excretion": 0.4388,
+            "toxicity": 0.3414,
+            "passed": false
+          },
+          {
+            "compound_id": "SIM-ADMET-014",
+            "absorption": 0.2184,
+            "distribution": 0.5671,
+            "metabolism": 0.3142,
+            "excretion": 0.4486,
+            "toxicity": 0.4741,
+            "passed": false
+          },
+          {
+            "compound_id": "SIM-ADMET-015",
+            "absorption": 0.4112,
+            "distribution": 0.6189,
+            "metabolism": 0.7864,
+            "excretion": 0.6682,
+            "toxicity": 0.3109,
+            "passed": false
+          },
+          {
+            "compound_id": "SIM-ADMET-016",
+            "absorption": 0.481,
+            "distribution": 0.4845,
+            "metabolism": 0.3679,
+            "excretion": 0.3166,
+            "toxicity": 0.6769,
+            "passed": false
+          },
+          {
+            "compound_id": "SIM-ADMET-017",
+            "absorption": 0.3209,
+            "distribution": 0.7003,
+            "metabolism": 0.743,
+            "excretion": 0.0369,
+            "toxicity": 0.1015,
+            "passed": false
+          },
+          {
+            "compound_id": "SIM-ADMET-018",
+            "absorption": 0.5437,
+            "distribution": 0.4479,
+            "metabolism": 0.2547,
+            "excretion": 0.7538,
+            "toxicity": 0.115,
+            "passed": true
+          },
+          {
+            "compound_id": "SIM-ADMET-019",
+            "absorption": 0.8658,
+            "distribution": 0.4884,
+            "metabolism": 0.4224,
+            "excretion": 0.4778,
+            "toxicity": 0.154,
+            "passed": true
+          },
+          {
+            "compound_id": "SIM-ADMET-020",
+            "absorption": 0.408,
+            "distribution": 0.5763,
+            "metabolism": 0.6479,
+            "excretion": 0.9545,
+            "toxicity": 0.5393,
+            "passed": false
+          },
+          {
+            "compound_id": "SIM-ADMET-021",
+            "absorption": 0.2394,
+            "distribution": 0.2679,
+            "metabolism": 0.5887,
+            "excretion": 0.2109,
+            "toxicity": 0.3737,
+            "passed": false
+          },
+          {
+            "compound_id": "SIM-ADMET-022",
+            "absorption": 0.2414,
+            "distribution": 0.6785,
+            "metabolism": 0.1057,
+            "excretion": 0.6539,
+            "toxicity": 0.9411,
+            "passed": false
+          },
+          {
+            "compound_id": "SIM-ADMET-023",
+            "absorption": 0.8681,
+            "distribution": 0.6259,
+            "metabolism": 0.5252,
+            "excretion": 0.3694,
+            "toxicity": 0.1941,
+            "passed": true
+          },
+          {
+            "compound_id": "SIM-ADMET-024",
+            "absorption": 0.7108,
+            "distribution": 0.8067,
+            "metabolism": 0.3138,
+            "excretion": 0.8923,
+            "toxicity": 0.6369,
+            "passed": false
+          },
+          {
+            "compound_id": "SIM-ADMET-025",
+            "absorption": 0.363,
+            "distribution": 0.6651,
+            "metabolism": 0.5526,
+            "excretion": 0.5804,
+            "toxicity": 0.1167,
+            "passed": false
+          },
+          {
+            "compound_id": "SIM-ADMET-026",
+            "absorption": 0.3029,
+            "distribution": 0.4799,
+            "metabolism": 0.1428,
+            "excretion": 0.6444,
+            "toxicity": 0.1336,
+            "passed": false
+          },
+          {
+            "compound_id": "SIM-ADMET-027",
+            "absorption": 0.7558,
+            "distribution": 0.976,
+            "metabolism": 0.8023,
+            "excretion": 0.4873,
+            "toxicity": 0.4587,
+            "passed": false
+          },
+          {
+            "compound_id": "SIM-ADMET-028",
+            "absorption": 0.32,
+            "distribution": 0.6374,
+            "metabolism": 0.8155,
+            "excretion": 0.5339,
+            "toxicity": 0.2005,
+            "passed": false
+          },
+          {
+            "compound_id": "SIM-ADMET-029",
+            "absorption": 0.6528,
+            "distribution": 0.6701,
+            "metabolism": 0.3301,
+            "excretion": 0.5548,
+            "toxicity": 0.374,
+            "passed": true
+          },
+          {
+            "compound_id": "SIM-ADMET-030",
+            "absorption": 0.8829,
+            "distribution": 0.7902,
+            "metabolism": 0.4335,
+            "excretion": 0.4131,
+            "toxicity": 0.0835,
+            "passed": true
+          },
+          {
+            "compound_id": "SIM-ADMET-031",
+            "absorption": 0.6487,
+            "distribution": 0.7253,
+            "metabolism": 0.4471,
+            "excretion": 0.4435,
+            "toxicity": 0.5141,
+            "passed": false
+          },
+          {
+            "compound_id": "SIM-ADMET-032",
+            "absorption": 0.3814,
+            "distribution": 0.2815,
+            "metabolism": 0.2606,
+            "excretion": 0.1101,
+            "toxicity": 0.3973,
+            "passed": false
+          },
+          {
+            "compound_id": "SIM-ADMET-033",
+            "absorption": 0.4921,
+            "distribution": 0.6451,
+            "metabolism": 0.4464,
+            "excretion": 0.5481,
+            "toxicity": 0.3976,
+            "passed": false
+          },
+          {
+            "compound_id": "SIM-ADMET-034",
+            "absorption": 0.3447,
+            "distribution": 0.4682,
+            "metabolism": 0.1379,
+            "excretion": 0.0947,
+            "toxicity": 0.2634,
+            "passed": false
+          },
+          {
+            "compound_id": "SIM-ADMET-035",
+            "absorption": 0.3754,
+            "distribution": 0.6428,
+            "metabolism": 0.5075,
+            "excretion": 0.9554,
+            "toxicity": 0.5267,
+            "passed": false
+          },
+          {
+            "compound_id": "SIM-ADMET-036",
+            "absorption": 0.5031,
+            "distribution": 0.4269,
+            "metabolism": 0.3065,
+            "excretion": 0.849,
+            "toxicity": 0.8027,
+            "passed": false
+          }
+        ],
+        "risk_distribution": [
+          {
+            "risk_level": "low",
+            "count": 6
+          },
+          {
+            "risk_level": "medium",
+            "count": 25
+          },
+          {
+            "risk_level": "high",
+            "count": 5
+          }
+        ],
+        "property_distribution": {
+          "absorption": {
+            "mean": 0.5183,
+            "std": 0.2219,
+            "bins": [
+              {
+                "min": 0.0,
+                "max": 0.1,
+                "count": 0
+              },
+              {
+                "min": 0.1,
+                "max": 0.2,
+                "count": 0
+              },
+              {
+                "min": 0.2,
+                "max": 0.3,
+                "count": 6
+              },
+              {
+                "min": 0.3,
+                "max": 0.4,
+                "count": 8
+              },
+              {
+                "min": 0.4,
+                "max": 0.5,
+                "count": 6
+              },
+              {
+                "min": 0.5,
+                "max": 0.6,
+                "count": 3
+              },
+              {
+                "min": 0.6,
+                "max": 0.7,
+                "count": 3
+              },
+              {
+                "min": 0.7,
+                "max": 0.8,
+                "count": 4
+              },
+              {
+                "min": 0.8,
+                "max": 0.9,
+                "count": 5
+              },
+              {
+                "min": 0.9,
+                "max": 1.0,
+                "count": 1
+              }
+            ]
+          },
+          "distribution": {
+            "mean": 0.5701,
+            "std": 0.1925,
+            "bins": [
+              {
+                "min": 0.0,
+                "max": 0.1,
+                "count": 0
+              },
+              {
+                "min": 0.1,
+                "max": 0.2,
+                "count": 1
+              },
+              {
+                "min": 0.2,
+                "max": 0.3,
+                "count": 4
+              },
+              {
+                "min": 0.3,
+                "max": 0.4,
+                "count": 2
+              },
+              {
+                "min": 0.4,
+                "max": 0.5,
+                "count": 6
+              },
+              {
+                "min": 0.5,
+                "max": 0.6,
+                "count": 5
+              },
+              {
+                "min": 0.6,
+                "max": 0.7,
+                "count": 10
+              },
+              {
+                "min": 0.7,
+                "max": 0.8,
+                "count": 4
+              },
+              {
+                "min": 0.8,
+                "max": 0.9,
+                "count": 3
+              },
+              {
+                "min": 0.9,
+                "max": 1.0,
+                "count": 1
+              }
+            ]
+          },
+          "metabolism": {
+            "mean": 0.4813,
+            "std": 0.2118,
+            "bins": [
+              {
+                "min": 0.0,
+                "max": 0.1,
+                "count": 0
+              },
+              {
+                "min": 0.1,
+                "max": 0.2,
+                "count": 3
+              },
+              {
+                "min": 0.2,
+                "max": 0.3,
+                "count": 3
+              },
+              {
+                "min": 0.3,
+                "max": 0.4,
+                "count": 7
+              },
+              {
+                "min": 0.4,
+                "max": 0.5,
+                "count": 9
+              },
+              {
+                "min": 0.5,
+                "max": 0.6,
+                "count": 5
+              },
+              {
+                "min": 0.6,
+                "max": 0.7,
+                "count": 2
+              },
+              {
+                "min": 0.7,
+                "max": 0.8,
+                "count": 2
+              },
+              {
+                "min": 0.8,
+                "max": 0.9,
+                "count": 4
+              },
+              {
+                "min": 0.9,
+                "max": 1.0,
+                "count": 1
+              }
+            ]
+          },
+          "excretion": {
+            "mean": 0.5295,
+            "std": 0.2344,
+            "bins": [
+              {
+                "min": 0.0,
+                "max": 0.1,
+                "count": 2
+              },
+              {
+                "min": 0.1,
+                "max": 0.2,
+                "count": 1
+              },
+              {
+                "min": 0.2,
+                "max": 0.3,
+                "count": 3
+              },
+              {
+                "min": 0.3,
+                "max": 0.4,
+                "count": 4
+              },
+              {
+                "min": 0.4,
+                "max": 0.5,
+                "count": 7
+              },
+              {
+                "min": 0.5,
+                "max": 0.6,
+                "count": 5
+              },
+              {
+                "min": 0.6,
+                "max": 0.7,
+                "count": 6
+              },
+              {
+                "min": 0.7,
+                "max": 0.8,
+                "count": 3
+              },
+              {
+                "min": 0.8,
+                "max": 0.9,
+                "count": 3
+              },
+              {
+                "min": 0.9,
+                "max": 1.0,
+                "count": 2
+              }
+            ]
+          },
+          "toxicity": {
+            "mean": 0.3464,
+            "std": 0.2183,
+            "bins": [
+              {
+                "min": 0.0,
+                "max": 0.1,
+                "count": 3
+              },
+              {
+                "min": 0.1,
+                "max": 0.2,
+                "count": 9
+              },
+              {
+                "min": 0.2,
+                "max": 0.3,
+                "count": 3
+              },
+              {
+                "min": 0.3,
+                "max": 0.4,
+                "count": 9
+              },
+              {
+                "min": 0.4,
+                "max": 0.5,
+                "count": 4
+              },
+              {
+                "min": 0.5,
+                "max": 0.6,
+                "count": 3
+              },
+              {
+                "min": 0.6,
+                "max": 0.7,
+                "count": 3
+              },
+              {
+                "min": 0.7,
+                "max": 0.8,
+                "count": 0
+              },
+              {
+                "min": 0.8,
+                "max": 0.9,
+                "count": 1
+              },
+              {
+                "min": 0.9,
+                "max": 1.0,
+                "count": 1
+              }
+            ]
+          }
+        }
       }
     },
     "logs": {
@@ -213,8 +919,669 @@
         "preview_url": "/api/v1/files/ART-DRUG-023/preview",
         "download_url": "/api/v1/files/ART-DRUG-023/download",
         "created_at": "2026-08-10T15:04:50+08:00"
+      },
+      {
+        "id": "ART-DRUG-ACSV1",
+        "name": "candidate_properties.csv",
+        "type": "dataset",
+        "format": "csv",
+        "size": 2063,
+        "storage_path": "artifacts/simulated/drug/admet-prediction/DRUG-20260811-0010/candidate_properties.csv",
+        "preview_url": "/api/v1/files/ART-DRUG-ACSV1/preview",
+        "download_url": "/api/v1/files/ART-DRUG-ACSV1/download",
+        "created_at": "2026-09-09T18:06:02+08:00",
+        "source_type": "simulated"
+      },
+      {
+        "id": "ART-DRUG-AJSON1",
+        "name": "admet_summary.json",
+        "type": "dataset",
+        "format": "json",
+        "size": 5417,
+        "storage_path": "artifacts/simulated/drug/admet-prediction/DRUG-20260811-0010/admet_summary.json",
+        "preview_url": "/api/v1/files/ART-DRUG-AJSON1/preview",
+        "download_url": "/api/v1/files/ART-DRUG-AJSON1/download",
+        "created_at": "2026-09-09T18:06:02+08:00",
+        "source_type": "simulated"
       }
-    ]
+    ],
+    "domain_data": {
+      "source_type": "simulated",
+      "execution_mode": "simulated",
+      "scenario_id": "admet-prediction",
+      "filter_rule": {
+        "toxicity_lt": 0.4,
+        "absorption_gt": 0.5,
+        "distribution_gt": 0.4
+      },
+      "admet_summary": {
+        "total": 36,
+        "passed": 7,
+        "failed": 29
+      },
+      "candidate_properties": [
+        {
+          "compound_id": "SIM-ADMET-001",
+          "absorption": 0.6312,
+          "distribution": 0.3128,
+          "metabolism": 0.8374,
+          "excretion": 0.2646,
+          "toxicity": 0.4518,
+          "passed": false
+        },
+        {
+          "compound_id": "SIM-ADMET-002",
+          "absorption": 0.7805,
+          "distribution": 0.8937,
+          "metabolism": 0.3783,
+          "excretion": 0.6603,
+          "toxicity": 0.0272,
+          "passed": true
+        },
+        {
+          "compound_id": "SIM-ADMET-003",
+          "absorption": 0.2191,
+          "distribution": 0.5248,
+          "metabolism": 0.2456,
+          "excretion": 0.591,
+          "toxicity": 0.1934,
+          "passed": false
+        },
+        {
+          "compound_id": "SIM-ADMET-004",
+          "absorption": 0.8902,
+          "distribution": 0.5196,
+          "metabolism": 0.3891,
+          "excretion": 0.7433,
+          "toxicity": 0.6845,
+          "passed": false
+        },
+        {
+          "compound_id": "SIM-ADMET-005",
+          "absorption": 0.4356,
+          "distribution": 0.651,
+          "metabolism": 0.4067,
+          "excretion": 0.7314,
+          "toxicity": 0.384,
+          "passed": false
+        },
+        {
+          "compound_id": "SIM-ADMET-006",
+          "absorption": 0.8078,
+          "distribution": 0.254,
+          "metabolism": 0.4751,
+          "excretion": 0.3554,
+          "toxicity": 0.0499,
+          "passed": false
+        },
+        {
+          "compound_id": "SIM-ADMET-007",
+          "absorption": 0.7432,
+          "distribution": 0.1466,
+          "metabolism": 0.8659,
+          "excretion": 0.4681,
+          "toxicity": 0.307,
+          "passed": false
+        },
+        {
+          "compound_id": "SIM-ADMET-008",
+          "absorption": 0.344,
+          "distribution": 0.5935,
+          "metabolism": 0.9239,
+          "excretion": 0.8785,
+          "toxicity": 0.314,
+          "passed": false
+        },
+        {
+          "compound_id": "SIM-ADMET-009",
+          "absorption": 0.2522,
+          "distribution": 0.616,
+          "metabolism": 0.4674,
+          "excretion": 0.2751,
+          "toxicity": 0.4321,
+          "passed": false
+        },
+        {
+          "compound_id": "SIM-ADMET-010",
+          "absorption": 0.2795,
+          "distribution": 0.8945,
+          "metabolism": 0.4389,
+          "excretion": 0.3515,
+          "toxicity": 0.1289,
+          "passed": false
+        },
+        {
+          "compound_id": "SIM-ADMET-011",
+          "absorption": 0.9163,
+          "distribution": 0.7805,
+          "metabolism": 0.647,
+          "excretion": 0.6509,
+          "toxicity": 0.2428,
+          "passed": true
+        },
+        {
+          "compound_id": "SIM-ADMET-012",
+          "absorption": 0.4386,
+          "distribution": 0.2888,
+          "metabolism": 0.5547,
+          "excretion": 0.6572,
+          "toxicity": 0.1266,
+          "passed": false
+        },
+        {
+          "compound_id": "SIM-ADMET-013",
+          "absorption": 0.5887,
+          "distribution": 0.3771,
+          "metabolism": 0.4434,
+          "excretion": 0.4388,
+          "toxicity": 0.3414,
+          "passed": false
+        },
+        {
+          "compound_id": "SIM-ADMET-014",
+          "absorption": 0.2184,
+          "distribution": 0.5671,
+          "metabolism": 0.3142,
+          "excretion": 0.4486,
+          "toxicity": 0.4741,
+          "passed": false
+        },
+        {
+          "compound_id": "SIM-ADMET-015",
+          "absorption": 0.4112,
+          "distribution": 0.6189,
+          "metabolism": 0.7864,
+          "excretion": 0.6682,
+          "toxicity": 0.3109,
+          "passed": false
+        },
+        {
+          "compound_id": "SIM-ADMET-016",
+          "absorption": 0.481,
+          "distribution": 0.4845,
+          "metabolism": 0.3679,
+          "excretion": 0.3166,
+          "toxicity": 0.6769,
+          "passed": false
+        },
+        {
+          "compound_id": "SIM-ADMET-017",
+          "absorption": 0.3209,
+          "distribution": 0.7003,
+          "metabolism": 0.743,
+          "excretion": 0.0369,
+          "toxicity": 0.1015,
+          "passed": false
+        },
+        {
+          "compound_id": "SIM-ADMET-018",
+          "absorption": 0.5437,
+          "distribution": 0.4479,
+          "metabolism": 0.2547,
+          "excretion": 0.7538,
+          "toxicity": 0.115,
+          "passed": true
+        },
+        {
+          "compound_id": "SIM-ADMET-019",
+          "absorption": 0.8658,
+          "distribution": 0.4884,
+          "metabolism": 0.4224,
+          "excretion": 0.4778,
+          "toxicity": 0.154,
+          "passed": true
+        },
+        {
+          "compound_id": "SIM-ADMET-020",
+          "absorption": 0.408,
+          "distribution": 0.5763,
+          "metabolism": 0.6479,
+          "excretion": 0.9545,
+          "toxicity": 0.5393,
+          "passed": false
+        },
+        {
+          "compound_id": "SIM-ADMET-021",
+          "absorption": 0.2394,
+          "distribution": 0.2679,
+          "metabolism": 0.5887,
+          "excretion": 0.2109,
+          "toxicity": 0.3737,
+          "passed": false
+        },
+        {
+          "compound_id": "SIM-ADMET-022",
+          "absorption": 0.2414,
+          "distribution": 0.6785,
+          "metabolism": 0.1057,
+          "excretion": 0.6539,
+          "toxicity": 0.9411,
+          "passed": false
+        },
+        {
+          "compound_id": "SIM-ADMET-023",
+          "absorption": 0.8681,
+          "distribution": 0.6259,
+          "metabolism": 0.5252,
+          "excretion": 0.3694,
+          "toxicity": 0.1941,
+          "passed": true
+        },
+        {
+          "compound_id": "SIM-ADMET-024",
+          "absorption": 0.7108,
+          "distribution": 0.8067,
+          "metabolism": 0.3138,
+          "excretion": 0.8923,
+          "toxicity": 0.6369,
+          "passed": false
+        },
+        {
+          "compound_id": "SIM-ADMET-025",
+          "absorption": 0.363,
+          "distribution": 0.6651,
+          "metabolism": 0.5526,
+          "excretion": 0.5804,
+          "toxicity": 0.1167,
+          "passed": false
+        },
+        {
+          "compound_id": "SIM-ADMET-026",
+          "absorption": 0.3029,
+          "distribution": 0.4799,
+          "metabolism": 0.1428,
+          "excretion": 0.6444,
+          "toxicity": 0.1336,
+          "passed": false
+        },
+        {
+          "compound_id": "SIM-ADMET-027",
+          "absorption": 0.7558,
+          "distribution": 0.976,
+          "metabolism": 0.8023,
+          "excretion": 0.4873,
+          "toxicity": 0.4587,
+          "passed": false
+        },
+        {
+          "compound_id": "SIM-ADMET-028",
+          "absorption": 0.32,
+          "distribution": 0.6374,
+          "metabolism": 0.8155,
+          "excretion": 0.5339,
+          "toxicity": 0.2005,
+          "passed": false
+        },
+        {
+          "compound_id": "SIM-ADMET-029",
+          "absorption": 0.6528,
+          "distribution": 0.6701,
+          "metabolism": 0.3301,
+          "excretion": 0.5548,
+          "toxicity": 0.374,
+          "passed": true
+        },
+        {
+          "compound_id": "SIM-ADMET-030",
+          "absorption": 0.8829,
+          "distribution": 0.7902,
+          "metabolism": 0.4335,
+          "excretion": 0.4131,
+          "toxicity": 0.0835,
+          "passed": true
+        },
+        {
+          "compound_id": "SIM-ADMET-031",
+          "absorption": 0.6487,
+          "distribution": 0.7253,
+          "metabolism": 0.4471,
+          "excretion": 0.4435,
+          "toxicity": 0.5141,
+          "passed": false
+        },
+        {
+          "compound_id": "SIM-ADMET-032",
+          "absorption": 0.3814,
+          "distribution": 0.2815,
+          "metabolism": 0.2606,
+          "excretion": 0.1101,
+          "toxicity": 0.3973,
+          "passed": false
+        },
+        {
+          "compound_id": "SIM-ADMET-033",
+          "absorption": 0.4921,
+          "distribution": 0.6451,
+          "metabolism": 0.4464,
+          "excretion": 0.5481,
+          "toxicity": 0.3976,
+          "passed": false
+        },
+        {
+          "compound_id": "SIM-ADMET-034",
+          "absorption": 0.3447,
+          "distribution": 0.4682,
+          "metabolism": 0.1379,
+          "excretion": 0.0947,
+          "toxicity": 0.2634,
+          "passed": false
+        },
+        {
+          "compound_id": "SIM-ADMET-035",
+          "absorption": 0.3754,
+          "distribution": 0.6428,
+          "metabolism": 0.5075,
+          "excretion": 0.9554,
+          "toxicity": 0.5267,
+          "passed": false
+        },
+        {
+          "compound_id": "SIM-ADMET-036",
+          "absorption": 0.5031,
+          "distribution": 0.4269,
+          "metabolism": 0.3065,
+          "excretion": 0.849,
+          "toxicity": 0.8027,
+          "passed": false
+        }
+      ],
+      "risk_distribution": [
+        {
+          "risk_level": "low",
+          "count": 6
+        },
+        {
+          "risk_level": "medium",
+          "count": 25
+        },
+        {
+          "risk_level": "high",
+          "count": 5
+        }
+      ],
+      "property_distribution": {
+        "absorption": {
+          "mean": 0.5183,
+          "std": 0.2219,
+          "bins": [
+            {
+              "min": 0.0,
+              "max": 0.1,
+              "count": 0
+            },
+            {
+              "min": 0.1,
+              "max": 0.2,
+              "count": 0
+            },
+            {
+              "min": 0.2,
+              "max": 0.3,
+              "count": 6
+            },
+            {
+              "min": 0.3,
+              "max": 0.4,
+              "count": 8
+            },
+            {
+              "min": 0.4,
+              "max": 0.5,
+              "count": 6
+            },
+            {
+              "min": 0.5,
+              "max": 0.6,
+              "count": 3
+            },
+            {
+              "min": 0.6,
+              "max": 0.7,
+              "count": 3
+            },
+            {
+              "min": 0.7,
+              "max": 0.8,
+              "count": 4
+            },
+            {
+              "min": 0.8,
+              "max": 0.9,
+              "count": 5
+            },
+            {
+              "min": 0.9,
+              "max": 1.0,
+              "count": 1
+            }
+          ]
+        },
+        "distribution": {
+          "mean": 0.5701,
+          "std": 0.1925,
+          "bins": [
+            {
+              "min": 0.0,
+              "max": 0.1,
+              "count": 0
+            },
+            {
+              "min": 0.1,
+              "max": 0.2,
+              "count": 1
+            },
+            {
+              "min": 0.2,
+              "max": 0.3,
+              "count": 4
+            },
+            {
+              "min": 0.3,
+              "max": 0.4,
+              "count": 2
+            },
+            {
+              "min": 0.4,
+              "max": 0.5,
+              "count": 6
+            },
+            {
+              "min": 0.5,
+              "max": 0.6,
+              "count": 5
+            },
+            {
+              "min": 0.6,
+              "max": 0.7,
+              "count": 10
+            },
+            {
+              "min": 0.7,
+              "max": 0.8,
+              "count": 4
+            },
+            {
+              "min": 0.8,
+              "max": 0.9,
+              "count": 3
+            },
+            {
+              "min": 0.9,
+              "max": 1.0,
+              "count": 1
+            }
+          ]
+        },
+        "metabolism": {
+          "mean": 0.4813,
+          "std": 0.2118,
+          "bins": [
+            {
+              "min": 0.0,
+              "max": 0.1,
+              "count": 0
+            },
+            {
+              "min": 0.1,
+              "max": 0.2,
+              "count": 3
+            },
+            {
+              "min": 0.2,
+              "max": 0.3,
+              "count": 3
+            },
+            {
+              "min": 0.3,
+              "max": 0.4,
+              "count": 7
+            },
+            {
+              "min": 0.4,
+              "max": 0.5,
+              "count": 9
+            },
+            {
+              "min": 0.5,
+              "max": 0.6,
+              "count": 5
+            },
+            {
+              "min": 0.6,
+              "max": 0.7,
+              "count": 2
+            },
+            {
+              "min": 0.7,
+              "max": 0.8,
+              "count": 2
+            },
+            {
+              "min": 0.8,
+              "max": 0.9,
+              "count": 4
+            },
+            {
+              "min": 0.9,
+              "max": 1.0,
+              "count": 1
+            }
+          ]
+        },
+        "excretion": {
+          "mean": 0.5295,
+          "std": 0.2344,
+          "bins": [
+            {
+              "min": 0.0,
+              "max": 0.1,
+              "count": 2
+            },
+            {
+              "min": 0.1,
+              "max": 0.2,
+              "count": 1
+            },
+            {
+              "min": 0.2,
+              "max": 0.3,
+              "count": 3
+            },
+            {
+              "min": 0.3,
+              "max": 0.4,
+              "count": 4
+            },
+            {
+              "min": 0.4,
+              "max": 0.5,
+              "count": 7
+            },
+            {
+              "min": 0.5,
+              "max": 0.6,
+              "count": 5
+            },
+            {
+              "min": 0.6,
+              "max": 0.7,
+              "count": 6
+            },
+            {
+              "min": 0.7,
+              "max": 0.8,
+              "count": 3
+            },
+            {
+              "min": 0.8,
+              "max": 0.9,
+              "count": 3
+            },
+            {
+              "min": 0.9,
+              "max": 1.0,
+              "count": 2
+            }
+          ]
+        },
+        "toxicity": {
+          "mean": 0.3464,
+          "std": 0.2183,
+          "bins": [
+            {
+              "min": 0.0,
+              "max": 0.1,
+              "count": 3
+            },
+            {
+              "min": 0.1,
+              "max": 0.2,
+              "count": 9
+            },
+            {
+              "min": 0.2,
+              "max": 0.3,
+              "count": 3
+            },
+            {
+              "min": 0.3,
+              "max": 0.4,
+              "count": 9
+            },
+            {
+              "min": 0.4,
+              "max": 0.5,
+              "count": 4
+            },
+            {
+              "min": 0.5,
+              "max": 0.6,
+              "count": 3
+            },
+            {
+              "min": 0.6,
+              "max": 0.7,
+              "count": 3
+            },
+            {
+              "min": 0.7,
+              "max": 0.8,
+              "count": 0
+            },
+            {
+              "min": 0.8,
+              "max": 0.9,
+              "count": 1
+            },
+            {
+              "min": 0.9,
+              "max": 1.0,
+              "count": 1
+            }
+          ]
+        }
+      }
+    }
   },
   "timestamp": "2026-08-10T15:04:50+08:00"
 }

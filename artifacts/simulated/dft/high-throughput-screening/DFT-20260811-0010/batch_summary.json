@@ -1,0 +1,154 @@
+{
+  "source_type": "simulated",
+  "batch_summary": {
+    "total": 200,
+    "completed": 200,
+    "converged": 187,
+    "failed": 13,
+    "qualified": 27
+  },
+  "candidate_ranking": [
+    {
+      "rank": 1,
+      "material_id": "SIM-MAT-0086",
+      "score": 1.2382,
+      "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+    },
+    {
+      "rank": 2,
+      "material_id": "SIM-MAT-0033",
+      "score": 1.16,
+      "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+    },
+    {
+      "rank": 3,
+      "material_id": "SIM-MAT-0169",
+      "score": 0.9694,
+      "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+    },
+    {
+      "rank": 4,
+      "material_id": "SIM-MAT-0067",
+      "score": 0.8391,
+      "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+    },
+    {
+      "rank": 5,
+      "material_id": "SIM-MAT-0082",
+      "score": 0.8308,
+      "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+    },
+    {
+      "rank": 6,
+      "material_id": "SIM-MAT-0111",
+      "score": 0.8286,
+      "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+    },
+    {
+      "rank": 7,
+      "material_id": "SIM-MAT-0142",
+      "score": 0.9317,
+      "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+    },
+    {
+      "rank": 8,
+      "material_id": "SIM-MAT-0071",
+      "score": 0.8888,
+      "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+    },
+    {
+      "rank": 9,
+      "material_id": "SIM-MAT-0135",
+      "score": 0.8519,
+      "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+    },
+    {
+      "rank": 10,
+      "material_id": "SIM-MAT-0150",
+      "score": 0.8593,
+      "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+    },
+    {
+      "rank": 11,
+      "material_id": "SIM-MAT-0199",
+      "score": 0.892,
+      "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+    },
+    {
+      "rank": 12,
+      "material_id": "SIM-MAT-0100",
+      "score": 0.6465,
+      "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+    },
+    {
+      "rank": 13,
+      "material_id": "SIM-MAT-0091",
+      "score": 0.7805,
+      "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+    },
+    {
+      "rank": 14,
+      "material_id": "SIM-MAT-0101",
+      "score": 0.8525,
+      "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+    },
+    {
+      "rank": 15,
+      "material_id": "SIM-MAT-0074",
+      "score": 0.6848,
+      "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+    },
+    {
+      "rank": 16,
+      "material_id": "SIM-MAT-0195",
+      "score": 0.7165,
+      "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+    },
+    {
+      "rank": 17,
+      "material_id": "SIM-MAT-0105",
+      "score": 0.6719,
+      "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+    },
+    {
+      "rank": 18,
+      "material_id": "SIM-MAT-0026",
+      "score": 0.7208,
+      "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+    },
+    {
+      "rank": 19,
+      "material_id": "SIM-MAT-0061",
+      "score": 0.6782,
+      "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+    },
+    {
+      "rank": 20,
+      "material_id": "SIM-MAT-0034",
+      "score": 0.6072,
+      "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+    }
+  ],
+  "cluster_distribution": [
+    {
+      "cluster_id": "changsha",
+      "cluster_name": "长沙",
+      "assigned": 50
+    },
+    {
+      "cluster_id": "guangzhou",
+      "cluster_name": "广州",
+      "assigned": 50
+    },
+    {
+      "cluster_id": "kunshan",
+      "cluster_name": "昆山",
+      "assigned": 50
+    },
+    {
+      "cluster_id": "jinan",
+      "cluster_name": "济南",
+      "assigned": 50
+    }
+  ]
+}

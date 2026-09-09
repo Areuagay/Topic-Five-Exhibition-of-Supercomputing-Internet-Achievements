@@ -1,0 +1,43 @@
+{
+  "code": 200,
+  "message": "success",
+  "data": {
+    "swarm-coordination": {
+      "fields": [
+        {
+          "name": "operator",
+          "label": "算子选择",
+          "type": "select",
+          "unit": "",
+          "required": true,
+          "default_value": "consensus-control",
+          "description": "选择要执行的算子库函数，与后端 /action/invoke 对齐。"
+        },
+        { "name": "uav_count", "label": "无人机数量", "type": "integer", "unit": "架", "required": true, "default_value": "1000" },
+        { "name": "simulation_steps", "label": "仿真步数", "type": "integer", "unit": "step", "required": true, "default_value": "5000" },
+        { "name": "communication_topology", "label": "通信拓扑", "type": "select", "unit": "", "required": true, "default_value": "small-world" },
+        { "name": "control_algorithm", "label": "协同控制算法", "type": "select", "unit": "", "required": true, "default_value": "consensus" },
+        { "name": "environment_disturbance", "label": "环境扰动", "type": "number", "unit": "", "required": true, "default_value": "0.05" }
+      ]
+    },
+    "path-planning": {
+      "fields": [
+        {
+          "name": "operator",
+          "label": "算子选择",
+          "type": "select",
+          "unit": "",
+          "required": true,
+          "default_value": "path-planning",
+          "description": "选择要执行的算子库函数，与后端 /action/invoke 对齐。"
+        },
+        { "name": "uav_count", "label": "无人机数量", "type": "integer", "unit": "架", "required": true, "default_value": "200" },
+        { "name": "map_resolution", "label": "地图分辨率", "type": "number", "unit": "m", "required": true, "default_value": "1.0" },
+        { "name": "planning_algorithm", "label": "规划算法", "type": "select", "unit": "", "required": true, "default_value": "rrt-star" },
+        { "name": "obstacle_density", "label": "障碍物密度", "type": "number", "unit": "%", "required": true, "default_value": "15" },
+        { "name": "max_flight_time", "label": "最大飞行时间", "type": "number", "unit": "min", "required": true, "default_value": "30" }
+      ]
+    }
+  },
+  "timestamp": "2026-08-11T12:00:00+08:00"
+}

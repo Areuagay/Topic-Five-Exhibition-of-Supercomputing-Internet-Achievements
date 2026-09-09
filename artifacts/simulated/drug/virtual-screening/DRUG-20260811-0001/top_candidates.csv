@@ -1,0 +1,17 @@
+rank,compound_id,docking_score,molecular_weight,logp,preview_url
+1,SIM-CMPD-0001,-12.5,314.4,3.6,/api/v1/files/ART-DRUG-VC01/preview
+2,SIM-CMPD-0002,-12.154,448.1,2.18,/api/v1/files/ART-DRUG-VC02/preview
+3,SIM-CMPD-0003,-12.089,331.1,1.94,/api/v1/files/ART-DRUG-VC03/preview
+4,SIM-CMPD-0004,-12.036,352.5,4.29,/api/v1/files/ART-DRUG-VC04/preview
+5,SIM-CMPD-0005,-11.983,353.2,1.09,/api/v1/files/ART-DRUG-VC05/preview
+6,SIM-CMPD-0006,-11.922,277.4,3.09,/api/v1/files/ART-DRUG-VC06/preview
+7,SIM-CMPD-0007,-11.921,433.9,2.29,/api/v1/files/ART-DRUG-VC07/preview
+8,SIM-CMPD-0008,-11.886,369.7,3.4,/api/v1/files/ART-DRUG-VC08/preview
+9,SIM-CMPD-0009,-11.852,350.8,4.07,/api/v1/files/ART-DRUG-VC09/preview
+10,SIM-CMPD-0010,-11.736,313.1,2.17,/api/v1/files/ART-DRUG-VC10/preview
+11,SIM-CMPD-0011,-11.725,314.3,4.38,/api/v1/files/ART-DRUG-VC11/preview
+12,SIM-CMPD-0012,-11.715,223.8,1.11,/api/v1/files/ART-DRUG-VC12/preview
+13,SIM-CMPD-0013,-11.705,399.9,3.99,/api/v1/files/ART-DRUG-VC13/preview
+14,SIM-CMPD-0014,-11.704,310.4,2.72,/api/v1/files/ART-DRUG-VC14/preview
+15,SIM-CMPD-0015,-11.699,283.2,3.33,/api/v1/files/ART-DRUG-VC15/preview
+16,SIM-CMPD-0016,-11.674,453.6,2.14,/api/v1/files/ART-DRUG-VC16/preview

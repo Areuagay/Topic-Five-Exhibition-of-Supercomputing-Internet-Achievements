@@ -1,0 +1,21 @@
+{
+  "code": 200,
+  "message": "success",
+  "data": [
+    {
+      "id": "virtual-screening",
+      "name": "百万级化合物库虚拟筛选",
+      "category": "虚拟药物筛选",
+      "description": "面向百万级化合物库的跨中心虚拟筛选，通过分片并行与多中心协同，实现大规模分子对接与候选化合物快速发现。",
+      "status": "available"
+    },
+    {
+      "id": "admet-prediction",
+      "name": "药物分子ADMET性质预测",
+      "category": "虚拟药物筛选",
+      "description": "对候选药物分子进行吸收、分布、代谢、排泄与毒性（ADMET）性质预测，辅助药物设计与毒性风险评估。",
+      "status": "available"
+    }
+  ],
+  "timestamp": "2026-08-11T10:00:00+08:00"
+}

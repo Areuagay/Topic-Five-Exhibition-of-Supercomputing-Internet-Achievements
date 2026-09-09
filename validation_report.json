@@ -1,0 +1,103 @@
+{
+  "source_type": "simulated",
+  "status": "PASS",
+  "failed_count": 0,
+  "results": [
+    {
+      "scenario_key": "wave-propagation",
+      "run_id": "GEO-20260811-0001",
+      "scenario_id": "wave-propagation",
+      "status": "PASS",
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "scenario_key": "tectonic-evolution",
+      "run_id": "GEO-20260811-0010",
+      "scenario_id": "tectonic-evolution",
+      "status": "PASS",
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "scenario_key": "llm-pretraining",
+      "run_id": "LLM-20260811-0001",
+      "scenario_id": "llm-pretraining",
+      "status": "PASS",
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "scenario_key": "pinn-acceleration",
+      "run_id": "LLM-20260811-0010",
+      "scenario_id": "pinn-acceleration",
+      "status": "PASS",
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "scenario_key": "vehicle-crash",
+      "run_id": "AUTO-20260811-0001",
+      "scenario_id": "vehicle-crash",
+      "status": "PASS",
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "scenario_key": "fatigue-life",
+      "run_id": "AUTO-20260811-0010",
+      "scenario_id": "fatigue-life",
+      "status": "PASS",
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "scenario_key": "swarm-coordination",
+      "run_id": "UAV-20260811-0001",
+      "scenario_id": "swarm-coordination",
+      "status": "PASS",
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "scenario_key": "path-planning",
+      "run_id": "UAV-20260811-0010",
+      "scenario_id": "path-planning",
+      "status": "PASS",
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "scenario_key": "virtual-screening",
+      "run_id": "DRUG-20260811-0001",
+      "scenario_id": "virtual-screening",
+      "status": "PASS",
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "scenario_key": "admet-prediction",
+      "run_id": "DRUG-20260811-0010",
+      "scenario_id": "admet-prediction",
+      "status": "PASS",
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "scenario_key": "band-dos",
+      "run_id": "DFT-20260811-0001",
+      "scenario_id": "band-dos",
+      "status": "PASS",
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "scenario_key": "high-throughput-screening",
+      "run_id": "DFT-20260811-0010",
+      "scenario_id": "high-throughput-screening",
+      "status": "PASS",
+      "errors": [],
+      "warnings": []
+    }
+  ]
+}

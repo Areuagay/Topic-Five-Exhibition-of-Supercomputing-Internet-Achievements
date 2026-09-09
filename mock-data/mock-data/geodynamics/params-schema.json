@@ -1,0 +1,29 @@
+{
+  "code": 200,
+  "message": "success",
+  "data": {
+    "wave-propagation": {
+      "fields": [
+        { "name": "grid_size", "label": "网格分辨率", "type": "integer", "unit": "格点", "required": true, "default_value": "2048" },
+        { "name": "model_type", "label": "介质模型", "type": "select", "unit": "", "required": true, "default_value": "layered", "description": "layered=分层模型；crust-mantle=壳幔模型" },
+        { "name": "source_depth", "label": "震源深度", "type": "number", "unit": "km", "required": true, "default_value": "15" },
+        { "name": "time_steps", "label": "时间步数", "type": "integer", "unit": "步", "required": true, "default_value": "10000" },
+        { "name": "dt", "label": "时间步长", "type": "number", "unit": "s", "required": true, "default_value": "0.001" },
+        { "name": "damping", "label": "吸收边界阻尼", "type": "number", "unit": "", "required": false, "default_value": "0.05" },
+        { "name": "operator", "label": "算子选择", "type": "select", "unit": "", "required": true, "default_value": "fd-wave-solver", "description": "选择要执行的算子库函数" }
+      ]
+    },
+    "tectonic-evolution": {
+      "fields": [
+        { "name": "viscosity", "label": "岩石圈粘度", "type": "number", "unit": "Pa·s", "required": true, "default_value": "1e21" },
+        { "name": "temp_top", "label": "顶部温度", "type": "number", "unit": "℃", "required": true, "default_value": "0" },
+        { "name": "temp_bottom", "label": "底部温度", "type": "number", "unit": "℃", "required": true, "default_value": "1350" },
+        { "name": "time_span", "label": "时间跨度", "type": "number", "unit": "Ma", "required": true, "default_value": "50" },
+        { "name": "element_type", "label": "单元类型", "type": "select", "unit": "", "required": true, "default_value": "q1", "description": "q1=四边形线性单元；q2=四边形二次单元" },
+        { "name": "refine_level", "label": "细化层级", "type": "integer", "unit": "级", "required": false, "default_value": "2" },
+        { "name": "operator", "label": "算子选择", "type": "select", "unit": "", "required": true, "default_value": "fem-pde-solver", "description": "选择要执行的算子库函数" }
+      ]
+    }
+  },
+  "timestamp": "2026-08-11T10:00:00+08:00"
+}

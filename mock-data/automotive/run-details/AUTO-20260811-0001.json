@@ -74,32 +74,3024 @@
         }
       ],
       "edges": [
-        { "source": "model-import", "target": "model-check" },
-        { "source": "model-check", "target": "boundary" },
-        { "source": "boundary", "target": "partition" },
-        { "source": "partition", "target": "solver" },
-        { "source": "solver", "target": "post" },
-        { "source": "post", "target": "validate" }
+        {
+          "source": "model-import",
+          "target": "model-check"
+        },
+        {
+          "source": "model-check",
+          "target": "boundary"
+        },
+        {
+          "source": "boundary",
+          "target": "partition"
+        },
+        {
+          "source": "partition",
+          "target": "solver"
+        },
+        {
+          "source": "solver",
+          "target": "post"
+        },
+        {
+          "source": "post",
+          "target": "validate"
+        }
       ]
     },
     "metrics": {
       "progress": 68,
       "metrics": [
-        { "name": "simulation_time", "label": "当前仿真时间", "value": 0.102, "total": 0.15, "unit": "s" },
-        { "name": "kinetic_energy", "label": "动能", "value": 241.4, "total": 0, "unit": "kJ" },
-        { "name": "internal_energy", "label": "内能", "value": 196.8, "total": 0, "unit": "kJ" },
-        { "name": "hourglass_energy_ratio", "label": "沙漏能占比", "value": 3.1, "total": 100, "unit": "%" },
-        { "name": "total_energy_error", "label": "总能量误差", "value": 2.8, "total": 100, "unit": "%" },
-        { "name": "peak_acceleration", "label": "加速度峰值", "value": 32.1, "total": 0, "unit": "g" },
-        { "name": "cpu_utilization", "label": "CPU利用率", "value": 88, "total": 100, "unit": "%" }
+        {
+          "name": "simulation_time",
+          "label": "当前仿真时间",
+          "value": 0.102,
+          "total": 0.15,
+          "unit": "s"
+        },
+        {
+          "name": "kinetic_energy",
+          "label": "动能",
+          "value": 241.4,
+          "total": 0,
+          "unit": "kJ"
+        },
+        {
+          "name": "internal_energy",
+          "label": "内能",
+          "value": 196.8,
+          "total": 0,
+          "unit": "kJ"
+        },
+        {
+          "name": "hourglass_energy_ratio",
+          "label": "沙漏能占比",
+          "value": 3.1,
+          "total": 100,
+          "unit": "%"
+        },
+        {
+          "name": "total_energy_error",
+          "label": "总能量误差",
+          "value": 2.8,
+          "total": 100,
+          "unit": "%"
+        },
+        {
+          "name": "peak_acceleration",
+          "label": "加速度峰值",
+          "value": 32.1,
+          "total": 0,
+          "unit": "g"
+        },
+        {
+          "name": "cpu_utilization",
+          "label": "CPU利用率",
+          "value": 88,
+          "total": 100,
+          "unit": "%"
+        }
       ],
       "energy_series": [
-        { "time": 0, "kinetic": 320, "internal": 8, "hourglass": 0.4 },
-        { "time": 0.03, "kinetic": 294.2, "internal": 41.1, "hourglass": 1.8 },
-        { "time": 0.06, "kinetic": 271.3, "internal": 88.5, "hourglass": 4.9 },
-        { "time": 0.09, "kinetic": 248.6, "internal": 163.8, "hourglass": 7.2 },
-        { "time": 0.102, "kinetic": 241.4, "internal": 196.8, "hourglass": 8 }
-      ]
+        {
+          "time": 0.0,
+          "kinetic": 325.563,
+          "internal": 8.042,
+          "hourglass": 0.422
+        },
+        {
+          "time": 0.00126,
+          "kinetic": 324.425,
+          "internal": 13.449,
+          "hourglass": 0.348
+        },
+        {
+          "time": 0.00252,
+          "kinetic": 318.468,
+          "internal": 19.03,
+          "hourglass": 0.648
+        },
+        {
+          "time": 0.00378,
+          "kinetic": 307.643,
+          "internal": 24.39,
+          "hourglass": 0.828
+        },
+        {
+          "time": 0.00504,
+          "kinetic": 308.804,
+          "internal": 29.773,
+          "hourglass": 0.861
+        },
+        {
+          "time": 0.0063,
+          "kinetic": 299.635,
+          "internal": 34.567,
+          "hourglass": 1.03
+        },
+        {
+          "time": 0.00756,
+          "kinetic": 295.332,
+          "internal": 39.753,
+          "hourglass": 1.031
+        },
+        {
+          "time": 0.00882,
+          "kinetic": 288.799,
+          "internal": 45.265,
+          "hourglass": 1.04
+        },
+        {
+          "time": 0.01008,
+          "kinetic": 285.63,
+          "internal": 49.403,
+          "hourglass": 1.341
+        },
+        {
+          "time": 0.01134,
+          "kinetic": 278.916,
+          "internal": 54.252,
+          "hourglass": 1.294
+        },
+        {
+          "time": 0.01261,
+          "kinetic": 276.223,
+          "internal": 59.268,
+          "hourglass": 1.542
+        },
+        {
+          "time": 0.01387,
+          "kinetic": 271.111,
+          "internal": 63.818,
+          "hourglass": 1.505
+        },
+        {
+          "time": 0.01513,
+          "kinetic": 264.907,
+          "internal": 69.078,
+          "hourglass": 1.545
+        },
+        {
+          "time": 0.01639,
+          "kinetic": 262.834,
+          "internal": 73.134,
+          "hourglass": 1.76
+        },
+        {
+          "time": 0.01765,
+          "kinetic": 257.434,
+          "internal": 77.092,
+          "hourglass": 1.629
+        },
+        {
+          "time": 0.01891,
+          "kinetic": 253.259,
+          "internal": 83.315,
+          "hourglass": 1.939
+        },
+        {
+          "time": 0.02017,
+          "kinetic": 248.091,
+          "internal": 85.837,
+          "hourglass": 2.086
+        },
+        {
+          "time": 0.02143,
+          "kinetic": 243.62,
+          "internal": 90.35,
+          "hourglass": 2.074
+        },
+        {
+          "time": 0.02269,
+          "kinetic": 240.424,
+          "internal": 93.857,
+          "hourglass": 2.151
+        },
+        {
+          "time": 0.02395,
+          "kinetic": 235.216,
+          "internal": 98.264,
+          "hourglass": 2.27
+        },
+        {
+          "time": 0.02521,
+          "kinetic": 232.171,
+          "internal": 101.849,
+          "hourglass": 2.402
+        },
+        {
+          "time": 0.02647,
+          "kinetic": 225.182,
+          "internal": 106.914,
+          "hourglass": 2.564
+        },
+        {
+          "time": 0.02773,
+          "kinetic": 223.407,
+          "internal": 111.205,
+          "hourglass": 2.64
+        },
+        {
+          "time": 0.02899,
+          "kinetic": 218.92,
+          "internal": 113.15,
+          "hourglass": 2.653
+        },
+        {
+          "time": 0.03025,
+          "kinetic": 217.419,
+          "internal": 116.07,
+          "hourglass": 2.576
+        },
+        {
+          "time": 0.03151,
+          "kinetic": 212.802,
+          "internal": 120.25,
+          "hourglass": 2.865
+        },
+        {
+          "time": 0.03277,
+          "kinetic": 209.243,
+          "internal": 124.801,
+          "hourglass": 2.951
+        },
+        {
+          "time": 0.03403,
+          "kinetic": 205.794,
+          "internal": 127.646,
+          "hourglass": 3.171
+        },
+        {
+          "time": 0.03529,
+          "kinetic": 201.131,
+          "internal": 131.594,
+          "hourglass": 2.975
+        },
+        {
+          "time": 0.03655,
+          "kinetic": 198.315,
+          "internal": 135.927,
+          "hourglass": 2.944
+        },
+        {
+          "time": 0.03782,
+          "kinetic": 194.035,
+          "internal": 137.589,
+          "hourglass": 3.307
+        },
+        {
+          "time": 0.03908,
+          "kinetic": 189.527,
+          "internal": 141.394,
+          "hourglass": 3.333
+        },
+        {
+          "time": 0.04034,
+          "kinetic": 186.508,
+          "internal": 144.573,
+          "hourglass": 3.4
+        },
+        {
+          "time": 0.0416,
+          "kinetic": 184.136,
+          "internal": 149.039,
+          "hourglass": 3.391
+        },
+        {
+          "time": 0.04286,
+          "kinetic": 182.431,
+          "internal": 150.784,
+          "hourglass": 3.693
+        },
+        {
+          "time": 0.04412,
+          "kinetic": 177.207,
+          "internal": 154.626,
+          "hourglass": 3.906
+        },
+        {
+          "time": 0.04538,
+          "kinetic": 177.05,
+          "internal": 156.628,
+          "hourglass": 3.597
+        },
+        {
+          "time": 0.04664,
+          "kinetic": 173.522,
+          "internal": 159.347,
+          "hourglass": 3.529
+        },
+        {
+          "time": 0.0479,
+          "kinetic": 171.364,
+          "internal": 162.631,
+          "hourglass": 4.075
+        },
+        {
+          "time": 0.04916,
+          "kinetic": 166.619,
+          "internal": 164.077,
+          "hourglass": 3.826
+        },
+        {
+          "time": 0.05042,
+          "kinetic": 164.699,
+          "internal": 168.51,
+          "hourglass": 3.861
+        },
+        {
+          "time": 0.05168,
+          "kinetic": 161.174,
+          "internal": 170.473,
+          "hourglass": 4.112
+        },
+        {
+          "time": 0.05294,
+          "kinetic": 158.059,
+          "internal": 173.269,
+          "hourglass": 4.082
+        },
+        {
+          "time": 0.0542,
+          "kinetic": 155.417,
+          "internal": 176.26,
+          "hourglass": 4.096
+        },
+        {
+          "time": 0.05546,
+          "kinetic": 152.402,
+          "internal": 178.078,
+          "hourglass": 4.225
+        },
+        {
+          "time": 0.05672,
+          "kinetic": 149.961,
+          "internal": 181.298,
+          "hourglass": 4.179
+        },
+        {
+          "time": 0.05798,
+          "kinetic": 147.702,
+          "internal": 183.764,
+          "hourglass": 4.205
+        },
+        {
+          "time": 0.05924,
+          "kinetic": 145.937,
+          "internal": 187.924,
+          "hourglass": 4.326
+        },
+        {
+          "time": 0.0605,
+          "kinetic": 142.234,
+          "internal": 189.449,
+          "hourglass": 4.173
+        },
+        {
+          "time": 0.06176,
+          "kinetic": 140.798,
+          "internal": 192.388,
+          "hourglass": 4.132
+        },
+        {
+          "time": 0.06303,
+          "kinetic": 137.667,
+          "internal": 192.454,
+          "hourglass": 4.314
+        },
+        {
+          "time": 0.06429,
+          "kinetic": 136.824,
+          "internal": 195.809,
+          "hourglass": 4.45
+        },
+        {
+          "time": 0.06555,
+          "kinetic": 132.552,
+          "internal": 197.198,
+          "hourglass": 4.354
+        },
+        {
+          "time": 0.06681,
+          "kinetic": 130.297,
+          "internal": 198.628,
+          "hourglass": 4.287
+        },
+        {
+          "time": 0.06807,
+          "kinetic": 128.914,
+          "internal": 202.969,
+          "hourglass": 4.415
+        },
+        {
+          "time": 0.06933,
+          "kinetic": 126.172,
+          "internal": 205.865,
+          "hourglass": 4.303
+        },
+        {
+          "time": 0.07059,
+          "kinetic": 124.194,
+          "internal": 205.97,
+          "hourglass": 4.37
+        },
+        {
+          "time": 0.07185,
+          "kinetic": 122.314,
+          "internal": 208.662,
+          "hourglass": 4.293
+        },
+        {
+          "time": 0.07311,
+          "kinetic": 121.485,
+          "internal": 210.789,
+          "hourglass": 4.373
+        },
+        {
+          "time": 0.07437,
+          "kinetic": 117.925,
+          "internal": 212.322,
+          "hourglass": 4.442
+        },
+        {
+          "time": 0.07563,
+          "kinetic": 115.81,
+          "internal": 213.773,
+          "hourglass": 4.452
+        },
+        {
+          "time": 0.07689,
+          "kinetic": 115.884,
+          "internal": 216.839,
+          "hourglass": 4.437
+        },
+        {
+          "time": 0.07815,
+          "kinetic": 112.981,
+          "internal": 218.907,
+          "hourglass": 4.366
+        },
+        {
+          "time": 0.07941,
+          "kinetic": 111.172,
+          "internal": 220.049,
+          "hourglass": 4.365
+        },
+        {
+          "time": 0.08067,
+          "kinetic": 108.419,
+          "internal": 221.466,
+          "hourglass": 4.188
+        },
+        {
+          "time": 0.08193,
+          "kinetic": 106.99,
+          "internal": 224.098,
+          "hourglass": 4.492
+        },
+        {
+          "time": 0.08319,
+          "kinetic": 105.691,
+          "internal": 226.418,
+          "hourglass": 4.295
+        },
+        {
+          "time": 0.08445,
+          "kinetic": 103.816,
+          "internal": 225.278,
+          "hourglass": 4.247
+        },
+        {
+          "time": 0.08571,
+          "kinetic": 101.308,
+          "internal": 227.843,
+          "hourglass": 4.303
+        },
+        {
+          "time": 0.08697,
+          "kinetic": 99.164,
+          "internal": 228.827,
+          "hourglass": 4.316
+        },
+        {
+          "time": 0.08824,
+          "kinetic": 98.361,
+          "internal": 231.542,
+          "hourglass": 4.09
+        },
+        {
+          "time": 0.0895,
+          "kinetic": 96.758,
+          "internal": 232.805,
+          "hourglass": 3.976
+        },
+        {
+          "time": 0.09076,
+          "kinetic": 95.619,
+          "internal": 233.22,
+          "hourglass": 4.277
+        },
+        {
+          "time": 0.09202,
+          "kinetic": 93.751,
+          "internal": 236.528,
+          "hourglass": 3.835
+        },
+        {
+          "time": 0.09328,
+          "kinetic": 91.719,
+          "internal": 237.348,
+          "hourglass": 4.062
+        },
+        {
+          "time": 0.09454,
+          "kinetic": 90.932,
+          "internal": 238.487,
+          "hourglass": 4.004
+        },
+        {
+          "time": 0.0958,
+          "kinetic": 89.551,
+          "internal": 241.527,
+          "hourglass": 3.893
+        },
+        {
+          "time": 0.09706,
+          "kinetic": 87.061,
+          "internal": 241.532,
+          "hourglass": 4.088
+        },
+        {
+          "time": 0.09832,
+          "kinetic": 87.027,
+          "internal": 244.454,
+          "hourglass": 3.823
+        },
+        {
+          "time": 0.09958,
+          "kinetic": 84.974,
+          "internal": 245.116,
+          "hourglass": 3.952
+        },
+        {
+          "time": 0.10084,
+          "kinetic": 83.938,
+          "internal": 247.505,
+          "hourglass": 3.867
+        },
+        {
+          "time": 0.1021,
+          "kinetic": 82.045,
+          "internal": 249.64,
+          "hourglass": 3.645
+        },
+        {
+          "time": 0.10336,
+          "kinetic": 81.567,
+          "internal": 247.965,
+          "hourglass": 3.59
+        },
+        {
+          "time": 0.10462,
+          "kinetic": 79.738,
+          "internal": 249.679,
+          "hourglass": 3.681
+        },
+        {
+          "time": 0.10588,
+          "kinetic": 78.628,
+          "internal": 251.265,
+          "hourglass": 3.799
+        },
+        {
+          "time": 0.10714,
+          "kinetic": 78.14,
+          "internal": 251.579,
+          "hourglass": 3.706
+        },
+        {
+          "time": 0.1084,
+          "kinetic": 76.138,
+          "internal": 251.41,
+          "hourglass": 3.546
+        },
+        {
+          "time": 0.10966,
+          "kinetic": 74.906,
+          "internal": 255.062,
+          "hourglass": 3.564
+        },
+        {
+          "time": 0.11092,
+          "kinetic": 73.578,
+          "internal": 256.659,
+          "hourglass": 3.58
+        },
+        {
+          "time": 0.11218,
+          "kinetic": 72.165,
+          "internal": 256.789,
+          "hourglass": 3.36
+        },
+        {
+          "time": 0.11345,
+          "kinetic": 70.778,
+          "internal": 259.508,
+          "hourglass": 3.499
+        },
+        {
+          "time": 0.11471,
+          "kinetic": 70.027,
+          "internal": 257.59,
+          "hourglass": 3.439
+        },
+        {
+          "time": 0.11597,
+          "kinetic": 69.418,
+          "internal": 260.183,
+          "hourglass": 3.237
+        },
+        {
+          "time": 0.11723,
+          "kinetic": 67.628,
+          "internal": 262.216,
+          "hourglass": 3.22
+        },
+        {
+          "time": 0.11849,
+          "kinetic": 67.088,
+          "internal": 264.433,
+          "hourglass": 3.205
+        },
+        {
+          "time": 0.11975,
+          "kinetic": 65.568,
+          "internal": 264.294,
+          "hourglass": 3.039
+        },
+        {
+          "time": 0.12101,
+          "kinetic": 64.558,
+          "internal": 265.65,
+          "hourglass": 3.012
+        },
+        {
+          "time": 0.12227,
+          "kinetic": 63.061,
+          "internal": 268.046,
+          "hourglass": 2.949
+        },
+        {
+          "time": 0.12353,
+          "kinetic": 63.004,
+          "internal": 266.403,
+          "hourglass": 3.042
+        },
+        {
+          "time": 0.12479,
+          "kinetic": 61.933,
+          "internal": 271.982,
+          "hourglass": 2.899
+        },
+        {
+          "time": 0.12605,
+          "kinetic": 61.071,
+          "internal": 266.629,
+          "hourglass": 2.85
+        },
+        {
+          "time": 0.12731,
+          "kinetic": 59.873,
+          "internal": 268.943,
+          "hourglass": 3.011
+        },
+        {
+          "time": 0.12857,
+          "kinetic": 59.331,
+          "internal": 268.948,
+          "hourglass": 2.728
+        },
+        {
+          "time": 0.12983,
+          "kinetic": 58.499,
+          "internal": 270.742,
+          "hourglass": 2.775
+        },
+        {
+          "time": 0.13109,
+          "kinetic": 56.786,
+          "internal": 271.721,
+          "hourglass": 2.574
+        },
+        {
+          "time": 0.13235,
+          "kinetic": 56.496,
+          "internal": 274.371,
+          "hourglass": 2.652
+        },
+        {
+          "time": 0.13361,
+          "kinetic": 55.506,
+          "internal": 271.036,
+          "hourglass": 2.605
+        },
+        {
+          "time": 0.13487,
+          "kinetic": 54.336,
+          "internal": 273.728,
+          "hourglass": 2.477
+        },
+        {
+          "time": 0.13613,
+          "kinetic": 53.748,
+          "internal": 276.684,
+          "hourglass": 2.476
+        },
+        {
+          "time": 0.13739,
+          "kinetic": 53.266,
+          "internal": 275.82,
+          "hourglass": 2.347
+        },
+        {
+          "time": 0.13866,
+          "kinetic": 52.036,
+          "internal": 276.878,
+          "hourglass": 2.54
+        },
+        {
+          "time": 0.13992,
+          "kinetic": 50.975,
+          "internal": 278.286,
+          "hourglass": 2.322
+        },
+        {
+          "time": 0.14118,
+          "kinetic": 50.535,
+          "internal": 276.683,
+          "hourglass": 2.372
+        },
+        {
+          "time": 0.14244,
+          "kinetic": 50.037,
+          "internal": 280.359,
+          "hourglass": 2.387
+        },
+        {
+          "time": 0.1437,
+          "kinetic": 48.816,
+          "internal": 281.777,
+          "hourglass": 2.345
+        },
+        {
+          "time": 0.14496,
+          "kinetic": 47.853,
+          "internal": 280.497,
+          "hourglass": 2.21
+        },
+        {
+          "time": 0.14622,
+          "kinetic": 47.849,
+          "internal": 281.553,
+          "hourglass": 2.193
+        },
+        {
+          "time": 0.14748,
+          "kinetic": 46.786,
+          "internal": 285.64,
+          "hourglass": 2.368
+        },
+        {
+          "time": 0.14874,
+          "kinetic": 46.061,
+          "internal": 281.445,
+          "hourglass": 2.207
+        },
+        {
+          "time": 0.15,
+          "kinetic": 45.351,
+          "internal": 283.134,
+          "hourglass": 2.228
+        }
+      ],
+      "domain_data": {
+        "source_type": "simulated",
+        "execution_mode": "simulated",
+        "scenario_id": "vehicle-crash",
+        "energy_series": [
+          {
+            "time": 0.0,
+            "kinetic_energy": 325.563,
+            "internal_energy": 8.042,
+            "hourglass_energy": 0.422,
+            "kinetic": 325.563,
+            "internal": 8.042,
+            "hourglass": 0.422
+          },
+          {
+            "time": 0.00126,
+            "kinetic_energy": 324.425,
+            "internal_energy": 13.449,
+            "hourglass_energy": 0.348,
+            "kinetic": 324.425,
+            "internal": 13.449,
+            "hourglass": 0.348
+          },
+          {
+            "time": 0.00252,
+            "kinetic_energy": 318.468,
+            "internal_energy": 19.03,
+            "hourglass_energy": 0.648,
+            "kinetic": 318.468,
+            "internal": 19.03,
+            "hourglass": 0.648
+          },
+          {
+            "time": 0.00378,
+            "kinetic_energy": 307.643,
+            "internal_energy": 24.39,
+            "hourglass_energy": 0.828,
+            "kinetic": 307.643,
+            "internal": 24.39,
+            "hourglass": 0.828
+          },
+          {
+            "time": 0.00504,
+            "kinetic_energy": 308.804,
+            "internal_energy": 29.773,
+            "hourglass_energy": 0.861,
+            "kinetic": 308.804,
+            "internal": 29.773,
+            "hourglass": 0.861
+          },
+          {
+            "time": 0.0063,
+            "kinetic_energy": 299.635,
+            "internal_energy": 34.567,
+            "hourglass_energy": 1.03,
+            "kinetic": 299.635,
+            "internal": 34.567,
+            "hourglass": 1.03
+          },
+          {
+            "time": 0.00756,
+            "kinetic_energy": 295.332,
+            "internal_energy": 39.753,
+            "hourglass_energy": 1.031,
+            "kinetic": 295.332,
+            "internal": 39.753,
+            "hourglass": 1.031
+          },
+          {
+            "time": 0.00882,
+            "kinetic_energy": 288.799,
+            "internal_energy": 45.265,
+            "hourglass_energy": 1.04,
+            "kinetic": 288.799,
+            "internal": 45.265,
+            "hourglass": 1.04
+          },
+          {
+            "time": 0.01008,
+            "kinetic_energy": 285.63,
+            "internal_energy": 49.403,
+            "hourglass_energy": 1.341,
+            "kinetic": 285.63,
+            "internal": 49.403,
+            "hourglass": 1.341
+          },
+          {
+            "time": 0.01134,
+            "kinetic_energy": 278.916,
+            "internal_energy": 54.252,
+            "hourglass_energy": 1.294,
+            "kinetic": 278.916,
+            "internal": 54.252,
+            "hourglass": 1.294
+          },
+          {
+            "time": 0.01261,
+            "kinetic_energy": 276.223,
+            "internal_energy": 59.268,
+            "hourglass_energy": 1.542,
+            "kinetic": 276.223,
+            "internal": 59.268,
+            "hourglass": 1.542
+          },
+          {
+            "time": 0.01387,
+            "kinetic_energy": 271.111,
+            "internal_energy": 63.818,
+            "hourglass_energy": 1.505,
+            "kinetic": 271.111,
+            "internal": 63.818,
+            "hourglass": 1.505
+          },
+          {
+            "time": 0.01513,
+            "kinetic_energy": 264.907,
+            "internal_energy": 69.078,
+            "hourglass_energy": 1.545,
+            "kinetic": 264.907,
+            "internal": 69.078,
+            "hourglass": 1.545
+          },
+          {
+            "time": 0.01639,
+            "kinetic_energy": 262.834,
+            "internal_energy": 73.134,
+            "hourglass_energy": 1.76,
+            "kinetic": 262.834,
+            "internal": 73.134,
+            "hourglass": 1.76
+          },
+          {
+            "time": 0.01765,
+            "kinetic_energy": 257.434,
+            "internal_energy": 77.092,
+            "hourglass_energy": 1.629,
+            "kinetic": 257.434,
+            "internal": 77.092,
+            "hourglass": 1.629
+          },
+          {
+            "time": 0.01891,
+            "kinetic_energy": 253.259,
+            "internal_energy": 83.315,
+            "hourglass_energy": 1.939,
+            "kinetic": 253.259,
+            "internal": 83.315,
+            "hourglass": 1.939
+          },
+          {
+            "time": 0.02017,
+            "kinetic_energy": 248.091,
+            "internal_energy": 85.837,
+            "hourglass_energy": 2.086,
+            "kinetic": 248.091,
+            "internal": 85.837,
+            "hourglass": 2.086
+          },
+          {
+            "time": 0.02143,
+            "kinetic_energy": 243.62,
+            "internal_energy": 90.35,
+            "hourglass_energy": 2.074,
+            "kinetic": 243.62,
+            "internal": 90.35,
+            "hourglass": 2.074
+          },
+          {
+            "time": 0.02269,
+            "kinetic_energy": 240.424,
+            "internal_energy": 93.857,
+            "hourglass_energy": 2.151,
+            "kinetic": 240.424,
+            "internal": 93.857,
+            "hourglass": 2.151
+          },
+          {
+            "time": 0.02395,
+            "kinetic_energy": 235.216,
+            "internal_energy": 98.264,
+            "hourglass_energy": 2.27,
+            "kinetic": 235.216,
+            "internal": 98.264,
+            "hourglass": 2.27
+          },
+          {
+            "time": 0.02521,
+            "kinetic_energy": 232.171,
+            "internal_energy": 101.849,
+            "hourglass_energy": 2.402,
+            "kinetic": 232.171,
+            "internal": 101.849,
+            "hourglass": 2.402
+          },
+          {
+            "time": 0.02647,
+            "kinetic_energy": 225.182,
+            "internal_energy": 106.914,
+            "hourglass_energy": 2.564,
+            "kinetic": 225.182,
+            "internal": 106.914,
+            "hourglass": 2.564
+          },
+          {
+            "time": 0.02773,
+            "kinetic_energy": 223.407,
+            "internal_energy": 111.205,
+            "hourglass_energy": 2.64,
+            "kinetic": 223.407,
+            "internal": 111.205,
+            "hourglass": 2.64
+          },
+          {
+            "time": 0.02899,
+            "kinetic_energy": 218.92,
+            "internal_energy": 113.15,
+            "hourglass_energy": 2.653,
+            "kinetic": 218.92,
+            "internal": 113.15,
+            "hourglass": 2.653
+          },
+          {
+            "time": 0.03025,
+            "kinetic_energy": 217.419,
+            "internal_energy": 116.07,
+            "hourglass_energy": 2.576,
+            "kinetic": 217.419,
+            "internal": 116.07,
+            "hourglass": 2.576
+          },
+          {
+            "time": 0.03151,
+            "kinetic_energy": 212.802,
+            "internal_energy": 120.25,
+            "hourglass_energy": 2.865,
+            "kinetic": 212.802,
+            "internal": 120.25,
+            "hourglass": 2.865
+          },
+          {
+            "time": 0.03277,
+            "kinetic_energy": 209.243,
+            "internal_energy": 124.801,
+            "hourglass_energy": 2.951,
+            "kinetic": 209.243,
+            "internal": 124.801,
+            "hourglass": 2.951
+          },
+          {
+            "time": 0.03403,
+            "kinetic_energy": 205.794,
+            "internal_energy": 127.646,
+            "hourglass_energy": 3.171,
+            "kinetic": 205.794,
+            "internal": 127.646,
+            "hourglass": 3.171
+          },
+          {
+            "time": 0.03529,
+            "kinetic_energy": 201.131,
+            "internal_energy": 131.594,
+            "hourglass_energy": 2.975,
+            "kinetic": 201.131,
+            "internal": 131.594,
+            "hourglass": 2.975
+          },
+          {
+            "time": 0.03655,
+            "kinetic_energy": 198.315,
+            "internal_energy": 135.927,
+            "hourglass_energy": 2.944,
+            "kinetic": 198.315,
+            "internal": 135.927,
+            "hourglass": 2.944
+          },
+          {
+            "time": 0.03782,
+            "kinetic_energy": 194.035,
+            "internal_energy": 137.589,
+            "hourglass_energy": 3.307,
+            "kinetic": 194.035,
+            "internal": 137.589,
+            "hourglass": 3.307
+          },
+          {
+            "time": 0.03908,
+            "kinetic_energy": 189.527,
+            "internal_energy": 141.394,
+            "hourglass_energy": 3.333,
+            "kinetic": 189.527,
+            "internal": 141.394,
+            "hourglass": 3.333
+          },
+          {
+            "time": 0.04034,
+            "kinetic_energy": 186.508,
+            "internal_energy": 144.573,
+            "hourglass_energy": 3.4,
+            "kinetic": 186.508,
+            "internal": 144.573,
+            "hourglass": 3.4
+          },
+          {
+            "time": 0.0416,
+            "kinetic_energy": 184.136,
+            "internal_energy": 149.039,
+            "hourglass_energy": 3.391,
+            "kinetic": 184.136,
+            "internal": 149.039,
+            "hourglass": 3.391
+          },
+          {
+            "time": 0.04286,
+            "kinetic_energy": 182.431,
+            "internal_energy": 150.784,
+            "hourglass_energy": 3.693,
+            "kinetic": 182.431,
+            "internal": 150.784,
+            "hourglass": 3.693
+          },
+          {
+            "time": 0.04412,
+            "kinetic_energy": 177.207,
+            "internal_energy": 154.626,
+            "hourglass_energy": 3.906,
+            "kinetic": 177.207,
+            "internal": 154.626,
+            "hourglass": 3.906
+          },
+          {
+            "time": 0.04538,
+            "kinetic_energy": 177.05,
+            "internal_energy": 156.628,
+            "hourglass_energy": 3.597,
+            "kinetic": 177.05,
+            "internal": 156.628,
+            "hourglass": 3.597
+          },
+          {
+            "time": 0.04664,
+            "kinetic_energy": 173.522,
+            "internal_energy": 159.347,
+            "hourglass_energy": 3.529,
+            "kinetic": 173.522,
+            "internal": 159.347,
+            "hourglass": 3.529
+          },
+          {
+            "time": 0.0479,
+            "kinetic_energy": 171.364,
+            "internal_energy": 162.631,
+            "hourglass_energy": 4.075,
+            "kinetic": 171.364,
+            "internal": 162.631,
+            "hourglass": 4.075
+          },
+          {
+            "time": 0.04916,
+            "kinetic_energy": 166.619,
+            "internal_energy": 164.077,
+            "hourglass_energy": 3.826,
+            "kinetic": 166.619,
+            "internal": 164.077,
+            "hourglass": 3.826
+          },
+          {
+            "time": 0.05042,
+            "kinetic_energy": 164.699,
+            "internal_energy": 168.51,
+            "hourglass_energy": 3.861,
+            "kinetic": 164.699,
+            "internal": 168.51,
+            "hourglass": 3.861
+          },
+          {
+            "time": 0.05168,
+            "kinetic_energy": 161.174,
+            "internal_energy": 170.473,
+            "hourglass_energy": 4.112,
+            "kinetic": 161.174,
+            "internal": 170.473,
+            "hourglass": 4.112
+          },
+          {
+            "time": 0.05294,
+            "kinetic_energy": 158.059,
+            "internal_energy": 173.269,
+            "hourglass_energy": 4.082,
+            "kinetic": 158.059,
+            "internal": 173.269,
+            "hourglass": 4.082
+          },
+          {
+            "time": 0.0542,
+            "kinetic_energy": 155.417,
+            "internal_energy": 176.26,
+            "hourglass_energy": 4.096,
+            "kinetic": 155.417,
+            "internal": 176.26,
+            "hourglass": 4.096
+          },
+          {
+            "time": 0.05546,
+            "kinetic_energy": 152.402,
+            "internal_energy": 178.078,
+            "hourglass_energy": 4.225,
+            "kinetic": 152.402,
+            "internal": 178.078,
+            "hourglass": 4.225
+          },
+          {
+            "time": 0.05672,
+            "kinetic_energy": 149.961,
+            "internal_energy": 181.298,
+            "hourglass_energy": 4.179,
+            "kinetic": 149.961,
+            "internal": 181.298,
+            "hourglass": 4.179
+          },
+          {
+            "time": 0.05798,
+            "kinetic_energy": 147.702,
+            "internal_energy": 183.764,
+            "hourglass_energy": 4.205,
+            "kinetic": 147.702,
+            "internal": 183.764,
+            "hourglass": 4.205
+          },
+          {
+            "time": 0.05924,
+            "kinetic_energy": 145.937,
+            "internal_energy": 187.924,
+            "hourglass_energy": 4.326,
+            "kinetic": 145.937,
+            "internal": 187.924,
+            "hourglass": 4.326
+          },
+          {
+            "time": 0.0605,
+            "kinetic_energy": 142.234,
+            "internal_energy": 189.449,
+            "hourglass_energy": 4.173,
+            "kinetic": 142.234,
+            "internal": 189.449,
+            "hourglass": 4.173
+          },
+          {
+            "time": 0.06176,
+            "kinetic_energy": 140.798,
+            "internal_energy": 192.388,
+            "hourglass_energy": 4.132,
+            "kinetic": 140.798,
+            "internal": 192.388,
+            "hourglass": 4.132
+          },
+          {
+            "time": 0.06303,
+            "kinetic_energy": 137.667,
+            "internal_energy": 192.454,
+            "hourglass_energy": 4.314,
+            "kinetic": 137.667,
+            "internal": 192.454,
+            "hourglass": 4.314
+          },
+          {
+            "time": 0.06429,
+            "kinetic_energy": 136.824,
+            "internal_energy": 195.809,
+            "hourglass_energy": 4.45,
+            "kinetic": 136.824,
+            "internal": 195.809,
+            "hourglass": 4.45
+          },
+          {
+            "time": 0.06555,
+            "kinetic_energy": 132.552,
+            "internal_energy": 197.198,
+            "hourglass_energy": 4.354,
+            "kinetic": 132.552,
+            "internal": 197.198,
+            "hourglass": 4.354
+          },
+          {
+            "time": 0.06681,
+            "kinetic_energy": 130.297,
+            "internal_energy": 198.628,
+            "hourglass_energy": 4.287,
+            "kinetic": 130.297,
+            "internal": 198.628,
+            "hourglass": 4.287
+          },
+          {
+            "time": 0.06807,
+            "kinetic_energy": 128.914,
+            "internal_energy": 202.969,
+            "hourglass_energy": 4.415,
+            "kinetic": 128.914,
+            "internal": 202.969,
+            "hourglass": 4.415
+          },
+          {
+            "time": 0.06933,
+            "kinetic_energy": 126.172,
+            "internal_energy": 205.865,
+            "hourglass_energy": 4.303,
+            "kinetic": 126.172,
+            "internal": 205.865,
+            "hourglass": 4.303
+          },
+          {
+            "time": 0.07059,
+            "kinetic_energy": 124.194,
+            "internal_energy": 205.97,
+            "hourglass_energy": 4.37,
+            "kinetic": 124.194,
+            "internal": 205.97,
+            "hourglass": 4.37
+          },
+          {
+            "time": 0.07185,
+            "kinetic_energy": 122.314,
+            "internal_energy": 208.662,
+            "hourglass_energy": 4.293,
+            "kinetic": 122.314,
+            "internal": 208.662,
+            "hourglass": 4.293
+          },
+          {
+            "time": 0.07311,
+            "kinetic_energy": 121.485,
+            "internal_energy": 210.789,
+            "hourglass_energy": 4.373,
+            "kinetic": 121.485,
+            "internal": 210.789,
+            "hourglass": 4.373
+          },
+          {
+            "time": 0.07437,
+            "kinetic_energy": 117.925,
+            "internal_energy": 212.322,
+            "hourglass_energy": 4.442,
+            "kinetic": 117.925,
+            "internal": 212.322,
+            "hourglass": 4.442
+          },
+          {
+            "time": 0.07563,
+            "kinetic_energy": 115.81,
+            "internal_energy": 213.773,
+            "hourglass_energy": 4.452,
+            "kinetic": 115.81,
+            "internal": 213.773,
+            "hourglass": 4.452
+          },
+          {
+            "time": 0.07689,
+            "kinetic_energy": 115.884,
+            "internal_energy": 216.839,
+            "hourglass_energy": 4.437,
+            "kinetic": 115.884,
+            "internal": 216.839,
+            "hourglass": 4.437
+          },
+          {
+            "time": 0.07815,
+            "kinetic_energy": 112.981,
+            "internal_energy": 218.907,
+            "hourglass_energy": 4.366,
+            "kinetic": 112.981,
+            "internal": 218.907,
+            "hourglass": 4.366
+          },
+          {
+            "time": 0.07941,
+            "kinetic_energy": 111.172,
+            "internal_energy": 220.049,
+            "hourglass_energy": 4.365,
+            "kinetic": 111.172,
+            "internal": 220.049,
+            "hourglass": 4.365
+          },
+          {
+            "time": 0.08067,
+            "kinetic_energy": 108.419,
+            "internal_energy": 221.466,
+            "hourglass_energy": 4.188,
+            "kinetic": 108.419,
+            "internal": 221.466,
+            "hourglass": 4.188
+          },
+          {
+            "time": 0.08193,
+            "kinetic_energy": 106.99,
+            "internal_energy": 224.098,
+            "hourglass_energy": 4.492,
+            "kinetic": 106.99,
+            "internal": 224.098,
+            "hourglass": 4.492
+          },
+          {
+            "time": 0.08319,
+            "kinetic_energy": 105.691,
+            "internal_energy": 226.418,
+            "hourglass_energy": 4.295,
+            "kinetic": 105.691,
+            "internal": 226.418,
+            "hourglass": 4.295
+          },
+          {
+            "time": 0.08445,
+            "kinetic_energy": 103.816,
+            "internal_energy": 225.278,
+            "hourglass_energy": 4.247,
+            "kinetic": 103.816,
+            "internal": 225.278,
+            "hourglass": 4.247
+          },
+          {
+            "time": 0.08571,
+            "kinetic_energy": 101.308,
+            "internal_energy": 227.843,
+            "hourglass_energy": 4.303,
+            "kinetic": 101.308,
+            "internal": 227.843,
+            "hourglass": 4.303
+          },
+          {
+            "time": 0.08697,
+            "kinetic_energy": 99.164,
+            "internal_energy": 228.827,
+            "hourglass_energy": 4.316,
+            "kinetic": 99.164,
+            "internal": 228.827,
+            "hourglass": 4.316
+          },
+          {
+            "time": 0.08824,
+            "kinetic_energy": 98.361,
+            "internal_energy": 231.542,
+            "hourglass_energy": 4.09,
+            "kinetic": 98.361,
+            "internal": 231.542,
+            "hourglass": 4.09
+          },
+          {
+            "time": 0.0895,
+            "kinetic_energy": 96.758,
+            "internal_energy": 232.805,
+            "hourglass_energy": 3.976,
+            "kinetic": 96.758,
+            "internal": 232.805,
+            "hourglass": 3.976
+          },
+          {
+            "time": 0.09076,
+            "kinetic_energy": 95.619,
+            "internal_energy": 233.22,
+            "hourglass_energy": 4.277,
+            "kinetic": 95.619,
+            "internal": 233.22,
+            "hourglass": 4.277
+          },
+          {
+            "time": 0.09202,
+            "kinetic_energy": 93.751,
+            "internal_energy": 236.528,
+            "hourglass_energy": 3.835,
+            "kinetic": 93.751,
+            "internal": 236.528,
+            "hourglass": 3.835
+          },
+          {
+            "time": 0.09328,
+            "kinetic_energy": 91.719,
+            "internal_energy": 237.348,
+            "hourglass_energy": 4.062,
+            "kinetic": 91.719,
+            "internal": 237.348,
+            "hourglass": 4.062
+          },
+          {
+            "time": 0.09454,
+            "kinetic_energy": 90.932,
+            "internal_energy": 238.487,
+            "hourglass_energy": 4.004,
+            "kinetic": 90.932,
+            "internal": 238.487,
+            "hourglass": 4.004
+          },
+          {
+            "time": 0.0958,
+            "kinetic_energy": 89.551,
+            "internal_energy": 241.527,
+            "hourglass_energy": 3.893,
+            "kinetic": 89.551,
+            "internal": 241.527,
+            "hourglass": 3.893
+          },
+          {
+            "time": 0.09706,
+            "kinetic_energy": 87.061,
+            "internal_energy": 241.532,
+            "hourglass_energy": 4.088,
+            "kinetic": 87.061,
+            "internal": 241.532,
+            "hourglass": 4.088
+          },
+          {
+            "time": 0.09832,
+            "kinetic_energy": 87.027,
+            "internal_energy": 244.454,
+            "hourglass_energy": 3.823,
+            "kinetic": 87.027,
+            "internal": 244.454,
+            "hourglass": 3.823
+          },
+          {
+            "time": 0.09958,
+            "kinetic_energy": 84.974,
+            "internal_energy": 245.116,
+            "hourglass_energy": 3.952,
+            "kinetic": 84.974,
+            "internal": 245.116,
+            "hourglass": 3.952
+          },
+          {
+            "time": 0.10084,
+            "kinetic_energy": 83.938,
+            "internal_energy": 247.505,
+            "hourglass_energy": 3.867,
+            "kinetic": 83.938,
+            "internal": 247.505,
+            "hourglass": 3.867
+          },
+          {
+            "time": 0.1021,
+            "kinetic_energy": 82.045,
+            "internal_energy": 249.64,
+            "hourglass_energy": 3.645,
+            "kinetic": 82.045,
+            "internal": 249.64,
+            "hourglass": 3.645
+          },
+          {
+            "time": 0.10336,
+            "kinetic_energy": 81.567,
+            "internal_energy": 247.965,
+            "hourglass_energy": 3.59,
+            "kinetic": 81.567,
+            "internal": 247.965,
+            "hourglass": 3.59
+          },
+          {
+            "time": 0.10462,
+            "kinetic_energy": 79.738,
+            "internal_energy": 249.679,
+            "hourglass_energy": 3.681,
+            "kinetic": 79.738,
+            "internal": 249.679,
+            "hourglass": 3.681
+          },
+          {
+            "time": 0.10588,
+            "kinetic_energy": 78.628,
+            "internal_energy": 251.265,
+            "hourglass_energy": 3.799,
+            "kinetic": 78.628,
+            "internal": 251.265,
+            "hourglass": 3.799
+          },
+          {
+            "time": 0.10714,
+            "kinetic_energy": 78.14,
+            "internal_energy": 251.579,
+            "hourglass_energy": 3.706,
+            "kinetic": 78.14,
+            "internal": 251.579,
+            "hourglass": 3.706
+          },
+          {
+            "time": 0.1084,
+            "kinetic_energy": 76.138,
+            "internal_energy": 251.41,
+            "hourglass_energy": 3.546,
+            "kinetic": 76.138,
+            "internal": 251.41,
+            "hourglass": 3.546
+          },
+          {
+            "time": 0.10966,
+            "kinetic_energy": 74.906,
+            "internal_energy": 255.062,
+            "hourglass_energy": 3.564,
+            "kinetic": 74.906,
+            "internal": 255.062,
+            "hourglass": 3.564
+          },
+          {
+            "time": 0.11092,
+            "kinetic_energy": 73.578,
+            "internal_energy": 256.659,
+            "hourglass_energy": 3.58,
+            "kinetic": 73.578,
+            "internal": 256.659,
+            "hourglass": 3.58
+          },
+          {
+            "time": 0.11218,
+            "kinetic_energy": 72.165,
+            "internal_energy": 256.789,
+            "hourglass_energy": 3.36,
+            "kinetic": 72.165,
+            "internal": 256.789,
+            "hourglass": 3.36
+          },
+          {
+            "time": 0.11345,
+            "kinetic_energy": 70.778,
+            "internal_energy": 259.508,
+            "hourglass_energy": 3.499,
+            "kinetic": 70.778,
+            "internal": 259.508,
+            "hourglass": 3.499
+          },
+          {
+            "time": 0.11471,
+            "kinetic_energy": 70.027,
+            "internal_energy": 257.59,
+            "hourglass_energy": 3.439,
+            "kinetic": 70.027,
+            "internal": 257.59,
+            "hourglass": 3.439
+          },
+          {
+            "time": 0.11597,
+            "kinetic_energy": 69.418,
+            "internal_energy": 260.183,
+            "hourglass_energy": 3.237,
+            "kinetic": 69.418,
+            "internal": 260.183,
+            "hourglass": 3.237
+          },
+          {
+            "time": 0.11723,
+            "kinetic_energy": 67.628,
+            "internal_energy": 262.216,
+            "hourglass_energy": 3.22,
+            "kinetic": 67.628,
+            "internal": 262.216,
+            "hourglass": 3.22
+          },
+          {
+            "time": 0.11849,
+            "kinetic_energy": 67.088,
+            "internal_energy": 264.433,
+            "hourglass_energy": 3.205,
+            "kinetic": 67.088,
+            "internal": 264.433,
+            "hourglass": 3.205
+          },
+          {
+            "time": 0.11975,
+            "kinetic_energy": 65.568,
+            "internal_energy": 264.294,
+            "hourglass_energy": 3.039,
+            "kinetic": 65.568,
+            "internal": 264.294,
+            "hourglass": 3.039
+          },
+          {
+            "time": 0.12101,
+            "kinetic_energy": 64.558,
+            "internal_energy": 265.65,
+            "hourglass_energy": 3.012,
+            "kinetic": 64.558,
+            "internal": 265.65,
+            "hourglass": 3.012
+          },
+          {
+            "time": 0.12227,
+            "kinetic_energy": 63.061,
+            "internal_energy": 268.046,
+            "hourglass_energy": 2.949,
+            "kinetic": 63.061,
+            "internal": 268.046,
+            "hourglass": 2.949
+          },
+          {
+            "time": 0.12353,
+            "kinetic_energy": 63.004,
+            "internal_energy": 266.403,
+            "hourglass_energy": 3.042,
+            "kinetic": 63.004,
+            "internal": 266.403,
+            "hourglass": 3.042
+          },
+          {
+            "time": 0.12479,
+            "kinetic_energy": 61.933,
+            "internal_energy": 271.982,
+            "hourglass_energy": 2.899,
+            "kinetic": 61.933,
+            "internal": 271.982,
+            "hourglass": 2.899
+          },
+          {
+            "time": 0.12605,
+            "kinetic_energy": 61.071,
+            "internal_energy": 266.629,
+            "hourglass_energy": 2.85,
+            "kinetic": 61.071,
+            "internal": 266.629,
+            "hourglass": 2.85
+          },
+          {
+            "time": 0.12731,
+            "kinetic_energy": 59.873,
+            "internal_energy": 268.943,
+            "hourglass_energy": 3.011,
+            "kinetic": 59.873,
+            "internal": 268.943,
+            "hourglass": 3.011
+          },
+          {
+            "time": 0.12857,
+            "kinetic_energy": 59.331,
+            "internal_energy": 268.948,
+            "hourglass_energy": 2.728,
+            "kinetic": 59.331,
+            "internal": 268.948,
+            "hourglass": 2.728
+          },
+          {
+            "time": 0.12983,
+            "kinetic_energy": 58.499,
+            "internal_energy": 270.742,
+            "hourglass_energy": 2.775,
+            "kinetic": 58.499,
+            "internal": 270.742,
+            "hourglass": 2.775
+          },
+          {
+            "time": 0.13109,
+            "kinetic_energy": 56.786,
+            "internal_energy": 271.721,
+            "hourglass_energy": 2.574,
+            "kinetic": 56.786,
+            "internal": 271.721,
+            "hourglass": 2.574
+          },
+          {
+            "time": 0.13235,
+            "kinetic_energy": 56.496,
+            "internal_energy": 274.371,
+            "hourglass_energy": 2.652,
+            "kinetic": 56.496,
+            "internal": 274.371,
+            "hourglass": 2.652
+          },
+          {
+            "time": 0.13361,
+            "kinetic_energy": 55.506,
+            "internal_energy": 271.036,
+            "hourglass_energy": 2.605,
+            "kinetic": 55.506,
+            "internal": 271.036,
+            "hourglass": 2.605
+          },
+          {
+            "time": 0.13487,
+            "kinetic_energy": 54.336,
+            "internal_energy": 273.728,
+            "hourglass_energy": 2.477,
+            "kinetic": 54.336,
+            "internal": 273.728,
+            "hourglass": 2.477
+          },
+          {
+            "time": 0.13613,
+            "kinetic_energy": 53.748,
+            "internal_energy": 276.684,
+            "hourglass_energy": 2.476,
+            "kinetic": 53.748,
+            "internal": 276.684,
+            "hourglass": 2.476
+          },
+          {
+            "time": 0.13739,
+            "kinetic_energy": 53.266,
+            "internal_energy": 275.82,
+            "hourglass_energy": 2.347,
+            "kinetic": 53.266,
+            "internal": 275.82,
+            "hourglass": 2.347
+          },
+          {
+            "time": 0.13866,
+            "kinetic_energy": 52.036,
+            "internal_energy": 276.878,
+            "hourglass_energy": 2.54,
+            "kinetic": 52.036,
+            "internal": 276.878,
+            "hourglass": 2.54
+          },
+          {
+            "time": 0.13992,
+            "kinetic_energy": 50.975,
+            "internal_energy": 278.286,
+            "hourglass_energy": 2.322,
+            "kinetic": 50.975,
+            "internal": 278.286,
+            "hourglass": 2.322
+          },
+          {
+            "time": 0.14118,
+            "kinetic_energy": 50.535,
+            "internal_energy": 276.683,
+            "hourglass_energy": 2.372,
+            "kinetic": 50.535,
+            "internal": 276.683,
+            "hourglass": 2.372
+          },
+          {
+            "time": 0.14244,
+            "kinetic_energy": 50.037,
+            "internal_energy": 280.359,
+            "hourglass_energy": 2.387,
+            "kinetic": 50.037,
+            "internal": 280.359,
+            "hourglass": 2.387
+          },
+          {
+            "time": 0.1437,
+            "kinetic_energy": 48.816,
+            "internal_energy": 281.777,
+            "hourglass_energy": 2.345,
+            "kinetic": 48.816,
+            "internal": 281.777,
+            "hourglass": 2.345
+          },
+          {
+            "time": 0.14496,
+            "kinetic_energy": 47.853,
+            "internal_energy": 280.497,
+            "hourglass_energy": 2.21,
+            "kinetic": 47.853,
+            "internal": 280.497,
+            "hourglass": 2.21
+          },
+          {
+            "time": 0.14622,
+            "kinetic_energy": 47.849,
+            "internal_energy": 281.553,
+            "hourglass_energy": 2.193,
+            "kinetic": 47.849,
+            "internal": 281.553,
+            "hourglass": 2.193
+          },
+          {
+            "time": 0.14748,
+            "kinetic_energy": 46.786,
+            "internal_energy": 285.64,
+            "hourglass_energy": 2.368,
+            "kinetic": 46.786,
+            "internal": 285.64,
+            "hourglass": 2.368
+          },
+          {
+            "time": 0.14874,
+            "kinetic_energy": 46.061,
+            "internal_energy": 281.445,
+            "hourglass_energy": 2.207,
+            "kinetic": 46.061,
+            "internal": 281.445,
+            "hourglass": 2.207
+          },
+          {
+            "time": 0.15,
+            "kinetic_energy": 45.351,
+            "internal_energy": 283.134,
+            "hourglass_energy": 2.228,
+            "kinetic": 45.351,
+            "internal": 283.134,
+            "hourglass": 2.228
+          }
+        ],
+        "acceleration_series": [
+          {
+            "time": 0.0,
+            "acceleration_g": 0.599
+          },
+          {
+            "time": 0.00094,
+            "acceleration_g": 0.665
+          },
+          {
+            "time": 0.00189,
+            "acceleration_g": 0.758
+          },
+          {
+            "time": 0.00283,
+            "acceleration_g": -0.965
+          },
+          {
+            "time": 0.00377,
+            "acceleration_g": 0.783
+          },
+          {
+            "time": 0.00472,
+            "acceleration_g": 0.385
+          },
+          {
+            "time": 0.00566,
+            "acceleration_g": -0.506
+          },
+          {
+            "time": 0.0066,
+            "acceleration_g": 0.165
+          },
+          {
+            "time": 0.00755,
+            "acceleration_g": -0.18
+          },
+          {
+            "time": 0.00849,
+            "acceleration_g": 0.877
+          },
+          {
+            "time": 0.00943,
+            "acceleration_g": 0.06
+          },
+          {
+            "time": 0.01038,
+            "acceleration_g": 0.327
+          },
+          {
+            "time": 0.01132,
+            "acceleration_g": 0.588
+          },
+          {
+            "time": 0.01226,
+            "acceleration_g": -0.198
+          },
+          {
+            "time": 0.01321,
+            "acceleration_g": 1.416
+          },
+          {
+            "time": 0.01415,
+            "acceleration_g": 2.373
+          },
+          {
+            "time": 0.01509,
+            "acceleration_g": 3.313
+          },
+          {
+            "time": 0.01604,
+            "acceleration_g": 2.157
+          },
+          {
+            "time": 0.01698,
+            "acceleration_g": 1.734
+          },
+          {
+            "time": 0.01792,
+            "acceleration_g": 3.204
+          },
+          {
+            "time": 0.01887,
+            "acceleration_g": 3.612
+          },
+          {
+            "time": 0.01981,
+            "acceleration_g": 5.307
+          },
+          {
+            "time": 0.02075,
+            "acceleration_g": 4.837
+          },
+          {
+            "time": 0.0217,
+            "acceleration_g": 5.091
+          },
+          {
+            "time": 0.02264,
+            "acceleration_g": 6.198
+          },
+          {
+            "time": 0.02358,
+            "acceleration_g": 7.178
+          },
+          {
+            "time": 0.02453,
+            "acceleration_g": 9.042
+          },
+          {
+            "time": 0.02547,
+            "acceleration_g": 10.51
+          },
+          {
+            "time": 0.02642,
+            "acceleration_g": 11.736
+          },
+          {
+            "time": 0.02736,
+            "acceleration_g": 13.514
+          },
+          {
+            "time": 0.0283,
+            "acceleration_g": 15.132
+          },
+          {
+            "time": 0.02925,
+            "acceleration_g": 16.061
+          },
+          {
+            "time": 0.03019,
+            "acceleration_g": 17.957
+          },
+          {
+            "time": 0.03113,
+            "acceleration_g": 19.513
+          },
+          {
+            "time": 0.03208,
+            "acceleration_g": 21.818
+          },
+          {
+            "time": 0.03302,
+            "acceleration_g": 23.399
+          },
+          {
+            "time": 0.03396,
+            "acceleration_g": 25.861
+          },
+          {
+            "time": 0.03491,
+            "acceleration_g": 27.371
+          },
+          {
+            "time": 0.03585,
+            "acceleration_g": 29.817
+          },
+          {
+            "time": 0.03679,
+            "acceleration_g": 30.758
+          },
+          {
+            "time": 0.03774,
+            "acceleration_g": 32.454
+          },
+          {
+            "time": 0.03868,
+            "acceleration_g": 34.807
+          },
+          {
+            "time": 0.03962,
+            "acceleration_g": 35.694
+          },
+          {
+            "time": 0.04057,
+            "acceleration_g": 35.734
+          },
+          {
+            "time": 0.04151,
+            "acceleration_g": 37.799
+          },
+          {
+            "time": 0.04245,
+            "acceleration_g": 38.329
+          },
+          {
+            "time": 0.0434,
+            "acceleration_g": 38.265
+          },
+          {
+            "time": 0.04434,
+            "acceleration_g": 39.639
+          },
+          {
+            "time": 0.04528,
+            "acceleration_g": 39.134
+          },
+          {
+            "time": 0.04623,
+            "acceleration_g": 38.929
+          },
+          {
+            "time": 0.04717,
+            "acceleration_g": 39.402
+          },
+          {
+            "time": 0.04811,
+            "acceleration_g": 39.088
+          },
+          {
+            "time": 0.04906,
+            "acceleration_g": 38.437
+          },
+          {
+            "time": 0.05,
+            "acceleration_g": 38.519
+          },
+          {
+            "time": 0.05094,
+            "acceleration_g": 36.351
+          },
+          {
+            "time": 0.05189,
+            "acceleration_g": 34.492
+          },
+          {
+            "time": 0.05283,
+            "acceleration_g": 33.449
+          },
+          {
+            "time": 0.05377,
+            "acceleration_g": 31.646
+          },
+          {
+            "time": 0.05472,
+            "acceleration_g": 30.276
+          },
+          {
+            "time": 0.05566,
+            "acceleration_g": 29.917
+          },
+          {
+            "time": 0.0566,
+            "acceleration_g": 27.781
+          },
+          {
+            "time": 0.05755,
+            "acceleration_g": 25.92
+          },
+          {
+            "time": 0.05849,
+            "acceleration_g": 23.375
+          },
+          {
+            "time": 0.05943,
+            "acceleration_g": 22.159
+          },
+          {
+            "time": 0.06038,
+            "acceleration_g": 22.029
+          },
+          {
+            "time": 0.06132,
+            "acceleration_g": 20.619
+          },
+          {
+            "time": 0.06226,
+            "acceleration_g": 20.028
+          },
+          {
+            "time": 0.06321,
+            "acceleration_g": 17.645
+          },
+          {
+            "time": 0.06415,
+            "acceleration_g": 15.497
+          },
+          {
+            "time": 0.06509,
+            "acceleration_g": 14.327
+          },
+          {
+            "time": 0.06604,
+            "acceleration_g": 14.506
+          },
+          {
+            "time": 0.06698,
+            "acceleration_g": 13.468
+          },
+          {
+            "time": 0.06792,
+            "acceleration_g": 13.763
+          },
+          {
+            "time": 0.06887,
+            "acceleration_g": 12.084
+          },
+          {
+            "time": 0.06981,
+            "acceleration_g": 11.602
+          },
+          {
+            "time": 0.07075,
+            "acceleration_g": 10.524
+          },
+          {
+            "time": 0.0717,
+            "acceleration_g": 9.663
+          },
+          {
+            "time": 0.07264,
+            "acceleration_g": 10.145
+          },
+          {
+            "time": 0.07358,
+            "acceleration_g": 9.224
+          },
+          {
+            "time": 0.07453,
+            "acceleration_g": 9.894
+          },
+          {
+            "time": 0.07547,
+            "acceleration_g": 9.693
+          },
+          {
+            "time": 0.07642,
+            "acceleration_g": 8.825
+          },
+          {
+            "time": 0.07736,
+            "acceleration_g": 9.382
+          },
+          {
+            "time": 0.0783,
+            "acceleration_g": 8.939
+          },
+          {
+            "time": 0.07925,
+            "acceleration_g": 8.994
+          },
+          {
+            "time": 0.08019,
+            "acceleration_g": 9.551
+          },
+          {
+            "time": 0.08113,
+            "acceleration_g": 8.253
+          },
+          {
+            "time": 0.08208,
+            "acceleration_g": 8.985
+          },
+          {
+            "time": 0.08302,
+            "acceleration_g": 8.657
+          },
+          {
+            "time": 0.08396,
+            "acceleration_g": 7.597
+          },
+          {
+            "time": 0.08491,
+            "acceleration_g": 8.027
+          },
+          {
+            "time": 0.08585,
+            "acceleration_g": 7.387
+          },
+          {
+            "time": 0.08679,
+            "acceleration_g": 7.008
+          },
+          {
+            "time": 0.08774,
+            "acceleration_g": 9.01
+          },
+          {
+            "time": 0.08868,
+            "acceleration_g": 7.721
+          },
+          {
+            "time": 0.08962,
+            "acceleration_g": 6.685
+          },
+          {
+            "time": 0.09057,
+            "acceleration_g": 7.377
+          },
+          {
+            "time": 0.09151,
+            "acceleration_g": 7.119
+          },
+          {
+            "time": 0.09245,
+            "acceleration_g": 7.076
+          },
+          {
+            "time": 0.0934,
+            "acceleration_g": 6.024
+          },
+          {
+            "time": 0.09434,
+            "acceleration_g": 5.714
+          },
+          {
+            "time": 0.09528,
+            "acceleration_g": 6.319
+          },
+          {
+            "time": 0.09623,
+            "acceleration_g": 5.97
+          },
+          {
+            "time": 0.09717,
+            "acceleration_g": 6.038
+          },
+          {
+            "time": 0.09811,
+            "acceleration_g": 4.922
+          },
+          {
+            "time": 0.09906,
+            "acceleration_g": 4.954
+          },
+          {
+            "time": 0.1,
+            "acceleration_g": 5.468
+          },
+          {
+            "time": 0.10094,
+            "acceleration_g": 4.839
+          },
+          {
+            "time": 0.10189,
+            "acceleration_g": 4.451
+          },
+          {
+            "time": 0.10283,
+            "acceleration_g": 4.66
+          },
+          {
+            "time": 0.10377,
+            "acceleration_g": 3.376
+          },
+          {
+            "time": 0.10472,
+            "acceleration_g": 4.656
+          },
+          {
+            "time": 0.10566,
+            "acceleration_g": 3.675
+          },
+          {
+            "time": 0.1066,
+            "acceleration_g": 4.795
+          },
+          {
+            "time": 0.10755,
+            "acceleration_g": 3.039
+          },
+          {
+            "time": 0.10849,
+            "acceleration_g": 1.771
+          },
+          {
+            "time": 0.10943,
+            "acceleration_g": 2.189
+          },
+          {
+            "time": 0.11038,
+            "acceleration_g": 3.825
+          },
+          {
+            "time": 0.11132,
+            "acceleration_g": 1.201
+          },
+          {
+            "time": 0.11226,
+            "acceleration_g": 2.545
+          },
+          {
+            "time": 0.11321,
+            "acceleration_g": 1.662
+          },
+          {
+            "time": 0.11415,
+            "acceleration_g": 2.455
+          },
+          {
+            "time": 0.11509,
+            "acceleration_g": 2.272
+          },
+          {
+            "time": 0.11604,
+            "acceleration_g": 1.115
+          },
+          {
+            "time": 0.11698,
+            "acceleration_g": 1.132
+          },
+          {
+            "time": 0.11792,
+            "acceleration_g": 1.9
+          },
+          {
+            "time": 0.11887,
+            "acceleration_g": 1.319
+          },
+          {
+            "time": 0.11981,
+            "acceleration_g": 1.122
+          },
+          {
+            "time": 0.12075,
+            "acceleration_g": 0.7
+          },
+          {
+            "time": 0.1217,
+            "acceleration_g": 0.177
+          },
+          {
+            "time": 0.12264,
+            "acceleration_g": 0.295
+          },
+          {
+            "time": 0.12358,
+            "acceleration_g": 1.24
+          },
+          {
+            "time": 0.12453,
+            "acceleration_g": -0.243
+          },
+          {
+            "time": 0.12547,
+            "acceleration_g": 0.166
+          },
+          {
+            "time": 0.12642,
+            "acceleration_g": 0.82
+          },
+          {
+            "time": 0.12736,
+            "acceleration_g": 0.449
+          },
+          {
+            "time": 0.1283,
+            "acceleration_g": 0.102
+          },
+          {
+            "time": 0.12925,
+            "acceleration_g": 0.739
+          },
+          {
+            "time": 0.13019,
+            "acceleration_g": -0.549
+          },
+          {
+            "time": 0.13113,
+            "acceleration_g": 0.495
+          },
+          {
+            "time": 0.13208,
+            "acceleration_g": 0.238
+          },
+          {
+            "time": 0.13302,
+            "acceleration_g": 0.745
+          },
+          {
+            "time": 0.13396,
+            "acceleration_g": 0.536
+          },
+          {
+            "time": 0.13491,
+            "acceleration_g": 0.123
+          },
+          {
+            "time": 0.13585,
+            "acceleration_g": -0.735
+          },
+          {
+            "time": 0.13679,
+            "acceleration_g": 0.976
+          },
+          {
+            "time": 0.13774,
+            "acceleration_g": 0.355
+          },
+          {
+            "time": 0.13868,
+            "acceleration_g": 1.535
+          },
+          {
+            "time": 0.13962,
+            "acceleration_g": -0.321
+          },
+          {
+            "time": 0.14057,
+            "acceleration_g": 0.346
+          },
+          {
+            "time": 0.14151,
+            "acceleration_g": -0.011
+          },
+          {
+            "time": 0.14245,
+            "acceleration_g": -0.19
+          },
+          {
+            "time": 0.1434,
+            "acceleration_g": 0.468
+          },
+          {
+            "time": 0.14434,
+            "acceleration_g": -0.546
+          },
+          {
+            "time": 0.14528,
+            "acceleration_g": -0.35
+          },
+          {
+            "time": 0.14623,
+            "acceleration_g": -0.301
+          },
+          {
+            "time": 0.14717,
+            "acceleration_g": 0.602
+          },
+          {
+            "time": 0.14811,
+            "acceleration_g": 0.593
+          },
+          {
+            "time": 0.14906,
+            "acceleration_g": 1.155
+          },
+          {
+            "time": 0.15,
+            "acceleration_g": -0.475
+          }
+        ],
+        "intrusion_series": [
+          {
+            "time": 0.0,
+            "intrusion_mm": 23.5
+          },
+          {
+            "time": 0.00126,
+            "intrusion_mm": 24.03
+          },
+          {
+            "time": 0.00252,
+            "intrusion_mm": 26.21
+          },
+          {
+            "time": 0.00378,
+            "intrusion_mm": 26.95
+          },
+          {
+            "time": 0.00504,
+            "intrusion_mm": 26.95
+          },
+          {
+            "time": 0.0063,
+            "intrusion_mm": 28.27
+          },
+          {
+            "time": 0.00756,
+            "intrusion_mm": 28.66
+          },
+          {
+            "time": 0.00882,
+            "intrusion_mm": 31.0
+          },
+          {
+            "time": 0.01008,
+            "intrusion_mm": 33.56
+          },
+          {
+            "time": 0.01134,
+            "intrusion_mm": 33.56
+          },
+          {
+            "time": 0.01261,
+            "intrusion_mm": 33.66
+          },
+          {
+            "time": 0.01387,
+            "intrusion_mm": 35.28
+          },
+          {
+            "time": 0.01513,
+            "intrusion_mm": 37.3
+          },
+          {
+            "time": 0.01639,
+            "intrusion_mm": 38.77
+          },
+          {
+            "time": 0.01765,
+            "intrusion_mm": 39.99
+          },
+          {
+            "time": 0.01891,
+            "intrusion_mm": 41.19
+          },
+          {
+            "time": 0.02017,
+            "intrusion_mm": 42.93
+          },
+          {
+            "time": 0.02143,
+            "intrusion_mm": 44.0
+          },
+          {
+            "time": 0.02269,
+            "intrusion_mm": 44.0
+          },
+          {
+            "time": 0.02395,
+            "intrusion_mm": 46.12
+          },
+          {
+            "time": 0.02521,
+            "intrusion_mm": 49.03
+          },
+          {
+            "time": 0.02647,
+            "intrusion_mm": 50.47
+          },
+          {
+            "time": 0.02773,
+            "intrusion_mm": 50.95
+          },
+          {
+            "time": 0.02899,
+            "intrusion_mm": 53.73
+          },
+          {
+            "time": 0.03025,
+            "intrusion_mm": 55.55
+          },
+          {
+            "time": 0.03151,
+            "intrusion_mm": 57.53
+          },
+          {
+            "time": 0.03277,
+            "intrusion_mm": 57.53
+          },
+          {
+            "time": 0.03403,
+            "intrusion_mm": 59.66
+          },
+          {
+            "time": 0.03529,
+            "intrusion_mm": 61.54
+          },
+          {
+            "time": 0.03655,
+            "intrusion_mm": 65.02
+          },
+          {
+            "time": 0.03782,
+            "intrusion_mm": 65.02
+          },
+          {
+            "time": 0.03908,
+            "intrusion_mm": 67.99
+          },
+          {
+            "time": 0.04034,
+            "intrusion_mm": 71.28
+          },
+          {
+            "time": 0.0416,
+            "intrusion_mm": 71.87
+          },
+          {
+            "time": 0.04286,
+            "intrusion_mm": 71.87
+          },
+          {
+            "time": 0.04412,
+            "intrusion_mm": 74.87
+          },
+          {
+            "time": 0.04538,
+            "intrusion_mm": 76.89
+          },
+          {
+            "time": 0.04664,
+            "intrusion_mm": 77.48
+          },
+          {
+            "time": 0.0479,
+            "intrusion_mm": 80.62
+          },
+          {
+            "time": 0.04916,
+            "intrusion_mm": 82.34
+          },
+          {
+            "time": 0.05042,
+            "intrusion_mm": 84.88
+          },
+          {
+            "time": 0.05168,
+            "intrusion_mm": 88.54
+          },
+          {
+            "time": 0.05294,
+            "intrusion_mm": 89.44
+          },
+          {
+            "time": 0.0542,
+            "intrusion_mm": 90.91
+          },
+          {
+            "time": 0.05546,
+            "intrusion_mm": 93.04
+          },
+          {
+            "time": 0.05672,
+            "intrusion_mm": 93.57
+          },
+          {
+            "time": 0.05798,
+            "intrusion_mm": 97.27
+          },
+          {
+            "time": 0.05924,
+            "intrusion_mm": 100.58
+          },
+          {
+            "time": 0.0605,
+            "intrusion_mm": 101.24
+          },
+          {
+            "time": 0.06176,
+            "intrusion_mm": 104.09
+          },
+          {
+            "time": 0.06303,
+            "intrusion_mm": 106.43
+          },
+          {
+            "time": 0.06429,
+            "intrusion_mm": 107.61
+          },
+          {
+            "time": 0.06555,
+            "intrusion_mm": 111.21
+          },
+          {
+            "time": 0.06681,
+            "intrusion_mm": 111.21
+          },
+          {
+            "time": 0.06807,
+            "intrusion_mm": 114.41
+          },
+          {
+            "time": 0.06933,
+            "intrusion_mm": 114.57
+          },
+          {
+            "time": 0.07059,
+            "intrusion_mm": 117.21
+          },
+          {
+            "time": 0.07185,
+            "intrusion_mm": 120.02
+          },
+          {
+            "time": 0.07311,
+            "intrusion_mm": 121.35
+          },
+          {
+            "time": 0.07437,
+            "intrusion_mm": 123.08
+          },
+          {
+            "time": 0.07563,
+            "intrusion_mm": 125.87
+          },
+          {
+            "time": 0.07689,
+            "intrusion_mm": 126.74
+          },
+          {
+            "time": 0.07815,
+            "intrusion_mm": 129.06
+          },
+          {
+            "time": 0.07941,
+            "intrusion_mm": 130.9
+          },
+          {
+            "time": 0.08067,
+            "intrusion_mm": 133.55
+          },
+          {
+            "time": 0.08193,
+            "intrusion_mm": 133.55
+          },
+          {
+            "time": 0.08319,
+            "intrusion_mm": 134.23
+          },
+          {
+            "time": 0.08445,
+            "intrusion_mm": 136.28
+          },
+          {
+            "time": 0.08571,
+            "intrusion_mm": 138.3
+          },
+          {
+            "time": 0.08697,
+            "intrusion_mm": 140.36
+          },
+          {
+            "time": 0.08824,
+            "intrusion_mm": 140.36
+          },
+          {
+            "time": 0.0895,
+            "intrusion_mm": 142.74
+          },
+          {
+            "time": 0.09076,
+            "intrusion_mm": 145.21
+          },
+          {
+            "time": 0.09202,
+            "intrusion_mm": 145.21
+          },
+          {
+            "time": 0.09328,
+            "intrusion_mm": 145.88
+          },
+          {
+            "time": 0.09454,
+            "intrusion_mm": 147.78
+          },
+          {
+            "time": 0.0958,
+            "intrusion_mm": 149.47
+          },
+          {
+            "time": 0.09706,
+            "intrusion_mm": 149.66
+          },
+          {
+            "time": 0.09832,
+            "intrusion_mm": 151.94
+          },
+          {
+            "time": 0.09958,
+            "intrusion_mm": 153.24
+          },
+          {
+            "time": 0.10084,
+            "intrusion_mm": 154.62
+          },
+          {
+            "time": 0.1021,
+            "intrusion_mm": 154.62
+          },
+          {
+            "time": 0.10336,
+            "intrusion_mm": 155.21
+          },
+          {
+            "time": 0.10462,
+            "intrusion_mm": 157.54
+          },
+          {
+            "time": 0.10588,
+            "intrusion_mm": 157.54
+          },
+          {
+            "time": 0.10714,
+            "intrusion_mm": 158.9
+          },
+          {
+            "time": 0.1084,
+            "intrusion_mm": 159.49
+          },
+          {
+            "time": 0.10966,
+            "intrusion_mm": 160.55
+          },
+          {
+            "time": 0.11092,
+            "intrusion_mm": 161.51
+          },
+          {
+            "time": 0.11218,
+            "intrusion_mm": 163.83
+          },
+          {
+            "time": 0.11345,
+            "intrusion_mm": 163.87
+          },
+          {
+            "time": 0.11471,
+            "intrusion_mm": 164.93
+          },
+          {
+            "time": 0.11597,
+            "intrusion_mm": 165.39
+          },
+          {
+            "time": 0.11723,
+            "intrusion_mm": 165.95
+          },
+          {
+            "time": 0.11849,
+            "intrusion_mm": 167.12
+          },
+          {
+            "time": 0.11975,
+            "intrusion_mm": 167.22
+          },
+          {
+            "time": 0.12101,
+            "intrusion_mm": 167.75
+          },
+          {
+            "time": 0.12227,
+            "intrusion_mm": 168.32
+          },
+          {
+            "time": 0.12353,
+            "intrusion_mm": 169.91
+          },
+          {
+            "time": 0.12479,
+            "intrusion_mm": 169.91
+          },
+          {
+            "time": 0.12605,
+            "intrusion_mm": 169.94
+          },
+          {
+            "time": 0.12731,
+            "intrusion_mm": 171.97
+          },
+          {
+            "time": 0.12857,
+            "intrusion_mm": 171.97
+          },
+          {
+            "time": 0.12983,
+            "intrusion_mm": 172.75
+          },
+          {
+            "time": 0.13109,
+            "intrusion_mm": 172.95
+          },
+          {
+            "time": 0.13235,
+            "intrusion_mm": 174.51
+          },
+          {
+            "time": 0.13361,
+            "intrusion_mm": 174.51
+          },
+          {
+            "time": 0.13487,
+            "intrusion_mm": 175.02
+          },
+          {
+            "time": 0.13613,
+            "intrusion_mm": 175.02
+          },
+          {
+            "time": 0.13739,
+            "intrusion_mm": 175.02
+          },
+          {
+            "time": 0.13866,
+            "intrusion_mm": 175.66
+          },
+          {
+            "time": 0.13992,
+            "intrusion_mm": 176.6
+          },
+          {
+            "time": 0.14118,
+            "intrusion_mm": 176.6
+          },
+          {
+            "time": 0.14244,
+            "intrusion_mm": 176.6
+          },
+          {
+            "time": 0.1437,
+            "intrusion_mm": 176.82
+          },
+          {
+            "time": 0.14496,
+            "intrusion_mm": 177.57
+          },
+          {
+            "time": 0.14622,
+            "intrusion_mm": 178.27
+          },
+          {
+            "time": 0.14748,
+            "intrusion_mm": 179.63
+          },
+          {
+            "time": 0.14874,
+            "intrusion_mm": 179.63
+          },
+          {
+            "time": 0.15,
+            "intrusion_mm": 179.63
+          }
+        ],
+        "critical_results": {
+          "peak_acceleration_g": 39.64,
+          "max_intrusion_mm": 179.63,
+          "max_stress_mpa": 422.5,
+          "energy_error_percent": 2.4
+        }
+      }
     },
     "logs": {
       "next_offset": 7,
@@ -171,8 +3163,2273 @@
         "preview_url": "",
         "download_url": "/api/v1/files/ART-AUTO-002/download",
         "created_at": "2026-08-11T10:11:30+08:00"
+      },
+      {
+        "id": "ART-AUTO-C01",
+        "name": "stress_front.png",
+        "type": "image",
+        "format": "png",
+        "size": 10384,
+        "storage_path": "artifacts/simulated/automotive/vehicle-crash/AUTO-20260811-0001/stress_front.png",
+        "preview_url": "/api/v1/files/ART-AUTO-C01/preview",
+        "download_url": "/api/v1/files/ART-AUTO-C01/download",
+        "created_at": "2026-09-09T18:06:01+08:00",
+        "source_type": "simulated"
+      },
+      {
+        "id": "ART-AUTO-C02",
+        "name": "stress_middle.png",
+        "type": "image",
+        "format": "png",
+        "size": 10610,
+        "storage_path": "artifacts/simulated/automotive/vehicle-crash/AUTO-20260811-0001/stress_middle.png",
+        "preview_url": "/api/v1/files/ART-AUTO-C02/preview",
+        "download_url": "/api/v1/files/ART-AUTO-C02/download",
+        "created_at": "2026-09-09T18:06:01+08:00",
+        "source_type": "simulated"
+      },
+      {
+        "id": "ART-AUTO-C03",
+        "name": "stress_final.png",
+        "type": "image",
+        "format": "png",
+        "size": 10115,
+        "storage_path": "artifacts/simulated/automotive/vehicle-crash/AUTO-20260811-0001/stress_final.png",
+        "preview_url": "/api/v1/files/ART-AUTO-C03/preview",
+        "download_url": "/api/v1/files/ART-AUTO-C03/download",
+        "created_at": "2026-09-09T18:06:01+08:00",
+        "source_type": "simulated"
+      },
+      {
+        "id": "ART-AUTO-CCSV1",
+        "name": "energy_series.csv",
+        "type": "dataset",
+        "format": "csv",
+        "size": 6200,
+        "storage_path": "artifacts/simulated/automotive/vehicle-crash/AUTO-20260811-0001/energy_series.csv",
+        "preview_url": "/api/v1/files/ART-AUTO-CCSV1/preview",
+        "download_url": "/api/v1/files/ART-AUTO-CCSV1/download",
+        "created_at": "2026-09-09T18:06:01+08:00",
+        "source_type": "simulated"
       }
-    ]
+    ],
+    "domain_data": {
+      "source_type": "simulated",
+      "execution_mode": "simulated",
+      "scenario_id": "vehicle-crash",
+      "energy_series": [
+        {
+          "time": 0.0,
+          "kinetic_energy": 325.563,
+          "internal_energy": 8.042,
+          "hourglass_energy": 0.422,
+          "kinetic": 325.563,
+          "internal": 8.042,
+          "hourglass": 0.422
+        },
+        {
+          "time": 0.00126,
+          "kinetic_energy": 324.425,
+          "internal_energy": 13.449,
+          "hourglass_energy": 0.348,
+          "kinetic": 324.425,
+          "internal": 13.449,
+          "hourglass": 0.348
+        },
+        {
+          "time": 0.00252,
+          "kinetic_energy": 318.468,
+          "internal_energy": 19.03,
+          "hourglass_energy": 0.648,
+          "kinetic": 318.468,
+          "internal": 19.03,
+          "hourglass": 0.648
+        },
+        {
+          "time": 0.00378,
+          "kinetic_energy": 307.643,
+          "internal_energy": 24.39,
+          "hourglass_energy": 0.828,
+          "kinetic": 307.643,
+          "internal": 24.39,
+          "hourglass": 0.828
+        },
+        {
+          "time": 0.00504,
+          "kinetic_energy": 308.804,
+          "internal_energy": 29.773,
+          "hourglass_energy": 0.861,
+          "kinetic": 308.804,
+          "internal": 29.773,
+          "hourglass": 0.861
+        },
+        {
+          "time": 0.0063,
+          "kinetic_energy": 299.635,
+          "internal_energy": 34.567,
+          "hourglass_energy": 1.03,
+          "kinetic": 299.635,
+          "internal": 34.567,
+          "hourglass": 1.03
+        },
+        {
+          "time": 0.00756,
+          "kinetic_energy": 295.332,
+          "internal_energy": 39.753,
+          "hourglass_energy": 1.031,
+          "kinetic": 295.332,
+          "internal": 39.753,
+          "hourglass": 1.031
+        },
+        {
+          "time": 0.00882,
+          "kinetic_energy": 288.799,
+          "internal_energy": 45.265,
+          "hourglass_energy": 1.04,
+          "kinetic": 288.799,
+          "internal": 45.265,
+          "hourglass": 1.04
+        },
+        {
+          "time": 0.01008,
+          "kinetic_energy": 285.63,
+          "internal_energy": 49.403,
+          "hourglass_energy": 1.341,
+          "kinetic": 285.63,
+          "internal": 49.403,
+          "hourglass": 1.341
+        },
+        {
+          "time": 0.01134,
+          "kinetic_energy": 278.916,
+          "internal_energy": 54.252,
+          "hourglass_energy": 1.294,
+          "kinetic": 278.916,
+          "internal": 54.252,
+          "hourglass": 1.294
+        },
+        {
+          "time": 0.01261,
+          "kinetic_energy": 276.223,
+          "internal_energy": 59.268,
+          "hourglass_energy": 1.542,
+          "kinetic": 276.223,
+          "internal": 59.268,
+          "hourglass": 1.542
+        },
+        {
+          "time": 0.01387,
+          "kinetic_energy": 271.111,
+          "internal_energy": 63.818,
+          "hourglass_energy": 1.505,
+          "kinetic": 271.111,
+          "internal": 63.818,
+          "hourglass": 1.505
+        },
+        {
+          "time": 0.01513,
+          "kinetic_energy": 264.907,
+          "internal_energy": 69.078,
+          "hourglass_energy": 1.545,
+          "kinetic": 264.907,
+          "internal": 69.078,
+          "hourglass": 1.545
+        },
+        {
+          "time": 0.01639,
+          "kinetic_energy": 262.834,
+          "internal_energy": 73.134,
+          "hourglass_energy": 1.76,
+          "kinetic": 262.834,
+          "internal": 73.134,
+          "hourglass": 1.76
+        },
+        {
+          "time": 0.01765,
+          "kinetic_energy": 257.434,
+          "internal_energy": 77.092,
+          "hourglass_energy": 1.629,
+          "kinetic": 257.434,
+          "internal": 77.092,
+          "hourglass": 1.629
+        },
+        {
+          "time": 0.01891,
+          "kinetic_energy": 253.259,
+          "internal_energy": 83.315,
+          "hourglass_energy": 1.939,
+          "kinetic": 253.259,
+          "internal": 83.315,
+          "hourglass": 1.939
+        },
+        {
+          "time": 0.02017,
+          "kinetic_energy": 248.091,
+          "internal_energy": 85.837,
+          "hourglass_energy": 2.086,
+          "kinetic": 248.091,
+          "internal": 85.837,
+          "hourglass": 2.086
+        },
+        {
+          "time": 0.02143,
+          "kinetic_energy": 243.62,
+          "internal_energy": 90.35,
+          "hourglass_energy": 2.074,
+          "kinetic": 243.62,
+          "internal": 90.35,
+          "hourglass": 2.074
+        },
+        {
+          "time": 0.02269,
+          "kinetic_energy": 240.424,
+          "internal_energy": 93.857,
+          "hourglass_energy": 2.151,
+          "kinetic": 240.424,
+          "internal": 93.857,
+          "hourglass": 2.151
+        },
+        {
+          "time": 0.02395,
+          "kinetic_energy": 235.216,
+          "internal_energy": 98.264,
+          "hourglass_energy": 2.27,
+          "kinetic": 235.216,
+          "internal": 98.264,
+          "hourglass": 2.27
+        },
+        {
+          "time": 0.02521,
+          "kinetic_energy": 232.171,
+          "internal_energy": 101.849,
+          "hourglass_energy": 2.402,
+          "kinetic": 232.171,
+          "internal": 101.849,
+          "hourglass": 2.402
+        },
+        {
+          "time": 0.02647,
+          "kinetic_energy": 225.182,
+          "internal_energy": 106.914,
+          "hourglass_energy": 2.564,
+          "kinetic": 225.182,
+          "internal": 106.914,
+          "hourglass": 2.564
+        },
+        {
+          "time": 0.02773,
+          "kinetic_energy": 223.407,
+          "internal_energy": 111.205,
+          "hourglass_energy": 2.64,
+          "kinetic": 223.407,
+          "internal": 111.205,
+          "hourglass": 2.64
+        },
+        {
+          "time": 0.02899,
+          "kinetic_energy": 218.92,
+          "internal_energy": 113.15,
+          "hourglass_energy": 2.653,
+          "kinetic": 218.92,
+          "internal": 113.15,
+          "hourglass": 2.653
+        },
+        {
+          "time": 0.03025,
+          "kinetic_energy": 217.419,
+          "internal_energy": 116.07,
+          "hourglass_energy": 2.576,
+          "kinetic": 217.419,
+          "internal": 116.07,
+          "hourglass": 2.576
+        },
+        {
+          "time": 0.03151,
+          "kinetic_energy": 212.802,
+          "internal_energy": 120.25,
+          "hourglass_energy": 2.865,
+          "kinetic": 212.802,
+          "internal": 120.25,
+          "hourglass": 2.865
+        },
+        {
+          "time": 0.03277,
+          "kinetic_energy": 209.243,
+          "internal_energy": 124.801,
+          "hourglass_energy": 2.951,
+          "kinetic": 209.243,
+          "internal": 124.801,
+          "hourglass": 2.951
+        },
+        {
+          "time": 0.03403,
+          "kinetic_energy": 205.794,
+          "internal_energy": 127.646,
+          "hourglass_energy": 3.171,
+          "kinetic": 205.794,
+          "internal": 127.646,
+          "hourglass": 3.171
+        },
+        {
+          "time": 0.03529,
+          "kinetic_energy": 201.131,
+          "internal_energy": 131.594,
+          "hourglass_energy": 2.975,
+          "kinetic": 201.131,
+          "internal": 131.594,
+          "hourglass": 2.975
+        },
+        {
+          "time": 0.03655,
+          "kinetic_energy": 198.315,
+          "internal_energy": 135.927,
+          "hourglass_energy": 2.944,
+          "kinetic": 198.315,
+          "internal": 135.927,
+          "hourglass": 2.944
+        },
+        {
+          "time": 0.03782,
+          "kinetic_energy": 194.035,
+          "internal_energy": 137.589,
+          "hourglass_energy": 3.307,
+          "kinetic": 194.035,
+          "internal": 137.589,
+          "hourglass": 3.307
+        },
+        {
+          "time": 0.03908,
+          "kinetic_energy": 189.527,
+          "internal_energy": 141.394,
+          "hourglass_energy": 3.333,
+          "kinetic": 189.527,
+          "internal": 141.394,
+          "hourglass": 3.333
+        },
+        {
+          "time": 0.04034,
+          "kinetic_energy": 186.508,
+          "internal_energy": 144.573,
+          "hourglass_energy": 3.4,
+          "kinetic": 186.508,
+          "internal": 144.573,
+          "hourglass": 3.4
+        },
+        {
+          "time": 0.0416,
+          "kinetic_energy": 184.136,
+          "internal_energy": 149.039,
+          "hourglass_energy": 3.391,
+          "kinetic": 184.136,
+          "internal": 149.039,
+          "hourglass": 3.391
+        },
+        {
+          "time": 0.04286,
+          "kinetic_energy": 182.431,
+          "internal_energy": 150.784,
+          "hourglass_energy": 3.693,
+          "kinetic": 182.431,
+          "internal": 150.784,
+          "hourglass": 3.693
+        },
+        {
+          "time": 0.04412,
+          "kinetic_energy": 177.207,
+          "internal_energy": 154.626,
+          "hourglass_energy": 3.906,
+          "kinetic": 177.207,
+          "internal": 154.626,
+          "hourglass": 3.906
+        },
+        {
+          "time": 0.04538,
+          "kinetic_energy": 177.05,
+          "internal_energy": 156.628,
+          "hourglass_energy": 3.597,
+          "kinetic": 177.05,
+          "internal": 156.628,
+          "hourglass": 3.597
+        },
+        {
+          "time": 0.04664,
+          "kinetic_energy": 173.522,
+          "internal_energy": 159.347,
+          "hourglass_energy": 3.529,
+          "kinetic": 173.522,
+          "internal": 159.347,
+          "hourglass": 3.529
+        },
+        {
+          "time": 0.0479,
+          "kinetic_energy": 171.364,
+          "internal_energy": 162.631,
+          "hourglass_energy": 4.075,
+          "kinetic": 171.364,
+          "internal": 162.631,
+          "hourglass": 4.075
+        },
+        {
+          "time": 0.04916,
+          "kinetic_energy": 166.619,
+          "internal_energy": 164.077,
+          "hourglass_energy": 3.826,
+          "kinetic": 166.619,
+          "internal": 164.077,
+          "hourglass": 3.826
+        },
+        {
+          "time": 0.05042,
+          "kinetic_energy": 164.699,
+          "internal_energy": 168.51,
+          "hourglass_energy": 3.861,
+          "kinetic": 164.699,
+          "internal": 168.51,
+          "hourglass": 3.861
+        },
+        {
+          "time": 0.05168,
+          "kinetic_energy": 161.174,
+          "internal_energy": 170.473,
+          "hourglass_energy": 4.112,
+          "kinetic": 161.174,
+          "internal": 170.473,
+          "hourglass": 4.112
+        },
+        {
+          "time": 0.05294,
+          "kinetic_energy": 158.059,
+          "internal_energy": 173.269,
+          "hourglass_energy": 4.082,
+          "kinetic": 158.059,
+          "internal": 173.269,
+          "hourglass": 4.082
+        },
+        {
+          "time": 0.0542,
+          "kinetic_energy": 155.417,
+          "internal_energy": 176.26,
+          "hourglass_energy": 4.096,
+          "kinetic": 155.417,
+          "internal": 176.26,
+          "hourglass": 4.096
+        },
+        {
+          "time": 0.05546,
+          "kinetic_energy": 152.402,
+          "internal_energy": 178.078,
+          "hourglass_energy": 4.225,
+          "kinetic": 152.402,
+          "internal": 178.078,
+          "hourglass": 4.225
+        },
+        {
+          "time": 0.05672,
+          "kinetic_energy": 149.961,
+          "internal_energy": 181.298,
+          "hourglass_energy": 4.179,
+          "kinetic": 149.961,
+          "internal": 181.298,
+          "hourglass": 4.179
+        },
+        {
+          "time": 0.05798,
+          "kinetic_energy": 147.702,
+          "internal_energy": 183.764,
+          "hourglass_energy": 4.205,
+          "kinetic": 147.702,
+          "internal": 183.764,
+          "hourglass": 4.205
+        },
+        {
+          "time": 0.05924,
+          "kinetic_energy": 145.937,
+          "internal_energy": 187.924,
+          "hourglass_energy": 4.326,
+          "kinetic": 145.937,
+          "internal": 187.924,
+          "hourglass": 4.326
+        },
+        {
+          "time": 0.0605,
+          "kinetic_energy": 142.234,
+          "internal_energy": 189.449,
+          "hourglass_energy": 4.173,
+          "kinetic": 142.234,
+          "internal": 189.449,
+          "hourglass": 4.173
+        },
+        {
+          "time": 0.06176,
+          "kinetic_energy": 140.798,
+          "internal_energy": 192.388,
+          "hourglass_energy": 4.132,
+          "kinetic": 140.798,
+          "internal": 192.388,
+          "hourglass": 4.132
+        },
+        {
+          "time": 0.06303,
+          "kinetic_energy": 137.667,
+          "internal_energy": 192.454,
+          "hourglass_energy": 4.314,
+          "kinetic": 137.667,
+          "internal": 192.454,
+          "hourglass": 4.314
+        },
+        {
+          "time": 0.06429,
+          "kinetic_energy": 136.824,
+          "internal_energy": 195.809,
+          "hourglass_energy": 4.45,
+          "kinetic": 136.824,
+          "internal": 195.809,
+          "hourglass": 4.45
+        },
+        {
+          "time": 0.06555,
+          "kinetic_energy": 132.552,
+          "internal_energy": 197.198,
+          "hourglass_energy": 4.354,
+          "kinetic": 132.552,
+          "internal": 197.198,
+          "hourglass": 4.354
+        },
+        {
+          "time": 0.06681,
+          "kinetic_energy": 130.297,
+          "internal_energy": 198.628,
+          "hourglass_energy": 4.287,
+          "kinetic": 130.297,
+          "internal": 198.628,
+          "hourglass": 4.287
+        },
+        {
+          "time": 0.06807,
+          "kinetic_energy": 128.914,
+          "internal_energy": 202.969,
+          "hourglass_energy": 4.415,
+          "kinetic": 128.914,
+          "internal": 202.969,
+          "hourglass": 4.415
+        },
+        {
+          "time": 0.06933,
+          "kinetic_energy": 126.172,
+          "internal_energy": 205.865,
+          "hourglass_energy": 4.303,
+          "kinetic": 126.172,
+          "internal": 205.865,
+          "hourglass": 4.303
+        },
+        {
+          "time": 0.07059,
+          "kinetic_energy": 124.194,
+          "internal_energy": 205.97,
+          "hourglass_energy": 4.37,
+          "kinetic": 124.194,
+          "internal": 205.97,
+          "hourglass": 4.37
+        },
+        {
+          "time": 0.07185,
+          "kinetic_energy": 122.314,
+          "internal_energy": 208.662,
+          "hourglass_energy": 4.293,
+          "kinetic": 122.314,
+          "internal": 208.662,
+          "hourglass": 4.293
+        },
+        {
+          "time": 0.07311,
+          "kinetic_energy": 121.485,
+          "internal_energy": 210.789,
+          "hourglass_energy": 4.373,
+          "kinetic": 121.485,
+          "internal": 210.789,
+          "hourglass": 4.373
+        },
+        {
+          "time": 0.07437,
+          "kinetic_energy": 117.925,
+          "internal_energy": 212.322,
+          "hourglass_energy": 4.442,
+          "kinetic": 117.925,
+          "internal": 212.322,
+          "hourglass": 4.442
+        },
+        {
+          "time": 0.07563,
+          "kinetic_energy": 115.81,
+          "internal_energy": 213.773,
+          "hourglass_energy": 4.452,
+          "kinetic": 115.81,
+          "internal": 213.773,
+          "hourglass": 4.452
+        },
+        {
+          "time": 0.07689,
+          "kinetic_energy": 115.884,
+          "internal_energy": 216.839,
+          "hourglass_energy": 4.437,
+          "kinetic": 115.884,
+          "internal": 216.839,
+          "hourglass": 4.437
+        },
+        {
+          "time": 0.07815,
+          "kinetic_energy": 112.981,
+          "internal_energy": 218.907,
+          "hourglass_energy": 4.366,
+          "kinetic": 112.981,
+          "internal": 218.907,
+          "hourglass": 4.366
+        },
+        {
+          "time": 0.07941,
+          "kinetic_energy": 111.172,
+          "internal_energy": 220.049,
+          "hourglass_energy": 4.365,
+          "kinetic": 111.172,
+          "internal": 220.049,
+          "hourglass": 4.365
+        },
+        {
+          "time": 0.08067,
+          "kinetic_energy": 108.419,
+          "internal_energy": 221.466,
+          "hourglass_energy": 4.188,
+          "kinetic": 108.419,
+          "internal": 221.466,
+          "hourglass": 4.188
+        },
+        {
+          "time": 0.08193,
+          "kinetic_energy": 106.99,
+          "internal_energy": 224.098,
+          "hourglass_energy": 4.492,
+          "kinetic": 106.99,
+          "internal": 224.098,
+          "hourglass": 4.492
+        },
+        {
+          "time": 0.08319,
+          "kinetic_energy": 105.691,
+          "internal_energy": 226.418,
+          "hourglass_energy": 4.295,
+          "kinetic": 105.691,
+          "internal": 226.418,
+          "hourglass": 4.295
+        },
+        {
+          "time": 0.08445,
+          "kinetic_energy": 103.816,
+          "internal_energy": 225.278,
+          "hourglass_energy": 4.247,
+          "kinetic": 103.816,
+          "internal": 225.278,
+          "hourglass": 4.247
+        },
+        {
+          "time": 0.08571,
+          "kinetic_energy": 101.308,
+          "internal_energy": 227.843,
+          "hourglass_energy": 4.303,
+          "kinetic": 101.308,
+          "internal": 227.843,
+          "hourglass": 4.303
+        },
+        {
+          "time": 0.08697,
+          "kinetic_energy": 99.164,
+          "internal_energy": 228.827,
+          "hourglass_energy": 4.316,
+          "kinetic": 99.164,
+          "internal": 228.827,
+          "hourglass": 4.316
+        },
+        {
+          "time": 0.08824,
+          "kinetic_energy": 98.361,
+          "internal_energy": 231.542,
+          "hourglass_energy": 4.09,
+          "kinetic": 98.361,
+          "internal": 231.542,
+          "hourglass": 4.09
+        },
+        {
+          "time": 0.0895,
+          "kinetic_energy": 96.758,
+          "internal_energy": 232.805,
+          "hourglass_energy": 3.976,
+          "kinetic": 96.758,
+          "internal": 232.805,
+          "hourglass": 3.976
+        },
+        {
+          "time": 0.09076,
+          "kinetic_energy": 95.619,
+          "internal_energy": 233.22,
+          "hourglass_energy": 4.277,
+          "kinetic": 95.619,
+          "internal": 233.22,
+          "hourglass": 4.277
+        },
+        {
+          "time": 0.09202,
+          "kinetic_energy": 93.751,
+          "internal_energy": 236.528,
+          "hourglass_energy": 3.835,
+          "kinetic": 93.751,
+          "internal": 236.528,
+          "hourglass": 3.835
+        },
+        {
+          "time": 0.09328,
+          "kinetic_energy": 91.719,
+          "internal_energy": 237.348,
+          "hourglass_energy": 4.062,
+          "kinetic": 91.719,
+          "internal": 237.348,
+          "hourglass": 4.062
+        },
+        {
+          "time": 0.09454,
+          "kinetic_energy": 90.932,
+          "internal_energy": 238.487,
+          "hourglass_energy": 4.004,
+          "kinetic": 90.932,
+          "internal": 238.487,
+          "hourglass": 4.004
+        },
+        {
+          "time": 0.0958,
+          "kinetic_energy": 89.551,
+          "internal_energy": 241.527,
+          "hourglass_energy": 3.893,
+          "kinetic": 89.551,
+          "internal": 241.527,
+          "hourglass": 3.893
+        },
+        {
+          "time": 0.09706,
+          "kinetic_energy": 87.061,
+          "internal_energy": 241.532,
+          "hourglass_energy": 4.088,
+          "kinetic": 87.061,
+          "internal": 241.532,
+          "hourglass": 4.088
+        },
+        {
+          "time": 0.09832,
+          "kinetic_energy": 87.027,
+          "internal_energy": 244.454,
+          "hourglass_energy": 3.823,
+          "kinetic": 87.027,
+          "internal": 244.454,
+          "hourglass": 3.823
+        },
+        {
+          "time": 0.09958,
+          "kinetic_energy": 84.974,
+          "internal_energy": 245.116,
+          "hourglass_energy": 3.952,
+          "kinetic": 84.974,
+          "internal": 245.116,
+          "hourglass": 3.952
+        },
+        {
+          "time": 0.10084,
+          "kinetic_energy": 83.938,
+          "internal_energy": 247.505,
+          "hourglass_energy": 3.867,
+          "kinetic": 83.938,
+          "internal": 247.505,
+          "hourglass": 3.867
+        },
+        {
+          "time": 0.1021,
+          "kinetic_energy": 82.045,
+          "internal_energy": 249.64,
+          "hourglass_energy": 3.645,
+          "kinetic": 82.045,
+          "internal": 249.64,
+          "hourglass": 3.645
+        },
+        {
+          "time": 0.10336,
+          "kinetic_energy": 81.567,
+          "internal_energy": 247.965,
+          "hourglass_energy": 3.59,
+          "kinetic": 81.567,
+          "internal": 247.965,
+          "hourglass": 3.59
+        },
+        {
+          "time": 0.10462,
+          "kinetic_energy": 79.738,
+          "internal_energy": 249.679,
+          "hourglass_energy": 3.681,
+          "kinetic": 79.738,
+          "internal": 249.679,
+          "hourglass": 3.681
+        },
+        {
+          "time": 0.10588,
+          "kinetic_energy": 78.628,
+          "internal_energy": 251.265,
+          "hourglass_energy": 3.799,
+          "kinetic": 78.628,
+          "internal": 251.265,
+          "hourglass": 3.799
+        },
+        {
+          "time": 0.10714,
+          "kinetic_energy": 78.14,
+          "internal_energy": 251.579,
+          "hourglass_energy": 3.706,
+          "kinetic": 78.14,
+          "internal": 251.579,
+          "hourglass": 3.706
+        },
+        {
+          "time": 0.1084,
+          "kinetic_energy": 76.138,
+          "internal_energy": 251.41,
+          "hourglass_energy": 3.546,
+          "kinetic": 76.138,
+          "internal": 251.41,
+          "hourglass": 3.546
+        },
+        {
+          "time": 0.10966,
+          "kinetic_energy": 74.906,
+          "internal_energy": 255.062,
+          "hourglass_energy": 3.564,
+          "kinetic": 74.906,
+          "internal": 255.062,
+          "hourglass": 3.564
+        },
+        {
+          "time": 0.11092,
+          "kinetic_energy": 73.578,
+          "internal_energy": 256.659,
+          "hourglass_energy": 3.58,
+          "kinetic": 73.578,
+          "internal": 256.659,
+          "hourglass": 3.58
+        },
+        {
+          "time": 0.11218,
+          "kinetic_energy": 72.165,
+          "internal_energy": 256.789,
+          "hourglass_energy": 3.36,
+          "kinetic": 72.165,
+          "internal": 256.789,
+          "hourglass": 3.36
+        },
+        {
+          "time": 0.11345,
+          "kinetic_energy": 70.778,
+          "internal_energy": 259.508,
+          "hourglass_energy": 3.499,
+          "kinetic": 70.778,
+          "internal": 259.508,
+          "hourglass": 3.499
+        },
+        {
+          "time": 0.11471,
+          "kinetic_energy": 70.027,
+          "internal_energy": 257.59,
+          "hourglass_energy": 3.439,
+          "kinetic": 70.027,
+          "internal": 257.59,
+          "hourglass": 3.439
+        },
+        {
+          "time": 0.11597,
+          "kinetic_energy": 69.418,
+          "internal_energy": 260.183,
+          "hourglass_energy": 3.237,
+          "kinetic": 69.418,
+          "internal": 260.183,
+          "hourglass": 3.237
+        },
+        {
+          "time": 0.11723,
+          "kinetic_energy": 67.628,
+          "internal_energy": 262.216,
+          "hourglass_energy": 3.22,
+          "kinetic": 67.628,
+          "internal": 262.216,
+          "hourglass": 3.22
+        },
+        {
+          "time": 0.11849,
+          "kinetic_energy": 67.088,
+          "internal_energy": 264.433,
+          "hourglass_energy": 3.205,
+          "kinetic": 67.088,
+          "internal": 264.433,
+          "hourglass": 3.205
+        },
+        {
+          "time": 0.11975,
+          "kinetic_energy": 65.568,
+          "internal_energy": 264.294,
+          "hourglass_energy": 3.039,
+          "kinetic": 65.568,
+          "internal": 264.294,
+          "hourglass": 3.039
+        },
+        {
+          "time": 0.12101,
+          "kinetic_energy": 64.558,
+          "internal_energy": 265.65,
+          "hourglass_energy": 3.012,
+          "kinetic": 64.558,
+          "internal": 265.65,
+          "hourglass": 3.012
+        },
+        {
+          "time": 0.12227,
+          "kinetic_energy": 63.061,
+          "internal_energy": 268.046,
+          "hourglass_energy": 2.949,
+          "kinetic": 63.061,
+          "internal": 268.046,
+          "hourglass": 2.949
+        },
+        {
+          "time": 0.12353,
+          "kinetic_energy": 63.004,
+          "internal_energy": 266.403,
+          "hourglass_energy": 3.042,
+          "kinetic": 63.004,
+          "internal": 266.403,
+          "hourglass": 3.042
+        },
+        {
+          "time": 0.12479,
+          "kinetic_energy": 61.933,
+          "internal_energy": 271.982,
+          "hourglass_energy": 2.899,
+          "kinetic": 61.933,
+          "internal": 271.982,
+          "hourglass": 2.899
+        },
+        {
+          "time": 0.12605,
+          "kinetic_energy": 61.071,
+          "internal_energy": 266.629,
+          "hourglass_energy": 2.85,
+          "kinetic": 61.071,
+          "internal": 266.629,
+          "hourglass": 2.85
+        },
+        {
+          "time": 0.12731,
+          "kinetic_energy": 59.873,
+          "internal_energy": 268.943,
+          "hourglass_energy": 3.011,
+          "kinetic": 59.873,
+          "internal": 268.943,
+          "hourglass": 3.011
+        },
+        {
+          "time": 0.12857,
+          "kinetic_energy": 59.331,
+          "internal_energy": 268.948,
+          "hourglass_energy": 2.728,
+          "kinetic": 59.331,
+          "internal": 268.948,
+          "hourglass": 2.728
+        },
+        {
+          "time": 0.12983,
+          "kinetic_energy": 58.499,
+          "internal_energy": 270.742,
+          "hourglass_energy": 2.775,
+          "kinetic": 58.499,
+          "internal": 270.742,
+          "hourglass": 2.775
+        },
+        {
+          "time": 0.13109,
+          "kinetic_energy": 56.786,
+          "internal_energy": 271.721,
+          "hourglass_energy": 2.574,
+          "kinetic": 56.786,
+          "internal": 271.721,
+          "hourglass": 2.574
+        },
+        {
+          "time": 0.13235,
+          "kinetic_energy": 56.496,
+          "internal_energy": 274.371,
+          "hourglass_energy": 2.652,
+          "kinetic": 56.496,
+          "internal": 274.371,
+          "hourglass": 2.652
+        },
+        {
+          "time": 0.13361,
+          "kinetic_energy": 55.506,
+          "internal_energy": 271.036,
+          "hourglass_energy": 2.605,
+          "kinetic": 55.506,
+          "internal": 271.036,
+          "hourglass": 2.605
+        },
+        {
+          "time": 0.13487,
+          "kinetic_energy": 54.336,
+          "internal_energy": 273.728,
+          "hourglass_energy": 2.477,
+          "kinetic": 54.336,
+          "internal": 273.728,
+          "hourglass": 2.477
+        },
+        {
+          "time": 0.13613,
+          "kinetic_energy": 53.748,
+          "internal_energy": 276.684,
+          "hourglass_energy": 2.476,
+          "kinetic": 53.748,
+          "internal": 276.684,
+          "hourglass": 2.476
+        },
+        {
+          "time": 0.13739,
+          "kinetic_energy": 53.266,
+          "internal_energy": 275.82,
+          "hourglass_energy": 2.347,
+          "kinetic": 53.266,
+          "internal": 275.82,
+          "hourglass": 2.347
+        },
+        {
+          "time": 0.13866,
+          "kinetic_energy": 52.036,
+          "internal_energy": 276.878,
+          "hourglass_energy": 2.54,
+          "kinetic": 52.036,
+          "internal": 276.878,
+          "hourglass": 2.54
+        },
+        {
+          "time": 0.13992,
+          "kinetic_energy": 50.975,
+          "internal_energy": 278.286,
+          "hourglass_energy": 2.322,
+          "kinetic": 50.975,
+          "internal": 278.286,
+          "hourglass": 2.322
+        },
+        {
+          "time": 0.14118,
+          "kinetic_energy": 50.535,
+          "internal_energy": 276.683,
+          "hourglass_energy": 2.372,
+          "kinetic": 50.535,
+          "internal": 276.683,
+          "hourglass": 2.372
+        },
+        {
+          "time": 0.14244,
+          "kinetic_energy": 50.037,
+          "internal_energy": 280.359,
+          "hourglass_energy": 2.387,
+          "kinetic": 50.037,
+          "internal": 280.359,
+          "hourglass": 2.387
+        },
+        {
+          "time": 0.1437,
+          "kinetic_energy": 48.816,
+          "internal_energy": 281.777,
+          "hourglass_energy": 2.345,
+          "kinetic": 48.816,
+          "internal": 281.777,
+          "hourglass": 2.345
+        },
+        {
+          "time": 0.14496,
+          "kinetic_energy": 47.853,
+          "internal_energy": 280.497,
+          "hourglass_energy": 2.21,
+          "kinetic": 47.853,
+          "internal": 280.497,
+          "hourglass": 2.21
+        },
+        {
+          "time": 0.14622,
+          "kinetic_energy": 47.849,
+          "internal_energy": 281.553,
+          "hourglass_energy": 2.193,
+          "kinetic": 47.849,
+          "internal": 281.553,
+          "hourglass": 2.193
+        },
+        {
+          "time": 0.14748,
+          "kinetic_energy": 46.786,
+          "internal_energy": 285.64,
+          "hourglass_energy": 2.368,
+          "kinetic": 46.786,
+          "internal": 285.64,
+          "hourglass": 2.368
+        },
+        {
+          "time": 0.14874,
+          "kinetic_energy": 46.061,
+          "internal_energy": 281.445,
+          "hourglass_energy": 2.207,
+          "kinetic": 46.061,
+          "internal": 281.445,
+          "hourglass": 2.207
+        },
+        {
+          "time": 0.15,
+          "kinetic_energy": 45.351,
+          "internal_energy": 283.134,
+          "hourglass_energy": 2.228,
+          "kinetic": 45.351,
+          "internal": 283.134,
+          "hourglass": 2.228
+        }
+      ],
+      "acceleration_series": [
+        {
+          "time": 0.0,
+          "acceleration_g": 0.599
+        },
+        {
+          "time": 0.00094,
+          "acceleration_g": 0.665
+        },
+        {
+          "time": 0.00189,
+          "acceleration_g": 0.758
+        },
+        {
+          "time": 0.00283,
+          "acceleration_g": -0.965
+        },
+        {
+          "time": 0.00377,
+          "acceleration_g": 0.783
+        },
+        {
+          "time": 0.00472,
+          "acceleration_g": 0.385
+        },
+        {
+          "time": 0.00566,
+          "acceleration_g": -0.506
+        },
+        {
+          "time": 0.0066,
+          "acceleration_g": 0.165
+        },
+        {
+          "time": 0.00755,
+          "acceleration_g": -0.18
+        },
+        {
+          "time": 0.00849,
+          "acceleration_g": 0.877
+        },
+        {
+          "time": 0.00943,
+          "acceleration_g": 0.06
+        },
+        {
+          "time": 0.01038,
+          "acceleration_g": 0.327
+        },
+        {
+          "time": 0.01132,
+          "acceleration_g": 0.588
+        },
+        {
+          "time": 0.01226,
+          "acceleration_g": -0.198
+        },
+        {
+          "time": 0.01321,
+          "acceleration_g": 1.416
+        },
+        {
+          "time": 0.01415,
+          "acceleration_g": 2.373
+        },
+        {
+          "time": 0.01509,
+          "acceleration_g": 3.313
+        },
+        {
+          "time": 0.01604,
+          "acceleration_g": 2.157
+        },
+        {
+          "time": 0.01698,
+          "acceleration_g": 1.734
+        },
+        {
+          "time": 0.01792,
+          "acceleration_g": 3.204
+        },
+        {
+          "time": 0.01887,
+          "acceleration_g": 3.612
+        },
+        {
+          "time": 0.01981,
+          "acceleration_g": 5.307
+        },
+        {
+          "time": 0.02075,
+          "acceleration_g": 4.837
+        },
+        {
+          "time": 0.0217,
+          "acceleration_g": 5.091
+        },
+        {
+          "time": 0.02264,
+          "acceleration_g": 6.198
+        },
+        {
+          "time": 0.02358,
+          "acceleration_g": 7.178
+        },
+        {
+          "time": 0.02453,
+          "acceleration_g": 9.042
+        },
+        {
+          "time": 0.02547,
+          "acceleration_g": 10.51
+        },
+        {
+          "time": 0.02642,
+          "acceleration_g": 11.736
+        },
+        {
+          "time": 0.02736,
+          "acceleration_g": 13.514
+        },
+        {
+          "time": 0.0283,
+          "acceleration_g": 15.132
+        },
+        {
+          "time": 0.02925,
+          "acceleration_g": 16.061
+        },
+        {
+          "time": 0.03019,
+          "acceleration_g": 17.957
+        },
+        {
+          "time": 0.03113,
+          "acceleration_g": 19.513
+        },
+        {
+          "time": 0.03208,
+          "acceleration_g": 21.818
+        },
+        {
+          "time": 0.03302,
+          "acceleration_g": 23.399
+        },
+        {
+          "time": 0.03396,
+          "acceleration_g": 25.861
+        },
+        {
+          "time": 0.03491,
+          "acceleration_g": 27.371
+        },
+        {
+          "time": 0.03585,
+          "acceleration_g": 29.817
+        },
+        {
+          "time": 0.03679,
+          "acceleration_g": 30.758
+        },
+        {
+          "time": 0.03774,
+          "acceleration_g": 32.454
+        },
+        {
+          "time": 0.03868,
+          "acceleration_g": 34.807
+        },
+        {
+          "time": 0.03962,
+          "acceleration_g": 35.694
+        },
+        {
+          "time": 0.04057,
+          "acceleration_g": 35.734
+        },
+        {
+          "time": 0.04151,
+          "acceleration_g": 37.799
+        },
+        {
+          "time": 0.04245,
+          "acceleration_g": 38.329
+        },
+        {
+          "time": 0.0434,
+          "acceleration_g": 38.265
+        },
+        {
+          "time": 0.04434,
+          "acceleration_g": 39.639
+        },
+        {
+          "time": 0.04528,
+          "acceleration_g": 39.134
+        },
+        {
+          "time": 0.04623,
+          "acceleration_g": 38.929
+        },
+        {
+          "time": 0.04717,
+          "acceleration_g": 39.402
+        },
+        {
+          "time": 0.04811,
+          "acceleration_g": 39.088
+        },
+        {
+          "time": 0.04906,
+          "acceleration_g": 38.437
+        },
+        {
+          "time": 0.05,
+          "acceleration_g": 38.519
+        },
+        {
+          "time": 0.05094,
+          "acceleration_g": 36.351
+        },
+        {
+          "time": 0.05189,
+          "acceleration_g": 34.492
+        },
+        {
+          "time": 0.05283,
+          "acceleration_g": 33.449
+        },
+        {
+          "time": 0.05377,
+          "acceleration_g": 31.646
+        },
+        {
+          "time": 0.05472,
+          "acceleration_g": 30.276
+        },
+        {
+          "time": 0.05566,
+          "acceleration_g": 29.917
+        },
+        {
+          "time": 0.0566,
+          "acceleration_g": 27.781
+        },
+        {
+          "time": 0.05755,
+          "acceleration_g": 25.92
+        },
+        {
+          "time": 0.05849,
+          "acceleration_g": 23.375
+        },
+        {
+          "time": 0.05943,
+          "acceleration_g": 22.159
+        },
+        {
+          "time": 0.06038,
+          "acceleration_g": 22.029
+        },
+        {
+          "time": 0.06132,
+          "acceleration_g": 20.619
+        },
+        {
+          "time": 0.06226,
+          "acceleration_g": 20.028
+        },
+        {
+          "time": 0.06321,
+          "acceleration_g": 17.645
+        },
+        {
+          "time": 0.06415,
+          "acceleration_g": 15.497
+        },
+        {
+          "time": 0.06509,
+          "acceleration_g": 14.327
+        },
+        {
+          "time": 0.06604,
+          "acceleration_g": 14.506
+        },
+        {
+          "time": 0.06698,
+          "acceleration_g": 13.468
+        },
+        {
+          "time": 0.06792,
+          "acceleration_g": 13.763
+        },
+        {
+          "time": 0.06887,
+          "acceleration_g": 12.084
+        },
+        {
+          "time": 0.06981,
+          "acceleration_g": 11.602
+        },
+        {
+          "time": 0.07075,
+          "acceleration_g": 10.524
+        },
+        {
+          "time": 0.0717,
+          "acceleration_g": 9.663
+        },
+        {
+          "time": 0.07264,
+          "acceleration_g": 10.145
+        },
+        {
+          "time": 0.07358,
+          "acceleration_g": 9.224
+        },
+        {
+          "time": 0.07453,
+          "acceleration_g": 9.894
+        },
+        {
+          "time": 0.07547,
+          "acceleration_g": 9.693
+        },
+        {
+          "time": 0.07642,
+          "acceleration_g": 8.825
+        },
+        {
+          "time": 0.07736,
+          "acceleration_g": 9.382
+        },
+        {
+          "time": 0.0783,
+          "acceleration_g": 8.939
+        },
+        {
+          "time": 0.07925,
+          "acceleration_g": 8.994
+        },
+        {
+          "time": 0.08019,
+          "acceleration_g": 9.551
+        },
+        {
+          "time": 0.08113,
+          "acceleration_g": 8.253
+        },
+        {
+          "time": 0.08208,
+          "acceleration_g": 8.985
+        },
+        {
+          "time": 0.08302,
+          "acceleration_g": 8.657
+        },
+        {
+          "time": 0.08396,
+          "acceleration_g": 7.597
+        },
+        {
+          "time": 0.08491,
+          "acceleration_g": 8.027
+        },
+        {
+          "time": 0.08585,
+          "acceleration_g": 7.387
+        },
+        {
+          "time": 0.08679,
+          "acceleration_g": 7.008
+        },
+        {
+          "time": 0.08774,
+          "acceleration_g": 9.01
+        },
+        {
+          "time": 0.08868,
+          "acceleration_g": 7.721
+        },
+        {
+          "time": 0.08962,
+          "acceleration_g": 6.685
+        },
+        {
+          "time": 0.09057,
+          "acceleration_g": 7.377
+        },
+        {
+          "time": 0.09151,
+          "acceleration_g": 7.119
+        },
+        {
+          "time": 0.09245,
+          "acceleration_g": 7.076
+        },
+        {
+          "time": 0.0934,
+          "acceleration_g": 6.024
+        },
+        {
+          "time": 0.09434,
+          "acceleration_g": 5.714
+        },
+        {
+          "time": 0.09528,
+          "acceleration_g": 6.319
+        },
+        {
+          "time": 0.09623,
+          "acceleration_g": 5.97
+        },
+        {
+          "time": 0.09717,
+          "acceleration_g": 6.038
+        },
+        {
+          "time": 0.09811,
+          "acceleration_g": 4.922
+        },
+        {
+          "time": 0.09906,
+          "acceleration_g": 4.954
+        },
+        {
+          "time": 0.1,
+          "acceleration_g": 5.468
+        },
+        {
+          "time": 0.10094,
+          "acceleration_g": 4.839
+        },
+        {
+          "time": 0.10189,
+          "acceleration_g": 4.451
+        },
+        {
+          "time": 0.10283,
+          "acceleration_g": 4.66
+        },
+        {
+          "time": 0.10377,
+          "acceleration_g": 3.376
+        },
+        {
+          "time": 0.10472,
+          "acceleration_g": 4.656
+        },
+        {
+          "time": 0.10566,
+          "acceleration_g": 3.675
+        },
+        {
+          "time": 0.1066,
+          "acceleration_g": 4.795
+        },
+        {
+          "time": 0.10755,
+          "acceleration_g": 3.039
+        },
+        {
+          "time": 0.10849,
+          "acceleration_g": 1.771
+        },
+        {
+          "time": 0.10943,
+          "acceleration_g": 2.189
+        },
+        {
+          "time": 0.11038,
+          "acceleration_g": 3.825
+        },
+        {
+          "time": 0.11132,
+          "acceleration_g": 1.201
+        },
+        {
+          "time": 0.11226,
+          "acceleration_g": 2.545
+        },
+        {
+          "time": 0.11321,
+          "acceleration_g": 1.662
+        },
+        {
+          "time": 0.11415,
+          "acceleration_g": 2.455
+        },
+        {
+          "time": 0.11509,
+          "acceleration_g": 2.272
+        },
+        {
+          "time": 0.11604,
+          "acceleration_g": 1.115
+        },
+        {
+          "time": 0.11698,
+          "acceleration_g": 1.132
+        },
+        {
+          "time": 0.11792,
+          "acceleration_g": 1.9
+        },
+        {
+          "time": 0.11887,
+          "acceleration_g": 1.319
+        },
+        {
+          "time": 0.11981,
+          "acceleration_g": 1.122
+        },
+        {
+          "time": 0.12075,
+          "acceleration_g": 0.7
+        },
+        {
+          "time": 0.1217,
+          "acceleration_g": 0.177
+        },
+        {
+          "time": 0.12264,
+          "acceleration_g": 0.295
+        },
+        {
+          "time": 0.12358,
+          "acceleration_g": 1.24
+        },
+        {
+          "time": 0.12453,
+          "acceleration_g": -0.243
+        },
+        {
+          "time": 0.12547,
+          "acceleration_g": 0.166
+        },
+        {
+          "time": 0.12642,
+          "acceleration_g": 0.82
+        },
+        {
+          "time": 0.12736,
+          "acceleration_g": 0.449
+        },
+        {
+          "time": 0.1283,
+          "acceleration_g": 0.102
+        },
+        {
+          "time": 0.12925,
+          "acceleration_g": 0.739
+        },
+        {
+          "time": 0.13019,
+          "acceleration_g": -0.549
+        },
+        {
+          "time": 0.13113,
+          "acceleration_g": 0.495
+        },
+        {
+          "time": 0.13208,
+          "acceleration_g": 0.238
+        },
+        {
+          "time": 0.13302,
+          "acceleration_g": 0.745
+        },
+        {
+          "time": 0.13396,
+          "acceleration_g": 0.536
+        },
+        {
+          "time": 0.13491,
+          "acceleration_g": 0.123
+        },
+        {
+          "time": 0.13585,
+          "acceleration_g": -0.735
+        },
+        {
+          "time": 0.13679,
+          "acceleration_g": 0.976
+        },
+        {
+          "time": 0.13774,
+          "acceleration_g": 0.355
+        },
+        {
+          "time": 0.13868,
+          "acceleration_g": 1.535
+        },
+        {
+          "time": 0.13962,
+          "acceleration_g": -0.321
+        },
+        {
+          "time": 0.14057,
+          "acceleration_g": 0.346
+        },
+        {
+          "time": 0.14151,
+          "acceleration_g": -0.011
+        },
+        {
+          "time": 0.14245,
+          "acceleration_g": -0.19
+        },
+        {
+          "time": 0.1434,
+          "acceleration_g": 0.468
+        },
+        {
+          "time": 0.14434,
+          "acceleration_g": -0.546
+        },
+        {
+          "time": 0.14528,
+          "acceleration_g": -0.35
+        },
+        {
+          "time": 0.14623,
+          "acceleration_g": -0.301
+        },
+        {
+          "time": 0.14717,
+          "acceleration_g": 0.602
+        },
+        {
+          "time": 0.14811,
+          "acceleration_g": 0.593
+        },
+        {
+          "time": 0.14906,
+          "acceleration_g": 1.155
+        },
+        {
+          "time": 0.15,
+          "acceleration_g": -0.475
+        }
+      ],
+      "intrusion_series": [
+        {
+          "time": 0.0,
+          "intrusion_mm": 23.5
+        },
+        {
+          "time": 0.00126,
+          "intrusion_mm": 24.03
+        },
+        {
+          "time": 0.00252,
+          "intrusion_mm": 26.21
+        },
+        {
+          "time": 0.00378,
+          "intrusion_mm": 26.95
+        },
+        {
+          "time": 0.00504,
+          "intrusion_mm": 26.95
+        },
+        {
+          "time": 0.0063,
+          "intrusion_mm": 28.27
+        },
+        {
+          "time": 0.00756,
+          "intrusion_mm": 28.66
+        },
+        {
+          "time": 0.00882,
+          "intrusion_mm": 31.0
+        },
+        {
+          "time": 0.01008,
+          "intrusion_mm": 33.56
+        },
+        {
+          "time": 0.01134,
+          "intrusion_mm": 33.56
+        },
+        {
+          "time": 0.01261,
+          "intrusion_mm": 33.66
+        },
+        {
+          "time": 0.01387,
+          "intrusion_mm": 35.28
+        },
+        {
+          "time": 0.01513,
+          "intrusion_mm": 37.3
+        },
+        {
+          "time": 0.01639,
+          "intrusion_mm": 38.77
+        },
+        {
+          "time": 0.01765,
+          "intrusion_mm": 39.99
+        },
+        {
+          "time": 0.01891,
+          "intrusion_mm": 41.19
+        },
+        {
+          "time": 0.02017,
+          "intrusion_mm": 42.93
+        },
+        {
+          "time": 0.02143,
+          "intrusion_mm": 44.0
+        },
+        {
+          "time": 0.02269,
+          "intrusion_mm": 44.0
+        },
+        {
+          "time": 0.02395,
+          "intrusion_mm": 46.12
+        },
+        {
+          "time": 0.02521,
+          "intrusion_mm": 49.03
+        },
+        {
+          "time": 0.02647,
+          "intrusion_mm": 50.47
+        },
+        {
+          "time": 0.02773,
+          "intrusion_mm": 50.95
+        },
+        {
+          "time": 0.02899,
+          "intrusion_mm": 53.73
+        },
+        {
+          "time": 0.03025,
+          "intrusion_mm": 55.55
+        },
+        {
+          "time": 0.03151,
+          "intrusion_mm": 57.53
+        },
+        {
+          "time": 0.03277,
+          "intrusion_mm": 57.53
+        },
+        {
+          "time": 0.03403,
+          "intrusion_mm": 59.66
+        },
+        {
+          "time": 0.03529,
+          "intrusion_mm": 61.54
+        },
+        {
+          "time": 0.03655,
+          "intrusion_mm": 65.02
+        },
+        {
+          "time": 0.03782,
+          "intrusion_mm": 65.02
+        },
+        {
+          "time": 0.03908,
+          "intrusion_mm": 67.99
+        },
+        {
+          "time": 0.04034,
+          "intrusion_mm": 71.28
+        },
+        {
+          "time": 0.0416,
+          "intrusion_mm": 71.87
+        },
+        {
+          "time": 0.04286,
+          "intrusion_mm": 71.87
+        },
+        {
+          "time": 0.04412,
+          "intrusion_mm": 74.87
+        },
+        {
+          "time": 0.04538,
+          "intrusion_mm": 76.89
+        },
+        {
+          "time": 0.04664,
+          "intrusion_mm": 77.48
+        },
+        {
+          "time": 0.0479,
+          "intrusion_mm": 80.62
+        },
+        {
+          "time": 0.04916,
+          "intrusion_mm": 82.34
+        },
+        {
+          "time": 0.05042,
+          "intrusion_mm": 84.88
+        },
+        {
+          "time": 0.05168,
+          "intrusion_mm": 88.54
+        },
+        {
+          "time": 0.05294,
+          "intrusion_mm": 89.44
+        },
+        {
+          "time": 0.0542,
+          "intrusion_mm": 90.91
+        },
+        {
+          "time": 0.05546,
+          "intrusion_mm": 93.04
+        },
+        {
+          "time": 0.05672,
+          "intrusion_mm": 93.57
+        },
+        {
+          "time": 0.05798,
+          "intrusion_mm": 97.27
+        },
+        {
+          "time": 0.05924,
+          "intrusion_mm": 100.58
+        },
+        {
+          "time": 0.0605,
+          "intrusion_mm": 101.24
+        },
+        {
+          "time": 0.06176,
+          "intrusion_mm": 104.09
+        },
+        {
+          "time": 0.06303,
+          "intrusion_mm": 106.43
+        },
+        {
+          "time": 0.06429,
+          "intrusion_mm": 107.61
+        },
+        {
+          "time": 0.06555,
+          "intrusion_mm": 111.21
+        },
+        {
+          "time": 0.06681,
+          "intrusion_mm": 111.21
+        },
+        {
+          "time": 0.06807,
+          "intrusion_mm": 114.41
+        },
+        {
+          "time": 0.06933,
+          "intrusion_mm": 114.57
+        },
+        {
+          "time": 0.07059,
+          "intrusion_mm": 117.21
+        },
+        {
+          "time": 0.07185,
+          "intrusion_mm": 120.02
+        },
+        {
+          "time": 0.07311,
+          "intrusion_mm": 121.35
+        },
+        {
+          "time": 0.07437,
+          "intrusion_mm": 123.08
+        },
+        {
+          "time": 0.07563,
+          "intrusion_mm": 125.87
+        },
+        {
+          "time": 0.07689,
+          "intrusion_mm": 126.74
+        },
+        {
+          "time": 0.07815,
+          "intrusion_mm": 129.06
+        },
+        {
+          "time": 0.07941,
+          "intrusion_mm": 130.9
+        },
+        {
+          "time": 0.08067,
+          "intrusion_mm": 133.55
+        },
+        {
+          "time": 0.08193,
+          "intrusion_mm": 133.55
+        },
+        {
+          "time": 0.08319,
+          "intrusion_mm": 134.23
+        },
+        {
+          "time": 0.08445,
+          "intrusion_mm": 136.28
+        },
+        {
+          "time": 0.08571,
+          "intrusion_mm": 138.3
+        },
+        {
+          "time": 0.08697,
+          "intrusion_mm": 140.36
+        },
+        {
+          "time": 0.08824,
+          "intrusion_mm": 140.36
+        },
+        {
+          "time": 0.0895,
+          "intrusion_mm": 142.74
+        },
+        {
+          "time": 0.09076,
+          "intrusion_mm": 145.21
+        },
+        {
+          "time": 0.09202,
+          "intrusion_mm": 145.21
+        },
+        {
+          "time": 0.09328,
+          "intrusion_mm": 145.88
+        },
+        {
+          "time": 0.09454,
+          "intrusion_mm": 147.78
+        },
+        {
+          "time": 0.0958,
+          "intrusion_mm": 149.47
+        },
+        {
+          "time": 0.09706,
+          "intrusion_mm": 149.66
+        },
+        {
+          "time": 0.09832,
+          "intrusion_mm": 151.94
+        },
+        {
+          "time": 0.09958,
+          "intrusion_mm": 153.24
+        },
+        {
+          "time": 0.10084,
+          "intrusion_mm": 154.62
+        },
+        {
+          "time": 0.1021,
+          "intrusion_mm": 154.62
+        },
+        {
+          "time": 0.10336,
+          "intrusion_mm": 155.21
+        },
+        {
+          "time": 0.10462,
+          "intrusion_mm": 157.54
+        },
+        {
+          "time": 0.10588,
+          "intrusion_mm": 157.54
+        },
+        {
+          "time": 0.10714,
+          "intrusion_mm": 158.9
+        },
+        {
+          "time": 0.1084,
+          "intrusion_mm": 159.49
+        },
+        {
+          "time": 0.10966,
+          "intrusion_mm": 160.55
+        },
+        {
+          "time": 0.11092,
+          "intrusion_mm": 161.51
+        },
+        {
+          "time": 0.11218,
+          "intrusion_mm": 163.83
+        },
+        {
+          "time": 0.11345,
+          "intrusion_mm": 163.87
+        },
+        {
+          "time": 0.11471,
+          "intrusion_mm": 164.93
+        },
+        {
+          "time": 0.11597,
+          "intrusion_mm": 165.39
+        },
+        {
+          "time": 0.11723,
+          "intrusion_mm": 165.95
+        },
+        {
+          "time": 0.11849,
+          "intrusion_mm": 167.12
+        },
+        {
+          "time": 0.11975,
+          "intrusion_mm": 167.22
+        },
+        {
+          "time": 0.12101,
+          "intrusion_mm": 167.75
+        },
+        {
+          "time": 0.12227,
+          "intrusion_mm": 168.32
+        },
+        {
+          "time": 0.12353,
+          "intrusion_mm": 169.91
+        },
+        {
+          "time": 0.12479,
+          "intrusion_mm": 169.91
+        },
+        {
+          "time": 0.12605,
+          "intrusion_mm": 169.94
+        },
+        {
+          "time": 0.12731,
+          "intrusion_mm": 171.97
+        },
+        {
+          "time": 0.12857,
+          "intrusion_mm": 171.97
+        },
+        {
+          "time": 0.12983,
+          "intrusion_mm": 172.75
+        },
+        {
+          "time": 0.13109,
+          "intrusion_mm": 172.95
+        },
+        {
+          "time": 0.13235,
+          "intrusion_mm": 174.51
+        },
+        {
+          "time": 0.13361,
+          "intrusion_mm": 174.51
+        },
+        {
+          "time": 0.13487,
+          "intrusion_mm": 175.02
+        },
+        {
+          "time": 0.13613,
+          "intrusion_mm": 175.02
+        },
+        {
+          "time": 0.13739,
+          "intrusion_mm": 175.02
+        },
+        {
+          "time": 0.13866,
+          "intrusion_mm": 175.66
+        },
+        {
+          "time": 0.13992,
+          "intrusion_mm": 176.6
+        },
+        {
+          "time": 0.14118,
+          "intrusion_mm": 176.6
+        },
+        {
+          "time": 0.14244,
+          "intrusion_mm": 176.6
+        },
+        {
+          "time": 0.1437,
+          "intrusion_mm": 176.82
+        },
+        {
+          "time": 0.14496,
+          "intrusion_mm": 177.57
+        },
+        {
+          "time": 0.14622,
+          "intrusion_mm": 178.27
+        },
+        {
+          "time": 0.14748,
+          "intrusion_mm": 179.63
+        },
+        {
+          "time": 0.14874,
+          "intrusion_mm": 179.63
+        },
+        {
+          "time": 0.15,
+          "intrusion_mm": 179.63
+        }
+      ],
+      "critical_results": {
+        "peak_acceleration_g": 39.64,
+        "max_intrusion_mm": 179.63,
+        "max_stress_mpa": 422.5,
+        "energy_error_percent": 2.4
+      }
+    }
   },
   "timestamp": "2026-08-11T10:12:05+08:00"
 }

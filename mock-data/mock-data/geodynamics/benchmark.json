@@ -1,0 +1,31 @@
+{
+  "code": 200,
+  "message": "success",
+  "data": {
+    "wave-propagation": {
+      "dimensions": [
+        { "key": "solve_speed", "name": "求解速率", "unit": "格点/s" },
+        { "key": "step_time", "name": "单步耗时", "unit": "s" },
+        { "key": "parallel_efficiency", "name": "并行效率", "unit": "%" },
+        { "key": "memory_per_core", "name": "单核内存", "unit": "GB" }
+      ],
+      "series": [
+        { "name": "本方案", "solve_speed": 5184000, "step_time": 0.82, "parallel_efficiency": 84, "memory_per_core": 4.2 },
+        { "name": "基准方案", "solve_speed": 3021000, "step_time": 1.41, "parallel_efficiency": 63, "memory_per_core": 6.8 }
+      ]
+    },
+    "tectonic-evolution": {
+      "dimensions": [
+        { "key": "solve_speed", "name": "求解速率", "unit": "单元/s" },
+        { "key": "step_time", "name": "单步耗时", "unit": "s" },
+        { "key": "parallel_efficiency", "name": "并行效率", "unit": "%" },
+        { "key": "nonlinear_iter", "name": "平均Newton迭代", "unit": "次" }
+      ],
+      "series": [
+        { "name": "本方案", "solve_speed": 682000, "step_time": 1.15, "parallel_efficiency": 89, "nonlinear_iter": 4 },
+        { "name": "基准方案", "solve_speed": 397000, "step_time": 1.98, "parallel_efficiency": 71, "nonlinear_iter": 6 }
+      ]
+    }
+  },
+  "timestamp": "2026-08-11T10:00:00+08:00"
+}

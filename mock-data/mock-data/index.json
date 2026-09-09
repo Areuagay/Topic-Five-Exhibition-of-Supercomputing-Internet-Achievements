@@ -1,0 +1,115 @@
+{
+  "code": 200,
+  "message": "success",
+  "data": {
+    "title": "课题五-超算互联网应用成果展",
+    "generated_at": "2026-08-11T12:00:00+08:00",
+    "total_records": 100,
+    "domains": [
+      {
+        "domain": "geodynamics",
+        "prefix": "geodynamics",
+        "name": "地球动力学模拟",
+        "short_name": "地球动力学",
+        "category": "地球科学",
+        "icon": "geo",
+        "description": "地震波传播模拟与板块构造数值模拟，展示有限差分/有限元方法在超算上的并行能力。",
+        "scenario_count": 2,
+        "run_count": 14,
+        "status": "available",
+        "scenarios": ["wave-propagation", "tectonic-evolution"],
+        "cluster_hint": ["changsha", "guangzhou"]
+      },
+      {
+        "domain": "llm",
+        "prefix": "llm",
+        "name": "AI 大模型训练",
+        "short_name": "AI大模型",
+        "category": "AI大模型",
+        "icon": "llm",
+        "description": "大语言模型分布式预训练与 PINN 科学计算 AI 加速，多节点多 GPU 并行训练示范。",
+        "scenario_count": 2,
+        "run_count": 14,
+        "status": "available",
+        "scenarios": ["llm-pretraining", "pinn-acceleration"],
+        "cluster_hint": ["kunshan", "guangzhou"]
+      },
+      {
+        "domain": "automotive",
+        "prefix": "automotive",
+        "name": "汽车结构仿真",
+        "short_name": "汽车仿真",
+        "category": "工程仿真",
+        "icon": "auto",
+        "description": "整车碰撞仿真与结构疲劳寿命预测，基于显式动力学的大规模并行有限元计算。",
+        "scenario_count": 2,
+        "run_count": 14,
+        "status": "available",
+        "scenarios": ["vehicle-crash", "fatigue-life"],
+        "cluster_hint": ["changsha", "guangzhou", "kunshan"]
+      },
+      {
+        "domain": "uav",
+        "prefix": "uav",
+        "name": "大规模无人机协同仿真",
+        "short_name": "无人机协同",
+        "category": "多智能体",
+        "icon": "uav",
+        "description": "千架无人机集群协同控制仿真与三维航迹规划避障，多智能体并行仿真示范。",
+        "scenario_count": 2,
+        "run_count": 14,
+        "status": "available",
+        "scenarios": ["swarm-coordination", "path-planning"],
+        "cluster_hint": ["changsha", "kunshan"]
+      },
+      {
+        "domain": "drug",
+        "prefix": "drug",
+        "name": "跨中心虚拟药物筛选",
+        "short_name": "药物筛选",
+        "category": "生物计算",
+        "icon": "drug",
+        "description": "百万级化合物库跨中心虚拟筛选与药物分子 ADMET 性质预测。",
+        "scenario_count": 2,
+        "run_count": 14,
+        "status": "available",
+        "scenarios": ["virtual-screening", "admet-prediction"],
+        "cluster_hint": ["changsha", "guangzhou", "kunshan", "jinan"]
+      },
+      {
+        "domain": "dft",
+        "prefix": "dft",
+        "name": "第一性原理材料计算",
+        "short_name": "材料计算",
+        "category": "量子化学",
+        "icon": "dft",
+        "description": "材料能带结构与态密度计算、高通量材料筛选，基于 DFT 的第一性原理计算。",
+        "scenario_count": 2,
+        "run_count": 14,
+        "status": "available",
+        "scenarios": ["band-dos", "high-throughput-screening"],
+        "cluster_hint": ["changsha", "jinan"]
+      },
+      {
+        "domain": "multicenter",
+        "prefix": "multicenter",
+        "name": "函数多中心联调",
+        "short_name": "多中心联调",
+        "category": "平台能力",
+        "icon": "multi",
+        "description": "四中心资源状态、函数部署矩阵、跨中心调用链路、工作负载扩缩容与迁移。",
+        "scenario_count": 0,
+        "run_count": 16,
+        "status": "available",
+        "scenarios": [],
+        "cluster_hint": ["changsha", "guangzhou", "kunshan", "jinan"]
+      }
+    ],
+    "clusters": [
+      { "id": "changsha", "name": "长沙天河新一代", "location": "长沙", "architecture": "飞腾CPU + 迈创DSP" },
+      { "id": "guangzhou", "name": "广州天河二号", "location": "广州", "architecture": "Intel CPU" },
+      { "id": "kunshan", "name": "昆山昆仑", "location": "昆山", "architecture": "曙光CPU + 曙光DCU" },
+      { "id": "jinan", "name": "济南神威蓝光", "location": "济南", "architecture": "申威CPU" }
+    ]
+  }
+}

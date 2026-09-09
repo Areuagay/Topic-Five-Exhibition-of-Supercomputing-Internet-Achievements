@@ -67,34 +67,890 @@
         }
       ],
       "edges": [
-        { "source": "prepare", "target": "shard" },
-        { "source": "shard", "target": "init" },
-        { "source": "init", "target": "train" },
-        { "source": "train", "target": "checkpoint" },
-        { "source": "checkpoint", "target": "evaluate" }
+        {
+          "source": "prepare",
+          "target": "shard"
+        },
+        {
+          "source": "shard",
+          "target": "init"
+        },
+        {
+          "source": "init",
+          "target": "train"
+        },
+        {
+          "source": "train",
+          "target": "checkpoint"
+        },
+        {
+          "source": "checkpoint",
+          "target": "evaluate"
+        }
       ]
     },
     "metrics": {
       "progress": 42,
       "metrics": [
-        { "name": "step", "label": "训练步数", "value": 4200, "total": 10000, "unit": "step" },
-        { "name": "loss", "label": "Loss", "value": 2.314, "total": 0, "unit": "" },
-        { "name": "learning_rate", "label": "学习率", "value": 8e-05, "total": 0, "unit": "" },
-        { "name": "tokens_per_second", "label": "训练吞吐量", "value": 18420, "total": 0, "unit": "tokens/s" },
-        { "name": "gpu_utilization", "label": "GPU利用率", "value": 92, "total": 100, "unit": "%" },
-        { "name": "gpu_memory", "label": "GPU显存使用率", "value": 87, "total": 100, "unit": "%" },
-        { "name": "communication_overhead", "label": "通信开销", "value": 14.2, "total": 100, "unit": "%" }
+        {
+          "name": "step",
+          "label": "训练步数",
+          "value": 4200,
+          "total": 10000,
+          "unit": "step"
+        },
+        {
+          "name": "loss",
+          "label": "Loss",
+          "value": 2.314,
+          "total": 0,
+          "unit": ""
+        },
+        {
+          "name": "learning_rate",
+          "label": "学习率",
+          "value": 8e-05,
+          "total": 0,
+          "unit": ""
+        },
+        {
+          "name": "tokens_per_second",
+          "label": "训练吞吐量",
+          "value": 18420,
+          "total": 0,
+          "unit": "tokens/s"
+        },
+        {
+          "name": "gpu_utilization",
+          "label": "GPU利用率",
+          "value": 92,
+          "total": 100,
+          "unit": "%"
+        },
+        {
+          "name": "gpu_memory",
+          "label": "GPU显存使用率",
+          "value": 87,
+          "total": 100,
+          "unit": "%"
+        },
+        {
+          "name": "communication_overhead",
+          "label": "通信开销",
+          "value": 14.2,
+          "total": 100,
+          "unit": "%"
+        }
       ],
       "gpu_metrics": [
-        { "gpu_id": "gpu-0", "utilization": 94, "memory_utilization": 88, "temperature": 67 },
-        { "gpu_id": "gpu-1", "utilization": 91, "memory_utilization": 87, "temperature": 65 },
-        { "gpu_id": "gpu-2", "utilization": 93, "memory_utilization": 86, "temperature": 66 },
-        { "gpu_id": "gpu-3", "utilization": 90, "memory_utilization": 88, "temperature": 64 },
-        { "gpu_id": "gpu-4", "utilization": 92, "memory_utilization": 89, "temperature": 68 },
-        { "gpu_id": "gpu-5", "utilization": 89, "memory_utilization": 85, "temperature": 63 },
-        { "gpu_id": "gpu-6", "utilization": 93, "memory_utilization": 87, "temperature": 66 },
-        { "gpu_id": "gpu-7", "utilization": 91, "memory_utilization": 88, "temperature": 65 }
-      ]
+        {
+          "gpu_id": "gpu-0",
+          "utilization": 91.14,
+          "memory_utilization": 88.11,
+          "temperature": 71.5
+        },
+        {
+          "gpu_id": "gpu-1",
+          "utilization": 91.12,
+          "memory_utilization": 90.3,
+          "temperature": 66.2
+        },
+        {
+          "gpu_id": "gpu-2",
+          "utilization": 89.79,
+          "memory_utilization": 84.24,
+          "temperature": 65.9
+        },
+        {
+          "gpu_id": "gpu-3",
+          "utilization": 85.46,
+          "memory_utilization": 91.43,
+          "temperature": 67.6
+        },
+        {
+          "gpu_id": "gpu-4",
+          "utilization": 91.13,
+          "memory_utilization": 83.68,
+          "temperature": 66.6
+        },
+        {
+          "gpu_id": "gpu-5",
+          "utilization": 94.68,
+          "memory_utilization": 86.9,
+          "temperature": 69.5
+        },
+        {
+          "gpu_id": "gpu-6",
+          "utilization": 90.1,
+          "memory_utilization": 92.24,
+          "temperature": 74.4
+        },
+        {
+          "gpu_id": "gpu-7",
+          "utilization": 89.36,
+          "memory_utilization": 84.36,
+          "temperature": 74.2
+        }
+      ],
+      "domain_data": {
+        "source_type": "simulated",
+        "execution_mode": "simulated",
+        "scenario_id": "llm-pretraining",
+        "training_series": [
+          {
+            "step": 50,
+            "loss": 4.95367,
+            "learning_rate": 1.875e-05,
+            "tokens_per_second": 181583.2,
+            "gpu_utilization": 86.59,
+            "communication_overhead": 13.8
+          },
+          {
+            "step": 100,
+            "loss": 4.73654,
+            "learning_rate": 3.75e-05,
+            "tokens_per_second": 195475.5,
+            "gpu_utilization": 88.07,
+            "communication_overhead": 13.36
+          },
+          {
+            "step": 150,
+            "loss": 4.57147,
+            "learning_rate": 5.625e-05,
+            "tokens_per_second": 181597.3,
+            "gpu_utilization": 87.01,
+            "communication_overhead": 15.87
+          },
+          {
+            "step": 200,
+            "loss": 4.36479,
+            "learning_rate": 7.5e-05,
+            "tokens_per_second": 172432.6,
+            "gpu_utilization": 88.19,
+            "communication_overhead": 13.88
+          },
+          {
+            "step": 250,
+            "loss": 4.22162,
+            "learning_rate": 9.375e-05,
+            "tokens_per_second": 176934.6,
+            "gpu_utilization": 78.72,
+            "communication_overhead": 15.06
+          },
+          {
+            "step": 300,
+            "loss": 4.07209,
+            "learning_rate": 0.0001125,
+            "tokens_per_second": 175400.6,
+            "gpu_utilization": 87.36,
+            "communication_overhead": 12.09
+          },
+          {
+            "step": 350,
+            "loss": 3.92584,
+            "learning_rate": 0.00013125,
+            "tokens_per_second": 177428.7,
+            "gpu_utilization": 85.07,
+            "communication_overhead": 10.49
+          },
+          {
+            "step": 400,
+            "loss": 3.79216,
+            "learning_rate": 0.00015,
+            "tokens_per_second": 183329.2,
+            "gpu_utilization": 86.64,
+            "communication_overhead": 8.0
+          },
+          {
+            "step": 450,
+            "loss": 3.63942,
+            "learning_rate": 0.00016875,
+            "tokens_per_second": 205315.2,
+            "gpu_utilization": 85.12,
+            "communication_overhead": 10.29
+          },
+          {
+            "step": 500,
+            "loss": 3.55339,
+            "learning_rate": 0.0001875,
+            "tokens_per_second": 185816.6,
+            "gpu_utilization": 85.05,
+            "communication_overhead": 8.83
+          },
+          {
+            "step": 550,
+            "loss": 3.42577,
+            "learning_rate": 0.00020625,
+            "tokens_per_second": 186158.3,
+            "gpu_utilization": 87.11,
+            "communication_overhead": 14.01
+          },
+          {
+            "step": 600,
+            "loss": 3.28987,
+            "learning_rate": 0.000225,
+            "tokens_per_second": 189039.8,
+            "gpu_utilization": 90.7,
+            "communication_overhead": 10.63
+          },
+          {
+            "step": 650,
+            "loss": 3.20772,
+            "learning_rate": 0.00024375,
+            "tokens_per_second": 181582.3,
+            "gpu_utilization": 88.16,
+            "communication_overhead": 15.09
+          },
+          {
+            "step": 700,
+            "loss": 3.09525,
+            "learning_rate": 0.0002625,
+            "tokens_per_second": 184498.2,
+            "gpu_utilization": 85.35,
+            "communication_overhead": 10.48
+          },
+          {
+            "step": 750,
+            "loss": 3.02393,
+            "learning_rate": 0.00028125,
+            "tokens_per_second": 162926.0,
+            "gpu_utilization": 80.25,
+            "communication_overhead": 10.37
+          },
+          {
+            "step": 800,
+            "loss": 2.91628,
+            "learning_rate": 0.0003,
+            "tokens_per_second": 182275.0,
+            "gpu_utilization": 94.77,
+            "communication_overhead": 12.03
+          },
+          {
+            "step": 850,
+            "loss": 2.84402,
+            "learning_rate": 0.00029982,
+            "tokens_per_second": 186826.2,
+            "gpu_utilization": 79.41,
+            "communication_overhead": 9.48
+          },
+          {
+            "step": 900,
+            "loss": 2.76123,
+            "learning_rate": 0.00029928,
+            "tokens_per_second": 196899.9,
+            "gpu_utilization": 86.66,
+            "communication_overhead": 12.87
+          },
+          {
+            "step": 950,
+            "loss": 2.6989,
+            "learning_rate": 0.00029838,
+            "tokens_per_second": 197763.9,
+            "gpu_utilization": 83.1,
+            "communication_overhead": 8.75
+          },
+          {
+            "step": 1000,
+            "loss": 2.62802,
+            "learning_rate": 0.00029712,
+            "tokens_per_second": 174281.2,
+            "gpu_utilization": 86.62,
+            "communication_overhead": 8.68
+          },
+          {
+            "step": 1050,
+            "loss": 2.53757,
+            "learning_rate": 0.0002955,
+            "tokens_per_second": 173657.1,
+            "gpu_utilization": 85.0,
+            "communication_overhead": 16.36
+          },
+          {
+            "step": 1100,
+            "loss": 2.46103,
+            "learning_rate": 0.00029354,
+            "tokens_per_second": 177303.4,
+            "gpu_utilization": 85.8,
+            "communication_overhead": 8.91
+          },
+          {
+            "step": 1150,
+            "loss": 2.39509,
+            "learning_rate": 0.00029123,
+            "tokens_per_second": 188893.9,
+            "gpu_utilization": 90.04,
+            "communication_overhead": 10.94
+          },
+          {
+            "step": 1200,
+            "loss": 2.35773,
+            "learning_rate": 0.00028858,
+            "tokens_per_second": 180464.7,
+            "gpu_utilization": 90.98,
+            "communication_overhead": 11.96
+          },
+          {
+            "step": 1250,
+            "loss": 2.2745,
+            "learning_rate": 0.0002856,
+            "tokens_per_second": 185751.5,
+            "gpu_utilization": 92.72,
+            "communication_overhead": 12.32
+          },
+          {
+            "step": 1300,
+            "loss": 2.26551,
+            "learning_rate": 0.00028229,
+            "tokens_per_second": 188406.1,
+            "gpu_utilization": 87.67,
+            "communication_overhead": 16.13
+          },
+          {
+            "step": 1350,
+            "loss": 2.18849,
+            "learning_rate": 0.00027866,
+            "tokens_per_second": 199434.1,
+            "gpu_utilization": 86.67,
+            "communication_overhead": 12.25
+          },
+          {
+            "step": 1400,
+            "loss": 2.17442,
+            "learning_rate": 0.00027472,
+            "tokens_per_second": 174300.0,
+            "gpu_utilization": 83.93,
+            "communication_overhead": 17.44
+          },
+          {
+            "step": 1450,
+            "loss": 2.0885,
+            "learning_rate": 0.00027048,
+            "tokens_per_second": 186734.3,
+            "gpu_utilization": 89.05,
+            "communication_overhead": 11.94
+          },
+          {
+            "step": 1500,
+            "loss": 2.04721,
+            "learning_rate": 0.00026595,
+            "tokens_per_second": 161699.3,
+            "gpu_utilization": 87.88,
+            "communication_overhead": 14.55
+          },
+          {
+            "step": 1550,
+            "loss": 2.03413,
+            "learning_rate": 0.00026114,
+            "tokens_per_second": 172919.9,
+            "gpu_utilization": 79.4,
+            "communication_overhead": 12.94
+          },
+          {
+            "step": 1600,
+            "loss": 2.01424,
+            "learning_rate": 0.00025607,
+            "tokens_per_second": 189279.3,
+            "gpu_utilization": 93.47,
+            "communication_overhead": 10.8
+          },
+          {
+            "step": 1650,
+            "loss": 1.9822,
+            "learning_rate": 0.00025073,
+            "tokens_per_second": 188719.0,
+            "gpu_utilization": 85.67,
+            "communication_overhead": 9.88
+          },
+          {
+            "step": 1700,
+            "loss": 1.94679,
+            "learning_rate": 0.00024516,
+            "tokens_per_second": 191561.0,
+            "gpu_utilization": 87.04,
+            "communication_overhead": 12.58
+          },
+          {
+            "step": 1750,
+            "loss": 1.90786,
+            "learning_rate": 0.00023935,
+            "tokens_per_second": 200261.6,
+            "gpu_utilization": 84.65,
+            "communication_overhead": 12.41
+          },
+          {
+            "step": 1800,
+            "loss": 1.85936,
+            "learning_rate": 0.00023334,
+            "tokens_per_second": 176093.6,
+            "gpu_utilization": 89.07,
+            "communication_overhead": 8.0
+          },
+          {
+            "step": 1850,
+            "loss": 1.83295,
+            "learning_rate": 0.00022712,
+            "tokens_per_second": 174224.8,
+            "gpu_utilization": 89.18,
+            "communication_overhead": 11.37
+          },
+          {
+            "step": 1900,
+            "loss": 1.78937,
+            "learning_rate": 0.00022071,
+            "tokens_per_second": 174215.7,
+            "gpu_utilization": 92.41,
+            "communication_overhead": 15.24
+          },
+          {
+            "step": 1950,
+            "loss": 1.75908,
+            "learning_rate": 0.00021413,
+            "tokens_per_second": 181776.2,
+            "gpu_utilization": 87.24,
+            "communication_overhead": 13.48
+          },
+          {
+            "step": 2000,
+            "loss": 1.80949,
+            "learning_rate": 0.0002074,
+            "tokens_per_second": 168339.7,
+            "gpu_utilization": 94.91,
+            "communication_overhead": 10.71
+          },
+          {
+            "step": 2050,
+            "loss": 1.72945,
+            "learning_rate": 0.00020053,
+            "tokens_per_second": 184227.5,
+            "gpu_utilization": 91.78,
+            "communication_overhead": 12.69
+          },
+          {
+            "step": 2100,
+            "loss": 1.68289,
+            "learning_rate": 0.00019354,
+            "tokens_per_second": 186843.6,
+            "gpu_utilization": 93.75,
+            "communication_overhead": 9.1
+          },
+          {
+            "step": 2150,
+            "loss": 1.707,
+            "learning_rate": 0.00018645,
+            "tokens_per_second": 191976.0,
+            "gpu_utilization": 96.0,
+            "communication_overhead": 10.0
+          },
+          {
+            "step": 2200,
+            "loss": 1.63993,
+            "learning_rate": 0.00017926,
+            "tokens_per_second": 199881.0,
+            "gpu_utilization": 88.97,
+            "communication_overhead": 16.78
+          },
+          {
+            "step": 2250,
+            "loss": 1.64838,
+            "learning_rate": 0.00017201,
+            "tokens_per_second": 181846.2,
+            "gpu_utilization": 90.47,
+            "communication_overhead": 8.0
+          },
+          {
+            "step": 2300,
+            "loss": 1.64721,
+            "learning_rate": 0.0001647,
+            "tokens_per_second": 184492.6,
+            "gpu_utilization": 87.68,
+            "communication_overhead": 12.89
+          },
+          {
+            "step": 2350,
+            "loss": 1.63246,
+            "learning_rate": 0.00015736,
+            "tokens_per_second": 190529.7,
+            "gpu_utilization": 86.4,
+            "communication_overhead": 12.95
+          },
+          {
+            "step": 2400,
+            "loss": 1.61664,
+            "learning_rate": 0.00015,
+            "tokens_per_second": 181027.2,
+            "gpu_utilization": 87.02,
+            "communication_overhead": 8.87
+          },
+          {
+            "step": 2450,
+            "loss": 1.57782,
+            "learning_rate": 0.00014264,
+            "tokens_per_second": 194477.5,
+            "gpu_utilization": 82.65,
+            "communication_overhead": 8.74
+          },
+          {
+            "step": 2500,
+            "loss": 1.58465,
+            "learning_rate": 0.0001353,
+            "tokens_per_second": 188196.2,
+            "gpu_utilization": 90.11,
+            "communication_overhead": 9.45
+          },
+          {
+            "step": 2550,
+            "loss": 1.577,
+            "learning_rate": 0.00012799,
+            "tokens_per_second": 177843.5,
+            "gpu_utilization": 88.63,
+            "communication_overhead": 11.72
+          },
+          {
+            "step": 2600,
+            "loss": 1.5384,
+            "learning_rate": 0.00012074,
+            "tokens_per_second": 195194.4,
+            "gpu_utilization": 89.29,
+            "communication_overhead": 14.41
+          },
+          {
+            "step": 2650,
+            "loss": 1.53927,
+            "learning_rate": 0.00011355,
+            "tokens_per_second": 194477.9,
+            "gpu_utilization": 87.35,
+            "communication_overhead": 12.24
+          },
+          {
+            "step": 2700,
+            "loss": 1.5468,
+            "learning_rate": 0.00010646,
+            "tokens_per_second": 189904.0,
+            "gpu_utilization": 95.95,
+            "communication_overhead": 14.22
+          },
+          {
+            "step": 2750,
+            "loss": 1.49486,
+            "learning_rate": 9.947e-05,
+            "tokens_per_second": 179905.9,
+            "gpu_utilization": 90.7,
+            "communication_overhead": 14.2
+          },
+          {
+            "step": 2800,
+            "loss": 1.51709,
+            "learning_rate": 9.26e-05,
+            "tokens_per_second": 189877.2,
+            "gpu_utilization": 87.61,
+            "communication_overhead": 13.61
+          },
+          {
+            "step": 2850,
+            "loss": 1.5329,
+            "learning_rate": 8.587e-05,
+            "tokens_per_second": 194956.7,
+            "gpu_utilization": 83.84,
+            "communication_overhead": 9.32
+          },
+          {
+            "step": 2900,
+            "loss": 1.49757,
+            "learning_rate": 7.929e-05,
+            "tokens_per_second": 188517.0,
+            "gpu_utilization": 88.19,
+            "communication_overhead": 11.91
+          },
+          {
+            "step": 2950,
+            "loss": 1.49147,
+            "learning_rate": 7.288e-05,
+            "tokens_per_second": 179457.3,
+            "gpu_utilization": 88.35,
+            "communication_overhead": 13.9
+          },
+          {
+            "step": 3000,
+            "loss": 1.47298,
+            "learning_rate": 6.666e-05,
+            "tokens_per_second": 176747.3,
+            "gpu_utilization": 94.01,
+            "communication_overhead": 13.4
+          },
+          {
+            "step": 3050,
+            "loss": 1.48128,
+            "learning_rate": 6.065e-05,
+            "tokens_per_second": 189345.6,
+            "gpu_utilization": 81.72,
+            "communication_overhead": 11.92
+          },
+          {
+            "step": 3100,
+            "loss": 1.45512,
+            "learning_rate": 5.484e-05,
+            "tokens_per_second": 176435.7,
+            "gpu_utilization": 94.88,
+            "communication_overhead": 8.0
+          },
+          {
+            "step": 3150,
+            "loss": 1.45518,
+            "learning_rate": 4.927e-05,
+            "tokens_per_second": 170768.2,
+            "gpu_utilization": 91.29,
+            "communication_overhead": 12.76
+          },
+          {
+            "step": 3200,
+            "loss": 1.45226,
+            "learning_rate": 4.393e-05,
+            "tokens_per_second": 176428.5,
+            "gpu_utilization": 84.92,
+            "communication_overhead": 10.84
+          },
+          {
+            "step": 3250,
+            "loss": 1.46375,
+            "learning_rate": 3.886e-05,
+            "tokens_per_second": 173737.5,
+            "gpu_utilization": 83.76,
+            "communication_overhead": 8.0
+          },
+          {
+            "step": 3300,
+            "loss": 1.45466,
+            "learning_rate": 3.405e-05,
+            "tokens_per_second": 176688.8,
+            "gpu_utilization": 87.33,
+            "communication_overhead": 11.54
+          },
+          {
+            "step": 3350,
+            "loss": 1.41852,
+            "learning_rate": 2.952e-05,
+            "tokens_per_second": 188212.1,
+            "gpu_utilization": 96.0,
+            "communication_overhead": 12.74
+          },
+          {
+            "step": 3400,
+            "loss": 1.44717,
+            "learning_rate": 2.528e-05,
+            "tokens_per_second": 191918.8,
+            "gpu_utilization": 78.81,
+            "communication_overhead": 13.22
+          },
+          {
+            "step": 3450,
+            "loss": 1.46382,
+            "learning_rate": 2.134e-05,
+            "tokens_per_second": 190000.4,
+            "gpu_utilization": 88.57,
+            "communication_overhead": 9.55
+          },
+          {
+            "step": 3500,
+            "loss": 1.40658,
+            "learning_rate": 1.771e-05,
+            "tokens_per_second": 188399.4,
+            "gpu_utilization": 92.36,
+            "communication_overhead": 9.27
+          },
+          {
+            "step": 3550,
+            "loss": 1.43382,
+            "learning_rate": 1.44e-05,
+            "tokens_per_second": 189573.4,
+            "gpu_utilization": 92.02,
+            "communication_overhead": 15.94
+          },
+          {
+            "step": 3600,
+            "loss": 1.4101,
+            "learning_rate": 1.142e-05,
+            "tokens_per_second": 172935.8,
+            "gpu_utilization": 91.96,
+            "communication_overhead": 11.16
+          },
+          {
+            "step": 3650,
+            "loss": 1.43758,
+            "learning_rate": 8.77e-06,
+            "tokens_per_second": 195980.1,
+            "gpu_utilization": 89.81,
+            "communication_overhead": 12.66
+          },
+          {
+            "step": 3700,
+            "loss": 1.3993,
+            "learning_rate": 6.46e-06,
+            "tokens_per_second": 169116.9,
+            "gpu_utilization": 86.65,
+            "communication_overhead": 11.56
+          },
+          {
+            "step": 3750,
+            "loss": 1.40776,
+            "learning_rate": 4.5e-06,
+            "tokens_per_second": 176609.5,
+            "gpu_utilization": 86.65,
+            "communication_overhead": 11.99
+          },
+          {
+            "step": 3800,
+            "loss": 1.41201,
+            "learning_rate": 2.88e-06,
+            "tokens_per_second": 179425.0,
+            "gpu_utilization": 84.02,
+            "communication_overhead": 10.7
+          },
+          {
+            "step": 3850,
+            "loss": 1.41214,
+            "learning_rate": 1.62e-06,
+            "tokens_per_second": 188142.3,
+            "gpu_utilization": 90.58,
+            "communication_overhead": 11.88
+          },
+          {
+            "step": 3900,
+            "loss": 1.39183,
+            "learning_rate": 7.2e-07,
+            "tokens_per_second": 186512.7,
+            "gpu_utilization": 91.85,
+            "communication_overhead": 8.82
+          },
+          {
+            "step": 3950,
+            "loss": 1.37848,
+            "learning_rate": 1.8e-07,
+            "tokens_per_second": 191983.1,
+            "gpu_utilization": 87.07,
+            "communication_overhead": 9.47
+          },
+          {
+            "step": 4000,
+            "loss": 1.38946,
+            "learning_rate": 0.0,
+            "tokens_per_second": 178106.2,
+            "gpu_utilization": 95.2,
+            "communication_overhead": 16.58
+          }
+        ],
+        "gpu_metrics": [
+          {
+            "gpu_id": 0,
+            "utilization": 91.14,
+            "memory_utilization": 88.11,
+            "temperature": 71.5
+          },
+          {
+            "gpu_id": 1,
+            "utilization": 91.12,
+            "memory_utilization": 90.3,
+            "temperature": 66.2
+          },
+          {
+            "gpu_id": 2,
+            "utilization": 89.79,
+            "memory_utilization": 84.24,
+            "temperature": 65.9
+          },
+          {
+            "gpu_id": 3,
+            "utilization": 85.46,
+            "memory_utilization": 91.43,
+            "temperature": 67.6
+          },
+          {
+            "gpu_id": 4,
+            "utilization": 91.13,
+            "memory_utilization": 83.68,
+            "temperature": 66.6
+          },
+          {
+            "gpu_id": 5,
+            "utilization": 94.68,
+            "memory_utilization": 86.9,
+            "temperature": 69.5
+          },
+          {
+            "gpu_id": 6,
+            "utilization": 90.1,
+            "memory_utilization": 92.24,
+            "temperature": 74.4
+          },
+          {
+            "gpu_id": 7,
+            "utilization": 89.36,
+            "memory_utilization": 84.36,
+            "temperature": 74.2
+          },
+          {
+            "gpu_id": 8,
+            "utilization": 93.96,
+            "memory_utilization": 82.37,
+            "temperature": 66.5
+          },
+          {
+            "gpu_id": 9,
+            "utilization": 86.41,
+            "memory_utilization": 89.32,
+            "temperature": 69.8
+          },
+          {
+            "gpu_id": 10,
+            "utilization": 96.0,
+            "memory_utilization": 81.78,
+            "temperature": 68.8
+          },
+          {
+            "gpu_id": 11,
+            "utilization": 89.92,
+            "memory_utilization": 79.85,
+            "temperature": 69.2
+          }
+        ],
+        "parallel_config": {
+          "data_parallel": 4,
+          "tensor_parallel": 2,
+          "pipeline_parallel": 2,
+          "world_size": 16
+        },
+        "checkpoint_events": [
+          {
+            "step": 1000,
+            "timestamp": "2026-08-11T09:20:00+08:00",
+            "size_gb": 38.53,
+            "path": "simulated://checkpoints/LLM-20260811-0001/ckpt-1000"
+          },
+          {
+            "step": 2000,
+            "timestamp": "2026-08-11T09:45:00+08:00",
+            "size_gb": 38.83,
+            "path": "simulated://checkpoints/LLM-20260811-0001/ckpt-2000"
+          },
+          {
+            "step": 3000,
+            "timestamp": "2026-08-11T10:10:00+08:00",
+            "size_gb": 38.39,
+            "path": "simulated://checkpoints/LLM-20260811-0001/ckpt-3000"
+          },
+          {
+            "step": 4000,
+            "timestamp": "2026-08-11T10:35:00+08:00",
+            "size_gb": 38.44,
+            "path": "simulated://checkpoints/LLM-20260811-0001/ckpt-4000"
+          },
+          {
+            "step": 4200,
+            "timestamp": "2026-08-11T11:00:00+08:00",
+            "size_gb": 38.58,
+            "path": "simulated://checkpoints/LLM-20260811-0001/ckpt-4200"
+          }
+        ]
+      }
     },
     "logs": {
       "next_offset": 8,
@@ -173,8 +1029,791 @@
         "preview_url": "/api/v1/files/ART-LLM-002/preview",
         "download_url": "/api/v1/files/ART-LLM-002/download",
         "created_at": "2026-08-11T10:58:05+08:00"
+      },
+      {
+        "id": "ART-LLM-PCSV1",
+        "name": "training_series.csv",
+        "type": "dataset",
+        "format": "csv",
+        "size": 3614,
+        "storage_path": "artifacts/simulated/llm/llm-pretraining/LLM-20260811-0001/training_series.csv",
+        "preview_url": "/api/v1/files/ART-LLM-PCSV1/preview",
+        "download_url": "/api/v1/files/ART-LLM-PCSV1/download",
+        "created_at": "2026-09-09T18:06:01+08:00",
+        "source_type": "simulated"
+      },
+      {
+        "id": "ART-LLM-PJSON1",
+        "name": "gpu_metrics.json",
+        "type": "dataset",
+        "format": "json",
+        "size": 1583,
+        "storage_path": "artifacts/simulated/llm/llm-pretraining/LLM-20260811-0001/gpu_metrics.json",
+        "preview_url": "/api/v1/files/ART-LLM-PJSON1/preview",
+        "download_url": "/api/v1/files/ART-LLM-PJSON1/download",
+        "created_at": "2026-09-09T18:06:01+08:00",
+        "source_type": "simulated"
       }
-    ]
+    ],
+    "domain_data": {
+      "source_type": "simulated",
+      "execution_mode": "simulated",
+      "scenario_id": "llm-pretraining",
+      "training_series": [
+        {
+          "step": 50,
+          "loss": 4.95367,
+          "learning_rate": 1.875e-05,
+          "tokens_per_second": 181583.2,
+          "gpu_utilization": 86.59,
+          "communication_overhead": 13.8
+        },
+        {
+          "step": 100,
+          "loss": 4.73654,
+          "learning_rate": 3.75e-05,
+          "tokens_per_second": 195475.5,
+          "gpu_utilization": 88.07,
+          "communication_overhead": 13.36
+        },
+        {
+          "step": 150,
+          "loss": 4.57147,
+          "learning_rate": 5.625e-05,
+          "tokens_per_second": 181597.3,
+          "gpu_utilization": 87.01,
+          "communication_overhead": 15.87
+        },
+        {
+          "step": 200,
+          "loss": 4.36479,
+          "learning_rate": 7.5e-05,
+          "tokens_per_second": 172432.6,
+          "gpu_utilization": 88.19,
+          "communication_overhead": 13.88
+        },
+        {
+          "step": 250,
+          "loss": 4.22162,
+          "learning_rate": 9.375e-05,
+          "tokens_per_second": 176934.6,
+          "gpu_utilization": 78.72,
+          "communication_overhead": 15.06
+        },
+        {
+          "step": 300,
+          "loss": 4.07209,
+          "learning_rate": 0.0001125,
+          "tokens_per_second": 175400.6,
+          "gpu_utilization": 87.36,
+          "communication_overhead": 12.09
+        },
+        {
+          "step": 350,
+          "loss": 3.92584,
+          "learning_rate": 0.00013125,
+          "tokens_per_second": 177428.7,
+          "gpu_utilization": 85.07,
+          "communication_overhead": 10.49
+        },
+        {
+          "step": 400,
+          "loss": 3.79216,
+          "learning_rate": 0.00015,
+          "tokens_per_second": 183329.2,
+          "gpu_utilization": 86.64,
+          "communication_overhead": 8.0
+        },
+        {
+          "step": 450,
+          "loss": 3.63942,
+          "learning_rate": 0.00016875,
+          "tokens_per_second": 205315.2,
+          "gpu_utilization": 85.12,
+          "communication_overhead": 10.29
+        },
+        {
+          "step": 500,
+          "loss": 3.55339,
+          "learning_rate": 0.0001875,
+          "tokens_per_second": 185816.6,
+          "gpu_utilization": 85.05,
+          "communication_overhead": 8.83
+        },
+        {
+          "step": 550,
+          "loss": 3.42577,
+          "learning_rate": 0.00020625,
+          "tokens_per_second": 186158.3,
+          "gpu_utilization": 87.11,
+          "communication_overhead": 14.01
+        },
+        {
+          "step": 600,
+          "loss": 3.28987,
+          "learning_rate": 0.000225,
+          "tokens_per_second": 189039.8,
+          "gpu_utilization": 90.7,
+          "communication_overhead": 10.63
+        },
+        {
+          "step": 650,
+          "loss": 3.20772,
+          "learning_rate": 0.00024375,
+          "tokens_per_second": 181582.3,
+          "gpu_utilization": 88.16,
+          "communication_overhead": 15.09
+        },
+        {
+          "step": 700,
+          "loss": 3.09525,
+          "learning_rate": 0.0002625,
+          "tokens_per_second": 184498.2,
+          "gpu_utilization": 85.35,
+          "communication_overhead": 10.48
+        },
+        {
+          "step": 750,
+          "loss": 3.02393,
+          "learning_rate": 0.00028125,
+          "tokens_per_second": 162926.0,
+          "gpu_utilization": 80.25,
+          "communication_overhead": 10.37
+        },
+        {
+          "step": 800,
+          "loss": 2.91628,
+          "learning_rate": 0.0003,
+          "tokens_per_second": 182275.0,
+          "gpu_utilization": 94.77,
+          "communication_overhead": 12.03
+        },
+        {
+          "step": 850,
+          "loss": 2.84402,
+          "learning_rate": 0.00029982,
+          "tokens_per_second": 186826.2,
+          "gpu_utilization": 79.41,
+          "communication_overhead": 9.48
+        },
+        {
+          "step": 900,
+          "loss": 2.76123,
+          "learning_rate": 0.00029928,
+          "tokens_per_second": 196899.9,
+          "gpu_utilization": 86.66,
+          "communication_overhead": 12.87
+        },
+        {
+          "step": 950,
+          "loss": 2.6989,
+          "learning_rate": 0.00029838,
+          "tokens_per_second": 197763.9,
+          "gpu_utilization": 83.1,
+          "communication_overhead": 8.75
+        },
+        {
+          "step": 1000,
+          "loss": 2.62802,
+          "learning_rate": 0.00029712,
+          "tokens_per_second": 174281.2,
+          "gpu_utilization": 86.62,
+          "communication_overhead": 8.68
+        },
+        {
+          "step": 1050,
+          "loss": 2.53757,
+          "learning_rate": 0.0002955,
+          "tokens_per_second": 173657.1,
+          "gpu_utilization": 85.0,
+          "communication_overhead": 16.36
+        },
+        {
+          "step": 1100,
+          "loss": 2.46103,
+          "learning_rate": 0.00029354,
+          "tokens_per_second": 177303.4,
+          "gpu_utilization": 85.8,
+          "communication_overhead": 8.91
+        },
+        {
+          "step": 1150,
+          "loss": 2.39509,
+          "learning_rate": 0.00029123,
+          "tokens_per_second": 188893.9,
+          "gpu_utilization": 90.04,
+          "communication_overhead": 10.94
+        },
+        {
+          "step": 1200,
+          "loss": 2.35773,
+          "learning_rate": 0.00028858,
+          "tokens_per_second": 180464.7,
+          "gpu_utilization": 90.98,
+          "communication_overhead": 11.96
+        },
+        {
+          "step": 1250,
+          "loss": 2.2745,
+          "learning_rate": 0.0002856,
+          "tokens_per_second": 185751.5,
+          "gpu_utilization": 92.72,
+          "communication_overhead": 12.32
+        },
+        {
+          "step": 1300,
+          "loss": 2.26551,
+          "learning_rate": 0.00028229,
+          "tokens_per_second": 188406.1,
+          "gpu_utilization": 87.67,
+          "communication_overhead": 16.13
+        },
+        {
+          "step": 1350,
+          "loss": 2.18849,
+          "learning_rate": 0.00027866,
+          "tokens_per_second": 199434.1,
+          "gpu_utilization": 86.67,
+          "communication_overhead": 12.25
+        },
+        {
+          "step": 1400,
+          "loss": 2.17442,
+          "learning_rate": 0.00027472,
+          "tokens_per_second": 174300.0,
+          "gpu_utilization": 83.93,
+          "communication_overhead": 17.44
+        },
+        {
+          "step": 1450,
+          "loss": 2.0885,
+          "learning_rate": 0.00027048,
+          "tokens_per_second": 186734.3,
+          "gpu_utilization": 89.05,
+          "communication_overhead": 11.94
+        },
+        {
+          "step": 1500,
+          "loss": 2.04721,
+          "learning_rate": 0.00026595,
+          "tokens_per_second": 161699.3,
+          "gpu_utilization": 87.88,
+          "communication_overhead": 14.55
+        },
+        {
+          "step": 1550,
+          "loss": 2.03413,
+          "learning_rate": 0.00026114,
+          "tokens_per_second": 172919.9,
+          "gpu_utilization": 79.4,
+          "communication_overhead": 12.94
+        },
+        {
+          "step": 1600,
+          "loss": 2.01424,
+          "learning_rate": 0.00025607,
+          "tokens_per_second": 189279.3,
+          "gpu_utilization": 93.47,
+          "communication_overhead": 10.8
+        },
+        {
+          "step": 1650,
+          "loss": 1.9822,
+          "learning_rate": 0.00025073,
+          "tokens_per_second": 188719.0,
+          "gpu_utilization": 85.67,
+          "communication_overhead": 9.88
+        },
+        {
+          "step": 1700,
+          "loss": 1.94679,
+          "learning_rate": 0.00024516,
+          "tokens_per_second": 191561.0,
+          "gpu_utilization": 87.04,
+          "communication_overhead": 12.58
+        },
+        {
+          "step": 1750,
+          "loss": 1.90786,
+          "learning_rate": 0.00023935,
+          "tokens_per_second": 200261.6,
+          "gpu_utilization": 84.65,
+          "communication_overhead": 12.41
+        },
+        {
+          "step": 1800,
+          "loss": 1.85936,
+          "learning_rate": 0.00023334,
+          "tokens_per_second": 176093.6,
+          "gpu_utilization": 89.07,
+          "communication_overhead": 8.0
+        },
+        {
+          "step": 1850,
+          "loss": 1.83295,
+          "learning_rate": 0.00022712,
+          "tokens_per_second": 174224.8,
+          "gpu_utilization": 89.18,
+          "communication_overhead": 11.37
+        },
+        {
+          "step": 1900,
+          "loss": 1.78937,
+          "learning_rate": 0.00022071,
+          "tokens_per_second": 174215.7,
+          "gpu_utilization": 92.41,
+          "communication_overhead": 15.24
+        },
+        {
+          "step": 1950,
+          "loss": 1.75908,
+          "learning_rate": 0.00021413,
+          "tokens_per_second": 181776.2,
+          "gpu_utilization": 87.24,
+          "communication_overhead": 13.48
+        },
+        {
+          "step": 2000,
+          "loss": 1.80949,
+          "learning_rate": 0.0002074,
+          "tokens_per_second": 168339.7,
+          "gpu_utilization": 94.91,
+          "communication_overhead": 10.71
+        },
+        {
+          "step": 2050,
+          "loss": 1.72945,
+          "learning_rate": 0.00020053,
+          "tokens_per_second": 184227.5,
+          "gpu_utilization": 91.78,
+          "communication_overhead": 12.69
+        },
+        {
+          "step": 2100,
+          "loss": 1.68289,
+          "learning_rate": 0.00019354,
+          "tokens_per_second": 186843.6,
+          "gpu_utilization": 93.75,
+          "communication_overhead": 9.1
+        },
+        {
+          "step": 2150,
+          "loss": 1.707,
+          "learning_rate": 0.00018645,
+          "tokens_per_second": 191976.0,
+          "gpu_utilization": 96.0,
+          "communication_overhead": 10.0
+        },
+        {
+          "step": 2200,
+          "loss": 1.63993,
+          "learning_rate": 0.00017926,
+          "tokens_per_second": 199881.0,
+          "gpu_utilization": 88.97,
+          "communication_overhead": 16.78
+        },
+        {
+          "step": 2250,
+          "loss": 1.64838,
+          "learning_rate": 0.00017201,
+          "tokens_per_second": 181846.2,
+          "gpu_utilization": 90.47,
+          "communication_overhead": 8.0
+        },
+        {
+          "step": 2300,
+          "loss": 1.64721,
+          "learning_rate": 0.0001647,
+          "tokens_per_second": 184492.6,
+          "gpu_utilization": 87.68,
+          "communication_overhead": 12.89
+        },
+        {
+          "step": 2350,
+          "loss": 1.63246,
+          "learning_rate": 0.00015736,
+          "tokens_per_second": 190529.7,
+          "gpu_utilization": 86.4,
+          "communication_overhead": 12.95
+        },
+        {
+          "step": 2400,
+          "loss": 1.61664,
+          "learning_rate": 0.00015,
+          "tokens_per_second": 181027.2,
+          "gpu_utilization": 87.02,
+          "communication_overhead": 8.87
+        },
+        {
+          "step": 2450,
+          "loss": 1.57782,
+          "learning_rate": 0.00014264,
+          "tokens_per_second": 194477.5,
+          "gpu_utilization": 82.65,
+          "communication_overhead": 8.74
+        },
+        {
+          "step": 2500,
+          "loss": 1.58465,
+          "learning_rate": 0.0001353,
+          "tokens_per_second": 188196.2,
+          "gpu_utilization": 90.11,
+          "communication_overhead": 9.45
+        },
+        {
+          "step": 2550,
+          "loss": 1.577,
+          "learning_rate": 0.00012799,
+          "tokens_per_second": 177843.5,
+          "gpu_utilization": 88.63,
+          "communication_overhead": 11.72
+        },
+        {
+          "step": 2600,
+          "loss": 1.5384,
+          "learning_rate": 0.00012074,
+          "tokens_per_second": 195194.4,
+          "gpu_utilization": 89.29,
+          "communication_overhead": 14.41
+        },
+        {
+          "step": 2650,
+          "loss": 1.53927,
+          "learning_rate": 0.00011355,
+          "tokens_per_second": 194477.9,
+          "gpu_utilization": 87.35,
+          "communication_overhead": 12.24
+        },
+        {
+          "step": 2700,
+          "loss": 1.5468,
+          "learning_rate": 0.00010646,
+          "tokens_per_second": 189904.0,
+          "gpu_utilization": 95.95,
+          "communication_overhead": 14.22
+        },
+        {
+          "step": 2750,
+          "loss": 1.49486,
+          "learning_rate": 9.947e-05,
+          "tokens_per_second": 179905.9,
+          "gpu_utilization": 90.7,
+          "communication_overhead": 14.2
+        },
+        {
+          "step": 2800,
+          "loss": 1.51709,
+          "learning_rate": 9.26e-05,
+          "tokens_per_second": 189877.2,
+          "gpu_utilization": 87.61,
+          "communication_overhead": 13.61
+        },
+        {
+          "step": 2850,
+          "loss": 1.5329,
+          "learning_rate": 8.587e-05,
+          "tokens_per_second": 194956.7,
+          "gpu_utilization": 83.84,
+          "communication_overhead": 9.32
+        },
+        {
+          "step": 2900,
+          "loss": 1.49757,
+          "learning_rate": 7.929e-05,
+          "tokens_per_second": 188517.0,
+          "gpu_utilization": 88.19,
+          "communication_overhead": 11.91
+        },
+        {
+          "step": 2950,
+          "loss": 1.49147,
+          "learning_rate": 7.288e-05,
+          "tokens_per_second": 179457.3,
+          "gpu_utilization": 88.35,
+          "communication_overhead": 13.9
+        },
+        {
+          "step": 3000,
+          "loss": 1.47298,
+          "learning_rate": 6.666e-05,
+          "tokens_per_second": 176747.3,
+          "gpu_utilization": 94.01,
+          "communication_overhead": 13.4
+        },
+        {
+          "step": 3050,
+          "loss": 1.48128,
+          "learning_rate": 6.065e-05,
+          "tokens_per_second": 189345.6,
+          "gpu_utilization": 81.72,
+          "communication_overhead": 11.92
+        },
+        {
+          "step": 3100,
+          "loss": 1.45512,
+          "learning_rate": 5.484e-05,
+          "tokens_per_second": 176435.7,
+          "gpu_utilization": 94.88,
+          "communication_overhead": 8.0
+        },
+        {
+          "step": 3150,
+          "loss": 1.45518,
+          "learning_rate": 4.927e-05,
+          "tokens_per_second": 170768.2,
+          "gpu_utilization": 91.29,
+          "communication_overhead": 12.76
+        },
+        {
+          "step": 3200,
+          "loss": 1.45226,
+          "learning_rate": 4.393e-05,
+          "tokens_per_second": 176428.5,
+          "gpu_utilization": 84.92,
+          "communication_overhead": 10.84
+        },
+        {
+          "step": 3250,
+          "loss": 1.46375,
+          "learning_rate": 3.886e-05,
+          "tokens_per_second": 173737.5,
+          "gpu_utilization": 83.76,
+          "communication_overhead": 8.0
+        },
+        {
+          "step": 3300,
+          "loss": 1.45466,
+          "learning_rate": 3.405e-05,
+          "tokens_per_second": 176688.8,
+          "gpu_utilization": 87.33,
+          "communication_overhead": 11.54
+        },
+        {
+          "step": 3350,
+          "loss": 1.41852,
+          "learning_rate": 2.952e-05,
+          "tokens_per_second": 188212.1,
+          "gpu_utilization": 96.0,
+          "communication_overhead": 12.74
+        },
+        {
+          "step": 3400,
+          "loss": 1.44717,
+          "learning_rate": 2.528e-05,
+          "tokens_per_second": 191918.8,
+          "gpu_utilization": 78.81,
+          "communication_overhead": 13.22
+        },
+        {
+          "step": 3450,
+          "loss": 1.46382,
+          "learning_rate": 2.134e-05,
+          "tokens_per_second": 190000.4,
+          "gpu_utilization": 88.57,
+          "communication_overhead": 9.55
+        },
+        {
+          "step": 3500,
+          "loss": 1.40658,
+          "learning_rate": 1.771e-05,
+          "tokens_per_second": 188399.4,
+          "gpu_utilization": 92.36,
+          "communication_overhead": 9.27
+        },
+        {
+          "step": 3550,
+          "loss": 1.43382,
+          "learning_rate": 1.44e-05,
+          "tokens_per_second": 189573.4,
+          "gpu_utilization": 92.02,
+          "communication_overhead": 15.94
+        },
+        {
+          "step": 3600,
+          "loss": 1.4101,
+          "learning_rate": 1.142e-05,
+          "tokens_per_second": 172935.8,
+          "gpu_utilization": 91.96,
+          "communication_overhead": 11.16
+        },
+        {
+          "step": 3650,
+          "loss": 1.43758,
+          "learning_rate": 8.77e-06,
+          "tokens_per_second": 195980.1,
+          "gpu_utilization": 89.81,
+          "communication_overhead": 12.66
+        },
+        {
+          "step": 3700,
+          "loss": 1.3993,
+          "learning_rate": 6.46e-06,
+          "tokens_per_second": 169116.9,
+          "gpu_utilization": 86.65,
+          "communication_overhead": 11.56
+        },
+        {
+          "step": 3750,
+          "loss": 1.40776,
+          "learning_rate": 4.5e-06,
+          "tokens_per_second": 176609.5,
+          "gpu_utilization": 86.65,
+          "communication_overhead": 11.99
+        },
+        {
+          "step": 3800,
+          "loss": 1.41201,
+          "learning_rate": 2.88e-06,
+          "tokens_per_second": 179425.0,
+          "gpu_utilization": 84.02,
+          "communication_overhead": 10.7
+        },
+        {
+          "step": 3850,
+          "loss": 1.41214,
+          "learning_rate": 1.62e-06,
+          "tokens_per_second": 188142.3,
+          "gpu_utilization": 90.58,
+          "communication_overhead": 11.88
+        },
+        {
+          "step": 3900,
+          "loss": 1.39183,
+          "learning_rate": 7.2e-07,
+          "tokens_per_second": 186512.7,
+          "gpu_utilization": 91.85,
+          "communication_overhead": 8.82
+        },
+        {
+          "step": 3950,
+          "loss": 1.37848,
+          "learning_rate": 1.8e-07,
+          "tokens_per_second": 191983.1,
+          "gpu_utilization": 87.07,
+          "communication_overhead": 9.47
+        },
+        {
+          "step": 4000,
+          "loss": 1.38946,
+          "learning_rate": 0.0,
+          "tokens_per_second": 178106.2,
+          "gpu_utilization": 95.2,
+          "communication_overhead": 16.58
+        }
+      ],
+      "gpu_metrics": [
+        {
+          "gpu_id": 0,
+          "utilization": 91.14,
+          "memory_utilization": 88.11,
+          "temperature": 71.5
+        },
+        {
+          "gpu_id": 1,
+          "utilization": 91.12,
+          "memory_utilization": 90.3,
+          "temperature": 66.2
+        },
+        {
+          "gpu_id": 2,
+          "utilization": 89.79,
+          "memory_utilization": 84.24,
+          "temperature": 65.9
+        },
+        {
+          "gpu_id": 3,
+          "utilization": 85.46,
+          "memory_utilization": 91.43,
+          "temperature": 67.6
+        },
+        {
+          "gpu_id": 4,
+          "utilization": 91.13,
+          "memory_utilization": 83.68,
+          "temperature": 66.6
+        },
+        {
+          "gpu_id": 5,
+          "utilization": 94.68,
+          "memory_utilization": 86.9,
+          "temperature": 69.5
+        },
+        {
+          "gpu_id": 6,
+          "utilization": 90.1,
+          "memory_utilization": 92.24,
+          "temperature": 74.4
+        },
+        {
+          "gpu_id": 7,
+          "utilization": 89.36,
+          "memory_utilization": 84.36,
+          "temperature": 74.2
+        },
+        {
+          "gpu_id": 8,
+          "utilization": 93.96,
+          "memory_utilization": 82.37,
+          "temperature": 66.5
+        },
+        {
+          "gpu_id": 9,
+          "utilization": 86.41,
+          "memory_utilization": 89.32,
+          "temperature": 69.8
+        },
+        {
+          "gpu_id": 10,
+          "utilization": 96.0,
+          "memory_utilization": 81.78,
+          "temperature": 68.8
+        },
+        {
+          "gpu_id": 11,
+          "utilization": 89.92,
+          "memory_utilization": 79.85,
+          "temperature": 69.2
+        }
+      ],
+      "parallel_config": {
+        "data_parallel": 4,
+        "tensor_parallel": 2,
+        "pipeline_parallel": 2,
+        "world_size": 16
+      },
+      "checkpoint_events": [
+        {
+          "step": 1000,
+          "timestamp": "2026-08-11T09:20:00+08:00",
+          "size_gb": 38.53,
+          "path": "simulated://checkpoints/LLM-20260811-0001/ckpt-1000"
+        },
+        {
+          "step": 2000,
+          "timestamp": "2026-08-11T09:45:00+08:00",
+          "size_gb": 38.83,
+          "path": "simulated://checkpoints/LLM-20260811-0001/ckpt-2000"
+        },
+        {
+          "step": 3000,
+          "timestamp": "2026-08-11T10:10:00+08:00",
+          "size_gb": 38.39,
+          "path": "simulated://checkpoints/LLM-20260811-0001/ckpt-3000"
+        },
+        {
+          "step": 4000,
+          "timestamp": "2026-08-11T10:35:00+08:00",
+          "size_gb": 38.44,
+          "path": "simulated://checkpoints/LLM-20260811-0001/ckpt-4000"
+        },
+        {
+          "step": 4200,
+          "timestamp": "2026-08-11T11:00:00+08:00",
+          "size_gb": 38.58,
+          "path": "simulated://checkpoints/LLM-20260811-0001/ckpt-4200"
+        }
+      ]
+    }
   },
   "timestamp": "2026-08-11T10:58:35+08:00"
 }

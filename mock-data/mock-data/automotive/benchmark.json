@@ -1,0 +1,33 @@
+{
+  "code": 200,
+  "message": "success",
+  "data": {
+    "vehicle-crash": {
+      "dimensions": [
+        { "key": "walltime", "name": "仿真耗时", "unit": "min" },
+        { "key": "parallel_efficiency", "name": "并行效率", "unit": "%" },
+        { "key": "io_throughput", "name": "I/O吞吐", "unit": "GB/s" },
+        { "key": "energy_error", "name": "总能量误差", "unit": "%" }
+      ],
+      "series": [
+        { "name": "本方案（1024核）", "walltime": 102, "parallel_efficiency": 96, "io_throughput": 18.5, "energy_error": 2.8 },
+        { "name": "基准方案（256核）", "walltime": 486, "parallel_efficiency": 88, "io_throughput": 9.2, "energy_error": 3.6 },
+        { "name": "传统方案（64核）", "walltime": 2140, "parallel_efficiency": 75, "io_throughput": 4.1, "energy_error": 4.9 }
+      ]
+    },
+    "fatigue-life": {
+      "dimensions": [
+        { "key": "walltime", "name": "分析耗时", "unit": "min" },
+        { "key": "throughput", "name": "节点处理量", "unit": "万节点/h" },
+        { "key": "parallel_efficiency", "name": "并行效率", "unit": "%" },
+        { "key": "failure_rate", "name": "失败率", "unit": "%" }
+      ],
+      "series": [
+        { "name": "本方案（512核）", "walltime": 45, "throughput": 480, "parallel_efficiency": 93, "failure_rate": 0.3 },
+        { "name": "基准方案（128核）", "walltime": 186, "throughput": 116, "parallel_efficiency": 86, "failure_rate": 0.6 },
+        { "name": "传统方案（32核）", "walltime": 760, "throughput": 28, "parallel_efficiency": 72, "failure_rate": 1.2 }
+      ]
+    }
+  },
+  "timestamp": "2026-08-11T12:00:00+08:00"
+}

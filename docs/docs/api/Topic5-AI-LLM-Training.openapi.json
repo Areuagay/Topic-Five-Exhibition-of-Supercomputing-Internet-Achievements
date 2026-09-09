@@ -1,0 +1,3127 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "课题五-AI大模型训练接口",
+    "description": "Apifox 导入兼容版。包含 13 个接口、中文接口名称、接口说明、请求/响应示例、字段中文名（title）、字段说明（description）和 Mock 规则（x-apifox-mock）。覆盖大语言模型分布式预训练与 PINN 科学计算 AI 加速两个场景。",
+    "version": "1.2.0"
+  },
+  "tags": [
+    {
+      "name": "场景管理"
+    },
+    {
+      "name": "任务运行"
+    },
+    {
+      "name": "运行监控与结果"
+    },
+    {
+      "name": "算子管理",
+      "description": "算子库函数注册、调用与状态管理接口。"
+    }
+  ],
+  "paths": {
+    "/api/v1/llm/scenarios": {
+      "get": {
+        "summary": "获取AI大模型场景列表",
+        "deprecated": false,
+        "description": "获取 AI 大模型领域下的两个示范应用入口。",
+        "operationId": "getAIScenarios",
+        "tags": [
+          "场景管理"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回的文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "array",
+                      "title": "AI场景列表",
+                      "description": "AI 场景集合。",
+                      "items": {
+                        "type": "object",
+                        "title": "AI场景摘要",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "title": "场景ID",
+                            "description": "AI 示范场景唯一标识。",
+                            "example": "llm-pretraining"
+                          },
+                          "name": {
+                            "type": "string",
+                            "title": "场景名称",
+                            "description": "AI 示范场景中文名称。",
+                            "example": "大语言模型分布式预训练"
+                          },
+                          "category": {
+                            "type": "string",
+                            "title": "所属领域",
+                            "description": "应用所属领域。",
+                            "example": "AI大模型"
+                          },
+                          "description": {
+                            "type": "string",
+                            "title": "场景简介",
+                            "description": "应用入口卡片简介。",
+                            "example": "多节点多GPU大语言模型分布式预训练示范"
+                          },
+                          "status": {
+                            "type": "string",
+                            "title": "可用状态",
+                            "description": "场景当前可用状态。",
+                            "enum": [
+                              "available",
+                              "unavailable",
+                              "developing"
+                            ],
+                            "example": "available"
+                          }
+                        }
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T11:00:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": [
+                    {
+                      "id": "llm-pretraining",
+                      "name": "大语言模型分布式预训练",
+                      "category": "AI大模型",
+                      "description": "多节点多GPU大语言模型分布式预训练示范",
+                      "status": "available"
+                    },
+                    {
+                      "id": "pinn-acceleration",
+                      "name": "科学计算AI加速（PINN）",
+                      "category": "AI大模型",
+                      "description": "利用物理信息神经网络开展PDE科学计算加速示范",
+                      "status": "available"
+                    }
+                  ],
+                  "timestamp": "2026-08-11T11:00:00+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/llm/scenarios/{scenario_id}": {
+      "get": {
+        "summary": "获取AI大模型场景详情",
+        "deprecated": false,
+        "description": "获取应用详情页所需的场景说明、摘要指标、支持集群、技术栈、流程、关联算子和成果亮点。",
+        "operationId": "getAIScenarioDetail",
+        "tags": [
+          "场景管理"
+        ],
+        "parameters": [
+          {
+            "name": "scenario_id",
+            "in": "path",
+            "description": "AI 场景唯一标识：llm-pretraining=大语言模型分布式预训练；pinn-acceleration=科学计算AI加速（PINN）。",
+            "required": true,
+            "example": "llm-pretraining",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "llm-pretraining",
+                "pinn-acceleration"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回的文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "AI场景详情",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "title": "场景ID",
+                          "description": "AI 示范场景唯一标识。",
+                          "example": "llm-pretraining"
+                        },
+                        "name": {
+                          "type": "string",
+                          "title": "场景名称",
+                          "description": "场景中文名称。",
+                          "example": "大语言模型分布式预训练"
+                        },
+                        "category": {
+                          "type": "string",
+                          "title": "所属领域",
+                          "description": "应用所属领域。",
+                          "example": "AI大模型"
+                        },
+                        "description": {
+                          "type": "string",
+                          "title": "场景简介",
+                          "description": "详情页场景说明。",
+                          "example": "基于 DeepSpeed/Megatron-LM 的多节点大语言模型分布式预训练示范"
+                        },
+                        "summary_metrics": {
+                          "type": "array",
+                          "title": "摘要指标",
+                          "description": "详情页顶部摘要指标。",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "label": {
+                                "type": "string",
+                                "title": "指标名称",
+                                "description": "摘要指标中文名称。",
+                                "example": "模型规模"
+                              },
+                              "value": {
+                                "type": "string",
+                                "title": "指标值",
+                                "description": "摘要指标展示值。",
+                                "example": "7B"
+                              },
+                              "unit": {
+                                "type": "string",
+                                "title": "指标单位",
+                                "description": "摘要指标单位。",
+                                "example": "参数"
+                              }
+                            }
+                          }
+                        },
+                        "supported_clusters": {
+                          "type": "array",
+                          "title": "支持计算中心",
+                          "description": "支持本场景运行的计算中心 ID。",
+                          "items": {
+                            "type": "string",
+                            "title": "计算中心ID",
+                            "description": "计算中心唯一标识。",
+                            "example": "kunshan"
+                          }
+                        },
+                        "tech_stack": {
+                          "type": "array",
+                          "title": "技术栈",
+                          "description": "应用核心技术与软件栈。",
+                          "items": {
+                            "type": "string",
+                            "title": "技术名称",
+                            "description": "技术栈条目。",
+                            "example": "DeepSpeed"
+                          }
+                        },
+                        "background": {
+                          "type": "string",
+                          "title": "问题背景",
+                          "description": "应用问题背景说明。",
+                          "example": "随着模型参数规模增长，单机训练难以满足大模型训练效率与存储需求。"
+                        },
+                        "method": {
+                          "type": "string",
+                          "title": "计算方法",
+                          "description": "应用主要计算方法说明。",
+                          "example": "采用数据并行、张量并行、流水线并行及梯度同步实现多节点分布式训练。"
+                        },
+                        "architecture": {
+                          "type": "array",
+                          "title": "技术流程",
+                          "description": "应用技术流程步骤。",
+                          "items": {
+                            "type": "string",
+                            "title": "流程步骤",
+                            "description": "技术流程节点名称。",
+                            "example": "数据分片"
+                          }
+                        },
+                        "operators": {
+                          "type": "array",
+                          "title": "关联算子",
+                          "description": "该应用关联的函数/算子。",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "title": "算子ID",
+                                "description": "算子唯一标识。",
+                                "example": "ai-data-prep"
+                              },
+                              "name": {
+                                "type": "string",
+                                "title": "算子名称",
+                                "description": "算子中文名称。",
+                                "example": "训练数据准备与切分算子"
+                              }
+                            }
+                          }
+                        },
+                        "highlights": {
+                          "type": "array",
+                          "title": "成果亮点",
+                          "description": "详情页成果亮点。",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "label": {
+                                "type": "string",
+                                "title": "亮点名称",
+                                "description": "亮点指标中文名称。",
+                                "example": "训练吞吐"
+                              },
+                              "value": {
+                                "type": "string",
+                                "title": "亮点数值",
+                                "description": "亮点指标展示值。",
+                                "example": "18420"
+                              },
+                              "unit": {
+                                "type": "string",
+                                "title": "亮点单位",
+                                "description": "亮点指标单位。",
+                                "example": "tokens/s"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "example": {
+                        "id": "llm-pretraining",
+                        "name": "大语言模型分布式预训练",
+                        "category": "AI大模型",
+                        "description": "基于 DeepSpeed/Megatron-LM 的多节点大语言模型分布式预训练示范",
+                        "summary_metrics": [
+                          {
+                            "label": "模型规模",
+                            "value": "7B",
+                            "unit": "参数"
+                          },
+                          {
+                            "label": "GPU规模",
+                            "value": "16",
+                            "unit": "卡"
+                          },
+                          {
+                            "label": "训练吞吐",
+                            "value": "18420",
+                            "unit": "tokens/s"
+                          }
+                        ],
+                        "supported_clusters": [
+                          "guangzhou",
+                          "kunshan"
+                        ],
+                        "tech_stack": [
+                          "PyTorch",
+                          "DeepSpeed",
+                          "Megatron-LM",
+                          "NCCL",
+                          "SLURM"
+                        ],
+                        "background": "随着模型参数规模增长，单机训练难以满足大模型训练效率与存储需求。",
+                        "method": "采用数据并行、张量并行、流水线并行及梯度同步实现多节点分布式训练。",
+                        "architecture": [
+                          "训练数据准备",
+                          "数据分片",
+                          "模型初始化",
+                          "分布式训练",
+                          "梯度同步",
+                          "Checkpoint保存",
+                          "模型评估"
+                        ],
+                        "operators": [
+                          {
+                            "id": "attention",
+                            "name": "注意力机制算子"
+                          },
+                          {
+                            "id": "distributed-training",
+                            "name": "分布式训练算子"
+                          },
+                          {
+                            "id": "optimizer",
+                            "name": "梯度下降优化器"
+                          }
+                        ],
+                        "highlights": [
+                          {
+                            "label": "模型参数",
+                            "value": "7",
+                            "unit": "B"
+                          },
+                          {
+                            "label": "GPU数量",
+                            "value": "16",
+                            "unit": "卡"
+                          },
+                          {
+                            "label": "训练吞吐",
+                            "value": "18420",
+                            "unit": "tokens/s"
+                          }
+                        ]
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T11:00:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "id": "llm-pretraining",
+                    "name": "大语言模型分布式预训练",
+                    "category": "AI大模型",
+                    "description": "基于 DeepSpeed/Megatron-LM 的多节点大语言模型分布式预训练示范",
+                    "summary_metrics": [
+                      {
+                        "label": "模型规模",
+                        "value": "7B",
+                        "unit": "参数"
+                      },
+                      {
+                        "label": "GPU规模",
+                        "value": "16",
+                        "unit": "卡"
+                      },
+                      {
+                        "label": "训练吞吐",
+                        "value": "18420",
+                        "unit": "tokens/s"
+                      }
+                    ],
+                    "supported_clusters": [
+                      "guangzhou",
+                      "kunshan"
+                    ],
+                    "tech_stack": [
+                      "PyTorch",
+                      "DeepSpeed",
+                      "Megatron-LM",
+                      "NCCL",
+                      "SLURM"
+                    ],
+                    "background": "随着模型参数规模增长，单机训练难以满足大模型训练效率与存储需求。",
+                    "method": "采用数据并行、张量并行、流水线并行及梯度同步实现多节点分布式训练。",
+                    "architecture": [
+                      "训练数据准备",
+                      "数据分片",
+                      "模型初始化",
+                      "分布式训练",
+                      "梯度同步",
+                      "Checkpoint保存",
+                      "模型评估"
+                    ],
+                    "operators": [
+                      {
+                        "id": "ai-data-prep",
+                        "name": "训练数据准备与切分算子"
+                      },
+                      {
+                        "id": "ai-train-megatron",
+                        "name": "Megatron张量并行预训练算子"
+                      },
+                      {
+                        "id": "ai-train-deepspeed",
+                        "name": "DeepSpeed ZeRO大模型训练算子"
+                      },
+                      {
+                        "id": "ai-train-fsdp",
+                        "name": "PyTorch FSDP全分片参数训练算子"
+                      },
+                      {
+                        "id": "ai-train-ddp",
+                        "name": "PyTorch数据并行训练算子"
+                      }
+                    ],
+                    "highlights": [
+                      {
+                        "label": "模型参数",
+                        "value": "7",
+                        "unit": "B"
+                      },
+                      {
+                        "label": "GPU数量",
+                        "value": "16",
+                        "unit": "卡"
+                      },
+                      {
+                        "label": "训练吞吐",
+                        "value": "18420",
+                        "unit": "tokens/s"
+                      }
+                    ]
+                  },
+                  "timestamp": "2026-08-11T11:00:00+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/llm/scenarios/{scenario_id}/params-schema": {
+      "get": {
+        "summary": "获取AI大模型参数定义",
+        "deprecated": false,
+        "description": "获取当前场景可配置参数，供前端动态生成训练参数表单。",
+        "operationId": "getAIParamsSchema",
+        "tags": [
+          "场景管理"
+        ],
+        "parameters": [
+          {
+            "name": "scenario_id",
+            "in": "path",
+            "description": "AI 场景唯一标识：llm-pretraining=大语言模型分布式预训练；pinn-acceleration=科学计算AI加速（PINN）。",
+            "required": true,
+            "example": "llm-pretraining",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "llm-pretraining",
+                "pinn-acceleration"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回的文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "AI参数定义",
+                      "properties": {
+                        "fields": {
+                          "type": "array",
+                          "title": "参数列表",
+                          "description": "当前 AI 场景可配置参数。",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string",
+                                "title": "参数英文名",
+                                "description": "参数唯一英文编码。",
+                                "example": "batch_size"
+                              },
+                              "label": {
+                                "type": "string",
+                                "title": "参数中文名",
+                                "description": "前端展示中文名称。",
+                                "example": "Batch Size"
+                              },
+                              "type": {
+                                "type": "string",
+                                "title": "参数类型",
+                                "description": "表单参数数据类型。",
+                                "example": "integer"
+                              },
+                              "unit": {
+                                "type": "string",
+                                "title": "参数单位",
+                                "description": "参数单位，可为空。",
+                                "example": ""
+                              },
+                              "required": {
+                                "type": "boolean",
+                                "title": "是否必填",
+                                "description": "提交任务时是否必须提供。",
+                                "example": true
+                              },
+                              "default_value": {
+                                "type": "string",
+                                "title": "默认值",
+                                "description": "参数默认值，以字符串形式用于通用渲染。",
+                                "example": "32"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "example": {
+                        "fields": [
+                          {
+                            "name": "model_name",
+                            "label": "模型名称",
+                            "type": "string",
+                            "unit": "",
+                            "required": true,
+                            "default_value": "demo-transformer"
+                          },
+                          {
+                            "name": "model_size",
+                            "label": "模型规模",
+                            "type": "string",
+                            "unit": "",
+                            "required": true,
+                            "default_value": "7B"
+                          },
+                          {
+                            "name": "batch_size",
+                            "label": "Batch Size",
+                            "type": "integer",
+                            "unit": "",
+                            "required": true,
+                            "default_value": "32"
+                          },
+                          {
+                            "name": "learning_rate",
+                            "label": "学习率",
+                            "type": "number",
+                            "unit": "",
+                            "required": true,
+                            "default_value": "0.0001"
+                          },
+                          {
+                            "name": "max_steps",
+                            "label": "最大训练步数",
+                            "type": "integer",
+                            "unit": "step",
+                            "required": true,
+                            "default_value": "10000"
+                          },
+                          {
+                            "name": "dp",
+                            "label": "数据并行度",
+                            "type": "integer",
+                            "unit": "",
+                            "required": true,
+                            "default_value": "2"
+                          },
+                          {
+                            "name": "tp",
+                            "label": "张量并行度",
+                            "type": "integer",
+                            "unit": "",
+                            "required": true,
+                            "default_value": "4"
+                          },
+                          {
+                            "name": "pp",
+                            "label": "流水线并行度",
+                            "type": "integer",
+                            "unit": "",
+                            "required": true,
+                            "default_value": "2"
+                          }
+                        ]
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T11:00:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "fields": [
+                      {
+                        "name": "operator",
+                        "label": "算子选择",
+                        "type": "select",
+                        "unit": "",
+                        "required": true,
+                        "default_value": "ai-data-prep",
+                        "description": "选择要执行的算子库函数，与后端 /action/invoke 对齐。"
+                      },
+                      {
+                        "name": "model_name",
+                        "label": "模型名称",
+                        "type": "string",
+                        "unit": "",
+                        "required": true,
+                        "default_value": "demo-transformer"
+                      },
+                      {
+                        "name": "model_size",
+                        "label": "模型规模",
+                        "type": "string",
+                        "unit": "",
+                        "required": true,
+                        "default_value": "7B"
+                      },
+                      {
+                        "name": "batch_size",
+                        "label": "Batch Size",
+                        "type": "integer",
+                        "unit": "",
+                        "required": true,
+                        "default_value": "32"
+                      },
+                      {
+                        "name": "learning_rate",
+                        "label": "学习率",
+                        "type": "number",
+                        "unit": "",
+                        "required": true,
+                        "default_value": "0.0001"
+                      },
+                      {
+                        "name": "max_steps",
+                        "label": "最大训练步数",
+                        "type": "integer",
+                        "unit": "step",
+                        "required": true,
+                        "default_value": "10000"
+                      },
+                      {
+                        "name": "dp",
+                        "label": "数据并行度",
+                        "type": "integer",
+                        "unit": "",
+                        "required": true,
+                        "default_value": "2"
+                      },
+                      {
+                        "name": "tp",
+                        "label": "张量并行度",
+                        "type": "integer",
+                        "unit": "",
+                        "required": true,
+                        "default_value": "4"
+                      },
+                      {
+                        "name": "pp",
+                        "label": "流水线并行度",
+                        "type": "integer",
+                        "unit": "",
+                        "required": true,
+                        "default_value": "2"
+                      }
+                    ]
+                  },
+                  "timestamp": "2026-08-11T11:00:00+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/llm/scenarios/{scenario_id}/benchmark": {
+      "get": {
+        "summary": "获取AI大模型性能对比数据",
+        "deprecated": false,
+        "description": "获取训练速度、GPU利用率、通信开销和扩展效率等性能对比数据。",
+        "operationId": "getAIBenchmark",
+        "tags": [
+          "场景管理"
+        ],
+        "parameters": [
+          {
+            "name": "scenario_id",
+            "in": "path",
+            "description": "AI 场景唯一标识：llm-pretraining=大语言模型分布式预训练；pinn-acceleration=科学计算AI加速（PINN）。",
+            "required": true,
+            "example": "llm-pretraining",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "llm-pretraining",
+                "pinn-acceleration"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回的文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "AI性能对比数据",
+                      "properties": {
+                        "dimensions": {
+                          "type": "array",
+                          "title": "对比维度",
+                          "description": "参与性能对比的指标维度。",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "key": {
+                                "type": "string",
+                                "title": "维度编码",
+                                "description": "性能指标英文编码。",
+                                "example": "training_speed"
+                              },
+                              "name": {
+                                "type": "string",
+                                "title": "维度名称",
+                                "description": "性能指标中文名称。",
+                                "example": "训练速度"
+                              },
+                              "unit": {
+                                "type": "string",
+                                "title": "维度单位",
+                                "description": "指标单位。",
+                                "example": "tokens/s"
+                              }
+                            }
+                          }
+                        },
+                        "series": {
+                          "type": "array",
+                          "title": "对比序列",
+                          "description": "不同训练方案的性能指标。",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string",
+                                "title": "方案名称",
+                                "description": "对比方案中文名称。",
+                                "example": "本方案"
+                              },
+                              "training_speed": {
+                                "type": "number",
+                                "title": "训练速度",
+                                "description": "训练吞吐量。",
+                                "example": 18420
+                              },
+                              "gpu_utilization": {
+                                "type": "number",
+                                "title": "GPU利用率",
+                                "description": "GPU 平均利用率。",
+                                "example": 92
+                              },
+                              "communication_overhead": {
+                                "type": "number",
+                                "title": "通信开销",
+                                "description": "分布式训练通信时间占比。",
+                                "example": 14
+                              },
+                              "scaling_efficiency": {
+                                "type": "number",
+                                "title": "扩展效率",
+                                "description": "多卡/多节点扩展效率。",
+                                "example": 88
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "example": {
+                        "dimensions": [
+                          {
+                            "key": "training_speed",
+                            "name": "训练速度",
+                            "unit": "tokens/s"
+                          },
+                          {
+                            "key": "gpu_utilization",
+                            "name": "GPU利用率",
+                            "unit": "%"
+                          },
+                          {
+                            "key": "communication_overhead",
+                            "name": "通信开销",
+                            "unit": "%"
+                          },
+                          {
+                            "key": "scaling_efficiency",
+                            "name": "扩展效率",
+                            "unit": "%"
+                          }
+                        ],
+                        "series": [
+                          {
+                            "name": "本方案",
+                            "training_speed": 18420,
+                            "gpu_utilization": 92,
+                            "communication_overhead": 14,
+                            "scaling_efficiency": 88
+                          },
+                          {
+                            "name": "基准方案",
+                            "training_speed": 10200,
+                            "gpu_utilization": 71,
+                            "communication_overhead": 26,
+                            "scaling_efficiency": 68
+                          }
+                        ]
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T11:00:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "dimensions": [
+                      {
+                        "key": "training_speed",
+                        "name": "训练速度",
+                        "unit": "tokens/s"
+                      },
+                      {
+                        "key": "gpu_utilization",
+                        "name": "GPU利用率",
+                        "unit": "%"
+                      },
+                      {
+                        "key": "communication_overhead",
+                        "name": "通信开销",
+                        "unit": "%"
+                      },
+                      {
+                        "key": "scaling_efficiency",
+                        "name": "扩展效率",
+                        "unit": "%"
+                      }
+                    ],
+                    "series": [
+                      {
+                        "name": "本方案",
+                        "training_speed": 18420,
+                        "gpu_utilization": 92,
+                        "communication_overhead": 14,
+                        "scaling_efficiency": 88
+                      },
+                      {
+                        "name": "基准方案",
+                        "training_speed": 10200,
+                        "gpu_utilization": 71,
+                        "communication_overhead": 26,
+                        "scaling_efficiency": 68
+                      }
+                    ]
+                  },
+                  "timestamp": "2026-08-11T11:00:00+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/llm/scenarios/{scenario_id}/runs": {
+      "post": {
+        "summary": "创建AI大模型运行任务",
+        "deprecated": false,
+        "description": "创建大语言模型分布式预训练或 PINN 运行任务。",
+        "operationId": "createAIRun",
+        "tags": [
+          "任务运行"
+        ],
+        "parameters": [
+          {
+            "name": "scenario_id",
+            "in": "path",
+            "description": "AI 场景唯一标识：llm-pretraining=大语言模型分布式预训练；pinn-acceleration=科学计算AI加速（PINN）。",
+            "required": true,
+            "example": "llm-pretraining",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "llm-pretraining",
+                "pinn-acceleration"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "title": "AI大模型运行任务创建请求",
+                "description": "创建大语言模型分布式预训练或 PINN 任务时提交的请求体。",
+                "required": [
+                  "execution_mode",
+                  "cluster_policy",
+                  "parameters",
+                  "resources",
+                  "operator"
+                ],
+                "properties": {
+                  "execution_mode": {
+                    "type": "string",
+                    "title": "执行模式",
+                    "description": "real=真实程序/超算；simulated=本地模拟；replay=历史日志/结果回放。",
+                    "enum": [
+                      "real",
+                      "simulated",
+                      "replay"
+                    ],
+                    "example": "real"
+                  },
+                  "cluster_policy": {
+                    "type": "string",
+                    "title": "集群调度策略",
+                    "description": "auto=自动选择；manual=手动选择；multi-center=多中心协同。",
+                    "enum": [
+                      "auto",
+                      "manual",
+                      "multi-center"
+                    ],
+                    "example": "auto"
+                  },
+                  "preferred_clusters": {
+                    "type": "array",
+                    "title": "优选计算中心",
+                    "description": "优先尝试调度的计算中心 ID。",
+                    "items": {
+                      "type": "string",
+                      "title": "计算中心ID",
+                      "description": "计算中心唯一标识。",
+                      "example": "kunshan"
+                    }
+                  },
+                  "input_files": {
+                    "type": "array",
+                    "title": "输入文件列表",
+                    "description": "训练数据、Tokenizer、配置或 Checkpoint 等输入路径。",
+                    "items": {
+                      "type": "string",
+                      "title": "输入文件路径",
+                      "description": "全局文件系统或对象存储中的文件路径。",
+                      "example": "gfs://demo/llm/train_dataset/"
+                    }
+                  },
+                  "parameters": {
+                    "type": "object",
+                    "title": "AI训练参数",
+                    "description": "大语言模型分布式训练参数。",
+                    "required": [
+                      "model_name",
+                      "model_size",
+                      "batch_size",
+                      "learning_rate",
+                      "max_steps",
+                      "parallel_strategy"
+                    ],
+                    "properties": {
+                      "model_name": {
+                        "type": "string",
+                        "title": "模型名称",
+                        "description": "训练模型名称或配置标识。",
+                        "example": "demo-transformer"
+                      },
+                      "model_size": {
+                        "type": "string",
+                        "title": "模型规模",
+                        "description": "模型参数规模。",
+                        "example": "7B"
+                      },
+                      "batch_size": {
+                        "type": "integer",
+                        "title": "Batch Size",
+                        "description": "全局或任务配置的 Batch Size。",
+                        "example": 32
+                      },
+                      "learning_rate": {
+                        "type": "number",
+                        "title": "学习率",
+                        "description": "训练优化器学习率。",
+                        "example": 0.0001
+                      },
+                      "max_steps": {
+                        "type": "integer",
+                        "title": "最大训练步数",
+                        "description": "本次训练最大 Step 数。",
+                        "example": 10000
+                      },
+                      "parallel_strategy": {
+                        "type": "object",
+                        "title": "并行策略",
+                        "description": "数据并行、张量并行和流水线并行配置。",
+                        "required": [
+                          "dp",
+                          "tp",
+                          "pp"
+                        ],
+                        "properties": {
+                          "dp": {
+                            "type": "integer",
+                            "title": "数据并行度",
+                            "description": "Data Parallel 并行度。",
+                            "example": 2
+                          },
+                          "tp": {
+                            "type": "integer",
+                            "title": "张量并行度",
+                            "description": "Tensor Parallel 并行度。",
+                            "example": 4
+                          },
+                          "pp": {
+                            "type": "integer",
+                            "title": "流水线并行度",
+                            "description": "Pipeline Parallel 并行度。",
+                            "example": 2
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "resources": {
+                    "type": "object",
+                    "title": "资源需求",
+                    "description": "任务申请的计算资源。",
+                    "required": [
+                      "nodes",
+                      "gpu_count"
+                    ],
+                    "properties": {
+                      "nodes": {
+                        "type": "integer",
+                        "title": "计算节点数",
+                        "description": "申请的计算节点数量。",
+                        "example": 4
+                      },
+                      "cpu_cores": {
+                        "type": "integer",
+                        "title": "CPU 核数",
+                        "description": "任务使用/申请的 CPU 总核数。",
+                        "example": 128
+                      },
+                      "gpu_count": {
+                        "type": "integer",
+                        "title": "GPU/加速卡数量",
+                        "description": "申请的 GPU/DCU 数量。",
+                        "example": 16
+                      },
+                      "memory_gb": {
+                        "type": "integer",
+                        "title": "内存容量",
+                        "description": "申请总内存，单位 GB。",
+                        "example": 1024
+                      }
+                    }
+                  },
+                  "operator": {
+                    "type": "string",
+                    "title": "算子选择",
+                    "description": "选择要执行的算子库函数，如 ai-data-prep。",
+                    "example": "ai-data-prep"
+                  }
+                },
+                "example": {
+                  "execution_mode": "real",
+                  "cluster_policy": "auto",
+                  "preferred_clusters": [
+                    "kunshan"
+                  ],
+                  "input_files": [
+                    "gfs://demo/llm/train_dataset/",
+                    "gfs://demo/llm/tokenizer/",
+                    "gfs://demo/llm/config.json"
+                  ],
+                  "parameters": {
+                    "model_name": "demo-transformer",
+                    "model_size": "7B",
+                    "batch_size": 32,
+                    "learning_rate": 0.0001,
+                    "max_steps": 10000,
+                    "parallel_strategy": {
+                      "dp": 2,
+                      "tp": 4,
+                      "pp": 2
+                    }
+                  },
+                  "resources": {
+                    "nodes": 4,
+                    "cpu_cores": 128,
+                    "gpu_count": 16,
+                    "memory_gb": 1024
+                  }
+                }
+              },
+              "example": {
+                "execution_mode": "real",
+                "cluster_policy": "auto",
+                "preferred_clusters": [
+                  "kunshan"
+                ],
+                "input_files": [
+                  "gfs://demo/llm/train_dataset/",
+                  "gfs://demo/llm/tokenizer/",
+                  "gfs://demo/llm/config.json"
+                ],
+                "parameters": {
+                  "model_name": "demo-transformer",
+                  "model_size": "7B",
+                  "batch_size": 32,
+                  "learning_rate": 0.0001,
+                  "max_steps": 10000,
+                  "parallel_strategy": {
+                    "dp": 2,
+                    "tp": 4,
+                    "pp": 2
+                  }
+                },
+                "resources": {
+                  "nodes": 4,
+                  "cpu_cores": 128,
+                  "gpu_count": 16,
+                  "memory_gb": 1024
+                },
+                "operator": "ai-data-prep"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回的文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "任务创建结果",
+                      "properties": {
+                        "run_id": {
+                          "type": "string",
+                          "title": "运行实例ID",
+                          "description": "本次训练任务运行实例唯一标识。",
+                          "example": "LLM-20260811-0001"
+                        },
+                        "status": {
+                          "type": "string",
+                          "title": "任务状态",
+                          "description": "任务当前状态。",
+                          "enum": [
+                            "pending",
+                            "queued",
+                            "running",
+                            "success",
+                            "failed",
+                            "stopped",
+                            "migrating"
+                          ],
+                          "example": "queued"
+                        },
+                        "cluster_id": {
+                          "type": "string",
+                          "title": "计算中心ID",
+                          "description": "任务被调度到的计算中心。",
+                          "example": "kunshan"
+                        },
+                        "job_id": {
+                          "type": "string",
+                          "title": "调度作业ID",
+                          "description": "底层 SLURM/任务调度系统作业 ID。",
+                          "example": "275431"
+                        }
+                      },
+                      "example": {
+                        "run_id": "LLM-20260811-0001",
+                        "status": "queued",
+                        "cluster_id": "kunshan",
+                        "job_id": "275431"
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T11:00:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "run_id": "LLM-20260811-0001",
+                    "status": "queued",
+                    "cluster_id": "kunshan",
+                    "job_id": "275431",
+                    "operator": "ai-data-prep"
+                  },
+                  "timestamp": "2026-08-11T11:00:00+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/llm/runs/{run_id}": {
+      "get": {
+        "summary": "查询AI大模型任务状态",
+        "deprecated": false,
+        "description": "查询训练进度、当前阶段、运行中心、资源配置和累计核时。",
+        "operationId": "getAIRun",
+        "tags": [
+          "任务运行"
+        ],
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "description": "AI 任务运行实例唯一标识。",
+            "required": true,
+            "example": "LLM-20260811-0001",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回的文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "AI任务状态",
+                      "properties": {
+                        "run_id": {
+                          "type": "string",
+                          "title": "运行实例ID",
+                          "description": "任务运行实例唯一标识。",
+                          "example": "LLM-20260811-0001"
+                        },
+                        "scenario_id": {
+                          "type": "string",
+                          "title": "场景ID",
+                          "description": "当前任务所属 AI 场景。",
+                          "example": "llm-pretraining"
+                        },
+                        "status": {
+                          "type": "string",
+                          "title": "任务状态",
+                          "description": "当前任务生命周期状态。",
+                          "enum": [
+                            "pending",
+                            "queued",
+                            "running",
+                            "success",
+                            "failed",
+                            "stopped",
+                            "migrating"
+                          ],
+                          "example": "running"
+                        },
+                        "progress": {
+                          "type": "number",
+                          "title": "任务进度",
+                          "description": "训练任务整体完成百分比。",
+                          "example": 42
+                        },
+                        "execution_mode": {
+                          "type": "string",
+                          "title": "执行模式",
+                          "description": "任务实际执行模式。",
+                          "enum": [
+                            "real",
+                            "simulated",
+                            "replay"
+                          ],
+                          "example": "real"
+                        },
+                        "cluster_id": {
+                          "type": "string",
+                          "title": "计算中心ID",
+                          "description": "当前任务运行中心。",
+                          "example": "kunshan"
+                        },
+                        "cluster_name": {
+                          "type": "string",
+                          "title": "计算中心名称",
+                          "description": "当前运行中心中文名称。",
+                          "example": "昆仑"
+                        },
+                        "job_id": {
+                          "type": "string",
+                          "title": "调度作业ID",
+                          "description": "SLURM/任务调度作业 ID。",
+                          "example": "275431"
+                        },
+                        "current_stage": {
+                          "type": "string",
+                          "title": "当前阶段",
+                          "description": "当前训练工作流阶段。",
+                          "example": "distributed-training"
+                        },
+                        "start_time": {
+                          "type": "string",
+                          "title": "开始时间",
+                          "description": "训练任务开始时间。",
+                          "example": "2026-08-11T09:30:00+08:00"
+                        },
+                        "end_time": {
+                          "type": "string",
+                          "title": "结束时间",
+                          "description": "任务结束时间，运行中返回空字符串。",
+                          "example": ""
+                        },
+                        "elapsed_seconds": {
+                          "type": "integer",
+                          "title": "已运行时长",
+                          "description": "任务累计运行秒数。",
+                          "example": 2860
+                        },
+                        "nodes": {
+                          "type": "integer",
+                          "title": "计算节点数",
+                          "description": "任务使用节点数。",
+                          "example": 4
+                        },
+                        "cpu_cores": {
+                          "type": "integer",
+                          "title": "CPU 核数",
+                          "description": "任务使用 CPU 总核数。",
+                          "example": 128
+                        },
+                        "gpu_count": {
+                          "type": "integer",
+                          "title": "GPU 数量",
+                          "description": "任务使用 GPU/加速卡数量。",
+                          "example": 16
+                        },
+                        "memory_gb": {
+                          "type": "integer",
+                          "title": "内存容量",
+                          "description": "任务使用/申请内存 GB。",
+                          "example": 1024
+                        },
+                        "core_hours": {
+                          "type": "number",
+                          "title": "累计核时",
+                          "description": "截至当前统计的累计 core-hours。",
+                          "example": 101.7
+                        }
+                      },
+                      "example": {
+                        "run_id": "LLM-20260811-0001",
+                        "scenario_id": "llm-pretraining",
+                        "status": "running",
+                        "progress": 42,
+                        "execution_mode": "real",
+                        "cluster_id": "kunshan",
+                        "cluster_name": "昆仑",
+                        "job_id": "275431",
+                        "current_stage": "distributed-training",
+                        "start_time": "2026-08-11T09:30:00+08:00",
+                        "end_time": "",
+                        "elapsed_seconds": 2860,
+                        "nodes": 4,
+                        "cpu_cores": 128,
+                        "gpu_count": 16,
+                        "memory_gb": 1024,
+                        "core_hours": 101.7
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T11:00:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "run_id": "LLM-20260811-0001",
+                    "scenario_id": "llm-pretraining",
+                    "status": "running",
+                    "progress": 42,
+                    "execution_mode": "real",
+                    "cluster_id": "kunshan",
+                    "cluster_name": "昆仑",
+                    "job_id": "275431",
+                    "current_stage": "distributed-training",
+                    "start_time": "2026-08-11T09:30:00+08:00",
+                    "end_time": "",
+                    "elapsed_seconds": 2860,
+                    "nodes": 4,
+                    "cpu_cores": 128,
+                    "gpu_count": 16,
+                    "memory_gb": 1024,
+                    "core_hours": 101.7
+                  },
+                  "timestamp": "2026-08-11T11:00:00+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/llm/runs/{run_id}/stop": {
+      "post": {
+        "summary": "停止AI大模型任务",
+        "deprecated": false,
+        "description": "停止 pending、queued 或 running 状态的 AI 任务。",
+        "operationId": "stopAIRun",
+        "tags": [
+          "任务运行"
+        ],
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "description": "AI 任务运行实例唯一标识。",
+            "required": true,
+            "example": "LLM-20260811-0001",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回的文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "停止AI任务结果",
+                      "properties": {
+                        "run_id": {
+                          "type": "string",
+                          "title": "运行实例ID",
+                          "description": "被停止的任务 ID。",
+                          "example": "LLM-20260811-0001"
+                        },
+                        "status": {
+                          "type": "string",
+                          "title": "任务状态",
+                          "description": "停止后固定为 stopped。",
+                          "enum": [
+                            "stopped"
+                          ],
+                          "example": "stopped"
+                        }
+                      },
+                      "example": {
+                        "run_id": "LLM-20260811-0001",
+                        "status": "stopped"
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T11:00:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "run_id": "LLM-20260811-0001",
+                    "status": "stopped"
+                  },
+                  "timestamp": "2026-08-11T11:00:00+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/llm/runs/{run_id}/workflow": {
+      "get": {
+        "summary": "查询AI大模型工作流",
+        "deprecated": false,
+        "description": "查询训练数据准备、数据分片、模型初始化、分布式训练、Checkpoint 和评估等 DAG 节点。",
+        "operationId": "getAIWorkflow",
+        "tags": [
+          "运行监控与结果"
+        ],
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "description": "AI 任务运行实例唯一标识。",
+            "required": true,
+            "example": "LLM-20260811-0001",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回的文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "AI工作流",
+                      "properties": {
+                        "nodes": {
+                          "type": "array",
+                          "title": "工作流节点",
+                          "description": "AI 训练 DAG 节点。",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "title": "节点ID",
+                                "description": "工作流节点唯一标识。",
+                                "example": "train"
+                              },
+                              "name": {
+                                "type": "string",
+                                "title": "节点名称",
+                                "description": "工作流节点中文名称。",
+                                "example": "分布式训练"
+                              },
+                              "status": {
+                                "type": "string",
+                                "title": "节点状态",
+                                "description": "节点当前状态。",
+                                "enum": [
+                                  "pending",
+                                  "queued",
+                                  "running",
+                                  "success",
+                                  "failed",
+                                  "stopped"
+                                ],
+                                "example": "running"
+                              },
+                              "progress": {
+                                "type": "number",
+                                "title": "节点进度",
+                                "description": "节点完成百分比。",
+                                "example": 42
+                              },
+                              "cluster_id": {
+                                "type": "string",
+                                "title": "执行中心ID",
+                                "description": "执行当前节点的计算中心。",
+                                "example": "kunshan"
+                              }
+                            }
+                          }
+                        },
+                        "edges": {
+                          "type": "array",
+                          "title": "工作流连线",
+                          "description": "DAG 节点依赖关系。",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "source": {
+                                "type": "string",
+                                "title": "源节点",
+                                "description": "前置节点 ID。",
+                                "example": "init"
+                              },
+                              "target": {
+                                "type": "string",
+                                "title": "目标节点",
+                                "description": "后置节点 ID。",
+                                "example": "train"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "example": {
+                        "nodes": [
+                          {
+                            "id": "prepare",
+                            "name": "训练数据检查",
+                            "status": "success",
+                            "progress": 100,
+                            "cluster_id": "kunshan"
+                          },
+                          {
+                            "id": "shard",
+                            "name": "数据分片",
+                            "status": "success",
+                            "progress": 100,
+                            "cluster_id": "kunshan"
+                          },
+                          {
+                            "id": "init",
+                            "name": "模型初始化",
+                            "status": "success",
+                            "progress": 100,
+                            "cluster_id": "kunshan"
+                          },
+                          {
+                            "id": "train",
+                            "name": "分布式训练",
+                            "status": "running",
+                            "progress": 42,
+                            "cluster_id": "kunshan"
+                          },
+                          {
+                            "id": "checkpoint",
+                            "name": "Checkpoint保存",
+                            "status": "pending",
+                            "progress": 0,
+                            "cluster_id": "kunshan"
+                          },
+                          {
+                            "id": "evaluate",
+                            "name": "模型评估",
+                            "status": "pending",
+                            "progress": 0,
+                            "cluster_id": "kunshan"
+                          }
+                        ],
+                        "edges": [
+                          {
+                            "source": "prepare",
+                            "target": "shard"
+                          },
+                          {
+                            "source": "shard",
+                            "target": "init"
+                          },
+                          {
+                            "source": "init",
+                            "target": "train"
+                          },
+                          {
+                            "source": "train",
+                            "target": "checkpoint"
+                          },
+                          {
+                            "source": "checkpoint",
+                            "target": "evaluate"
+                          }
+                        ]
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T11:00:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "nodes": [
+                      {
+                        "id": "prepare",
+                        "name": "训练数据检查",
+                        "status": "success",
+                        "progress": 100,
+                        "cluster_id": "kunshan"
+                      },
+                      {
+                        "id": "shard",
+                        "name": "数据分片",
+                        "status": "success",
+                        "progress": 100,
+                        "cluster_id": "kunshan"
+                      },
+                      {
+                        "id": "init",
+                        "name": "模型初始化",
+                        "status": "success",
+                        "progress": 100,
+                        "cluster_id": "kunshan"
+                      },
+                      {
+                        "id": "train",
+                        "name": "分布式训练",
+                        "status": "running",
+                        "progress": 42,
+                        "cluster_id": "kunshan"
+                      },
+                      {
+                        "id": "checkpoint",
+                        "name": "Checkpoint保存",
+                        "status": "pending",
+                        "progress": 0,
+                        "cluster_id": "kunshan"
+                      },
+                      {
+                        "id": "evaluate",
+                        "name": "模型评估",
+                        "status": "pending",
+                        "progress": 0,
+                        "cluster_id": "kunshan"
+                      }
+                    ],
+                    "edges": [
+                      {
+                        "source": "prepare",
+                        "target": "shard"
+                      },
+                      {
+                        "source": "shard",
+                        "target": "init"
+                      },
+                      {
+                        "source": "init",
+                        "target": "train"
+                      },
+                      {
+                        "source": "train",
+                        "target": "checkpoint"
+                      },
+                      {
+                        "source": "checkpoint",
+                        "target": "evaluate"
+                      }
+                    ]
+                  },
+                  "timestamp": "2026-08-11T11:00:00+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/llm/runs/{run_id}/metrics": {
+      "get": {
+        "summary": "查询AI大模型运行指标",
+        "deprecated": false,
+        "description": "查询 Loss、学习率、训练吞吐、GPU利用率、显存使用率、通信开销及 GPU 明细。",
+        "operationId": "getAIMetrics",
+        "tags": [
+          "运行监控与结果"
+        ],
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "description": "AI 任务运行实例唯一标识。",
+            "required": true,
+            "example": "LLM-20260811-0001",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回的文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "AI运行指标",
+                      "properties": {
+                        "progress": {
+                          "type": "number",
+                          "title": "任务进度",
+                          "description": "训练任务整体完成百分比。",
+                          "example": 42
+                        },
+                        "metrics": {
+                          "type": "array",
+                          "title": "训练指标列表",
+                          "description": "日志解析或训练程序输出的结构化指标。",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string",
+                                "title": "指标编码",
+                                "description": "指标英文编码。",
+                                "example": "loss"
+                              },
+                              "label": {
+                                "type": "string",
+                                "title": "指标中文名",
+                                "description": "前端展示名称。",
+                                "example": "Loss"
+                              },
+                              "value": {
+                                "type": "number",
+                                "title": "指标值",
+                                "description": "当前指标数值。",
+                                "example": 2.314
+                              },
+                              "total": {
+                                "type": "number",
+                                "title": "指标总值",
+                                "description": "具有进度含义时的总量；无总量返回 0。",
+                                "example": 10000
+                              },
+                              "unit": {
+                                "type": "string",
+                                "title": "指标单位",
+                                "description": "指标展示单位，无单位返回空字符串。",
+                                "example": "tokens/s"
+                              }
+                            }
+                          }
+                        },
+                        "gpu_metrics": {
+                          "type": "array",
+                          "title": "GPU明细指标",
+                          "description": "GPU/加速卡级运行状态，用于热力图或资源状态展示。",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "gpu_id": {
+                                "type": "string",
+                                "title": "GPU编号",
+                                "description": "GPU/加速卡唯一编号。",
+                                "example": "gpu-0"
+                              },
+                              "utilization": {
+                                "type": "number",
+                                "title": "GPU利用率",
+                                "description": "GPU 计算利用率百分比。",
+                                "example": 94
+                              },
+                              "memory_utilization": {
+                                "type": "number",
+                                "title": "显存使用率",
+                                "description": "显存占用百分比。",
+                                "example": 88
+                              },
+                              "temperature": {
+                                "type": "number",
+                                "title": "GPU温度",
+                                "description": "GPU 当前温度，单位摄氏度。",
+                                "example": 67
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "example": {
+                        "progress": 42,
+                        "metrics": [
+                          {
+                            "name": "step",
+                            "label": "训练步数",
+                            "value": 4200,
+                            "total": 10000,
+                            "unit": "step"
+                          },
+                          {
+                            "name": "loss",
+                            "label": "Loss",
+                            "value": 2.314,
+                            "total": 0,
+                            "unit": ""
+                          },
+                          {
+                            "name": "learning_rate",
+                            "label": "学习率",
+                            "value": 8e-05,
+                            "total": 0,
+                            "unit": ""
+                          },
+                          {
+                            "name": "tokens_per_second",
+                            "label": "训练吞吐量",
+                            "value": 18420,
+                            "total": 0,
+                            "unit": "tokens/s"
+                          },
+                          {
+                            "name": "gpu_utilization",
+                            "label": "GPU利用率",
+                            "value": 92,
+                            "total": 100,
+                            "unit": "%"
+                          },
+                          {
+                            "name": "gpu_memory",
+                            "label": "GPU显存使用率",
+                            "value": 87,
+                            "total": 100,
+                            "unit": "%"
+                          },
+                          {
+                            "name": "communication_overhead",
+                            "label": "通信开销",
+                            "value": 14.2,
+                            "total": 100,
+                            "unit": "%"
+                          }
+                        ],
+                        "gpu_metrics": [
+                          {
+                            "gpu_id": "gpu-0",
+                            "utilization": 94,
+                            "memory_utilization": 88,
+                            "temperature": 67
+                          },
+                          {
+                            "gpu_id": "gpu-1",
+                            "utilization": 91,
+                            "memory_utilization": 87,
+                            "temperature": 65
+                          },
+                          {
+                            "gpu_id": "gpu-2",
+                            "utilization": 93,
+                            "memory_utilization": 86,
+                            "temperature": 66
+                          },
+                          {
+                            "gpu_id": "gpu-3",
+                            "utilization": 90,
+                            "memory_utilization": 88,
+                            "temperature": 64
+                          }
+                        ]
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T11:00:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "progress": 42,
+                    "metrics": [
+                      {
+                        "name": "step",
+                        "label": "训练步数",
+                        "value": 4200,
+                        "total": 10000,
+                        "unit": "step"
+                      },
+                      {
+                        "name": "loss",
+                        "label": "Loss",
+                        "value": 2.314,
+                        "total": 0,
+                        "unit": ""
+                      },
+                      {
+                        "name": "learning_rate",
+                        "label": "学习率",
+                        "value": 8e-05,
+                        "total": 0,
+                        "unit": ""
+                      },
+                      {
+                        "name": "tokens_per_second",
+                        "label": "训练吞吐量",
+                        "value": 18420,
+                        "total": 0,
+                        "unit": "tokens/s"
+                      },
+                      {
+                        "name": "gpu_utilization",
+                        "label": "GPU利用率",
+                        "value": 92,
+                        "total": 100,
+                        "unit": "%"
+                      },
+                      {
+                        "name": "gpu_memory",
+                        "label": "GPU显存使用率",
+                        "value": 87,
+                        "total": 100,
+                        "unit": "%"
+                      },
+                      {
+                        "name": "communication_overhead",
+                        "label": "通信开销",
+                        "value": 14.2,
+                        "total": 100,
+                        "unit": "%"
+                      }
+                    ],
+                    "gpu_metrics": [
+                      {
+                        "gpu_id": "gpu-0",
+                        "utilization": 94,
+                        "memory_utilization": 88,
+                        "temperature": 67
+                      },
+                      {
+                        "gpu_id": "gpu-1",
+                        "utilization": 91,
+                        "memory_utilization": 87,
+                        "temperature": 65
+                      },
+                      {
+                        "gpu_id": "gpu-2",
+                        "utilization": 93,
+                        "memory_utilization": 86,
+                        "temperature": 66
+                      },
+                      {
+                        "gpu_id": "gpu-3",
+                        "utilization": 90,
+                        "memory_utilization": 88,
+                        "temperature": 64
+                      }
+                    ]
+                  },
+                  "timestamp": "2026-08-11T11:00:00+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/llm/runs/{run_id}/logs": {
+      "get": {
+        "summary": "查询AI大模型运行日志",
+        "deprecated": false,
+        "description": "增量查询训练程序原始日志。",
+        "operationId": "getAILogs",
+        "tags": [
+          "运行监控与结果"
+        ],
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "description": "AI 任务运行实例唯一标识。",
+            "required": true,
+            "example": "LLM-20260811-0001",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "日志起始偏移量。",
+            "required": false,
+            "example": 0,
+            "schema": {
+              "type": "integer",
+              "default": 0
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "单次最大返回日志条数。",
+            "required": false,
+            "example": 200,
+            "schema": {
+              "type": "integer",
+              "default": 200
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回的文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "AI运行日志",
+                      "properties": {
+                        "next_offset": {
+                          "type": "integer",
+                          "title": "下一偏移量",
+                          "description": "下一次查询应使用的 offset。",
+                          "example": 4
+                        },
+                        "has_more": {
+                          "type": "boolean",
+                          "title": "是否还有日志",
+                          "description": "是否还有尚未返回的训练日志。",
+                          "example": false
+                        },
+                        "lines": {
+                          "type": "array",
+                          "title": "日志行",
+                          "description": "训练日志集合。",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "seq": {
+                                "type": "integer",
+                                "title": "日志序号",
+                                "description": "日志递增序号。",
+                                "example": 1
+                              },
+                              "timestamp": {
+                                "type": "string",
+                                "title": "日志时间",
+                                "description": "日志产生时间。",
+                                "example": "2026-08-11T09:30:01+08:00"
+                              },
+                              "level": {
+                                "type": "string",
+                                "title": "日志级别",
+                                "description": "DEBUG/INFO/WARN/ERROR。",
+                                "enum": [
+                                  "DEBUG",
+                                  "INFO",
+                                  "WARN",
+                                  "ERROR"
+                                ],
+                                "example": "INFO"
+                              },
+                              "message": {
+                                "type": "string",
+                                "title": "日志内容",
+                                "description": "训练程序原始日志文本。",
+                                "example": "Distributed environment initialized"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "example": {
+                        "next_offset": 4,
+                        "has_more": false,
+                        "lines": [
+                          {
+                            "seq": 1,
+                            "timestamp": "2026-08-11T09:30:01+08:00",
+                            "level": "INFO",
+                            "message": "Distributed environment initialized"
+                          },
+                          {
+                            "seq": 2,
+                            "timestamp": "2026-08-11T09:30:05+08:00",
+                            "level": "INFO",
+                            "message": "Model initialized: demo-transformer 7B"
+                          },
+                          {
+                            "seq": 3,
+                            "timestamp": "2026-08-11T10:02:18+08:00",
+                            "level": "INFO",
+                            "message": "step=4199 loss=2.321 tokens/s=18290"
+                          },
+                          {
+                            "seq": 4,
+                            "timestamp": "2026-08-11T10:02:20+08:00",
+                            "level": "INFO",
+                            "message": "step=4200 loss=2.314 tokens/s=18420"
+                          }
+                        ]
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T11:00:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "next_offset": 4,
+                    "has_more": false,
+                    "lines": [
+                      {
+                        "seq": 1,
+                        "timestamp": "2026-08-11T09:30:01+08:00",
+                        "level": "INFO",
+                        "message": "Distributed environment initialized"
+                      },
+                      {
+                        "seq": 2,
+                        "timestamp": "2026-08-11T09:30:05+08:00",
+                        "level": "INFO",
+                        "message": "Model initialized: demo-transformer 7B"
+                      },
+                      {
+                        "seq": 3,
+                        "timestamp": "2026-08-11T10:02:18+08:00",
+                        "level": "INFO",
+                        "message": "step=4199 loss=2.321 tokens/s=18290"
+                      },
+                      {
+                        "seq": 4,
+                        "timestamp": "2026-08-11T10:02:20+08:00",
+                        "level": "INFO",
+                        "message": "step=4200 loss=2.314 tokens/s=18420"
+                      }
+                    ]
+                  },
+                  "timestamp": "2026-08-11T11:00:00+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/llm/runs/{run_id}/artifacts": {
+      "get": {
+        "summary": "查询AI大模型结果文件",
+        "deprecated": false,
+        "description": "查询 Loss/吞吐数据、Checkpoint、评估结果、PINN预测结果等文件。",
+        "operationId": "getAIArtifacts",
+        "tags": [
+          "运行监控与结果"
+        ],
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "description": "AI 任务运行实例唯一标识。",
+            "required": true,
+            "example": "LLM-20260811-0001",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回的文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "array",
+                      "title": "AI结果文件列表",
+                      "description": "AI 任务产生的结果文件。",
+                      "items": {
+                        "type": "object",
+                        "title": "AI结果文件",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "title": "结果文件ID",
+                            "description": "结果文件唯一标识。",
+                            "example": "ART-LLM-001"
+                          },
+                          "name": {
+                            "type": "string",
+                            "title": "文件名称",
+                            "description": "结果文件名称。",
+                            "example": "loss.csv"
+                          },
+                          "type": {
+                            "type": "string",
+                            "title": "结果类型",
+                            "description": "结果文件用途类型。",
+                            "enum": [
+                              "dataset",
+                              "image",
+                              "video",
+                              "model",
+                              "checkpoint",
+                              "report",
+                              "archive",
+                              "log",
+                              "other"
+                            ],
+                            "example": "dataset"
+                          },
+                          "format": {
+                            "type": "string",
+                            "title": "文件格式",
+                            "description": "结果文件扩展格式。",
+                            "example": "csv"
+                          },
+                          "size": {
+                            "type": "integer",
+                            "title": "文件大小",
+                            "description": "文件字节数。",
+                            "example": 328144
+                          },
+                          "storage_path": {
+                            "type": "string",
+                            "title": "存储路径",
+                            "description": "全局文件系统或对象存储路径。",
+                            "example": "gfs://results/LLM-20260811-0001/loss.csv"
+                          },
+                          "preview_url": {
+                            "type": "string",
+                            "title": "预览地址",
+                            "description": "前端预览接口地址；不支持时返回空字符串。",
+                            "example": "/api/v1/files/ART-LLM-001/preview"
+                          },
+                          "download_url": {
+                            "type": "string",
+                            "title": "下载地址",
+                            "description": "文件下载接口地址。",
+                            "example": "/api/v1/files/ART-LLM-001/download"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "title": "生成时间",
+                            "description": "结果文件生成时间。",
+                            "example": "2026-08-11T10:15:00+08:00"
+                          }
+                        }
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T11:00:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": [
+                    {
+                      "id": "ART-LLM-001",
+                      "name": "loss.csv",
+                      "type": "dataset",
+                      "format": "csv",
+                      "size": 328144,
+                      "storage_path": "gfs://results/LLM-20260811-0001/loss.csv",
+                      "preview_url": "/api/v1/files/ART-LLM-001/preview",
+                      "download_url": "/api/v1/files/ART-LLM-001/download",
+                      "created_at": "2026-08-11T10:15:00+08:00"
+                    },
+                    {
+                      "id": "ART-LLM-002",
+                      "name": "throughput.csv",
+                      "type": "dataset",
+                      "format": "csv",
+                      "size": 281223,
+                      "storage_path": "gfs://results/LLM-20260811-0001/throughput.csv",
+                      "preview_url": "/api/v1/files/ART-LLM-002/preview",
+                      "download_url": "/api/v1/files/ART-LLM-002/download",
+                      "created_at": "2026-08-11T10:15:01+08:00"
+                    },
+                    {
+                      "id": "ART-LLM-003",
+                      "name": "checkpoint-4200",
+                      "type": "checkpoint",
+                      "format": "directory",
+                      "size": 7516192768,
+                      "storage_path": "gfs://results/LLM-20260811-0001/checkpoint-4200/",
+                      "preview_url": "",
+                      "download_url": "/api/v1/files/ART-LLM-003/download",
+                      "created_at": "2026-08-11T10:16:00+08:00"
+                    },
+                    {
+                      "id": "ART-LLM-004",
+                      "name": "evaluation.json",
+                      "type": "report",
+                      "format": "json",
+                      "size": 24512,
+                      "storage_path": "gfs://results/LLM-20260811-0001/evaluation.json",
+                      "preview_url": "/api/v1/files/ART-LLM-004/preview",
+                      "download_url": "/api/v1/files/ART-LLM-004/download",
+                      "created_at": "2026-08-11T10:20:00+08:00"
+                    }
+                  ],
+                  "timestamp": "2026-08-11T11:00:00+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/llm/operators/register": {
+      "post": {
+        "summary": "注册AI大模型训练算子",
+        "deprecated": false,
+        "description": "将算子注册到统一函数平台，对齐后端 POST /action/create。注册后可通过算子调用接口执行。",
+        "operationId": "registerLlmOperator",
+        "tags": [
+          "算子管理"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "title": "算子注册请求",
+                "description": "算子注册信息。",
+                "required": [
+                  "name",
+                  "version",
+                  "runtime_type",
+                  "runtime",
+                  "handler"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "title": "算子名称",
+                    "description": "算子唯一标识，与后端函数名一致（如 ai-train-megatron）。",
+                    "example": "ai-train-megatron"
+                  },
+                  "version": {
+                    "type": "string",
+                    "title": "算子版本",
+                    "description": "算子版本号。",
+                    "example": "v1"
+                  },
+                  "runtime_type": {
+                    "type": "string",
+                    "title": "运行时类型",
+                    "description": "docker/docker-run/singularity/instance 等。",
+                    "example": "docker"
+                  },
+                  "runtime": {
+                    "type": "string",
+                    "title": "运行镜像",
+                    "description": "镜像地址或运行时路径。",
+                    "example": "local/ai-operator/ai-train-megatron-server:20260629"
+                  },
+                  "runtime_args": {
+                    "type": "string",
+                    "title": "运行时参数",
+                    "description": "容器挂载、GPU 等运行时参数。",
+                    "example": "--gpus all"
+                  },
+                  "handler": {
+                    "type": "string",
+                    "title": "处理函数",
+                    "description": "容器内处理入口。",
+                    "example": "/invoke"
+                  },
+                  "cpu_cores": {
+                    "type": "integer",
+                    "title": "CPU核数",
+                    "description": "申请 CPU 核数。",
+                    "example": 8
+                  },
+                  "gpu_count": {
+                    "type": "integer",
+                    "title": "GPU数量",
+                    "description": "申请 GPU 数量。",
+                    "example": 1
+                  },
+                  "memory_mb": {
+                    "type": "integer",
+                    "title": "内存容量",
+                    "description": "申请内存，单位 MB。",
+                    "example": 24576
+                  },
+                  "env_vars": {
+                    "type": "object",
+                    "title": "环境变量",
+                    "description": "注入的环境变量。",
+                    "example": {}
+                  },
+                  "mpi_enabled": {
+                    "type": "boolean",
+                    "title": "是否启用MPI",
+                    "description": "是否启用 MPI 并行。",
+                    "example": false
+                  },
+                  "mpi_command": {
+                    "type": "string",
+                    "title": "MPI命令",
+                    "description": "MPI 启动命令。",
+                    "example": ""
+                  },
+                  "timeout_sec": {
+                    "type": "integer",
+                    "title": "超时时间",
+                    "description": "最大执行时间，单位 s。",
+                    "example": 3600
+                  }
+                },
+                "example": {
+                  "name": "ai-train-megatron",
+                  "version": "v1",
+                  "runtime_type": "docker",
+                  "runtime": "local/ai-operator/ai-train-megatron-server:20260629",
+                  "runtime_args": "--gpus all",
+                  "handler": "/invoke",
+                  "cpu_cores": 8,
+                  "gpu_count": 1,
+                  "memory_mb": 24576,
+                  "env_vars": {},
+                  "mpi_enabled": false,
+                  "mpi_command": "",
+                  "timeout_sec": 3600
+                }
+              },
+              "example": {
+                "name": "ai-train-megatron",
+                "version": "v1",
+                "runtime_type": "docker",
+                "runtime": "local/ai-operator/ai-train-megatron-server:20260629",
+                "runtime_args": "--gpus all",
+                "handler": "/invoke",
+                "cpu_cores": 8,
+                "gpu_count": 1,
+                "memory_mb": 24576,
+                "env_vars": {},
+                "mpi_enabled": false,
+                "mpi_command": "",
+                "timeout_sec": 3600
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回的文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "算子注册结果",
+                      "properties": {
+                        "operator_id": {
+                          "type": "string",
+                          "title": "算子ID",
+                          "description": "注册后的算子唯一标识。",
+                          "example": "ai-train-megatron"
+                        },
+                        "name": {
+                          "type": "string",
+                          "title": "算子名称",
+                          "description": "算子函数名。",
+                          "example": "ai-train-megatron"
+                        },
+                        "version": {
+                          "type": "string",
+                          "title": "算子版本",
+                          "description": "算子版本号。",
+                          "example": "v1"
+                        },
+                        "status": {
+                          "type": "string",
+                          "title": "注册状态",
+                          "description": "注册结果状态。",
+                          "example": "registered"
+                        }
+                      },
+                      "example": {
+                        "operator_id": "ai-train-megatron",
+                        "name": "ai-train-megatron",
+                        "version": "v1",
+                        "status": "registered"
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T12:00:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "operator_id": "ai-train-megatron",
+                    "name": "ai-train-megatron",
+                    "version": "v1",
+                    "status": "registered"
+                  },
+                  "timestamp": "2026-08-11T12:00:00+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/llm/operators/{name}/{version}/invoke": {
+      "post": {
+        "summary": "调用AI大模型训练算子",
+        "deprecated": false,
+        "description": "按算子名与版本调用算子，对齐后端 POST /action/invoke。Cap'n Proto 二进制协议（TrainRequest/TrainResponse）。",
+        "operationId": "invokeLlmOperator",
+        "tags": [
+          "算子管理"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "算子函数名。",
+            "required": true,
+            "example": "ai-train-megatron",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "description": "算子版本号。",
+            "required": true,
+            "example": "v1",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "title": "算子调用请求",
+                "description": "算子输入参数。",
+                "properties": {
+                  "data_root": {
+                    "type": "string",
+                    "title": "数据根目录",
+                    "description": "输入数据根目录，对应算子请求 dataRoot。",
+                    "example": "/data"
+                  },
+                  "output_dir": {
+                    "type": "string",
+                    "title": "输出目录",
+                    "description": "结果输出目录，对应算子请求 outputDir。",
+                    "example": "/runs/demo"
+                  },
+                  "config": {
+                    "type": "object",
+                    "title": "算子配置",
+                    "description": "结构化业务参数，对应算子请求 configJson。",
+                    "example": {}
+                  }
+                },
+                "example": {
+                  "data_root": "/data",
+                  "output_dir": "/runs/demo",
+                  "config": {
+                    "task": "megatron",
+                    "epochs": 3
+                  }
+                }
+              },
+              "example": {
+                "data_root": "/data",
+                "output_dir": "/runs/demo",
+                "config": {
+                  "task": "megatron",
+                  "epochs": 3
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回的文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "算子调用结果",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "title": "调用状态",
+                          "description": "算子执行状态。",
+                          "example": "success"
+                        },
+                        "metrics": {
+                          "type": "string",
+                          "title": "指标摘要",
+                          "description": "JSON 格式的指标摘要。",
+                          "example": "{\"loss\": 0.02}"
+                        },
+                        "artifact_dir": {
+                          "type": "string",
+                          "title": "产物目录",
+                          "description": "结果产物输出目录。",
+                          "example": "/runs/demo/artifacts"
+                        }
+                      },
+                      "example": {
+                        "status": "success",
+                        "metrics": "{\"loss\": 0.02}",
+                        "artifact_dir": "/runs/demo/artifacts"
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T12:00:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "status": "success",
+                    "metrics": "{\"loss\": 0.02}",
+                    "artifact_dir": "/runs/demo/artifacts"
+                  },
+                  "timestamp": "2026-08-11T12:00:00+08:00"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    }
+  },
+  "components": {
+    "schemas": {},
+    "responses": {},
+    "securitySchemes": {}
+  },
+  "servers": [],
+  "security": []
+}

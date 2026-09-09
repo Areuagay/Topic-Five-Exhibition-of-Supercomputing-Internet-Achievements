@@ -24,8 +24,8 @@
  *   POST /api/v1/llm/runs                     -> 模拟成功响应（回显 body）
  */
 import { createServer } from 'node:http'
-import { existsSync, readFileSync } from 'node:fs'
-import { resolve } from 'node:path'
+import { existsSync, readFileSync, statSync } from 'node:fs'
+import { basename, extname, resolve, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const __dirname = resolve(fileURLToPath(import.meta.url), '..')
@@ -33,8 +33,22 @@ const __dirname = resolve(fileURLToPath(import.meta.url), '..')
 const HOST = process.env.BACKEND_HOST || '127.0.0.1'
 const PORT = Number(process.env.BACKEND_PORT || 3001)
 const MOCK_DATA_DIR = process.env.MOCK_DATA_DIR || resolve(__dirname, '..', 'mock-data')
+const REPO_ROOT = resolve(__dirname, '..')
+const ARTIFACTS_ROOT = resolve(REPO_ROOT, 'artifacts')
+const ARTIFACT_INDEX = resolve(ARTIFACTS_ROOT, 'simulated', 'artifact_index.json')
 
 const API_PREFIX = '/api/v1'
+
+const MIME = {
+  '.png': 'image/png',
+  '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
+  '.gif': 'image/gif',
+  '.json': 'application/json; charset=utf-8',
+  '.csv': 'text/csv; charset=utf-8',
+  '.txt': 'text/plain; charset=utf-8',
+  '.dat': 'application/octet-stream',
+}
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
@@ -84,6 +98,45 @@ function readJson(relPath) {
     /* 忽略单个文件解析失败，按 404 处理 */
   }
   return null
+}
+
+/** 解析 artifact_id -> 仓库内相对路径（仅允许 artifacts/ 下文件） */
+function resolveArtifactPath(artifactId) {
+  if (!artifactId || artifactId.includes('..') || artifactId.includes('/') || artifactId.includes('\\')) {
+    return null
+  }
+  try {
+    if (existsSync(ARTIFACT_INDEX)) {
+      const index = JSON.parse(readFileSync(ARTIFACT_INDEX, 'utf-8'))
+      const entry = index?.artifacts?.[artifactId]
+      if (entry?.path) {
+        const rel = String(entry.path).replace(/\\/g, '/')
+        if (rel.includes('..') || !rel.startsWith('artifacts/')) return null
+        const abs = resolve(REPO_ROOT, rel)
+        if (!abs.startsWith(ARTIFACTS_ROOT + sep) && abs !== ARTIFACTS_ROOT) return null
+        if (existsSync(abs) && statSync(abs).isFile()) return abs
+      }
+    }
+  } catch {
+    /* fall through */
+  }
+  return null
+}
+
+function sendFile(res, absPath, { download = false } = {}) {
+  const buf = readFileSync(absPath)
+  const ext = extname(absPath).toLowerCase()
+  const headers = {
+    'Content-Type': MIME[ext] || 'application/octet-stream',
+    'Content-Length': buf.length,
+    'Cache-Control': 'no-store',
+    ...CORS_HEADERS,
+  }
+  if (download) {
+    headers['Content-Disposition'] = `attachment; filename="${basename(absPath)}"`
+  }
+  res.writeHead(200, headers)
+  res.end(buf)
 }
 
 /**
@@ -208,9 +261,35 @@ const server = createServer(async (req, res) => {
     return
   }
 
-  // 读操作：GET 返回 mock-data 下的 JSON
+  // 读操作：GET 返回 mock-data 下的 JSON；文件预览/下载单独处理
   if (method === 'GET') {
     const parts = pathname.slice(API_PREFIX.length).split('/').filter(Boolean)
+
+    // GET /api/v1/files/{artifact_id}/preview|download
+    if (parts[0] === 'files' && parts[1] && (parts[2] === 'preview' || parts[2] === 'download')) {
+      const abs = resolveArtifactPath(parts[1])
+      if (!abs) {
+        sendJSON(res, 404, {
+          code: 404,
+          message: `Artifact file not found: ${parts[1]}（仅提供 artifacts/ 下已登记的模拟文件）`,
+          data: null,
+          timestamp: new Date().toISOString(),
+        })
+        return
+      }
+      try {
+        sendFile(res, abs, { download: parts[2] === 'download' })
+      } catch {
+        sendJSON(res, 500, {
+          code: 500,
+          message: `Failed to read artifact: ${parts[1]}`,
+          data: null,
+          timestamp: new Date().toISOString(),
+        })
+      }
+      return
+    }
+
     const route = resolveMockFile(parts)
     if (!route) {
       sendJSON(res, 404, {

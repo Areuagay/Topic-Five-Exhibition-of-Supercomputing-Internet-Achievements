@@ -1,0 +1,55 @@
+{
+  "code": 200,
+  "message": "success",
+  "data": [
+    {
+      "name": "fd-wave-solver",
+      "version": "v1",
+      "runtime_type": "docker",
+      "runtime": "local/geo-operator/fd-wave-solver-server:20260629",
+      "handler": "/invoke",
+      "cpu_cores": 64,
+      "gpu_count": 0,
+      "memory_mb": 262144,
+      "status": "registered",
+      "description": "有限差分波动方程求解器：高阶有限差分格式三维地震波场模拟。"
+    },
+    {
+      "name": "fem-pde-solver",
+      "version": "v1",
+      "runtime_type": "docker",
+      "runtime": "local/geo-operator/fem-pde-solver-server:20260630",
+      "handler": "/invoke",
+      "cpu_cores": 128,
+      "gpu_count": 0,
+      "memory_mb": 524288,
+      "status": "registered",
+      "description": "偏微分方程求解器（FEM）：岩石圈热-力学耦合有限元求解。"
+    },
+    {
+      "name": "fft-operator",
+      "version": "v1",
+      "runtime_type": "docker",
+      "runtime": "local/common/fft-operator-server:20260601",
+      "handler": "/invoke",
+      "cpu_cores": 16,
+      "gpu_count": 0,
+      "memory_mb": 16384,
+      "status": "registered",
+      "description": "FFT快速傅里叶变换：波场频谱分析与滤波后处理。"
+    },
+    {
+      "name": "sparse-matrix",
+      "version": "v1",
+      "runtime_type": "docker",
+      "runtime": "local/common/sparse-matrix-server:20260601",
+      "handler": "/invoke",
+      "cpu_cores": 8,
+      "gpu_count": 0,
+      "memory_mb": 8192,
+      "status": "registered",
+      "description": "稀疏矩阵运算：CSR/CSC 稀疏求解与预处理。"
+    }
+  ],
+  "timestamp": "2026-08-11T10:00:00+08:00"
+}

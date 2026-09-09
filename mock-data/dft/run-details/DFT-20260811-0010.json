@@ -74,38 +74,2079 @@
         }
       ],
       "edges": [
-        { "source": "structure", "target": "pseudo" },
-        { "source": "pseudo", "target": "relax" },
-        { "source": "relax", "target": "scf" },
-        { "source": "scf", "target": "band" },
-        { "source": "band", "target": "dos" },
-        { "source": "dos", "target": "post" }
+        {
+          "source": "structure",
+          "target": "pseudo"
+        },
+        {
+          "source": "pseudo",
+          "target": "relax"
+        },
+        {
+          "source": "relax",
+          "target": "scf"
+        },
+        {
+          "source": "scf",
+          "target": "band"
+        },
+        {
+          "source": "band",
+          "target": "dos"
+        },
+        {
+          "source": "dos",
+          "target": "post"
+        }
       ]
     },
     "metrics": {
       "progress": 100,
       "metrics": [
-        { "name": "scf_iteration", "label": "SCF迭代次数", "value": 18, "total": 18, "unit": "次" },
-        { "name": "total_energy", "label": "总能量", "value": -108.324, "total": 0, "unit": "Ry" },
-        { "name": "energy_delta", "label": "能量变化", "value": 3.2e-7, "total": 0, "unit": "Ry" },
-        { "name": "scf_converged", "label": "SCF收敛状态", "value": 1, "total": 1, "unit": "" },
-        { "name": "kpoint_progress", "label": "K点计算进度", "value": 1000, "total": 1000, "unit": "个" },
-        { "name": "cpu_utilization", "label": "CPU利用率", "value": 92, "total": 100, "unit": "%" }
+        {
+          "name": "scf_iteration",
+          "label": "SCF迭代次数",
+          "value": 18,
+          "total": 18,
+          "unit": "次"
+        },
+        {
+          "name": "total_energy",
+          "label": "总能量",
+          "value": -108.324,
+          "total": 0,
+          "unit": "Ry"
+        },
+        {
+          "name": "energy_delta",
+          "label": "能量变化",
+          "value": 3.2e-07,
+          "total": 0,
+          "unit": "Ry"
+        },
+        {
+          "name": "scf_converged",
+          "label": "SCF收敛状态",
+          "value": 1,
+          "total": 1,
+          "unit": ""
+        },
+        {
+          "name": "kpoint_progress",
+          "label": "K点计算进度",
+          "value": 1000,
+          "total": 1000,
+          "unit": "个"
+        },
+        {
+          "name": "cpu_utilization",
+          "label": "CPU利用率",
+          "value": 92,
+          "total": 100,
+          "unit": "%"
+        }
       ],
       "scf_series": [
-        { "iteration": 1, "total_energy": -107.812, "energy_delta": 0.128 },
-        { "iteration": 5, "total_energy": -108.21, "energy_delta": 0.012 },
-        { "iteration": 10, "total_energy": -108.31, "energy_delta": 0.0011 },
-        { "iteration": 15, "total_energy": -108.3238, "energy_delta": 1.5e-5 },
-        { "iteration": 18, "total_energy": -108.324, "energy_delta": 3.2e-7 }
+        {
+          "iteration": 1,
+          "total_energy": -107.812,
+          "energy_delta": 0.128
+        },
+        {
+          "iteration": 5,
+          "total_energy": -108.21,
+          "energy_delta": 0.012
+        },
+        {
+          "iteration": 10,
+          "total_energy": -108.31,
+          "energy_delta": 0.0011
+        },
+        {
+          "iteration": 15,
+          "total_energy": -108.3238,
+          "energy_delta": 1.5e-05
+        },
+        {
+          "iteration": 18,
+          "total_energy": -108.324,
+          "energy_delta": 3.2e-07
+        }
       ],
       "batch_progress": {
-        "total_materials": 1000,
-        "completed_materials": 1000,
-        "converged_materials": 962,
-        "failed_materials": 38,
+        "total_materials": 200,
+        "completed_materials": 200,
+        "converged_materials": 187,
+        "failed_materials": 13,
         "materials_per_hour": 42,
-        "qualified_candidates": 37
+        "qualified_candidates": 27
+      },
+      "domain_data": {
+        "source_type": "simulated",
+        "execution_mode": "simulated",
+        "scenario_id": "high-throughput-screening",
+        "batch_summary": {
+          "total": 200,
+          "completed": 200,
+          "converged": 187,
+          "failed": 13,
+          "qualified": 27
+        },
+        "materials": [
+          {
+            "material_id": "SIM-MAT-0001",
+            "formula": "As3Al",
+            "formation_energy": -0.6706,
+            "band_gap": 0.543,
+            "stability_score": 0.7516,
+            "converged": true,
+            "cluster_id": "changsha"
+          },
+          {
+            "material_id": "SIM-MAT-0002",
+            "formula": "SeGa3",
+            "formation_energy": -0.7343,
+            "band_gap": 0.0,
+            "stability_score": 0.99,
+            "converged": true,
+            "cluster_id": "guangzhou"
+          },
+          {
+            "material_id": "SIM-MAT-0003",
+            "formula": "O3N",
+            "formation_energy": -0.0148,
+            "band_gap": 2.234,
+            "stability_score": 0.5608,
+            "converged": true,
+            "cluster_id": "kunshan"
+          },
+          {
+            "material_id": "SIM-MAT-0004",
+            "formula": "SSe3",
+            "formation_energy": -0.8123,
+            "band_gap": 1.049,
+            "stability_score": 0.7579,
+            "converged": true,
+            "cluster_id": "jinan"
+          },
+          {
+            "material_id": "SIM-MAT-0005",
+            "formula": "Si2As3",
+            "formation_energy": -0.8032,
+            "band_gap": 0.158,
+            "stability_score": 0.8746,
+            "converged": true,
+            "cluster_id": "changsha"
+          },
+          {
+            "material_id": "SIM-MAT-0006",
+            "formula": "NSi3",
+            "formation_energy": -0.2566,
+            "band_gap": 2.591,
+            "stability_score": 0.749,
+            "converged": true,
+            "cluster_id": "guangzhou"
+          },
+          {
+            "material_id": "SIM-MAT-0007",
+            "formula": "Ge3Ti2",
+            "formation_energy": -0.0629,
+            "band_gap": 0.88,
+            "stability_score": 0.4341,
+            "converged": true,
+            "cluster_id": "kunshan"
+          },
+          {
+            "material_id": "SIM-MAT-0008",
+            "formula": "SiAl",
+            "formation_energy": -0.5737,
+            "band_gap": 0.318,
+            "stability_score": 0.8294,
+            "converged": true,
+            "cluster_id": "jinan"
+          },
+          {
+            "material_id": "SIM-MAT-0009",
+            "formula": "Zn2S2",
+            "formation_energy": 0.1073,
+            "band_gap": 0.361,
+            "stability_score": 0.4743,
+            "converged": true,
+            "cluster_id": "changsha"
+          },
+          {
+            "material_id": "SIM-MAT-0010",
+            "formula": "Ga3Ti3",
+            "formation_energy": 0.3124,
+            "band_gap": 1.945,
+            "stability_score": 0.5002,
+            "converged": true,
+            "cluster_id": "guangzhou"
+          },
+          {
+            "material_id": "SIM-MAT-0011",
+            "formula": "Cu2N",
+            "formation_energy": -0.6833,
+            "band_gap": 3.798,
+            "stability_score": 0.928,
+            "converged": true,
+            "cluster_id": "kunshan"
+          },
+          {
+            "material_id": "SIM-MAT-0012",
+            "formula": "Zn3N",
+            "formation_energy": -0.9138,
+            "band_gap": 0.777,
+            "stability_score": 0.8671,
+            "converged": true,
+            "cluster_id": "jinan"
+          },
+          {
+            "material_id": "SIM-MAT-0013",
+            "formula": "Ti3As",
+            "formation_energy": -1.0089,
+            "band_gap": 3.756,
+            "stability_score": 0.9753,
+            "converged": true,
+            "cluster_id": "changsha"
+          },
+          {
+            "material_id": "SIM-MAT-0014",
+            "formula": "SZn",
+            "formation_energy": -0.3005,
+            "band_gap": 1.275,
+            "stability_score": 0.6334,
+            "converged": true,
+            "cluster_id": "guangzhou"
+          },
+          {
+            "material_id": "SIM-MAT-0015",
+            "formula": "Ga2Zn3",
+            "formation_energy": -0.2729,
+            "band_gap": 2.764,
+            "stability_score": 0.7459,
+            "converged": true,
+            "cluster_id": "kunshan"
+          },
+          {
+            "material_id": "SIM-MAT-0016",
+            "formula": "Ge3Cu2",
+            "formation_energy": -0.4288,
+            "band_gap": 0.778,
+            "stability_score": 0.7972,
+            "converged": true,
+            "cluster_id": "jinan"
+          },
+          {
+            "material_id": "SIM-MAT-0017",
+            "formula": "S2Cu3",
+            "formation_energy": -0.0915,
+            "band_gap": 0.0,
+            "stability_score": 0.5483,
+            "converged": true,
+            "cluster_id": "changsha"
+          },
+          {
+            "material_id": "SIM-MAT-0018",
+            "formula": "TiN2",
+            "formation_energy": -0.3938,
+            "band_gap": 1.276,
+            "stability_score": 0.638,
+            "converged": true,
+            "cluster_id": "guangzhou"
+          },
+          {
+            "material_id": "SIM-MAT-0019",
+            "formula": "Ge2Ga2",
+            "formation_energy": -0.2923,
+            "band_gap": 3.217,
+            "stability_score": 0.7881,
+            "converged": true,
+            "cluster_id": "kunshan"
+          },
+          {
+            "material_id": "SIM-MAT-0020",
+            "formula": "Se3Cu2",
+            "formation_energy": -0.808,
+            "band_gap": 2.124,
+            "stability_score": 0.7086,
+            "converged": true,
+            "cluster_id": "jinan"
+          },
+          {
+            "material_id": "SIM-MAT-0021",
+            "formula": "Ge3N2",
+            "formation_energy": -0.0772,
+            "band_gap": 3.339,
+            "stability_score": 0.5483,
+            "converged": true,
+            "cluster_id": "changsha"
+          },
+          {
+            "material_id": "SIM-MAT-0022",
+            "formula": "Si3Se3",
+            "formation_energy": -0.2678,
+            "band_gap": 3.985,
+            "stability_score": 0.62,
+            "converged": true,
+            "cluster_id": "guangzhou"
+          },
+          {
+            "material_id": "SIM-MAT-0023",
+            "formula": "N2Al",
+            "formation_energy": -0.6647,
+            "band_gap": 0.417,
+            "stability_score": 0.816,
+            "converged": true,
+            "cluster_id": "kunshan"
+          },
+          {
+            "material_id": "SIM-MAT-0024",
+            "formula": "NGe",
+            "formation_energy": -0.5457,
+            "band_gap": 0.666,
+            "stability_score": 0.6989,
+            "converged": true,
+            "cluster_id": "jinan"
+          },
+          {
+            "material_id": "SIM-MAT-0025",
+            "formula": "Ti3Al2",
+            "formation_energy": 0.1028,
+            "band_gap": 0.957,
+            "stability_score": 0.5114,
+            "converged": true,
+            "cluster_id": "changsha"
+          },
+          {
+            "material_id": "SIM-MAT-0026",
+            "formula": "As3N3",
+            "formation_energy": -0.6445,
+            "band_gap": 1.002,
+            "stability_score": 0.7716,
+            "converged": true,
+            "cluster_id": "guangzhou"
+          },
+          {
+            "material_id": "SIM-MAT-0027",
+            "formula": "Si2Ti3",
+            "formation_energy": 0.2927,
+            "band_gap": 0.0,
+            "stability_score": 0.4637,
+            "converged": true,
+            "cluster_id": "kunshan"
+          },
+          {
+            "material_id": "SIM-MAT-0028",
+            "formula": "Zn3Al3",
+            "formation_energy": -0.1601,
+            "band_gap": 2.154,
+            "stability_score": 0.565,
+            "converged": true,
+            "cluster_id": "jinan"
+          },
+          {
+            "material_id": "SIM-MAT-0029",
+            "formula": "SSi3",
+            "formation_energy": -0.3726,
+            "band_gap": 1.802,
+            "stability_score": 0.6963,
+            "converged": true,
+            "cluster_id": "changsha"
+          },
+          {
+            "material_id": "SIM-MAT-0030",
+            "formula": "As2Zn",
+            "formation_energy": 0.0477,
+            "band_gap": 2.892,
+            "stability_score": 0.5003,
+            "converged": true,
+            "cluster_id": "guangzhou"
+          },
+          {
+            "material_id": "SIM-MAT-0031",
+            "formula": "As3Ga",
+            "formation_energy": 0.3252,
+            "band_gap": 1.459,
+            "stability_score": 0.394,
+            "converged": true,
+            "cluster_id": "kunshan"
+          },
+          {
+            "material_id": "SIM-MAT-0032",
+            "formula": "SeZn3",
+            "formation_energy": -0.9895,
+            "band_gap": 0.0,
+            "stability_score": 0.8979,
+            "converged": true,
+            "cluster_id": "jinan"
+          },
+          {
+            "material_id": "SIM-MAT-0033",
+            "formula": "Ge2As",
+            "formation_energy": -1.4151,
+            "band_gap": 1.022,
+            "stability_score": 0.99,
+            "converged": true,
+            "cluster_id": "changsha"
+          },
+          {
+            "material_id": "SIM-MAT-0034",
+            "formula": "Si2Ge3",
+            "formation_energy": -0.3786,
+            "band_gap": 1.767,
+            "stability_score": 0.7596,
+            "converged": true,
+            "cluster_id": "guangzhou"
+          },
+          {
+            "material_id": "SIM-MAT-0035",
+            "formula": "Ge3Al3",
+            "formation_energy": 0.1774,
+            "band_gap": 1.447,
+            "stability_score": 0.5355,
+            "converged": true,
+            "cluster_id": "kunshan"
+          },
+          {
+            "material_id": "SIM-MAT-0036",
+            "formula": "As2O3",
+            "formation_energy": -0.6551,
+            "band_gap": 3.852,
+            "stability_score": 0.6986,
+            "converged": true,
+            "cluster_id": "jinan"
+          },
+          {
+            "material_id": "SIM-MAT-0037",
+            "formula": "SiN",
+            "formation_energy": -1.185,
+            "band_gap": 2.127,
+            "stability_score": 0.8847,
+            "converged": false,
+            "cluster_id": "changsha"
+          },
+          {
+            "material_id": "SIM-MAT-0038",
+            "formula": "Cu3Ti",
+            "formation_energy": 0.3789,
+            "band_gap": 2.795,
+            "stability_score": 0.2139,
+            "converged": true,
+            "cluster_id": "guangzhou"
+          },
+          {
+            "material_id": "SIM-MAT-0039",
+            "formula": "As3Ti3",
+            "formation_energy": -0.8121,
+            "band_gap": 3.517,
+            "stability_score": 0.8379,
+            "converged": false,
+            "cluster_id": "kunshan"
+          },
+          {
+            "material_id": "SIM-MAT-0040",
+            "formula": "N2Ti",
+            "formation_energy": -0.278,
+            "band_gap": 3.119,
+            "stability_score": 0.686,
+            "converged": true,
+            "cluster_id": "jinan"
+          },
+          {
+            "material_id": "SIM-MAT-0041",
+            "formula": "Ge2N",
+            "formation_energy": -0.3094,
+            "band_gap": 3.695,
+            "stability_score": 0.6169,
+            "converged": true,
+            "cluster_id": "changsha"
+          },
+          {
+            "material_id": "SIM-MAT-0042",
+            "formula": "Si2N3",
+            "formation_energy": 0.1399,
+            "band_gap": 3.635,
+            "stability_score": 0.5094,
+            "converged": true,
+            "cluster_id": "guangzhou"
+          },
+          {
+            "material_id": "SIM-MAT-0043",
+            "formula": "O2Ti2",
+            "formation_energy": -0.8544,
+            "band_gap": 0.058,
+            "stability_score": 0.8929,
+            "converged": true,
+            "cluster_id": "kunshan"
+          },
+          {
+            "material_id": "SIM-MAT-0044",
+            "formula": "Si3S2",
+            "formation_energy": -0.2422,
+            "band_gap": 3.474,
+            "stability_score": 0.7269,
+            "converged": true,
+            "cluster_id": "jinan"
+          },
+          {
+            "material_id": "SIM-MAT-0045",
+            "formula": "Al3S3",
+            "formation_energy": -0.6923,
+            "band_gap": 0.696,
+            "stability_score": 0.7167,
+            "converged": true,
+            "cluster_id": "changsha"
+          },
+          {
+            "material_id": "SIM-MAT-0046",
+            "formula": "O2Ge",
+            "formation_energy": -0.922,
+            "band_gap": 1.273,
+            "stability_score": 0.7326,
+            "converged": true,
+            "cluster_id": "guangzhou"
+          },
+          {
+            "material_id": "SIM-MAT-0047",
+            "formula": "TiS",
+            "formation_energy": -0.3626,
+            "band_gap": 3.466,
+            "stability_score": 0.6506,
+            "converged": true,
+            "cluster_id": "kunshan"
+          },
+          {
+            "material_id": "SIM-MAT-0048",
+            "formula": "SCu",
+            "formation_energy": -0.8293,
+            "band_gap": 2.744,
+            "stability_score": 0.8968,
+            "converged": true,
+            "cluster_id": "jinan"
+          },
+          {
+            "material_id": "SIM-MAT-0049",
+            "formula": "As3Zn2",
+            "formation_energy": -0.0579,
+            "band_gap": 0.895,
+            "stability_score": 0.4581,
+            "converged": true,
+            "cluster_id": "changsha"
+          },
+          {
+            "material_id": "SIM-MAT-0050",
+            "formula": "Cu3Se",
+            "formation_energy": 0.398,
+            "band_gap": 3.534,
+            "stability_score": 0.4785,
+            "converged": true,
+            "cluster_id": "guangzhou"
+          },
+          {
+            "material_id": "SIM-MAT-0051",
+            "formula": "OSi3",
+            "formation_energy": -0.6062,
+            "band_gap": 3.511,
+            "stability_score": 0.8281,
+            "converged": true,
+            "cluster_id": "kunshan"
+          },
+          {
+            "material_id": "SIM-MAT-0052",
+            "formula": "TiO",
+            "formation_energy": 0.1096,
+            "band_gap": 3.994,
+            "stability_score": 0.4098,
+            "converged": false,
+            "cluster_id": "jinan"
+          },
+          {
+            "material_id": "SIM-MAT-0053",
+            "formula": "As2Al",
+            "formation_energy": -0.4924,
+            "band_gap": 1.257,
+            "stability_score": 0.6582,
+            "converged": true,
+            "cluster_id": "changsha"
+          },
+          {
+            "material_id": "SIM-MAT-0054",
+            "formula": "Zn2N2",
+            "formation_energy": 0.2136,
+            "band_gap": 2.957,
+            "stability_score": 0.5157,
+            "converged": true,
+            "cluster_id": "guangzhou"
+          },
+          {
+            "material_id": "SIM-MAT-0055",
+            "formula": "Zn3As3",
+            "formation_energy": 0.1435,
+            "band_gap": 0.0,
+            "stability_score": 0.5199,
+            "converged": true,
+            "cluster_id": "kunshan"
+          },
+          {
+            "material_id": "SIM-MAT-0056",
+            "formula": "Ga2Se3",
+            "formation_energy": -0.1486,
+            "band_gap": 1.088,
+            "stability_score": 0.6268,
+            "converged": true,
+            "cluster_id": "jinan"
+          },
+          {
+            "material_id": "SIM-MAT-0057",
+            "formula": "Ga3Si",
+            "formation_energy": -0.5198,
+            "band_gap": 0.591,
+            "stability_score": 0.8337,
+            "converged": true,
+            "cluster_id": "changsha"
+          },
+          {
+            "material_id": "SIM-MAT-0058",
+            "formula": "Ti3S3",
+            "formation_energy": -0.3829,
+            "band_gap": 3.873,
+            "stability_score": 0.8194,
+            "converged": true,
+            "cluster_id": "guangzhou"
+          },
+          {
+            "material_id": "SIM-MAT-0059",
+            "formula": "SGa2",
+            "formation_energy": 0.2294,
+            "band_gap": 2.131,
+            "stability_score": 0.4506,
+            "converged": true,
+            "cluster_id": "kunshan"
+          },
+          {
+            "material_id": "SIM-MAT-0060",
+            "formula": "As2N3",
+            "formation_energy": -0.1222,
+            "band_gap": 2.284,
+            "stability_score": 0.6026,
+            "converged": true,
+            "cluster_id": "jinan"
+          },
+          {
+            "material_id": "SIM-MAT-0061",
+            "formula": "OAs2",
+            "formation_energy": -0.5512,
+            "band_gap": 2.479,
+            "stability_score": 0.7628,
+            "converged": true,
+            "cluster_id": "changsha"
+          },
+          {
+            "material_id": "SIM-MAT-0062",
+            "formula": "O3Al",
+            "formation_energy": -0.0699,
+            "band_gap": 3.713,
+            "stability_score": 0.4724,
+            "converged": true,
+            "cluster_id": "guangzhou"
+          },
+          {
+            "material_id": "SIM-MAT-0063",
+            "formula": "GeTi3",
+            "formation_energy": 0.2791,
+            "band_gap": 1.36,
+            "stability_score": 0.4143,
+            "converged": true,
+            "cluster_id": "kunshan"
+          },
+          {
+            "material_id": "SIM-MAT-0064",
+            "formula": "Ga3Al2",
+            "formation_energy": -0.8333,
+            "band_gap": 0.0,
+            "stability_score": 0.8887,
+            "converged": true,
+            "cluster_id": "jinan"
+          },
+          {
+            "material_id": "SIM-MAT-0065",
+            "formula": "Ga3Al",
+            "formation_energy": -0.5702,
+            "band_gap": 1.909,
+            "stability_score": 0.555,
+            "converged": true,
+            "cluster_id": "changsha"
+          },
+          {
+            "material_id": "SIM-MAT-0066",
+            "formula": "SGa2",
+            "formation_energy": 0.3255,
+            "band_gap": 2.821,
+            "stability_score": 0.4605,
+            "converged": true,
+            "cluster_id": "guangzhou"
+          },
+          {
+            "material_id": "SIM-MAT-0067",
+            "formula": "SiGa2",
+            "formation_energy": -0.7484,
+            "band_gap": 2.382,
+            "stability_score": 0.8995,
+            "converged": true,
+            "cluster_id": "kunshan"
+          },
+          {
+            "material_id": "SIM-MAT-0068",
+            "formula": "Ge2Cu3",
+            "formation_energy": -0.6884,
+            "band_gap": 3.341,
+            "stability_score": 0.802,
+            "converged": true,
+            "cluster_id": "jinan"
+          },
+          {
+            "material_id": "SIM-MAT-0069",
+            "formula": "Ge3Ti2",
+            "formation_energy": -0.0865,
+            "band_gap": 2.355,
+            "stability_score": 0.5413,
+            "converged": true,
+            "cluster_id": "changsha"
+          },
+          {
+            "material_id": "SIM-MAT-0070",
+            "formula": "Si2Zn3",
+            "formation_energy": -0.4753,
+            "band_gap": 0.0,
+            "stability_score": 0.6356,
+            "converged": true,
+            "cluster_id": "guangzhou"
+          },
+          {
+            "material_id": "SIM-MAT-0071",
+            "formula": "Ga3Zn",
+            "formation_energy": -0.9414,
+            "band_gap": 1.303,
+            "stability_score": 0.8538,
+            "converged": true,
+            "cluster_id": "kunshan"
+          },
+          {
+            "material_id": "SIM-MAT-0072",
+            "formula": "NAs2",
+            "formation_energy": -0.2009,
+            "band_gap": 0.0,
+            "stability_score": 0.5489,
+            "converged": true,
+            "cluster_id": "jinan"
+          },
+          {
+            "material_id": "SIM-MAT-0073",
+            "formula": "Al3Si3",
+            "formation_energy": -0.0979,
+            "band_gap": 2.179,
+            "stability_score": 0.6191,
+            "converged": true,
+            "cluster_id": "changsha"
+          },
+          {
+            "material_id": "SIM-MAT-0074",
+            "formula": "Zn2S3",
+            "formation_energy": -0.5065,
+            "band_gap": 1.617,
+            "stability_score": 0.8037,
+            "converged": true,
+            "cluster_id": "guangzhou"
+          },
+          {
+            "material_id": "SIM-MAT-0075",
+            "formula": "NO2",
+            "formation_energy": -0.6213,
+            "band_gap": 0.0,
+            "stability_score": 0.791,
+            "converged": false,
+            "cluster_id": "kunshan"
+          },
+          {
+            "material_id": "SIM-MAT-0076",
+            "formula": "Si2As",
+            "formation_energy": -0.1623,
+            "band_gap": 2.824,
+            "stability_score": 0.7126,
+            "converged": true,
+            "cluster_id": "jinan"
+          },
+          {
+            "material_id": "SIM-MAT-0077",
+            "formula": "Cu2Ti",
+            "formation_energy": -0.2882,
+            "band_gap": 1.517,
+            "stability_score": 0.5573,
+            "converged": true,
+            "cluster_id": "changsha"
+          },
+          {
+            "material_id": "SIM-MAT-0078",
+            "formula": "GaSe",
+            "formation_energy": -0.867,
+            "band_gap": 0.71,
+            "stability_score": 0.7736,
+            "converged": true,
+            "cluster_id": "guangzhou"
+          },
+          {
+            "material_id": "SIM-MAT-0079",
+            "formula": "CuS2",
+            "formation_energy": -0.3618,
+            "band_gap": 3.165,
+            "stability_score": 0.629,
+            "converged": true,
+            "cluster_id": "kunshan"
+          },
+          {
+            "material_id": "SIM-MAT-0080",
+            "formula": "NS2",
+            "formation_energy": 0.4121,
+            "band_gap": 1.543,
+            "stability_score": 0.483,
+            "converged": true,
+            "cluster_id": "jinan"
+          },
+          {
+            "material_id": "SIM-MAT-0081",
+            "formula": "Ge2O",
+            "formation_energy": -0.7459,
+            "band_gap": 0.906,
+            "stability_score": 0.6625,
+            "converged": true,
+            "cluster_id": "changsha"
+          },
+          {
+            "material_id": "SIM-MAT-0082",
+            "formula": "Ge3Se3",
+            "formation_energy": -0.7452,
+            "band_gap": 1.188,
+            "stability_score": 0.8879,
+            "converged": true,
+            "cluster_id": "guangzhou"
+          },
+          {
+            "material_id": "SIM-MAT-0083",
+            "formula": "Cu3Ge2",
+            "formation_energy": 0.2125,
+            "band_gap": 0.691,
+            "stability_score": 0.3765,
+            "converged": true,
+            "cluster_id": "kunshan"
+          },
+          {
+            "material_id": "SIM-MAT-0084",
+            "formula": "ON",
+            "formation_energy": -0.2483,
+            "band_gap": 3.899,
+            "stability_score": 0.7658,
+            "converged": true,
+            "cluster_id": "jinan"
+          },
+          {
+            "material_id": "SIM-MAT-0085",
+            "formula": "SGa",
+            "formation_energy": -0.301,
+            "band_gap": 2.771,
+            "stability_score": 0.7263,
+            "converged": true,
+            "cluster_id": "changsha"
+          },
+          {
+            "material_id": "SIM-MAT-0086",
+            "formula": "NAs",
+            "formation_energy": -1.6106,
+            "band_gap": 2.098,
+            "stability_score": 0.99,
+            "converged": true,
+            "cluster_id": "guangzhou"
+          },
+          {
+            "material_id": "SIM-MAT-0087",
+            "formula": "AsGa2",
+            "formation_energy": 0.4118,
+            "band_gap": 1.675,
+            "stability_score": 0.2953,
+            "converged": true,
+            "cluster_id": "kunshan"
+          },
+          {
+            "material_id": "SIM-MAT-0088",
+            "formula": "ZnSi2",
+            "formation_energy": -0.0981,
+            "band_gap": 0.603,
+            "stability_score": 0.5558,
+            "converged": false,
+            "cluster_id": "jinan"
+          },
+          {
+            "material_id": "SIM-MAT-0089",
+            "formula": "ZnCu",
+            "formation_energy": -0.9564,
+            "band_gap": 3.71,
+            "stability_score": 0.9425,
+            "converged": false,
+            "cluster_id": "changsha"
+          },
+          {
+            "material_id": "SIM-MAT-0090",
+            "formula": "OSi",
+            "formation_energy": -0.2425,
+            "band_gap": 2.095,
+            "stability_score": 0.5643,
+            "converged": true,
+            "cluster_id": "guangzhou"
+          },
+          {
+            "material_id": "SIM-MAT-0091",
+            "formula": "Cu3Al2",
+            "formation_energy": -0.7375,
+            "band_gap": 1.487,
+            "stability_score": 0.8091,
+            "converged": true,
+            "cluster_id": "kunshan"
+          },
+          {
+            "material_id": "SIM-MAT-0092",
+            "formula": "Se2As",
+            "formation_energy": 0.152,
+            "band_gap": 0.96,
+            "stability_score": 0.4089,
+            "converged": true,
+            "cluster_id": "jinan"
+          },
+          {
+            "material_id": "SIM-MAT-0093",
+            "formula": "SeZn",
+            "formation_energy": -0.0494,
+            "band_gap": 0.0,
+            "stability_score": 0.5064,
+            "converged": true,
+            "cluster_id": "changsha"
+          },
+          {
+            "material_id": "SIM-MAT-0094",
+            "formula": "Al2Se",
+            "formation_energy": -0.3046,
+            "band_gap": 3.863,
+            "stability_score": 0.7063,
+            "converged": true,
+            "cluster_id": "guangzhou"
+          },
+          {
+            "material_id": "SIM-MAT-0095",
+            "formula": "TiAl",
+            "formation_energy": -0.1069,
+            "band_gap": 1.347,
+            "stability_score": 0.6249,
+            "converged": true,
+            "cluster_id": "kunshan"
+          },
+          {
+            "material_id": "SIM-MAT-0096",
+            "formula": "OAs",
+            "formation_energy": -0.5614,
+            "band_gap": 2.996,
+            "stability_score": 0.7633,
+            "converged": true,
+            "cluster_id": "jinan"
+          },
+          {
+            "material_id": "SIM-MAT-0097",
+            "formula": "Ti2Se3",
+            "formation_energy": 0.2877,
+            "band_gap": 0.436,
+            "stability_score": 0.4871,
+            "converged": true,
+            "cluster_id": "changsha"
+          },
+          {
+            "material_id": "SIM-MAT-0098",
+            "formula": "S3Si2",
+            "formation_energy": -0.6732,
+            "band_gap": 3.837,
+            "stability_score": 0.8744,
+            "converged": true,
+            "cluster_id": "guangzhou"
+          },
+          {
+            "material_id": "SIM-MAT-0099",
+            "formula": "Cu3Al",
+            "formation_energy": 0.2705,
+            "band_gap": 0.804,
+            "stability_score": 0.2307,
+            "converged": true,
+            "cluster_id": "kunshan"
+          },
+          {
+            "material_id": "SIM-MAT-0100",
+            "formula": "Si2Cu",
+            "formation_energy": -0.3989,
+            "band_gap": 1.743,
+            "stability_score": 0.8116,
+            "converged": true,
+            "cluster_id": "jinan"
+          },
+          {
+            "material_id": "SIM-MAT-0101",
+            "formula": "Ge3Ga2",
+            "formation_energy": -0.9223,
+            "band_gap": 0.958,
+            "stability_score": 0.806,
+            "converged": true,
+            "cluster_id": "changsha"
+          },
+          {
+            "material_id": "SIM-MAT-0102",
+            "formula": "NGe3",
+            "formation_energy": -0.0019,
+            "band_gap": 2.68,
+            "stability_score": 0.4865,
+            "converged": true,
+            "cluster_id": "guangzhou"
+          },
+          {
+            "material_id": "SIM-MAT-0103",
+            "formula": "Al2Ge",
+            "formation_energy": -0.1503,
+            "band_gap": 2.74,
+            "stability_score": 0.6929,
+            "converged": true,
+            "cluster_id": "kunshan"
+          },
+          {
+            "material_id": "SIM-MAT-0104",
+            "formula": "Zn3Se",
+            "formation_energy": -0.7395,
+            "band_gap": 3.115,
+            "stability_score": 0.8851,
+            "converged": true,
+            "cluster_id": "jinan"
+          },
+          {
+            "material_id": "SIM-MAT-0105",
+            "formula": "Al3Ga",
+            "formation_energy": -0.5136,
+            "band_gap": 1.318,
+            "stability_score": 0.7774,
+            "converged": true,
+            "cluster_id": "changsha"
+          },
+          {
+            "material_id": "SIM-MAT-0106",
+            "formula": "S3N",
+            "formation_energy": -0.5684,
+            "band_gap": 3.75,
+            "stability_score": 0.7346,
+            "converged": true,
+            "cluster_id": "guangzhou"
+          },
+          {
+            "material_id": "SIM-MAT-0107",
+            "formula": "Cu2N2",
+            "formation_energy": -0.7644,
+            "band_gap": 3.638,
+            "stability_score": 0.8715,
+            "converged": true,
+            "cluster_id": "kunshan"
+          },
+          {
+            "material_id": "SIM-MAT-0108",
+            "formula": "As3Si2",
+            "formation_energy": -0.0484,
+            "band_gap": 0.126,
+            "stability_score": 0.6497,
+            "converged": true,
+            "cluster_id": "jinan"
+          },
+          {
+            "material_id": "SIM-MAT-0109",
+            "formula": "Se2Cu",
+            "formation_energy": -0.354,
+            "band_gap": 1.433,
+            "stability_score": 0.5844,
+            "converged": true,
+            "cluster_id": "changsha"
+          },
+          {
+            "material_id": "SIM-MAT-0110",
+            "formula": "S2Ga2",
+            "formation_energy": -0.7064,
+            "band_gap": 3.281,
+            "stability_score": 0.9863,
+            "converged": true,
+            "cluster_id": "guangzhou"
+          },
+          {
+            "material_id": "SIM-MAT-0111",
+            "formula": "O3Se3",
+            "formation_energy": -0.7511,
+            "band_gap": 1.423,
+            "stability_score": 0.8802,
+            "converged": true,
+            "cluster_id": "kunshan"
+          },
+          {
+            "material_id": "SIM-MAT-0112",
+            "formula": "Ti2As",
+            "formation_energy": 0.3064,
+            "band_gap": 1.735,
+            "stability_score": 0.5081,
+            "converged": false,
+            "cluster_id": "jinan"
+          },
+          {
+            "material_id": "SIM-MAT-0113",
+            "formula": "Zn2Ge3",
+            "formation_energy": -0.3832,
+            "band_gap": 2.591,
+            "stability_score": 0.6787,
+            "converged": true,
+            "cluster_id": "changsha"
+          },
+          {
+            "material_id": "SIM-MAT-0114",
+            "formula": "ZnGa3",
+            "formation_energy": -0.4125,
+            "band_gap": 2.192,
+            "stability_score": 0.722,
+            "converged": true,
+            "cluster_id": "guangzhou"
+          },
+          {
+            "material_id": "SIM-MAT-0115",
+            "formula": "Zn3As2",
+            "formation_energy": -0.4227,
+            "band_gap": 3.451,
+            "stability_score": 0.6788,
+            "converged": true,
+            "cluster_id": "kunshan"
+          },
+          {
+            "material_id": "SIM-MAT-0116",
+            "formula": "Se2Ti",
+            "formation_energy": 0.3474,
+            "band_gap": 0.0,
+            "stability_score": 0.3668,
+            "converged": true,
+            "cluster_id": "jinan"
+          },
+          {
+            "material_id": "SIM-MAT-0117",
+            "formula": "S2Al",
+            "formation_energy": -0.6734,
+            "band_gap": 0.123,
+            "stability_score": 0.9313,
+            "converged": true,
+            "cluster_id": "changsha"
+          },
+          {
+            "material_id": "SIM-MAT-0118",
+            "formula": "Se3Ge3",
+            "formation_energy": -0.0736,
+            "band_gap": 3.307,
+            "stability_score": 0.6765,
+            "converged": true,
+            "cluster_id": "guangzhou"
+          },
+          {
+            "material_id": "SIM-MAT-0119",
+            "formula": "O2Se3",
+            "formation_energy": 0.1831,
+            "band_gap": 3.14,
+            "stability_score": 0.4546,
+            "converged": false,
+            "cluster_id": "kunshan"
+          },
+          {
+            "material_id": "SIM-MAT-0120",
+            "formula": "Si3As",
+            "formation_energy": -0.7598,
+            "band_gap": 3.827,
+            "stability_score": 0.5298,
+            "converged": false,
+            "cluster_id": "jinan"
+          },
+          {
+            "material_id": "SIM-MAT-0121",
+            "formula": "SeCu3",
+            "formation_energy": -0.4791,
+            "band_gap": 0.0,
+            "stability_score": 0.7273,
+            "converged": true,
+            "cluster_id": "changsha"
+          },
+          {
+            "material_id": "SIM-MAT-0122",
+            "formula": "Si2As",
+            "formation_energy": -0.3423,
+            "band_gap": 0.164,
+            "stability_score": 0.6551,
+            "converged": true,
+            "cluster_id": "guangzhou"
+          },
+          {
+            "material_id": "SIM-MAT-0123",
+            "formula": "Se2Al2",
+            "formation_energy": 0.1311,
+            "band_gap": 3.703,
+            "stability_score": 0.3986,
+            "converged": true,
+            "cluster_id": "kunshan"
+          },
+          {
+            "material_id": "SIM-MAT-0124",
+            "formula": "GaN3",
+            "formation_energy": -0.641,
+            "band_gap": 3.63,
+            "stability_score": 0.7683,
+            "converged": true,
+            "cluster_id": "jinan"
+          },
+          {
+            "material_id": "SIM-MAT-0125",
+            "formula": "Zn2S3",
+            "formation_energy": -0.8039,
+            "band_gap": 0.72,
+            "stability_score": 0.7699,
+            "converged": true,
+            "cluster_id": "changsha"
+          },
+          {
+            "material_id": "SIM-MAT-0126",
+            "formula": "GeTi",
+            "formation_energy": -0.99,
+            "band_gap": 0.051,
+            "stability_score": 0.9308,
+            "converged": true,
+            "cluster_id": "guangzhou"
+          },
+          {
+            "material_id": "SIM-MAT-0127",
+            "formula": "S2Ga2",
+            "formation_energy": -0.0481,
+            "band_gap": 2.848,
+            "stability_score": 0.4233,
+            "converged": true,
+            "cluster_id": "kunshan"
+          },
+          {
+            "material_id": "SIM-MAT-0128",
+            "formula": "Al3As",
+            "formation_energy": 0.0127,
+            "band_gap": 0.677,
+            "stability_score": 0.5701,
+            "converged": true,
+            "cluster_id": "jinan"
+          },
+          {
+            "material_id": "SIM-MAT-0129",
+            "formula": "S2Ti",
+            "formation_energy": 0.2769,
+            "band_gap": 0.213,
+            "stability_score": 0.3859,
+            "converged": true,
+            "cluster_id": "changsha"
+          },
+          {
+            "material_id": "SIM-MAT-0130",
+            "formula": "Si2O2",
+            "formation_energy": 0.0812,
+            "band_gap": 3.981,
+            "stability_score": 0.6051,
+            "converged": true,
+            "cluster_id": "guangzhou"
+          },
+          {
+            "material_id": "SIM-MAT-0131",
+            "formula": "O2Al2",
+            "formation_energy": 0.1527,
+            "band_gap": 1.862,
+            "stability_score": 0.455,
+            "converged": true,
+            "cluster_id": "kunshan"
+          },
+          {
+            "material_id": "SIM-MAT-0132",
+            "formula": "Cu3As3",
+            "formation_energy": -0.0978,
+            "band_gap": 2.008,
+            "stability_score": 0.516,
+            "converged": true,
+            "cluster_id": "jinan"
+          },
+          {
+            "material_id": "SIM-MAT-0133",
+            "formula": "N3O",
+            "formation_energy": -0.3116,
+            "band_gap": 3.103,
+            "stability_score": 0.6531,
+            "converged": true,
+            "cluster_id": "changsha"
+          },
+          {
+            "material_id": "SIM-MAT-0134",
+            "formula": "Se3N3",
+            "formation_energy": -0.9093,
+            "band_gap": 0.0,
+            "stability_score": 0.7665,
+            "converged": true,
+            "cluster_id": "guangzhou"
+          },
+          {
+            "material_id": "SIM-MAT-0135",
+            "formula": "Zn3O",
+            "formation_energy": -0.8777,
+            "band_gap": 1.851,
+            "stability_score": 0.8347,
+            "converged": true,
+            "cluster_id": "kunshan"
+          },
+          {
+            "material_id": "SIM-MAT-0136",
+            "formula": "AsGe2",
+            "formation_energy": -0.172,
+            "band_gap": 0.942,
+            "stability_score": 0.6202,
+            "converged": true,
+            "cluster_id": "jinan"
+          },
+          {
+            "material_id": "SIM-MAT-0137",
+            "formula": "Al2Zn2",
+            "formation_energy": -0.0593,
+            "band_gap": 1.688,
+            "stability_score": 0.622,
+            "converged": true,
+            "cluster_id": "changsha"
+          },
+          {
+            "material_id": "SIM-MAT-0138",
+            "formula": "Zn2O2",
+            "formation_energy": 0.5539,
+            "band_gap": 0.523,
+            "stability_score": 0.3325,
+            "converged": true,
+            "cluster_id": "guangzhou"
+          },
+          {
+            "material_id": "SIM-MAT-0139",
+            "formula": "Zn2Ga3",
+            "formation_energy": -0.6344,
+            "band_gap": 3.056,
+            "stability_score": 0.8322,
+            "converged": false,
+            "cluster_id": "kunshan"
+          },
+          {
+            "material_id": "SIM-MAT-0140",
+            "formula": "Ti2Cu3",
+            "formation_energy": -0.4088,
+            "band_gap": 3.568,
+            "stability_score": 0.598,
+            "converged": true,
+            "cluster_id": "jinan"
+          },
+          {
+            "material_id": "SIM-MAT-0141",
+            "formula": "Ti2Se2",
+            "formation_energy": -0.1034,
+            "band_gap": 1.083,
+            "stability_score": 0.6521,
+            "converged": true,
+            "cluster_id": "changsha"
+          },
+          {
+            "material_id": "SIM-MAT-0142",
+            "formula": "GaAl3",
+            "formation_energy": -1.0185,
+            "band_gap": 0.97,
+            "stability_score": 0.8738,
+            "converged": true,
+            "cluster_id": "guangzhou"
+          },
+          {
+            "material_id": "SIM-MAT-0143",
+            "formula": "NTi",
+            "formation_energy": -0.149,
+            "band_gap": 3.245,
+            "stability_score": 0.5727,
+            "converged": true,
+            "cluster_id": "kunshan"
+          },
+          {
+            "material_id": "SIM-MAT-0144",
+            "formula": "O2Ge2",
+            "formation_energy": -0.4083,
+            "band_gap": 1.034,
+            "stability_score": 0.7397,
+            "converged": true,
+            "cluster_id": "jinan"
+          },
+          {
+            "material_id": "SIM-MAT-0145",
+            "formula": "GeCu3",
+            "formation_energy": -0.0257,
+            "band_gap": 0.515,
+            "stability_score": 0.4492,
+            "converged": true,
+            "cluster_id": "changsha"
+          },
+          {
+            "material_id": "SIM-MAT-0146",
+            "formula": "Ga2N2",
+            "formation_energy": 0.6332,
+            "band_gap": 0.0,
+            "stability_score": 0.3048,
+            "converged": true,
+            "cluster_id": "guangzhou"
+          },
+          {
+            "material_id": "SIM-MAT-0147",
+            "formula": "Al2Cu",
+            "formation_energy": -0.5275,
+            "band_gap": 0.793,
+            "stability_score": 0.8233,
+            "converged": true,
+            "cluster_id": "kunshan"
+          },
+          {
+            "material_id": "SIM-MAT-0148",
+            "formula": "Ti3Cu3",
+            "formation_energy": -0.1706,
+            "band_gap": 0.151,
+            "stability_score": 0.7258,
+            "converged": true,
+            "cluster_id": "jinan"
+          },
+          {
+            "material_id": "SIM-MAT-0149",
+            "formula": "GeCu2",
+            "formation_energy": 0.3006,
+            "band_gap": 2.576,
+            "stability_score": 0.6045,
+            "converged": true,
+            "cluster_id": "changsha"
+          },
+          {
+            "material_id": "SIM-MAT-0150",
+            "formula": "Ga2Si2",
+            "formation_energy": -0.9245,
+            "band_gap": 2.023,
+            "stability_score": 0.8158,
+            "converged": true,
+            "cluster_id": "guangzhou"
+          },
+          {
+            "material_id": "SIM-MAT-0151",
+            "formula": "Ga2Ti3",
+            "formation_energy": -0.2757,
+            "band_gap": 0.0,
+            "stability_score": 0.6113,
+            "converged": true,
+            "cluster_id": "kunshan"
+          },
+          {
+            "material_id": "SIM-MAT-0152",
+            "formula": "NGa3",
+            "formation_energy": -0.2169,
+            "band_gap": 3.244,
+            "stability_score": 0.6408,
+            "converged": true,
+            "cluster_id": "jinan"
+          },
+          {
+            "material_id": "SIM-MAT-0153",
+            "formula": "Se3Zn2",
+            "formation_energy": 0.1784,
+            "band_gap": 0.0,
+            "stability_score": 0.4822,
+            "converged": true,
+            "cluster_id": "changsha"
+          },
+          {
+            "material_id": "SIM-MAT-0154",
+            "formula": "OS2",
+            "formation_energy": -0.2249,
+            "band_gap": 3.529,
+            "stability_score": 0.7194,
+            "converged": true,
+            "cluster_id": "guangzhou"
+          },
+          {
+            "material_id": "SIM-MAT-0155",
+            "formula": "SGe",
+            "formation_energy": 0.0059,
+            "band_gap": 2.276,
+            "stability_score": 0.3863,
+            "converged": true,
+            "cluster_id": "kunshan"
+          },
+          {
+            "material_id": "SIM-MAT-0156",
+            "formula": "Cu2Zn",
+            "formation_energy": -0.2884,
+            "band_gap": 3.171,
+            "stability_score": 0.6625,
+            "converged": true,
+            "cluster_id": "jinan"
+          },
+          {
+            "material_id": "SIM-MAT-0157",
+            "formula": "Ti3Cu2",
+            "formation_energy": 0.5958,
+            "band_gap": 2.493,
+            "stability_score": 0.1935,
+            "converged": true,
+            "cluster_id": "changsha"
+          },
+          {
+            "material_id": "SIM-MAT-0158",
+            "formula": "AlN",
+            "formation_energy": -0.2475,
+            "band_gap": 1.54,
+            "stability_score": 0.6024,
+            "converged": true,
+            "cluster_id": "guangzhou"
+          },
+          {
+            "material_id": "SIM-MAT-0159",
+            "formula": "AsGe2",
+            "formation_energy": -0.3446,
+            "band_gap": 0.0,
+            "stability_score": 0.7263,
+            "converged": true,
+            "cluster_id": "kunshan"
+          },
+          {
+            "material_id": "SIM-MAT-0160",
+            "formula": "ZnAs",
+            "formation_energy": 0.0562,
+            "band_gap": 0.755,
+            "stability_score": 0.5676,
+            "converged": true,
+            "cluster_id": "jinan"
+          },
+          {
+            "material_id": "SIM-MAT-0161",
+            "formula": "Se2Zn",
+            "formation_energy": -0.4908,
+            "band_gap": 0.0,
+            "stability_score": 0.704,
+            "converged": true,
+            "cluster_id": "changsha"
+          },
+          {
+            "material_id": "SIM-MAT-0162",
+            "formula": "Ga2S",
+            "formation_energy": 0.063,
+            "band_gap": 2.551,
+            "stability_score": 0.4902,
+            "converged": true,
+            "cluster_id": "guangzhou"
+          },
+          {
+            "material_id": "SIM-MAT-0163",
+            "formula": "SGa2",
+            "formation_energy": -0.1265,
+            "band_gap": 0.664,
+            "stability_score": 0.5751,
+            "converged": true,
+            "cluster_id": "kunshan"
+          },
+          {
+            "material_id": "SIM-MAT-0164",
+            "formula": "Se3Cu2",
+            "formation_energy": -0.8452,
+            "band_gap": 2.36,
+            "stability_score": 0.6727,
+            "converged": true,
+            "cluster_id": "jinan"
+          },
+          {
+            "material_id": "SIM-MAT-0165",
+            "formula": "SeGa2",
+            "formation_energy": -0.1411,
+            "band_gap": 3.742,
+            "stability_score": 0.5609,
+            "converged": true,
+            "cluster_id": "changsha"
+          },
+          {
+            "material_id": "SIM-MAT-0166",
+            "formula": "SiSe2",
+            "formation_energy": -0.4602,
+            "band_gap": 0.0,
+            "stability_score": 0.7263,
+            "converged": true,
+            "cluster_id": "guangzhou"
+          },
+          {
+            "material_id": "SIM-MAT-0167",
+            "formula": "S2Ga2",
+            "formation_energy": 0.1392,
+            "band_gap": 3.362,
+            "stability_score": 0.477,
+            "converged": true,
+            "cluster_id": "kunshan"
+          },
+          {
+            "material_id": "SIM-MAT-0168",
+            "formula": "AlAs2",
+            "formation_energy": 0.4574,
+            "band_gap": 0.699,
+            "stability_score": 0.3866,
+            "converged": false,
+            "cluster_id": "jinan"
+          },
+          {
+            "material_id": "SIM-MAT-0169",
+            "formula": "Ti3N3",
+            "formation_energy": -1.0506,
+            "band_gap": 2.311,
+            "stability_score": 0.9152,
+            "converged": true,
+            "cluster_id": "changsha"
+          },
+          {
+            "material_id": "SIM-MAT-0170",
+            "formula": "Ti3O",
+            "formation_energy": -0.4434,
+            "band_gap": 0.893,
+            "stability_score": 0.7044,
+            "converged": true,
+            "cluster_id": "guangzhou"
+          },
+          {
+            "material_id": "SIM-MAT-0171",
+            "formula": "Zn2Ge2",
+            "formation_energy": 0.2546,
+            "band_gap": 1.242,
+            "stability_score": 0.4677,
+            "converged": true,
+            "cluster_id": "kunshan"
+          },
+          {
+            "material_id": "SIM-MAT-0172",
+            "formula": "As3Zn2",
+            "formation_energy": -0.255,
+            "band_gap": 1.728,
+            "stability_score": 0.6397,
+            "converged": true,
+            "cluster_id": "jinan"
+          },
+          {
+            "material_id": "SIM-MAT-0173",
+            "formula": "N2Ti3",
+            "formation_energy": -0.1041,
+            "band_gap": 2.478,
+            "stability_score": 0.538,
+            "converged": true,
+            "cluster_id": "changsha"
+          },
+          {
+            "material_id": "SIM-MAT-0174",
+            "formula": "SiCu",
+            "formation_energy": 0.2303,
+            "band_gap": 2.777,
+            "stability_score": 0.6061,
+            "converged": true,
+            "cluster_id": "guangzhou"
+          },
+          {
+            "material_id": "SIM-MAT-0175",
+            "formula": "O3S2",
+            "formation_energy": -0.6642,
+            "band_gap": 0.0,
+            "stability_score": 0.7852,
+            "converged": true,
+            "cluster_id": "kunshan"
+          },
+          {
+            "material_id": "SIM-MAT-0176",
+            "formula": "AlAs2",
+            "formation_energy": -0.3834,
+            "band_gap": 3.008,
+            "stability_score": 0.6831,
+            "converged": true,
+            "cluster_id": "jinan"
+          },
+          {
+            "material_id": "SIM-MAT-0177",
+            "formula": "As3O",
+            "formation_energy": -0.0436,
+            "band_gap": 3.46,
+            "stability_score": 0.4535,
+            "converged": true,
+            "cluster_id": "changsha"
+          },
+          {
+            "material_id": "SIM-MAT-0178",
+            "formula": "Cu2S2",
+            "formation_energy": -1.2095,
+            "band_gap": 3.292,
+            "stability_score": 0.9302,
+            "converged": false,
+            "cluster_id": "guangzhou"
+          },
+          {
+            "material_id": "SIM-MAT-0179",
+            "formula": "S3N3",
+            "formation_energy": -0.5658,
+            "band_gap": 0.119,
+            "stability_score": 0.7593,
+            "converged": true,
+            "cluster_id": "kunshan"
+          },
+          {
+            "material_id": "SIM-MAT-0180",
+            "formula": "TiGe3",
+            "formation_energy": 0.1663,
+            "band_gap": 0.83,
+            "stability_score": 0.4228,
+            "converged": true,
+            "cluster_id": "jinan"
+          },
+          {
+            "material_id": "SIM-MAT-0181",
+            "formula": "NAs3",
+            "formation_energy": 0.1657,
+            "band_gap": 0.653,
+            "stability_score": 0.4964,
+            "converged": true,
+            "cluster_id": "changsha"
+          },
+          {
+            "material_id": "SIM-MAT-0182",
+            "formula": "As2S3",
+            "formation_energy": -1.0577,
+            "band_gap": 0.592,
+            "stability_score": 0.9245,
+            "converged": true,
+            "cluster_id": "guangzhou"
+          },
+          {
+            "material_id": "SIM-MAT-0183",
+            "formula": "Ge3Cu2",
+            "formation_energy": -1.1184,
+            "band_gap": 3.588,
+            "stability_score": 0.8267,
+            "converged": true,
+            "cluster_id": "kunshan"
+          },
+          {
+            "material_id": "SIM-MAT-0184",
+            "formula": "Si2As",
+            "formation_energy": -0.5739,
+            "band_gap": 2.959,
+            "stability_score": 0.6976,
+            "converged": true,
+            "cluster_id": "jinan"
+          },
+          {
+            "material_id": "SIM-MAT-0185",
+            "formula": "Si2Zn2",
+            "formation_energy": -0.0549,
+            "band_gap": 0.832,
+            "stability_score": 0.6322,
+            "converged": true,
+            "cluster_id": "changsha"
+          },
+          {
+            "material_id": "SIM-MAT-0186",
+            "formula": "Se3Zn3",
+            "formation_energy": -0.5074,
+            "band_gap": 2.293,
+            "stability_score": 0.7517,
+            "converged": true,
+            "cluster_id": "guangzhou"
+          },
+          {
+            "material_id": "SIM-MAT-0187",
+            "formula": "As3S",
+            "formation_energy": 0.4202,
+            "band_gap": 0.27,
+            "stability_score": 0.4057,
+            "converged": true,
+            "cluster_id": "kunshan"
+          },
+          {
+            "material_id": "SIM-MAT-0188",
+            "formula": "Ti3Zn",
+            "formation_energy": -0.4764,
+            "band_gap": 3.913,
+            "stability_score": 0.6839,
+            "converged": true,
+            "cluster_id": "jinan"
+          },
+          {
+            "material_id": "SIM-MAT-0189",
+            "formula": "OSe",
+            "formation_energy": 0.059,
+            "band_gap": 3.702,
+            "stability_score": 0.5318,
+            "converged": true,
+            "cluster_id": "changsha"
+          },
+          {
+            "material_id": "SIM-MAT-0190",
+            "formula": "Al3Cu2",
+            "formation_energy": -0.22,
+            "band_gap": 2.349,
+            "stability_score": 0.5529,
+            "converged": true,
+            "cluster_id": "guangzhou"
+          },
+          {
+            "material_id": "SIM-MAT-0191",
+            "formula": "Ge2S3",
+            "formation_energy": -0.3781,
+            "band_gap": 3.612,
+            "stability_score": 0.7008,
+            "converged": true,
+            "cluster_id": "kunshan"
+          },
+          {
+            "material_id": "SIM-MAT-0192",
+            "formula": "Si3Ge2",
+            "formation_energy": -0.0354,
+            "band_gap": 2.03,
+            "stability_score": 0.56,
+            "converged": true,
+            "cluster_id": "jinan"
+          },
+          {
+            "material_id": "SIM-MAT-0193",
+            "formula": "Se3Ga2",
+            "formation_energy": -0.8448,
+            "band_gap": 0.485,
+            "stability_score": 0.9057,
+            "converged": true,
+            "cluster_id": "changsha"
+          },
+          {
+            "material_id": "SIM-MAT-0194",
+            "formula": "O2Ge2",
+            "formation_energy": -1.2477,
+            "band_gap": 0.447,
+            "stability_score": 0.99,
+            "converged": true,
+            "cluster_id": "guangzhou"
+          },
+          {
+            "material_id": "SIM-MAT-0195",
+            "formula": "SiCu2",
+            "formation_energy": -0.602,
+            "band_gap": 1.008,
+            "stability_score": 0.7928,
+            "converged": true,
+            "cluster_id": "kunshan"
+          },
+          {
+            "material_id": "SIM-MAT-0196",
+            "formula": "Si3N2",
+            "formation_energy": -1.4677,
+            "band_gap": 0.0,
+            "stability_score": 0.99,
+            "converged": true,
+            "cluster_id": "jinan"
+          },
+          {
+            "material_id": "SIM-MAT-0197",
+            "formula": "S2Ge2",
+            "formation_energy": -0.2869,
+            "band_gap": 1.259,
+            "stability_score": 0.7416,
+            "converged": false,
+            "cluster_id": "changsha"
+          },
+          {
+            "material_id": "SIM-MAT-0198",
+            "formula": "SeS",
+            "formation_energy": -0.61,
+            "band_gap": 0.254,
+            "stability_score": 0.7993,
+            "converged": true,
+            "cluster_id": "guangzhou"
+          },
+          {
+            "material_id": "SIM-MAT-0199",
+            "formula": "OS",
+            "formation_energy": -1.0094,
+            "band_gap": 1.148,
+            "stability_score": 0.8137,
+            "converged": true,
+            "cluster_id": "kunshan"
+          },
+          {
+            "material_id": "SIM-MAT-0200",
+            "formula": "Al3Ga3",
+            "formation_energy": -0.7009,
+            "band_gap": 0.645,
+            "stability_score": 0.6987,
+            "converged": true,
+            "cluster_id": "jinan"
+          }
+        ],
+        "candidate_ranking": [
+          {
+            "rank": 1,
+            "material_id": "SIM-MAT-0086",
+            "score": 1.2382,
+            "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+          },
+          {
+            "rank": 2,
+            "material_id": "SIM-MAT-0033",
+            "score": 1.16,
+            "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+          },
+          {
+            "rank": 3,
+            "material_id": "SIM-MAT-0169",
+            "score": 0.9694,
+            "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+          },
+          {
+            "rank": 4,
+            "material_id": "SIM-MAT-0067",
+            "score": 0.8391,
+            "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+          },
+          {
+            "rank": 5,
+            "material_id": "SIM-MAT-0082",
+            "score": 0.8308,
+            "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+          },
+          {
+            "rank": 6,
+            "material_id": "SIM-MAT-0111",
+            "score": 0.8286,
+            "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+          },
+          {
+            "rank": 7,
+            "material_id": "SIM-MAT-0142",
+            "score": 0.9317,
+            "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+          },
+          {
+            "rank": 8,
+            "material_id": "SIM-MAT-0071",
+            "score": 0.8888,
+            "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+          },
+          {
+            "rank": 9,
+            "material_id": "SIM-MAT-0135",
+            "score": 0.8519,
+            "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+          },
+          {
+            "rank": 10,
+            "material_id": "SIM-MAT-0150",
+            "score": 0.8593,
+            "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+          },
+          {
+            "rank": 11,
+            "material_id": "SIM-MAT-0199",
+            "score": 0.892,
+            "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+          },
+          {
+            "rank": 12,
+            "material_id": "SIM-MAT-0100",
+            "score": 0.6465,
+            "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+          },
+          {
+            "rank": 13,
+            "material_id": "SIM-MAT-0091",
+            "score": 0.7805,
+            "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+          },
+          {
+            "rank": 14,
+            "material_id": "SIM-MAT-0101",
+            "score": 0.8525,
+            "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+          },
+          {
+            "rank": 15,
+            "material_id": "SIM-MAT-0074",
+            "score": 0.6848,
+            "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+          },
+          {
+            "rank": 16,
+            "material_id": "SIM-MAT-0195",
+            "score": 0.7165,
+            "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+          },
+          {
+            "rank": 17,
+            "material_id": "SIM-MAT-0105",
+            "score": 0.6719,
+            "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+          },
+          {
+            "rank": 18,
+            "material_id": "SIM-MAT-0026",
+            "score": 0.7208,
+            "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+          },
+          {
+            "rank": 19,
+            "material_id": "SIM-MAT-0061",
+            "score": 0.6782,
+            "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+          },
+          {
+            "rank": 20,
+            "material_id": "SIM-MAT-0034",
+            "score": 0.6072,
+            "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+          }
+        ],
+        "cluster_distribution": [
+          {
+            "cluster_id": "changsha",
+            "cluster_name": "长沙",
+            "assigned": 50
+          },
+          {
+            "cluster_id": "guangzhou",
+            "cluster_name": "广州",
+            "assigned": 50
+          },
+          {
+            "cluster_id": "kunshan",
+            "cluster_name": "昆山",
+            "assigned": 50
+          },
+          {
+            "cluster_id": "jinan",
+            "cluster_name": "济南",
+            "assigned": 50
+          }
+        ],
+        "filter_rule": {
+          "converged": true,
+          "formation_energy_lt": -0.3,
+          "band_gap_range": [
+            0.8,
+            2.5
+          ],
+          "stability_score_gt": 0.7
+        }
       }
     },
     "logs": {
@@ -203,8 +2244,1999 @@
         "preview_url": "/api/v1/files/ART-DFT-023/preview",
         "download_url": "/api/v1/files/ART-DFT-023/download",
         "created_at": "2026-08-11T01:48:15+08:00"
+      },
+      {
+        "id": "ART-DFT-HCSV1",
+        "name": "materials.csv",
+        "type": "dataset",
+        "format": "csv",
+        "size": 10748,
+        "storage_path": "artifacts/simulated/dft/high-throughput-screening/DFT-20260811-0010/materials.csv",
+        "preview_url": "/api/v1/files/ART-DFT-HCSV1/preview",
+        "download_url": "/api/v1/files/ART-DFT-HCSV1/download",
+        "created_at": "2026-09-09T18:06:02+08:00",
+        "source_type": "simulated"
+      },
+      {
+        "id": "ART-DFT-HJSON1",
+        "name": "batch_summary.json",
+        "type": "dataset",
+        "format": "json",
+        "size": 4251,
+        "storage_path": "artifacts/simulated/dft/high-throughput-screening/DFT-20260811-0010/batch_summary.json",
+        "preview_url": "/api/v1/files/ART-DFT-HJSON1/preview",
+        "download_url": "/api/v1/files/ART-DFT-HJSON1/download",
+        "created_at": "2026-09-09T18:06:02+08:00",
+        "source_type": "simulated"
       }
-    ]
+    ],
+    "domain_data": {
+      "source_type": "simulated",
+      "execution_mode": "simulated",
+      "scenario_id": "high-throughput-screening",
+      "batch_summary": {
+        "total": 200,
+        "completed": 200,
+        "converged": 187,
+        "failed": 13,
+        "qualified": 27
+      },
+      "materials": [
+        {
+          "material_id": "SIM-MAT-0001",
+          "formula": "As3Al",
+          "formation_energy": -0.6706,
+          "band_gap": 0.543,
+          "stability_score": 0.7516,
+          "converged": true,
+          "cluster_id": "changsha"
+        },
+        {
+          "material_id": "SIM-MAT-0002",
+          "formula": "SeGa3",
+          "formation_energy": -0.7343,
+          "band_gap": 0.0,
+          "stability_score": 0.99,
+          "converged": true,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "material_id": "SIM-MAT-0003",
+          "formula": "O3N",
+          "formation_energy": -0.0148,
+          "band_gap": 2.234,
+          "stability_score": 0.5608,
+          "converged": true,
+          "cluster_id": "kunshan"
+        },
+        {
+          "material_id": "SIM-MAT-0004",
+          "formula": "SSe3",
+          "formation_energy": -0.8123,
+          "band_gap": 1.049,
+          "stability_score": 0.7579,
+          "converged": true,
+          "cluster_id": "jinan"
+        },
+        {
+          "material_id": "SIM-MAT-0005",
+          "formula": "Si2As3",
+          "formation_energy": -0.8032,
+          "band_gap": 0.158,
+          "stability_score": 0.8746,
+          "converged": true,
+          "cluster_id": "changsha"
+        },
+        {
+          "material_id": "SIM-MAT-0006",
+          "formula": "NSi3",
+          "formation_energy": -0.2566,
+          "band_gap": 2.591,
+          "stability_score": 0.749,
+          "converged": true,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "material_id": "SIM-MAT-0007",
+          "formula": "Ge3Ti2",
+          "formation_energy": -0.0629,
+          "band_gap": 0.88,
+          "stability_score": 0.4341,
+          "converged": true,
+          "cluster_id": "kunshan"
+        },
+        {
+          "material_id": "SIM-MAT-0008",
+          "formula": "SiAl",
+          "formation_energy": -0.5737,
+          "band_gap": 0.318,
+          "stability_score": 0.8294,
+          "converged": true,
+          "cluster_id": "jinan"
+        },
+        {
+          "material_id": "SIM-MAT-0009",
+          "formula": "Zn2S2",
+          "formation_energy": 0.1073,
+          "band_gap": 0.361,
+          "stability_score": 0.4743,
+          "converged": true,
+          "cluster_id": "changsha"
+        },
+        {
+          "material_id": "SIM-MAT-0010",
+          "formula": "Ga3Ti3",
+          "formation_energy": 0.3124,
+          "band_gap": 1.945,
+          "stability_score": 0.5002,
+          "converged": true,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "material_id": "SIM-MAT-0011",
+          "formula": "Cu2N",
+          "formation_energy": -0.6833,
+          "band_gap": 3.798,
+          "stability_score": 0.928,
+          "converged": true,
+          "cluster_id": "kunshan"
+        },
+        {
+          "material_id": "SIM-MAT-0012",
+          "formula": "Zn3N",
+          "formation_energy": -0.9138,
+          "band_gap": 0.777,
+          "stability_score": 0.8671,
+          "converged": true,
+          "cluster_id": "jinan"
+        },
+        {
+          "material_id": "SIM-MAT-0013",
+          "formula": "Ti3As",
+          "formation_energy": -1.0089,
+          "band_gap": 3.756,
+          "stability_score": 0.9753,
+          "converged": true,
+          "cluster_id": "changsha"
+        },
+        {
+          "material_id": "SIM-MAT-0014",
+          "formula": "SZn",
+          "formation_energy": -0.3005,
+          "band_gap": 1.275,
+          "stability_score": 0.6334,
+          "converged": true,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "material_id": "SIM-MAT-0015",
+          "formula": "Ga2Zn3",
+          "formation_energy": -0.2729,
+          "band_gap": 2.764,
+          "stability_score": 0.7459,
+          "converged": true,
+          "cluster_id": "kunshan"
+        },
+        {
+          "material_id": "SIM-MAT-0016",
+          "formula": "Ge3Cu2",
+          "formation_energy": -0.4288,
+          "band_gap": 0.778,
+          "stability_score": 0.7972,
+          "converged": true,
+          "cluster_id": "jinan"
+        },
+        {
+          "material_id": "SIM-MAT-0017",
+          "formula": "S2Cu3",
+          "formation_energy": -0.0915,
+          "band_gap": 0.0,
+          "stability_score": 0.5483,
+          "converged": true,
+          "cluster_id": "changsha"
+        },
+        {
+          "material_id": "SIM-MAT-0018",
+          "formula": "TiN2",
+          "formation_energy": -0.3938,
+          "band_gap": 1.276,
+          "stability_score": 0.638,
+          "converged": true,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "material_id": "SIM-MAT-0019",
+          "formula": "Ge2Ga2",
+          "formation_energy": -0.2923,
+          "band_gap": 3.217,
+          "stability_score": 0.7881,
+          "converged": true,
+          "cluster_id": "kunshan"
+        },
+        {
+          "material_id": "SIM-MAT-0020",
+          "formula": "Se3Cu2",
+          "formation_energy": -0.808,
+          "band_gap": 2.124,
+          "stability_score": 0.7086,
+          "converged": true,
+          "cluster_id": "jinan"
+        },
+        {
+          "material_id": "SIM-MAT-0021",
+          "formula": "Ge3N2",
+          "formation_energy": -0.0772,
+          "band_gap": 3.339,
+          "stability_score": 0.5483,
+          "converged": true,
+          "cluster_id": "changsha"
+        },
+        {
+          "material_id": "SIM-MAT-0022",
+          "formula": "Si3Se3",
+          "formation_energy": -0.2678,
+          "band_gap": 3.985,
+          "stability_score": 0.62,
+          "converged": true,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "material_id": "SIM-MAT-0023",
+          "formula": "N2Al",
+          "formation_energy": -0.6647,
+          "band_gap": 0.417,
+          "stability_score": 0.816,
+          "converged": true,
+          "cluster_id": "kunshan"
+        },
+        {
+          "material_id": "SIM-MAT-0024",
+          "formula": "NGe",
+          "formation_energy": -0.5457,
+          "band_gap": 0.666,
+          "stability_score": 0.6989,
+          "converged": true,
+          "cluster_id": "jinan"
+        },
+        {
+          "material_id": "SIM-MAT-0025",
+          "formula": "Ti3Al2",
+          "formation_energy": 0.1028,
+          "band_gap": 0.957,
+          "stability_score": 0.5114,
+          "converged": true,
+          "cluster_id": "changsha"
+        },
+        {
+          "material_id": "SIM-MAT-0026",
+          "formula": "As3N3",
+          "formation_energy": -0.6445,
+          "band_gap": 1.002,
+          "stability_score": 0.7716,
+          "converged": true,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "material_id": "SIM-MAT-0027",
+          "formula": "Si2Ti3",
+          "formation_energy": 0.2927,
+          "band_gap": 0.0,
+          "stability_score": 0.4637,
+          "converged": true,
+          "cluster_id": "kunshan"
+        },
+        {
+          "material_id": "SIM-MAT-0028",
+          "formula": "Zn3Al3",
+          "formation_energy": -0.1601,
+          "band_gap": 2.154,
+          "stability_score": 0.565,
+          "converged": true,
+          "cluster_id": "jinan"
+        },
+        {
+          "material_id": "SIM-MAT-0029",
+          "formula": "SSi3",
+          "formation_energy": -0.3726,
+          "band_gap": 1.802,
+          "stability_score": 0.6963,
+          "converged": true,
+          "cluster_id": "changsha"
+        },
+        {
+          "material_id": "SIM-MAT-0030",
+          "formula": "As2Zn",
+          "formation_energy": 0.0477,
+          "band_gap": 2.892,
+          "stability_score": 0.5003,
+          "converged": true,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "material_id": "SIM-MAT-0031",
+          "formula": "As3Ga",
+          "formation_energy": 0.3252,
+          "band_gap": 1.459,
+          "stability_score": 0.394,
+          "converged": true,
+          "cluster_id": "kunshan"
+        },
+        {
+          "material_id": "SIM-MAT-0032",
+          "formula": "SeZn3",
+          "formation_energy": -0.9895,
+          "band_gap": 0.0,
+          "stability_score": 0.8979,
+          "converged": true,
+          "cluster_id": "jinan"
+        },
+        {
+          "material_id": "SIM-MAT-0033",
+          "formula": "Ge2As",
+          "formation_energy": -1.4151,
+          "band_gap": 1.022,
+          "stability_score": 0.99,
+          "converged": true,
+          "cluster_id": "changsha"
+        },
+        {
+          "material_id": "SIM-MAT-0034",
+          "formula": "Si2Ge3",
+          "formation_energy": -0.3786,
+          "band_gap": 1.767,
+          "stability_score": 0.7596,
+          "converged": true,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "material_id": "SIM-MAT-0035",
+          "formula": "Ge3Al3",
+          "formation_energy": 0.1774,
+          "band_gap": 1.447,
+          "stability_score": 0.5355,
+          "converged": true,
+          "cluster_id": "kunshan"
+        },
+        {
+          "material_id": "SIM-MAT-0036",
+          "formula": "As2O3",
+          "formation_energy": -0.6551,
+          "band_gap": 3.852,
+          "stability_score": 0.6986,
+          "converged": true,
+          "cluster_id": "jinan"
+        },
+        {
+          "material_id": "SIM-MAT-0037",
+          "formula": "SiN",
+          "formation_energy": -1.185,
+          "band_gap": 2.127,
+          "stability_score": 0.8847,
+          "converged": false,
+          "cluster_id": "changsha"
+        },
+        {
+          "material_id": "SIM-MAT-0038",
+          "formula": "Cu3Ti",
+          "formation_energy": 0.3789,
+          "band_gap": 2.795,
+          "stability_score": 0.2139,
+          "converged": true,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "material_id": "SIM-MAT-0039",
+          "formula": "As3Ti3",
+          "formation_energy": -0.8121,
+          "band_gap": 3.517,
+          "stability_score": 0.8379,
+          "converged": false,
+          "cluster_id": "kunshan"
+        },
+        {
+          "material_id": "SIM-MAT-0040",
+          "formula": "N2Ti",
+          "formation_energy": -0.278,
+          "band_gap": 3.119,
+          "stability_score": 0.686,
+          "converged": true,
+          "cluster_id": "jinan"
+        },
+        {
+          "material_id": "SIM-MAT-0041",
+          "formula": "Ge2N",
+          "formation_energy": -0.3094,
+          "band_gap": 3.695,
+          "stability_score": 0.6169,
+          "converged": true,
+          "cluster_id": "changsha"
+        },
+        {
+          "material_id": "SIM-MAT-0042",
+          "formula": "Si2N3",
+          "formation_energy": 0.1399,
+          "band_gap": 3.635,
+          "stability_score": 0.5094,
+          "converged": true,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "material_id": "SIM-MAT-0043",
+          "formula": "O2Ti2",
+          "formation_energy": -0.8544,
+          "band_gap": 0.058,
+          "stability_score": 0.8929,
+          "converged": true,
+          "cluster_id": "kunshan"
+        },
+        {
+          "material_id": "SIM-MAT-0044",
+          "formula": "Si3S2",
+          "formation_energy": -0.2422,
+          "band_gap": 3.474,
+          "stability_score": 0.7269,
+          "converged": true,
+          "cluster_id": "jinan"
+        },
+        {
+          "material_id": "SIM-MAT-0045",
+          "formula": "Al3S3",
+          "formation_energy": -0.6923,
+          "band_gap": 0.696,
+          "stability_score": 0.7167,
+          "converged": true,
+          "cluster_id": "changsha"
+        },
+        {
+          "material_id": "SIM-MAT-0046",
+          "formula": "O2Ge",
+          "formation_energy": -0.922,
+          "band_gap": 1.273,
+          "stability_score": 0.7326,
+          "converged": true,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "material_id": "SIM-MAT-0047",
+          "formula": "TiS",
+          "formation_energy": -0.3626,
+          "band_gap": 3.466,
+          "stability_score": 0.6506,
+          "converged": true,
+          "cluster_id": "kunshan"
+        },
+        {
+          "material_id": "SIM-MAT-0048",
+          "formula": "SCu",
+          "formation_energy": -0.8293,
+          "band_gap": 2.744,
+          "stability_score": 0.8968,
+          "converged": true,
+          "cluster_id": "jinan"
+        },
+        {
+          "material_id": "SIM-MAT-0049",
+          "formula": "As3Zn2",
+          "formation_energy": -0.0579,
+          "band_gap": 0.895,
+          "stability_score": 0.4581,
+          "converged": true,
+          "cluster_id": "changsha"
+        },
+        {
+          "material_id": "SIM-MAT-0050",
+          "formula": "Cu3Se",
+          "formation_energy": 0.398,
+          "band_gap": 3.534,
+          "stability_score": 0.4785,
+          "converged": true,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "material_id": "SIM-MAT-0051",
+          "formula": "OSi3",
+          "formation_energy": -0.6062,
+          "band_gap": 3.511,
+          "stability_score": 0.8281,
+          "converged": true,
+          "cluster_id": "kunshan"
+        },
+        {
+          "material_id": "SIM-MAT-0052",
+          "formula": "TiO",
+          "formation_energy": 0.1096,
+          "band_gap": 3.994,
+          "stability_score": 0.4098,
+          "converged": false,
+          "cluster_id": "jinan"
+        },
+        {
+          "material_id": "SIM-MAT-0053",
+          "formula": "As2Al",
+          "formation_energy": -0.4924,
+          "band_gap": 1.257,
+          "stability_score": 0.6582,
+          "converged": true,
+          "cluster_id": "changsha"
+        },
+        {
+          "material_id": "SIM-MAT-0054",
+          "formula": "Zn2N2",
+          "formation_energy": 0.2136,
+          "band_gap": 2.957,
+          "stability_score": 0.5157,
+          "converged": true,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "material_id": "SIM-MAT-0055",
+          "formula": "Zn3As3",
+          "formation_energy": 0.1435,
+          "band_gap": 0.0,
+          "stability_score": 0.5199,
+          "converged": true,
+          "cluster_id": "kunshan"
+        },
+        {
+          "material_id": "SIM-MAT-0056",
+          "formula": "Ga2Se3",
+          "formation_energy": -0.1486,
+          "band_gap": 1.088,
+          "stability_score": 0.6268,
+          "converged": true,
+          "cluster_id": "jinan"
+        },
+        {
+          "material_id": "SIM-MAT-0057",
+          "formula": "Ga3Si",
+          "formation_energy": -0.5198,
+          "band_gap": 0.591,
+          "stability_score": 0.8337,
+          "converged": true,
+          "cluster_id": "changsha"
+        },
+        {
+          "material_id": "SIM-MAT-0058",
+          "formula": "Ti3S3",
+          "formation_energy": -0.3829,
+          "band_gap": 3.873,
+          "stability_score": 0.8194,
+          "converged": true,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "material_id": "SIM-MAT-0059",
+          "formula": "SGa2",
+          "formation_energy": 0.2294,
+          "band_gap": 2.131,
+          "stability_score": 0.4506,
+          "converged": true,
+          "cluster_id": "kunshan"
+        },
+        {
+          "material_id": "SIM-MAT-0060",
+          "formula": "As2N3",
+          "formation_energy": -0.1222,
+          "band_gap": 2.284,
+          "stability_score": 0.6026,
+          "converged": true,
+          "cluster_id": "jinan"
+        },
+        {
+          "material_id": "SIM-MAT-0061",
+          "formula": "OAs2",
+          "formation_energy": -0.5512,
+          "band_gap": 2.479,
+          "stability_score": 0.7628,
+          "converged": true,
+          "cluster_id": "changsha"
+        },
+        {
+          "material_id": "SIM-MAT-0062",
+          "formula": "O3Al",
+          "formation_energy": -0.0699,
+          "band_gap": 3.713,
+          "stability_score": 0.4724,
+          "converged": true,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "material_id": "SIM-MAT-0063",
+          "formula": "GeTi3",
+          "formation_energy": 0.2791,
+          "band_gap": 1.36,
+          "stability_score": 0.4143,
+          "converged": true,
+          "cluster_id": "kunshan"
+        },
+        {
+          "material_id": "SIM-MAT-0064",
+          "formula": "Ga3Al2",
+          "formation_energy": -0.8333,
+          "band_gap": 0.0,
+          "stability_score": 0.8887,
+          "converged": true,
+          "cluster_id": "jinan"
+        },
+        {
+          "material_id": "SIM-MAT-0065",
+          "formula": "Ga3Al",
+          "formation_energy": -0.5702,
+          "band_gap": 1.909,
+          "stability_score": 0.555,
+          "converged": true,
+          "cluster_id": "changsha"
+        },
+        {
+          "material_id": "SIM-MAT-0066",
+          "formula": "SGa2",
+          "formation_energy": 0.3255,
+          "band_gap": 2.821,
+          "stability_score": 0.4605,
+          "converged": true,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "material_id": "SIM-MAT-0067",
+          "formula": "SiGa2",
+          "formation_energy": -0.7484,
+          "band_gap": 2.382,
+          "stability_score": 0.8995,
+          "converged": true,
+          "cluster_id": "kunshan"
+        },
+        {
+          "material_id": "SIM-MAT-0068",
+          "formula": "Ge2Cu3",
+          "formation_energy": -0.6884,
+          "band_gap": 3.341,
+          "stability_score": 0.802,
+          "converged": true,
+          "cluster_id": "jinan"
+        },
+        {
+          "material_id": "SIM-MAT-0069",
+          "formula": "Ge3Ti2",
+          "formation_energy": -0.0865,
+          "band_gap": 2.355,
+          "stability_score": 0.5413,
+          "converged": true,
+          "cluster_id": "changsha"
+        },
+        {
+          "material_id": "SIM-MAT-0070",
+          "formula": "Si2Zn3",
+          "formation_energy": -0.4753,
+          "band_gap": 0.0,
+          "stability_score": 0.6356,
+          "converged": true,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "material_id": "SIM-MAT-0071",
+          "formula": "Ga3Zn",
+          "formation_energy": -0.9414,
+          "band_gap": 1.303,
+          "stability_score": 0.8538,
+          "converged": true,
+          "cluster_id": "kunshan"
+        },
+        {
+          "material_id": "SIM-MAT-0072",
+          "formula": "NAs2",
+          "formation_energy": -0.2009,
+          "band_gap": 0.0,
+          "stability_score": 0.5489,
+          "converged": true,
+          "cluster_id": "jinan"
+        },
+        {
+          "material_id": "SIM-MAT-0073",
+          "formula": "Al3Si3",
+          "formation_energy": -0.0979,
+          "band_gap": 2.179,
+          "stability_score": 0.6191,
+          "converged": true,
+          "cluster_id": "changsha"
+        },
+        {
+          "material_id": "SIM-MAT-0074",
+          "formula": "Zn2S3",
+          "formation_energy": -0.5065,
+          "band_gap": 1.617,
+          "stability_score": 0.8037,
+          "converged": true,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "material_id": "SIM-MAT-0075",
+          "formula": "NO2",
+          "formation_energy": -0.6213,
+          "band_gap": 0.0,
+          "stability_score": 0.791,
+          "converged": false,
+          "cluster_id": "kunshan"
+        },
+        {
+          "material_id": "SIM-MAT-0076",
+          "formula": "Si2As",
+          "formation_energy": -0.1623,
+          "band_gap": 2.824,
+          "stability_score": 0.7126,
+          "converged": true,
+          "cluster_id": "jinan"
+        },
+        {
+          "material_id": "SIM-MAT-0077",
+          "formula": "Cu2Ti",
+          "formation_energy": -0.2882,
+          "band_gap": 1.517,
+          "stability_score": 0.5573,
+          "converged": true,
+          "cluster_id": "changsha"
+        },
+        {
+          "material_id": "SIM-MAT-0078",
+          "formula": "GaSe",
+          "formation_energy": -0.867,
+          "band_gap": 0.71,
+          "stability_score": 0.7736,
+          "converged": true,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "material_id": "SIM-MAT-0079",
+          "formula": "CuS2",
+          "formation_energy": -0.3618,
+          "band_gap": 3.165,
+          "stability_score": 0.629,
+          "converged": true,
+          "cluster_id": "kunshan"
+        },
+        {
+          "material_id": "SIM-MAT-0080",
+          "formula": "NS2",
+          "formation_energy": 0.4121,
+          "band_gap": 1.543,
+          "stability_score": 0.483,
+          "converged": true,
+          "cluster_id": "jinan"
+        },
+        {
+          "material_id": "SIM-MAT-0081",
+          "formula": "Ge2O",
+          "formation_energy": -0.7459,
+          "band_gap": 0.906,
+          "stability_score": 0.6625,
+          "converged": true,
+          "cluster_id": "changsha"
+        },
+        {
+          "material_id": "SIM-MAT-0082",
+          "formula": "Ge3Se3",
+          "formation_energy": -0.7452,
+          "band_gap": 1.188,
+          "stability_score": 0.8879,
+          "converged": true,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "material_id": "SIM-MAT-0083",
+          "formula": "Cu3Ge2",
+          "formation_energy": 0.2125,
+          "band_gap": 0.691,
+          "stability_score": 0.3765,
+          "converged": true,
+          "cluster_id": "kunshan"
+        },
+        {
+          "material_id": "SIM-MAT-0084",
+          "formula": "ON",
+          "formation_energy": -0.2483,
+          "band_gap": 3.899,
+          "stability_score": 0.7658,
+          "converged": true,
+          "cluster_id": "jinan"
+        },
+        {
+          "material_id": "SIM-MAT-0085",
+          "formula": "SGa",
+          "formation_energy": -0.301,
+          "band_gap": 2.771,
+          "stability_score": 0.7263,
+          "converged": true,
+          "cluster_id": "changsha"
+        },
+        {
+          "material_id": "SIM-MAT-0086",
+          "formula": "NAs",
+          "formation_energy": -1.6106,
+          "band_gap": 2.098,
+          "stability_score": 0.99,
+          "converged": true,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "material_id": "SIM-MAT-0087",
+          "formula": "AsGa2",
+          "formation_energy": 0.4118,
+          "band_gap": 1.675,
+          "stability_score": 0.2953,
+          "converged": true,
+          "cluster_id": "kunshan"
+        },
+        {
+          "material_id": "SIM-MAT-0088",
+          "formula": "ZnSi2",
+          "formation_energy": -0.0981,
+          "band_gap": 0.603,
+          "stability_score": 0.5558,
+          "converged": false,
+          "cluster_id": "jinan"
+        },
+        {
+          "material_id": "SIM-MAT-0089",
+          "formula": "ZnCu",
+          "formation_energy": -0.9564,
+          "band_gap": 3.71,
+          "stability_score": 0.9425,
+          "converged": false,
+          "cluster_id": "changsha"
+        },
+        {
+          "material_id": "SIM-MAT-0090",
+          "formula": "OSi",
+          "formation_energy": -0.2425,
+          "band_gap": 2.095,
+          "stability_score": 0.5643,
+          "converged": true,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "material_id": "SIM-MAT-0091",
+          "formula": "Cu3Al2",
+          "formation_energy": -0.7375,
+          "band_gap": 1.487,
+          "stability_score": 0.8091,
+          "converged": true,
+          "cluster_id": "kunshan"
+        },
+        {
+          "material_id": "SIM-MAT-0092",
+          "formula": "Se2As",
+          "formation_energy": 0.152,
+          "band_gap": 0.96,
+          "stability_score": 0.4089,
+          "converged": true,
+          "cluster_id": "jinan"
+        },
+        {
+          "material_id": "SIM-MAT-0093",
+          "formula": "SeZn",
+          "formation_energy": -0.0494,
+          "band_gap": 0.0,
+          "stability_score": 0.5064,
+          "converged": true,
+          "cluster_id": "changsha"
+        },
+        {
+          "material_id": "SIM-MAT-0094",
+          "formula": "Al2Se",
+          "formation_energy": -0.3046,
+          "band_gap": 3.863,
+          "stability_score": 0.7063,
+          "converged": true,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "material_id": "SIM-MAT-0095",
+          "formula": "TiAl",
+          "formation_energy": -0.1069,
+          "band_gap": 1.347,
+          "stability_score": 0.6249,
+          "converged": true,
+          "cluster_id": "kunshan"
+        },
+        {
+          "material_id": "SIM-MAT-0096",
+          "formula": "OAs",
+          "formation_energy": -0.5614,
+          "band_gap": 2.996,
+          "stability_score": 0.7633,
+          "converged": true,
+          "cluster_id": "jinan"
+        },
+        {
+          "material_id": "SIM-MAT-0097",
+          "formula": "Ti2Se3",
+          "formation_energy": 0.2877,
+          "band_gap": 0.436,
+          "stability_score": 0.4871,
+          "converged": true,
+          "cluster_id": "changsha"
+        },
+        {
+          "material_id": "SIM-MAT-0098",
+          "formula": "S3Si2",
+          "formation_energy": -0.6732,
+          "band_gap": 3.837,
+          "stability_score": 0.8744,
+          "converged": true,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "material_id": "SIM-MAT-0099",
+          "formula": "Cu3Al",
+          "formation_energy": 0.2705,
+          "band_gap": 0.804,
+          "stability_score": 0.2307,
+          "converged": true,
+          "cluster_id": "kunshan"
+        },
+        {
+          "material_id": "SIM-MAT-0100",
+          "formula": "Si2Cu",
+          "formation_energy": -0.3989,
+          "band_gap": 1.743,
+          "stability_score": 0.8116,
+          "converged": true,
+          "cluster_id": "jinan"
+        },
+        {
+          "material_id": "SIM-MAT-0101",
+          "formula": "Ge3Ga2",
+          "formation_energy": -0.9223,
+          "band_gap": 0.958,
+          "stability_score": 0.806,
+          "converged": true,
+          "cluster_id": "changsha"
+        },
+        {
+          "material_id": "SIM-MAT-0102",
+          "formula": "NGe3",
+          "formation_energy": -0.0019,
+          "band_gap": 2.68,
+          "stability_score": 0.4865,
+          "converged": true,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "material_id": "SIM-MAT-0103",
+          "formula": "Al2Ge",
+          "formation_energy": -0.1503,
+          "band_gap": 2.74,
+          "stability_score": 0.6929,
+          "converged": true,
+          "cluster_id": "kunshan"
+        },
+        {
+          "material_id": "SIM-MAT-0104",
+          "formula": "Zn3Se",
+          "formation_energy": -0.7395,
+          "band_gap": 3.115,
+          "stability_score": 0.8851,
+          "converged": true,
+          "cluster_id": "jinan"
+        },
+        {
+          "material_id": "SIM-MAT-0105",
+          "formula": "Al3Ga",
+          "formation_energy": -0.5136,
+          "band_gap": 1.318,
+          "stability_score": 0.7774,
+          "converged": true,
+          "cluster_id": "changsha"
+        },
+        {
+          "material_id": "SIM-MAT-0106",
+          "formula": "S3N",
+          "formation_energy": -0.5684,
+          "band_gap": 3.75,
+          "stability_score": 0.7346,
+          "converged": true,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "material_id": "SIM-MAT-0107",
+          "formula": "Cu2N2",
+          "formation_energy": -0.7644,
+          "band_gap": 3.638,
+          "stability_score": 0.8715,
+          "converged": true,
+          "cluster_id": "kunshan"
+        },
+        {
+          "material_id": "SIM-MAT-0108",
+          "formula": "As3Si2",
+          "formation_energy": -0.0484,
+          "band_gap": 0.126,
+          "stability_score": 0.6497,
+          "converged": true,
+          "cluster_id": "jinan"
+        },
+        {
+          "material_id": "SIM-MAT-0109",
+          "formula": "Se2Cu",
+          "formation_energy": -0.354,
+          "band_gap": 1.433,
+          "stability_score": 0.5844,
+          "converged": true,
+          "cluster_id": "changsha"
+        },
+        {
+          "material_id": "SIM-MAT-0110",
+          "formula": "S2Ga2",
+          "formation_energy": -0.7064,
+          "band_gap": 3.281,
+          "stability_score": 0.9863,
+          "converged": true,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "material_id": "SIM-MAT-0111",
+          "formula": "O3Se3",
+          "formation_energy": -0.7511,
+          "band_gap": 1.423,
+          "stability_score": 0.8802,
+          "converged": true,
+          "cluster_id": "kunshan"
+        },
+        {
+          "material_id": "SIM-MAT-0112",
+          "formula": "Ti2As",
+          "formation_energy": 0.3064,
+          "band_gap": 1.735,
+          "stability_score": 0.5081,
+          "converged": false,
+          "cluster_id": "jinan"
+        },
+        {
+          "material_id": "SIM-MAT-0113",
+          "formula": "Zn2Ge3",
+          "formation_energy": -0.3832,
+          "band_gap": 2.591,
+          "stability_score": 0.6787,
+          "converged": true,
+          "cluster_id": "changsha"
+        },
+        {
+          "material_id": "SIM-MAT-0114",
+          "formula": "ZnGa3",
+          "formation_energy": -0.4125,
+          "band_gap": 2.192,
+          "stability_score": 0.722,
+          "converged": true,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "material_id": "SIM-MAT-0115",
+          "formula": "Zn3As2",
+          "formation_energy": -0.4227,
+          "band_gap": 3.451,
+          "stability_score": 0.6788,
+          "converged": true,
+          "cluster_id": "kunshan"
+        },
+        {
+          "material_id": "SIM-MAT-0116",
+          "formula": "Se2Ti",
+          "formation_energy": 0.3474,
+          "band_gap": 0.0,
+          "stability_score": 0.3668,
+          "converged": true,
+          "cluster_id": "jinan"
+        },
+        {
+          "material_id": "SIM-MAT-0117",
+          "formula": "S2Al",
+          "formation_energy": -0.6734,
+          "band_gap": 0.123,
+          "stability_score": 0.9313,
+          "converged": true,
+          "cluster_id": "changsha"
+        },
+        {
+          "material_id": "SIM-MAT-0118",
+          "formula": "Se3Ge3",
+          "formation_energy": -0.0736,
+          "band_gap": 3.307,
+          "stability_score": 0.6765,
+          "converged": true,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "material_id": "SIM-MAT-0119",
+          "formula": "O2Se3",
+          "formation_energy": 0.1831,
+          "band_gap": 3.14,
+          "stability_score": 0.4546,
+          "converged": false,
+          "cluster_id": "kunshan"
+        },
+        {
+          "material_id": "SIM-MAT-0120",
+          "formula": "Si3As",
+          "formation_energy": -0.7598,
+          "band_gap": 3.827,
+          "stability_score": 0.5298,
+          "converged": false,
+          "cluster_id": "jinan"
+        },
+        {
+          "material_id": "SIM-MAT-0121",
+          "formula": "SeCu3",
+          "formation_energy": -0.4791,
+          "band_gap": 0.0,
+          "stability_score": 0.7273,
+          "converged": true,
+          "cluster_id": "changsha"
+        },
+        {
+          "material_id": "SIM-MAT-0122",
+          "formula": "Si2As",
+          "formation_energy": -0.3423,
+          "band_gap": 0.164,
+          "stability_score": 0.6551,
+          "converged": true,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "material_id": "SIM-MAT-0123",
+          "formula": "Se2Al2",
+          "formation_energy": 0.1311,
+          "band_gap": 3.703,
+          "stability_score": 0.3986,
+          "converged": true,
+          "cluster_id": "kunshan"
+        },
+        {
+          "material_id": "SIM-MAT-0124",
+          "formula": "GaN3",
+          "formation_energy": -0.641,
+          "band_gap": 3.63,
+          "stability_score": 0.7683,
+          "converged": true,
+          "cluster_id": "jinan"
+        },
+        {
+          "material_id": "SIM-MAT-0125",
+          "formula": "Zn2S3",
+          "formation_energy": -0.8039,
+          "band_gap": 0.72,
+          "stability_score": 0.7699,
+          "converged": true,
+          "cluster_id": "changsha"
+        },
+        {
+          "material_id": "SIM-MAT-0126",
+          "formula": "GeTi",
+          "formation_energy": -0.99,
+          "band_gap": 0.051,
+          "stability_score": 0.9308,
+          "converged": true,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "material_id": "SIM-MAT-0127",
+          "formula": "S2Ga2",
+          "formation_energy": -0.0481,
+          "band_gap": 2.848,
+          "stability_score": 0.4233,
+          "converged": true,
+          "cluster_id": "kunshan"
+        },
+        {
+          "material_id": "SIM-MAT-0128",
+          "formula": "Al3As",
+          "formation_energy": 0.0127,
+          "band_gap": 0.677,
+          "stability_score": 0.5701,
+          "converged": true,
+          "cluster_id": "jinan"
+        },
+        {
+          "material_id": "SIM-MAT-0129",
+          "formula": "S2Ti",
+          "formation_energy": 0.2769,
+          "band_gap": 0.213,
+          "stability_score": 0.3859,
+          "converged": true,
+          "cluster_id": "changsha"
+        },
+        {
+          "material_id": "SIM-MAT-0130",
+          "formula": "Si2O2",
+          "formation_energy": 0.0812,
+          "band_gap": 3.981,
+          "stability_score": 0.6051,
+          "converged": true,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "material_id": "SIM-MAT-0131",
+          "formula": "O2Al2",
+          "formation_energy": 0.1527,
+          "band_gap": 1.862,
+          "stability_score": 0.455,
+          "converged": true,
+          "cluster_id": "kunshan"
+        },
+        {
+          "material_id": "SIM-MAT-0132",
+          "formula": "Cu3As3",
+          "formation_energy": -0.0978,
+          "band_gap": 2.008,
+          "stability_score": 0.516,
+          "converged": true,
+          "cluster_id": "jinan"
+        },
+        {
+          "material_id": "SIM-MAT-0133",
+          "formula": "N3O",
+          "formation_energy": -0.3116,
+          "band_gap": 3.103,
+          "stability_score": 0.6531,
+          "converged": true,
+          "cluster_id": "changsha"
+        },
+        {
+          "material_id": "SIM-MAT-0134",
+          "formula": "Se3N3",
+          "formation_energy": -0.9093,
+          "band_gap": 0.0,
+          "stability_score": 0.7665,
+          "converged": true,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "material_id": "SIM-MAT-0135",
+          "formula": "Zn3O",
+          "formation_energy": -0.8777,
+          "band_gap": 1.851,
+          "stability_score": 0.8347,
+          "converged": true,
+          "cluster_id": "kunshan"
+        },
+        {
+          "material_id": "SIM-MAT-0136",
+          "formula": "AsGe2",
+          "formation_energy": -0.172,
+          "band_gap": 0.942,
+          "stability_score": 0.6202,
+          "converged": true,
+          "cluster_id": "jinan"
+        },
+        {
+          "material_id": "SIM-MAT-0137",
+          "formula": "Al2Zn2",
+          "formation_energy": -0.0593,
+          "band_gap": 1.688,
+          "stability_score": 0.622,
+          "converged": true,
+          "cluster_id": "changsha"
+        },
+        {
+          "material_id": "SIM-MAT-0138",
+          "formula": "Zn2O2",
+          "formation_energy": 0.5539,
+          "band_gap": 0.523,
+          "stability_score": 0.3325,
+          "converged": true,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "material_id": "SIM-MAT-0139",
+          "formula": "Zn2Ga3",
+          "formation_energy": -0.6344,
+          "band_gap": 3.056,
+          "stability_score": 0.8322,
+          "converged": false,
+          "cluster_id": "kunshan"
+        },
+        {
+          "material_id": "SIM-MAT-0140",
+          "formula": "Ti2Cu3",
+          "formation_energy": -0.4088,
+          "band_gap": 3.568,
+          "stability_score": 0.598,
+          "converged": true,
+          "cluster_id": "jinan"
+        },
+        {
+          "material_id": "SIM-MAT-0141",
+          "formula": "Ti2Se2",
+          "formation_energy": -0.1034,
+          "band_gap": 1.083,
+          "stability_score": 0.6521,
+          "converged": true,
+          "cluster_id": "changsha"
+        },
+        {
+          "material_id": "SIM-MAT-0142",
+          "formula": "GaAl3",
+          "formation_energy": -1.0185,
+          "band_gap": 0.97,
+          "stability_score": 0.8738,
+          "converged": true,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "material_id": "SIM-MAT-0143",
+          "formula": "NTi",
+          "formation_energy": -0.149,
+          "band_gap": 3.245,
+          "stability_score": 0.5727,
+          "converged": true,
+          "cluster_id": "kunshan"
+        },
+        {
+          "material_id": "SIM-MAT-0144",
+          "formula": "O2Ge2",
+          "formation_energy": -0.4083,
+          "band_gap": 1.034,
+          "stability_score": 0.7397,
+          "converged": true,
+          "cluster_id": "jinan"
+        },
+        {
+          "material_id": "SIM-MAT-0145",
+          "formula": "GeCu3",
+          "formation_energy": -0.0257,
+          "band_gap": 0.515,
+          "stability_score": 0.4492,
+          "converged": true,
+          "cluster_id": "changsha"
+        },
+        {
+          "material_id": "SIM-MAT-0146",
+          "formula": "Ga2N2",
+          "formation_energy": 0.6332,
+          "band_gap": 0.0,
+          "stability_score": 0.3048,
+          "converged": true,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "material_id": "SIM-MAT-0147",
+          "formula": "Al2Cu",
+          "formation_energy": -0.5275,
+          "band_gap": 0.793,
+          "stability_score": 0.8233,
+          "converged": true,
+          "cluster_id": "kunshan"
+        },
+        {
+          "material_id": "SIM-MAT-0148",
+          "formula": "Ti3Cu3",
+          "formation_energy": -0.1706,
+          "band_gap": 0.151,
+          "stability_score": 0.7258,
+          "converged": true,
+          "cluster_id": "jinan"
+        },
+        {
+          "material_id": "SIM-MAT-0149",
+          "formula": "GeCu2",
+          "formation_energy": 0.3006,
+          "band_gap": 2.576,
+          "stability_score": 0.6045,
+          "converged": true,
+          "cluster_id": "changsha"
+        },
+        {
+          "material_id": "SIM-MAT-0150",
+          "formula": "Ga2Si2",
+          "formation_energy": -0.9245,
+          "band_gap": 2.023,
+          "stability_score": 0.8158,
+          "converged": true,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "material_id": "SIM-MAT-0151",
+          "formula": "Ga2Ti3",
+          "formation_energy": -0.2757,
+          "band_gap": 0.0,
+          "stability_score": 0.6113,
+          "converged": true,
+          "cluster_id": "kunshan"
+        },
+        {
+          "material_id": "SIM-MAT-0152",
+          "formula": "NGa3",
+          "formation_energy": -0.2169,
+          "band_gap": 3.244,
+          "stability_score": 0.6408,
+          "converged": true,
+          "cluster_id": "jinan"
+        },
+        {
+          "material_id": "SIM-MAT-0153",
+          "formula": "Se3Zn2",
+          "formation_energy": 0.1784,
+          "band_gap": 0.0,
+          "stability_score": 0.4822,
+          "converged": true,
+          "cluster_id": "changsha"
+        },
+        {
+          "material_id": "SIM-MAT-0154",
+          "formula": "OS2",
+          "formation_energy": -0.2249,
+          "band_gap": 3.529,
+          "stability_score": 0.7194,
+          "converged": true,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "material_id": "SIM-MAT-0155",
+          "formula": "SGe",
+          "formation_energy": 0.0059,
+          "band_gap": 2.276,
+          "stability_score": 0.3863,
+          "converged": true,
+          "cluster_id": "kunshan"
+        },
+        {
+          "material_id": "SIM-MAT-0156",
+          "formula": "Cu2Zn",
+          "formation_energy": -0.2884,
+          "band_gap": 3.171,
+          "stability_score": 0.6625,
+          "converged": true,
+          "cluster_id": "jinan"
+        },
+        {
+          "material_id": "SIM-MAT-0157",
+          "formula": "Ti3Cu2",
+          "formation_energy": 0.5958,
+          "band_gap": 2.493,
+          "stability_score": 0.1935,
+          "converged": true,
+          "cluster_id": "changsha"
+        },
+        {
+          "material_id": "SIM-MAT-0158",
+          "formula": "AlN",
+          "formation_energy": -0.2475,
+          "band_gap": 1.54,
+          "stability_score": 0.6024,
+          "converged": true,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "material_id": "SIM-MAT-0159",
+          "formula": "AsGe2",
+          "formation_energy": -0.3446,
+          "band_gap": 0.0,
+          "stability_score": 0.7263,
+          "converged": true,
+          "cluster_id": "kunshan"
+        },
+        {
+          "material_id": "SIM-MAT-0160",
+          "formula": "ZnAs",
+          "formation_energy": 0.0562,
+          "band_gap": 0.755,
+          "stability_score": 0.5676,
+          "converged": true,
+          "cluster_id": "jinan"
+        },
+        {
+          "material_id": "SIM-MAT-0161",
+          "formula": "Se2Zn",
+          "formation_energy": -0.4908,
+          "band_gap": 0.0,
+          "stability_score": 0.704,
+          "converged": true,
+          "cluster_id": "changsha"
+        },
+        {
+          "material_id": "SIM-MAT-0162",
+          "formula": "Ga2S",
+          "formation_energy": 0.063,
+          "band_gap": 2.551,
+          "stability_score": 0.4902,
+          "converged": true,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "material_id": "SIM-MAT-0163",
+          "formula": "SGa2",
+          "formation_energy": -0.1265,
+          "band_gap": 0.664,
+          "stability_score": 0.5751,
+          "converged": true,
+          "cluster_id": "kunshan"
+        },
+        {
+          "material_id": "SIM-MAT-0164",
+          "formula": "Se3Cu2",
+          "formation_energy": -0.8452,
+          "band_gap": 2.36,
+          "stability_score": 0.6727,
+          "converged": true,
+          "cluster_id": "jinan"
+        },
+        {
+          "material_id": "SIM-MAT-0165",
+          "formula": "SeGa2",
+          "formation_energy": -0.1411,
+          "band_gap": 3.742,
+          "stability_score": 0.5609,
+          "converged": true,
+          "cluster_id": "changsha"
+        },
+        {
+          "material_id": "SIM-MAT-0166",
+          "formula": "SiSe2",
+          "formation_energy": -0.4602,
+          "band_gap": 0.0,
+          "stability_score": 0.7263,
+          "converged": true,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "material_id": "SIM-MAT-0167",
+          "formula": "S2Ga2",
+          "formation_energy": 0.1392,
+          "band_gap": 3.362,
+          "stability_score": 0.477,
+          "converged": true,
+          "cluster_id": "kunshan"
+        },
+        {
+          "material_id": "SIM-MAT-0168",
+          "formula": "AlAs2",
+          "formation_energy": 0.4574,
+          "band_gap": 0.699,
+          "stability_score": 0.3866,
+          "converged": false,
+          "cluster_id": "jinan"
+        },
+        {
+          "material_id": "SIM-MAT-0169",
+          "formula": "Ti3N3",
+          "formation_energy": -1.0506,
+          "band_gap": 2.311,
+          "stability_score": 0.9152,
+          "converged": true,
+          "cluster_id": "changsha"
+        },
+        {
+          "material_id": "SIM-MAT-0170",
+          "formula": "Ti3O",
+          "formation_energy": -0.4434,
+          "band_gap": 0.893,
+          "stability_score": 0.7044,
+          "converged": true,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "material_id": "SIM-MAT-0171",
+          "formula": "Zn2Ge2",
+          "formation_energy": 0.2546,
+          "band_gap": 1.242,
+          "stability_score": 0.4677,
+          "converged": true,
+          "cluster_id": "kunshan"
+        },
+        {
+          "material_id": "SIM-MAT-0172",
+          "formula": "As3Zn2",
+          "formation_energy": -0.255,
+          "band_gap": 1.728,
+          "stability_score": 0.6397,
+          "converged": true,
+          "cluster_id": "jinan"
+        },
+        {
+          "material_id": "SIM-MAT-0173",
+          "formula": "N2Ti3",
+          "formation_energy": -0.1041,
+          "band_gap": 2.478,
+          "stability_score": 0.538,
+          "converged": true,
+          "cluster_id": "changsha"
+        },
+        {
+          "material_id": "SIM-MAT-0174",
+          "formula": "SiCu",
+          "formation_energy": 0.2303,
+          "band_gap": 2.777,
+          "stability_score": 0.6061,
+          "converged": true,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "material_id": "SIM-MAT-0175",
+          "formula": "O3S2",
+          "formation_energy": -0.6642,
+          "band_gap": 0.0,
+          "stability_score": 0.7852,
+          "converged": true,
+          "cluster_id": "kunshan"
+        },
+        {
+          "material_id": "SIM-MAT-0176",
+          "formula": "AlAs2",
+          "formation_energy": -0.3834,
+          "band_gap": 3.008,
+          "stability_score": 0.6831,
+          "converged": true,
+          "cluster_id": "jinan"
+        },
+        {
+          "material_id": "SIM-MAT-0177",
+          "formula": "As3O",
+          "formation_energy": -0.0436,
+          "band_gap": 3.46,
+          "stability_score": 0.4535,
+          "converged": true,
+          "cluster_id": "changsha"
+        },
+        {
+          "material_id": "SIM-MAT-0178",
+          "formula": "Cu2S2",
+          "formation_energy": -1.2095,
+          "band_gap": 3.292,
+          "stability_score": 0.9302,
+          "converged": false,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "material_id": "SIM-MAT-0179",
+          "formula": "S3N3",
+          "formation_energy": -0.5658,
+          "band_gap": 0.119,
+          "stability_score": 0.7593,
+          "converged": true,
+          "cluster_id": "kunshan"
+        },
+        {
+          "material_id": "SIM-MAT-0180",
+          "formula": "TiGe3",
+          "formation_energy": 0.1663,
+          "band_gap": 0.83,
+          "stability_score": 0.4228,
+          "converged": true,
+          "cluster_id": "jinan"
+        },
+        {
+          "material_id": "SIM-MAT-0181",
+          "formula": "NAs3",
+          "formation_energy": 0.1657,
+          "band_gap": 0.653,
+          "stability_score": 0.4964,
+          "converged": true,
+          "cluster_id": "changsha"
+        },
+        {
+          "material_id": "SIM-MAT-0182",
+          "formula": "As2S3",
+          "formation_energy": -1.0577,
+          "band_gap": 0.592,
+          "stability_score": 0.9245,
+          "converged": true,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "material_id": "SIM-MAT-0183",
+          "formula": "Ge3Cu2",
+          "formation_energy": -1.1184,
+          "band_gap": 3.588,
+          "stability_score": 0.8267,
+          "converged": true,
+          "cluster_id": "kunshan"
+        },
+        {
+          "material_id": "SIM-MAT-0184",
+          "formula": "Si2As",
+          "formation_energy": -0.5739,
+          "band_gap": 2.959,
+          "stability_score": 0.6976,
+          "converged": true,
+          "cluster_id": "jinan"
+        },
+        {
+          "material_id": "SIM-MAT-0185",
+          "formula": "Si2Zn2",
+          "formation_energy": -0.0549,
+          "band_gap": 0.832,
+          "stability_score": 0.6322,
+          "converged": true,
+          "cluster_id": "changsha"
+        },
+        {
+          "material_id": "SIM-MAT-0186",
+          "formula": "Se3Zn3",
+          "formation_energy": -0.5074,
+          "band_gap": 2.293,
+          "stability_score": 0.7517,
+          "converged": true,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "material_id": "SIM-MAT-0187",
+          "formula": "As3S",
+          "formation_energy": 0.4202,
+          "band_gap": 0.27,
+          "stability_score": 0.4057,
+          "converged": true,
+          "cluster_id": "kunshan"
+        },
+        {
+          "material_id": "SIM-MAT-0188",
+          "formula": "Ti3Zn",
+          "formation_energy": -0.4764,
+          "band_gap": 3.913,
+          "stability_score": 0.6839,
+          "converged": true,
+          "cluster_id": "jinan"
+        },
+        {
+          "material_id": "SIM-MAT-0189",
+          "formula": "OSe",
+          "formation_energy": 0.059,
+          "band_gap": 3.702,
+          "stability_score": 0.5318,
+          "converged": true,
+          "cluster_id": "changsha"
+        },
+        {
+          "material_id": "SIM-MAT-0190",
+          "formula": "Al3Cu2",
+          "formation_energy": -0.22,
+          "band_gap": 2.349,
+          "stability_score": 0.5529,
+          "converged": true,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "material_id": "SIM-MAT-0191",
+          "formula": "Ge2S3",
+          "formation_energy": -0.3781,
+          "band_gap": 3.612,
+          "stability_score": 0.7008,
+          "converged": true,
+          "cluster_id": "kunshan"
+        },
+        {
+          "material_id": "SIM-MAT-0192",
+          "formula": "Si3Ge2",
+          "formation_energy": -0.0354,
+          "band_gap": 2.03,
+          "stability_score": 0.56,
+          "converged": true,
+          "cluster_id": "jinan"
+        },
+        {
+          "material_id": "SIM-MAT-0193",
+          "formula": "Se3Ga2",
+          "formation_energy": -0.8448,
+          "band_gap": 0.485,
+          "stability_score": 0.9057,
+          "converged": true,
+          "cluster_id": "changsha"
+        },
+        {
+          "material_id": "SIM-MAT-0194",
+          "formula": "O2Ge2",
+          "formation_energy": -1.2477,
+          "band_gap": 0.447,
+          "stability_score": 0.99,
+          "converged": true,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "material_id": "SIM-MAT-0195",
+          "formula": "SiCu2",
+          "formation_energy": -0.602,
+          "band_gap": 1.008,
+          "stability_score": 0.7928,
+          "converged": true,
+          "cluster_id": "kunshan"
+        },
+        {
+          "material_id": "SIM-MAT-0196",
+          "formula": "Si3N2",
+          "formation_energy": -1.4677,
+          "band_gap": 0.0,
+          "stability_score": 0.99,
+          "converged": true,
+          "cluster_id": "jinan"
+        },
+        {
+          "material_id": "SIM-MAT-0197",
+          "formula": "S2Ge2",
+          "formation_energy": -0.2869,
+          "band_gap": 1.259,
+          "stability_score": 0.7416,
+          "converged": false,
+          "cluster_id": "changsha"
+        },
+        {
+          "material_id": "SIM-MAT-0198",
+          "formula": "SeS",
+          "formation_energy": -0.61,
+          "band_gap": 0.254,
+          "stability_score": 0.7993,
+          "converged": true,
+          "cluster_id": "guangzhou"
+        },
+        {
+          "material_id": "SIM-MAT-0199",
+          "formula": "OS",
+          "formation_energy": -1.0094,
+          "band_gap": 1.148,
+          "stability_score": 0.8137,
+          "converged": true,
+          "cluster_id": "kunshan"
+        },
+        {
+          "material_id": "SIM-MAT-0200",
+          "formula": "Al3Ga3",
+          "formation_energy": -0.7009,
+          "band_gap": 0.645,
+          "stability_score": 0.6987,
+          "converged": true,
+          "cluster_id": "jinan"
+        }
+      ],
+      "candidate_ranking": [
+        {
+          "rank": 1,
+          "material_id": "SIM-MAT-0086",
+          "score": 1.2382,
+          "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+        },
+        {
+          "rank": 2,
+          "material_id": "SIM-MAT-0033",
+          "score": 1.16,
+          "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+        },
+        {
+          "rank": 3,
+          "material_id": "SIM-MAT-0169",
+          "score": 0.9694,
+          "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+        },
+        {
+          "rank": 4,
+          "material_id": "SIM-MAT-0067",
+          "score": 0.8391,
+          "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+        },
+        {
+          "rank": 5,
+          "material_id": "SIM-MAT-0082",
+          "score": 0.8308,
+          "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+        },
+        {
+          "rank": 6,
+          "material_id": "SIM-MAT-0111",
+          "score": 0.8286,
+          "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+        },
+        {
+          "rank": 7,
+          "material_id": "SIM-MAT-0142",
+          "score": 0.9317,
+          "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+        },
+        {
+          "rank": 8,
+          "material_id": "SIM-MAT-0071",
+          "score": 0.8888,
+          "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+        },
+        {
+          "rank": 9,
+          "material_id": "SIM-MAT-0135",
+          "score": 0.8519,
+          "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+        },
+        {
+          "rank": 10,
+          "material_id": "SIM-MAT-0150",
+          "score": 0.8593,
+          "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+        },
+        {
+          "rank": 11,
+          "material_id": "SIM-MAT-0199",
+          "score": 0.892,
+          "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+        },
+        {
+          "rank": 12,
+          "material_id": "SIM-MAT-0100",
+          "score": 0.6465,
+          "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+        },
+        {
+          "rank": 13,
+          "material_id": "SIM-MAT-0091",
+          "score": 0.7805,
+          "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+        },
+        {
+          "rank": 14,
+          "material_id": "SIM-MAT-0101",
+          "score": 0.8525,
+          "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+        },
+        {
+          "rank": 15,
+          "material_id": "SIM-MAT-0074",
+          "score": 0.6848,
+          "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+        },
+        {
+          "rank": 16,
+          "material_id": "SIM-MAT-0195",
+          "score": 0.7165,
+          "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+        },
+        {
+          "rank": 17,
+          "material_id": "SIM-MAT-0105",
+          "score": 0.6719,
+          "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+        },
+        {
+          "rank": 18,
+          "material_id": "SIM-MAT-0026",
+          "score": 0.7208,
+          "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+        },
+        {
+          "rank": 19,
+          "material_id": "SIM-MAT-0061",
+          "score": 0.6782,
+          "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+        },
+        {
+          "rank": 20,
+          "material_id": "SIM-MAT-0034",
+          "score": 0.6072,
+          "reason": "converged + FE<-0.3 + 0.8<Eg<2.5 + stability>0.7 (simulated rule)"
+        }
+      ],
+      "cluster_distribution": [
+        {
+          "cluster_id": "changsha",
+          "cluster_name": "长沙",
+          "assigned": 50
+        },
+        {
+          "cluster_id": "guangzhou",
+          "cluster_name": "广州",
+          "assigned": 50
+        },
+        {
+          "cluster_id": "kunshan",
+          "cluster_name": "昆山",
+          "assigned": 50
+        },
+        {
+          "cluster_id": "jinan",
+          "cluster_name": "济南",
+          "assigned": 50
+        }
+      ],
+      "filter_rule": {
+        "converged": true,
+        "formation_energy_lt": -0.3,
+        "band_gap_range": [
+          0.8,
+          2.5
+        ],
+        "stability_score_gt": 0.7
+      }
+    }
   },
   "timestamp": "2026-08-11T01:48:15+08:00"
 }

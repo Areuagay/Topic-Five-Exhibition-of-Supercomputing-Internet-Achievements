@@ -1,0 +1,21 @@
+{
+  "code": 200,
+  "message": "success",
+  "data": [
+    {
+      "id": "band-dos",
+      "name": "材料能带结构与态密度计算",
+      "category": "第一性原理材料计算",
+      "description": "基于密度泛函理论（DFT）的材料电子结构计算，输出能带结构与态密度，支持半导体、金属等材料性质分析。",
+      "status": "available"
+    },
+    {
+      "id": "high-throughput-screening",
+      "name": "高通量材料筛选",
+      "category": "第一性原理材料计算",
+      "description": "面向大规模材料数据库的高通量第一性原理计算，批量评估材料稳定性与电子性质，加速新材料发现。",
+      "status": "available"
+    }
+  ],
+  "timestamp": "2026-08-11T10:00:00+08:00"
+}
