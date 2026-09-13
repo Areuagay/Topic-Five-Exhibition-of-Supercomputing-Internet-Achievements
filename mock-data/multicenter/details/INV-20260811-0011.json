@@ -1,0 +1,27 @@
+{
+  "code": 200,
+  "message": "success",
+  "data": {
+    "invocation_id": "INV-20260811-0011",
+    "function_id": "fn-file-convert",
+    "function_name": "文件格式转换函数",
+    "cluster_id": "jinan",
+    "status": "running",
+    "source_type": "simulated",
+    "instance_id": "fn-convert-jinan-01",
+    "start_time": "2026-08-11T11:10:00+08:00",
+    "end_time": "",
+    "trace_id": "TRACE-25af64",
+    "total_latency_ms": 33.5,
+    "args": { "source_format": "vtk", "target_format": "gmsh" },
+    "spans": [
+      { "seq": 1, "component": "api-gateway", "name": "API网关", "cluster_id": "global", "status": "success", "latency_ms": 3.9, "start_time": "2026-08-11T11:10:00.000+08:00" },
+      { "seq": 2, "component": "function-registry", "name": "函数注册中心", "cluster_id": "global", "status": "success", "latency_ms": 1.7, "start_time": "2026-08-11T11:10:00.004+08:00" },
+      { "seq": 3, "component": "global-scheduler", "name": "全局调度器", "cluster_id": "global", "status": "success", "latency_ms": 4.6, "start_time": "2026-08-11T11:10:00.006+08:00" },
+      { "seq": 4, "component": "center-agent", "name": "济南中心代理", "cluster_id": "jinan", "status": "success", "latency_ms": 12.8, "start_time": "2026-08-11T11:10:00.011+08:00" },
+      { "seq": 5, "component": "slurm-adapter", "name": "SLURM适配器", "cluster_id": "jinan", "status": "success", "latency_ms": 6.4, "start_time": "2026-08-11T11:10:00.024+08:00" },
+      { "seq": 6, "component": "function-runtime", "name": "函数运行时", "cluster_id": "jinan", "status": "running", "latency_ms": 4.1, "start_time": "2026-08-11T11:10:00.030+08:00" }
+    ]
+  },
+  "timestamp": "2026-08-11T11:10:01+08:00"
+}

@@ -1,0 +1,26 @@
+{
+  "code": 200,
+  "message": "success",
+  "data": {
+    "migration_id": "MIG-20260811-0003",
+    "workload_id": "WL-FN-CONVERT",
+    "function_id": "fn-file-convert",
+    "function_name": "文件格式转换函数",
+    "status": "pending",
+    "progress": 0,
+    "from_cluster": "changsha",
+    "from_cluster_name": "长沙天河新一代",
+    "to_cluster": "jinan",
+    "to_cluster_name": "济南神威蓝光",
+    "source_type": "simulated",
+    "start_time": "",
+    "end_time": "",
+    "reason": "长沙中心即将进入计划内维护窗口，提前将文件格式转换实例迁移至济南中心",
+    "transferred_replicas": 1,
+    "total_size_mb": 256,
+    "events": [
+      { "seq": 1, "event": "migration_planned", "name": "迁移计划生成", "status": "success", "timestamp": "2026-08-11T11:00:00+08:00", "detail": "检测到长沙中心维护计划，生成迁移方案，目标济南中心，等待调度窗口执行" }
+    ]
+  },
+  "timestamp": "2026-08-11T11:00:00+08:00"
+}

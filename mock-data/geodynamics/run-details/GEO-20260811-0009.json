@@ -1,0 +1,1744 @@
+{
+  "code": 200,
+  "message": "success",
+  "data": {
+    "run_id": "GEO-20260811-0009",
+    "scenario_id": "tectonic-evolution",
+    "scenario_name": "板块构造数值模拟",
+    "status": "running",
+    "progress": 58,
+    "execution_mode": "simulated",
+    "cluster_id": "kunshan",
+    "cluster_name": "昆山昆仑",
+    "job_id": "45210",
+    "current_stage": "coupled-solving",
+    "start_time": "2026-08-11T08:00:00+08:00",
+    "end_time": "",
+    "elapsed_seconds": 9000,
+    "nodes": 16,
+    "cpu_cores": 1024,
+    "gpu_count": 0,
+    "memory_gb": 8192,
+    "core_hours": 2560,
+    "source_type": "simulated",
+    "workflow": {
+      "nodes": [
+        {
+          "id": "prepare",
+          "name": "数据预处理",
+          "status": "success",
+          "progress": 100,
+          "cluster_id": "kunshan"
+        },
+        {
+          "id": "partition",
+          "name": "网格划分与域分解",
+          "status": "success",
+          "progress": 100,
+          "cluster_id": "kunshan"
+        },
+        {
+          "id": "solver",
+          "name": "耦合求解",
+          "status": "running",
+          "progress": 58,
+          "cluster_id": "kunshan"
+        },
+        {
+          "id": "post",
+          "name": "结果后处理",
+          "status": "pending",
+          "progress": 0,
+          "cluster_id": "kunshan"
+        }
+      ],
+      "edges": [
+        {
+          "source": "prepare",
+          "target": "partition"
+        },
+        {
+          "source": "partition",
+          "target": "solver"
+        },
+        {
+          "source": "solver",
+          "target": "post"
+        }
+      ]
+    },
+    "metrics": {
+      "progress": 58,
+      "metrics": [
+        {
+          "name": "time_step",
+          "label": "当前时间步",
+          "value": 2900,
+          "total": 5000,
+          "unit": ""
+        },
+        {
+          "name": "nonlinear_iter",
+          "label": "Newton迭代",
+          "value": 4,
+          "total": 0,
+          "unit": "次"
+        },
+        {
+          "name": "step_time",
+          "label": "单步耗时",
+          "value": 1.15,
+          "total": 0,
+          "unit": "s"
+        },
+        {
+          "name": "cpu_utilization",
+          "label": "CPU利用率",
+          "value": 90,
+          "total": 100,
+          "unit": "%"
+        }
+      ],
+      "domain_data": {
+        "source_type": "simulated",
+        "execution_mode": "simulated",
+        "scenario_id": "tectonic-evolution",
+        "scenario_alias": "plate-tectonics",
+        "temperature_series": [
+          {
+            "time": 0,
+            "max_temperature": 1251.99,
+            "avg_temperature": 901.99
+          },
+          {
+            "time": 2.128,
+            "max_temperature": 1264.26,
+            "avg_temperature": 907.2
+          },
+          {
+            "time": 4.255,
+            "max_temperature": 1286.36,
+            "avg_temperature": 922.47
+          },
+          {
+            "time": 6.383,
+            "max_temperature": 1307.75,
+            "avg_temperature": 937.46
+          },
+          {
+            "time": 8.511,
+            "max_temperature": 1340.67,
+            "avg_temperature": 964.62
+          },
+          {
+            "time": 10.638,
+            "max_temperature": 1336.12,
+            "avg_temperature": 955.13
+          },
+          {
+            "time": 12.766,
+            "max_temperature": 1382.26,
+            "avg_temperature": 997.29
+          },
+          {
+            "time": 14.894,
+            "max_temperature": 1373.43,
+            "avg_temperature": 985.58
+          },
+          {
+            "time": 17.021,
+            "max_temperature": 1392.56,
+            "avg_temperature": 1003.02
+          },
+          {
+            "time": 19.149,
+            "max_temperature": 1392.01,
+            "avg_temperature": 1002.02
+          },
+          {
+            "time": 21.277,
+            "max_temperature": 1385.41,
+            "avg_temperature": 996.22
+          },
+          {
+            "time": 23.404,
+            "max_temperature": 1410.11,
+            "avg_temperature": 1022.96
+          },
+          {
+            "time": 25.532,
+            "max_temperature": 1404.63,
+            "avg_temperature": 1020.68
+          },
+          {
+            "time": 27.66,
+            "max_temperature": 1406.19,
+            "avg_temperature": 1026.5
+          },
+          {
+            "time": 29.787,
+            "max_temperature": 1386.69,
+            "avg_temperature": 1012.19
+          },
+          {
+            "time": 31.915,
+            "max_temperature": 1390.91,
+            "avg_temperature": 1022.37
+          },
+          {
+            "time": 34.043,
+            "max_temperature": 1384.37,
+            "avg_temperature": 1022.37
+          },
+          {
+            "time": 36.17,
+            "max_temperature": 1371.57,
+            "avg_temperature": 1016.49
+          },
+          {
+            "time": 38.298,
+            "max_temperature": 1355.65,
+            "avg_temperature": 1007.65
+          },
+          {
+            "time": 40.426,
+            "max_temperature": 1322.19,
+            "avg_temperature": 981.2
+          },
+          {
+            "time": 42.553,
+            "max_temperature": 1325.88,
+            "avg_temperature": 991.63
+          },
+          {
+            "time": 44.681,
+            "max_temperature": 1310.16,
+            "avg_temperature": 982.14
+          },
+          {
+            "time": 46.809,
+            "max_temperature": 1280.44,
+            "avg_temperature": 957.97
+          },
+          {
+            "time": 48.936,
+            "max_temperature": 1282.26,
+            "avg_temperature": 964.48
+          },
+          {
+            "time": 51.064,
+            "max_temperature": 1247.6,
+            "avg_temperature": 933.49
+          },
+          {
+            "time": 53.191,
+            "max_temperature": 1227.45,
+            "avg_temperature": 915.89
+          },
+          {
+            "time": 55.319,
+            "max_temperature": 1216.73,
+            "avg_temperature": 906.52
+          },
+          {
+            "time": 57.447,
+            "max_temperature": 1207.55,
+            "avg_temperature": 897.44
+          },
+          {
+            "time": 59.574,
+            "max_temperature": 1196.73,
+            "avg_temperature": 885.47
+          },
+          {
+            "time": 61.702,
+            "max_temperature": 1185.48,
+            "avg_temperature": 871.85
+          },
+          {
+            "time": 63.83,
+            "max_temperature": 1175.66,
+            "avg_temperature": 858.52
+          },
+          {
+            "time": 65.957,
+            "max_temperature": 1172.13,
+            "avg_temperature": 850.46
+          },
+          {
+            "time": 68.085,
+            "max_temperature": 1147.49,
+            "avg_temperature": 820.39
+          },
+          {
+            "time": 70.213,
+            "max_temperature": 1150.83,
+            "avg_temperature": 817.58
+          },
+          {
+            "time": 72.34,
+            "max_temperature": 1147.05,
+            "avg_temperature": 807.13
+          },
+          {
+            "time": 74.468,
+            "max_temperature": 1134.82,
+            "avg_temperature": 787.92
+          },
+          {
+            "time": 76.596,
+            "max_temperature": 1145.27,
+            "avg_temperature": 791.28
+          },
+          {
+            "time": 78.723,
+            "max_temperature": 1145.17,
+            "avg_temperature": 784.23
+          },
+          {
+            "time": 80.851,
+            "max_temperature": 1152.39,
+            "avg_temperature": 784.83
+          },
+          {
+            "time": 82.979,
+            "max_temperature": 1165.14,
+            "avg_temperature": 791.52
+          },
+          {
+            "time": 85.106,
+            "max_temperature": 1163.04,
+            "avg_temperature": 784.09
+          },
+          {
+            "time": 87.234,
+            "max_temperature": 1164.71,
+            "avg_temperature": 781.35
+          },
+          {
+            "time": 89.362,
+            "max_temperature": 1162.49,
+            "avg_temperature": 775.76
+          },
+          {
+            "time": 91.489,
+            "max_temperature": 1176.9,
+            "avg_temperature": 787.95
+          },
+          {
+            "time": 93.617,
+            "max_temperature": 1192.19,
+            "avg_temperature": 802.25
+          },
+          {
+            "time": 95.745,
+            "max_temperature": 1186.84,
+            "avg_temperature": 797.15
+          },
+          {
+            "time": 97.872,
+            "max_temperature": 1211.94,
+            "avg_temperature": 823.75
+          },
+          {
+            "time": 100,
+            "max_temperature": 1205.66,
+            "avg_temperature": 820.17
+          }
+        ],
+        "velocity_series": [
+          {
+            "time": 0,
+            "max_velocity": 4.511e-9,
+            "avg_velocity": 1.757e-9
+          },
+          {
+            "time": 2.128,
+            "max_velocity": 4.473e-9,
+            "avg_velocity": 1.616e-9
+          },
+          {
+            "time": 4.255,
+            "max_velocity": 4.706e-9,
+            "avg_velocity": 1.752e-9
+          },
+          {
+            "time": 6.383,
+            "max_velocity": 4.762e-9,
+            "avg_velocity": 1.756e-9
+          },
+          {
+            "time": 8.511,
+            "max_velocity": 4.974e-9,
+            "avg_velocity": 1.799e-9
+          },
+          {
+            "time": 10.638,
+            "max_velocity": 5.219e-9,
+            "avg_velocity": 1.955e-9
+          },
+          {
+            "time": 12.766,
+            "max_velocity": 5.126e-9,
+            "avg_velocity": 1.98e-9
+          },
+          {
+            "time": 14.894,
+            "max_velocity": 5.178e-9,
+            "avg_velocity": 1.924e-9
+          },
+          {
+            "time": 17.021,
+            "max_velocity": 5.247e-9,
+            "avg_velocity": 1.912e-9
+          },
+          {
+            "time": 19.149,
+            "max_velocity": 5.197e-9,
+            "avg_velocity": 2.014e-9
+          },
+          {
+            "time": 21.277,
+            "max_velocity": 5.468e-9,
+            "avg_velocity": 2.084e-9
+          },
+          {
+            "time": 23.404,
+            "max_velocity": 5.401e-9,
+            "avg_velocity": 2.151e-9
+          },
+          {
+            "time": 25.532,
+            "max_velocity": 5.389e-9,
+            "avg_velocity": 2.01e-9
+          },
+          {
+            "time": 27.66,
+            "max_velocity": 5.396e-9,
+            "avg_velocity": 1.968e-9
+          },
+          {
+            "time": 29.787,
+            "max_velocity": 5.24e-9,
+            "avg_velocity": 1.854e-9
+          },
+          {
+            "time": 31.915,
+            "max_velocity": 5.411e-9,
+            "avg_velocity": 2.022e-9
+          },
+          {
+            "time": 34.043,
+            "max_velocity": 5.142e-9,
+            "avg_velocity": 2.012e-9
+          },
+          {
+            "time": 36.17,
+            "max_velocity": 5.169e-9,
+            "avg_velocity": 1.814e-9
+          },
+          {
+            "time": 38.298,
+            "max_velocity": 5.037e-9,
+            "avg_velocity": 1.81e-9
+          },
+          {
+            "time": 40.426,
+            "max_velocity": 5.025e-9,
+            "avg_velocity": 1.807e-9
+          },
+          {
+            "time": 42.553,
+            "max_velocity": 4.766e-9,
+            "avg_velocity": 1.826e-9
+          },
+          {
+            "time": 44.681,
+            "max_velocity": 4.485e-9,
+            "avg_velocity": 1.73e-9
+          },
+          {
+            "time": 46.809,
+            "max_velocity": 4.472e-9,
+            "avg_velocity": 1.657e-9
+          },
+          {
+            "time": 48.936,
+            "max_velocity": 4.338e-9,
+            "avg_velocity": 1.62e-9
+          },
+          {
+            "time": 51.064,
+            "max_velocity": 4.28e-9,
+            "avg_velocity": 1.587e-9
+          },
+          {
+            "time": 53.191,
+            "max_velocity": 4.105e-9,
+            "avg_velocity": 1.504e-9
+          },
+          {
+            "time": 55.319,
+            "max_velocity": 4.235e-9,
+            "avg_velocity": 1.56e-9
+          },
+          {
+            "time": 57.447,
+            "max_velocity": 3.862e-9,
+            "avg_velocity": 1.452e-9
+          },
+          {
+            "time": 59.574,
+            "max_velocity": 3.975e-9,
+            "avg_velocity": 1.569e-9
+          },
+          {
+            "time": 61.702,
+            "max_velocity": 3.721e-9,
+            "avg_velocity": 1.332e-9
+          },
+          {
+            "time": 63.83,
+            "max_velocity": 3.739e-9,
+            "avg_velocity": 1.339e-9
+          },
+          {
+            "time": 65.957,
+            "max_velocity": 3.529e-9,
+            "avg_velocity": 1.357e-9
+          },
+          {
+            "time": 68.085,
+            "max_velocity": 3.482e-9,
+            "avg_velocity": 1.328e-9
+          },
+          {
+            "time": 70.213,
+            "max_velocity": 3.431e-9,
+            "avg_velocity": 1.303e-9
+          },
+          {
+            "time": 72.34,
+            "max_velocity": 3.585e-9,
+            "avg_velocity": 1.382e-9
+          },
+          {
+            "time": 74.468,
+            "max_velocity": 3.529e-9,
+            "avg_velocity": 1.384e-9
+          },
+          {
+            "time": 76.596,
+            "max_velocity": 3.743e-9,
+            "avg_velocity": 1.365e-9
+          },
+          {
+            "time": 78.723,
+            "max_velocity": 3.65e-9,
+            "avg_velocity": 1.384e-9
+          },
+          {
+            "time": 80.851,
+            "max_velocity": 3.936e-9,
+            "avg_velocity": 1.503e-9
+          },
+          {
+            "time": 82.979,
+            "max_velocity": 4.061e-9,
+            "avg_velocity": 1.437e-9
+          },
+          {
+            "time": 85.106,
+            "max_velocity": 4.029e-9,
+            "avg_velocity": 1.422e-9
+          },
+          {
+            "time": 87.234,
+            "max_velocity": 4.02e-9,
+            "avg_velocity": 1.428e-9
+          },
+          {
+            "time": 89.362,
+            "max_velocity": 3.951e-9,
+            "avg_velocity": 1.473e-9
+          },
+          {
+            "time": 91.489,
+            "max_velocity": 4.184e-9,
+            "avg_velocity": 1.499e-9
+          },
+          {
+            "time": 93.617,
+            "max_velocity": 4.404e-9,
+            "avg_velocity": 1.655e-9
+          },
+          {
+            "time": 95.745,
+            "max_velocity": 4.686e-9,
+            "avg_velocity": 1.843e-9
+          },
+          {
+            "time": 97.872,
+            "max_velocity": 4.765e-9,
+            "avg_velocity": 1.683e-9
+          },
+          {
+            "time": 100,
+            "max_velocity": 4.767e-9,
+            "avg_velocity": 1.804e-9
+          }
+        ],
+        "nonlinear_series": [
+          {
+            "iteration": 1,
+            "residual": 0.1723420829
+          },
+          {
+            "iteration": 2,
+            "residual": 0.1351634507
+          },
+          {
+            "iteration": 3,
+            "residual": 0.1228620622
+          },
+          {
+            "iteration": 4,
+            "residual": 0.1095293091
+          },
+          {
+            "iteration": 5,
+            "residual": 0.0812595793
+          },
+          {
+            "iteration": 6,
+            "residual": 0.0745984626
+          },
+          {
+            "iteration": 7,
+            "residual": 0.0601669032
+          },
+          {
+            "iteration": 8,
+            "residual": 0.0521596327
+          },
+          {
+            "iteration": 9,
+            "residual": 0.0424236202
+          },
+          {
+            "iteration": 10,
+            "residual": 0.0385264513
+          },
+          {
+            "iteration": 11,
+            "residual": 0.0340920026
+          },
+          {
+            "iteration": 12,
+            "residual": 0.0276660088
+          },
+          {
+            "iteration": 13,
+            "residual": 0.0285613753
+          },
+          {
+            "iteration": 14,
+            "residual": 0.0185081294
+          },
+          {
+            "iteration": 15,
+            "residual": 0.015912877
+          },
+          {
+            "iteration": 16,
+            "residual": 0.0135892272
+          },
+          {
+            "iteration": 17,
+            "residual": 0.0117757072
+          },
+          {
+            "iteration": 18,
+            "residual": 0.009666591
+          },
+          {
+            "iteration": 19,
+            "residual": 0.0087559173
+          },
+          {
+            "iteration": 20,
+            "residual": 0.0069461895
+          },
+          {
+            "iteration": 21,
+            "residual": 0.0063065852
+          },
+          {
+            "iteration": 22,
+            "residual": 0.0051725285
+          },
+          {
+            "iteration": 23,
+            "residual": 0.0049368937
+          },
+          {
+            "iteration": 24,
+            "residual": 0.0037693426
+          },
+          {
+            "iteration": 25,
+            "residual": 0.0031779068
+          },
+          {
+            "iteration": 26,
+            "residual": 0.0025096042
+          },
+          {
+            "iteration": 27,
+            "residual": 0.0021506238
+          },
+          {
+            "iteration": 28,
+            "residual": 0.0017835599
+          },
+          {
+            "iteration": 29,
+            "residual": 0.0015972602
+          },
+          {
+            "iteration": 30,
+            "residual": 0.0013957701
+          },
+          {
+            "iteration": 31,
+            "residual": 0.0012100236
+          },
+          {
+            "iteration": 32,
+            "residual": 0.0009605632
+          },
+          {
+            "iteration": 33,
+            "residual": 0.0008356061
+          },
+          {
+            "iteration": 34,
+            "residual": 0.0007097877
+          },
+          {
+            "iteration": 35,
+            "residual": 0.0006158598
+          }
+        ],
+        "field_frames": [
+          {
+            "time": 0,
+            "temperature_preview": "/api/v1/files/ART-GEO-TT01/preview",
+            "velocity_preview": "/api/v1/files/ART-GEO-TV01/preview"
+          },
+          {
+            "time": 12.766,
+            "temperature_preview": "/api/v1/files/ART-GEO-TT02/preview",
+            "velocity_preview": "/api/v1/files/ART-GEO-TV02/preview"
+          },
+          {
+            "time": 25.532,
+            "temperature_preview": "/api/v1/files/ART-GEO-TT03/preview",
+            "velocity_preview": "/api/v1/files/ART-GEO-TV03/preview"
+          },
+          {
+            "time": 38.298,
+            "temperature_preview": "/api/v1/files/ART-GEO-TT04/preview",
+            "velocity_preview": "/api/v1/files/ART-GEO-TV04/preview"
+          },
+          {
+            "time": 51.064,
+            "temperature_preview": "/api/v1/files/ART-GEO-TT05/preview",
+            "velocity_preview": "/api/v1/files/ART-GEO-TV05/preview"
+          },
+          {
+            "time": 63.83,
+            "temperature_preview": "/api/v1/files/ART-GEO-TT06/preview",
+            "velocity_preview": "/api/v1/files/ART-GEO-TV06/preview"
+          },
+          {
+            "time": 76.596,
+            "temperature_preview": "/api/v1/files/ART-GEO-TT07/preview",
+            "velocity_preview": "/api/v1/files/ART-GEO-TV07/preview"
+          },
+          {
+            "time": 89.362,
+            "temperature_preview": "/api/v1/files/ART-GEO-TT08/preview",
+            "velocity_preview": "/api/v1/files/ART-GEO-TV08/preview"
+          }
+        ]
+      }
+    },
+    "logs": {
+      "next_offset": 5,
+      "has_more": false,
+      "lines": [
+        {
+          "seq": 1,
+          "timestamp": "2026-08-11T08:00:02+08:00",
+          "level": "INFO",
+          "cluster_id": "kunshan",
+          "message": "任务提交成功，作业ID 45210，分配节点 16 个（1024 核）"
+        },
+        {
+          "seq": 2,
+          "timestamp": "2026-08-11T08:01:40+08:00",
+          "level": "INFO",
+          "cluster_id": "kunshan",
+          "message": "初始板块几何与物性参数加载完成（粘度分层、密度场、初始速度场）"
+        },
+        {
+          "seq": 3,
+          "timestamp": "2026-08-11T08:05:12+08:00",
+          "level": "INFO",
+          "cluster_id": "kunshan",
+          "message": "非结构网格生成：3500 万单元，完成 16 域分解，负载均衡度 0.97"
+        },
+        {
+          "seq": 4,
+          "timestamp": "2026-08-11T08:05:40+08:00",
+          "level": "INFO",
+          "cluster_id": "kunshan",
+          "message": "开始耦合求解：动量守恒 + 能量守恒 + 热-力学耦合迭代"
+        },
+        {
+          "seq": 5,
+          "timestamp": "2026-08-11T10:30:00+08:00",
+          "level": "INFO",
+          "cluster_id": "kunshan",
+          "message": "时间步 2900/5000 完成，平均 Newton 迭代 4 次收敛"
+        }
+      ]
+    },
+    "artifacts": [
+      {
+        "id": "ART-GEO-010",
+        "name": "tectonic_evolution.mp4",
+        "type": "video",
+        "format": "mp4",
+        "size": 52428800,
+        "storage_path": "gfs://results/GEO-20260811-0010/tectonic_evolution.mp4",
+        "preview_url": "/api/v1/files/ART-GEO-010/preview",
+        "download_url": "/api/v1/files/ART-GEO-010/download",
+        "created_at": "2026-08-10T07:37:00+08:00"
+      },
+      {
+        "id": "ART-GEO-011",
+        "name": "velocity_field_final.png",
+        "type": "image",
+        "format": "png",
+        "size": 1892351,
+        "storage_path": "gfs://results/GEO-20260811-0010/velocity_field_final.png",
+        "preview_url": "/api/v1/files/ART-GEO-011/preview",
+        "download_url": "/api/v1/files/ART-GEO-011/download",
+        "created_at": "2026-08-10T07:35:30+08:00"
+      },
+      {
+        "id": "ART-GEO-012",
+        "name": "stress_field_snapshot_5000.vti",
+        "type": "dataset",
+        "format": "vti",
+        "size": 104857600,
+        "storage_path": "gfs://results/GEO-20260811-0010/stress_field_snapshot_5000.vti",
+        "preview_url": "",
+        "download_url": "/api/v1/files/ART-GEO-012/download",
+        "created_at": "2026-08-10T07:33:00+08:00"
+      },
+      {
+        "id": "ART-GEO-013",
+        "name": "simulation_report.pdf",
+        "type": "report",
+        "format": "pdf",
+        "size": 4587520,
+        "storage_path": "gfs://results/GEO-20260811-0010/simulation_report.pdf",
+        "preview_url": "/api/v1/files/ART-GEO-013/preview",
+        "download_url": "/api/v1/files/ART-GEO-013/download",
+        "created_at": "2026-08-10T07:39:00+08:00"
+      },
+      {
+        "id": "ART-GEO-TT01",
+        "name": "temperature_field_000.png",
+        "type": "image",
+        "format": "png",
+        "size": 33082,
+        "storage_path": "artifacts/simulated/geodynamics/tectonic-evolution/GEO-20260811-0010/temperature_field_000.png",
+        "preview_url": "/api/v1/files/ART-GEO-TT01/preview",
+        "download_url": "/api/v1/files/ART-GEO-TT01/download",
+        "created_at": "2026-09-09T18:05:59+08:00",
+        "source_type": "simulated"
+      },
+      {
+        "id": "ART-GEO-TV01",
+        "name": "velocity_field_000.png",
+        "type": "image",
+        "format": "png",
+        "size": 55529,
+        "storage_path": "artifacts/simulated/geodynamics/tectonic-evolution/GEO-20260811-0010/velocity_field_000.png",
+        "preview_url": "/api/v1/files/ART-GEO-TV01/preview",
+        "download_url": "/api/v1/files/ART-GEO-TV01/download",
+        "created_at": "2026-09-09T18:06:00+08:00",
+        "source_type": "simulated"
+      },
+      {
+        "id": "ART-GEO-TT02",
+        "name": "temperature_field_001.png",
+        "type": "image",
+        "format": "png",
+        "size": 33335,
+        "storage_path": "artifacts/simulated/geodynamics/tectonic-evolution/GEO-20260811-0010/temperature_field_001.png",
+        "preview_url": "/api/v1/files/ART-GEO-TT02/preview",
+        "download_url": "/api/v1/files/ART-GEO-TT02/download",
+        "created_at": "2026-09-09T18:06:00+08:00",
+        "source_type": "simulated"
+      },
+      {
+        "id": "ART-GEO-TV02",
+        "name": "velocity_field_001.png",
+        "type": "image",
+        "format": "png",
+        "size": 55723,
+        "storage_path": "artifacts/simulated/geodynamics/tectonic-evolution/GEO-20260811-0010/velocity_field_001.png",
+        "preview_url": "/api/v1/files/ART-GEO-TV02/preview",
+        "download_url": "/api/v1/files/ART-GEO-TV02/download",
+        "created_at": "2026-09-09T18:06:00+08:00",
+        "source_type": "simulated"
+      },
+      {
+        "id": "ART-GEO-TT03",
+        "name": "temperature_field_002.png",
+        "type": "image",
+        "format": "png",
+        "size": 33297,
+        "storage_path": "artifacts/simulated/geodynamics/tectonic-evolution/GEO-20260811-0010/temperature_field_002.png",
+        "preview_url": "/api/v1/files/ART-GEO-TT03/preview",
+        "download_url": "/api/v1/files/ART-GEO-TT03/download",
+        "created_at": "2026-09-09T18:06:00+08:00",
+        "source_type": "simulated"
+      },
+      {
+        "id": "ART-GEO-TV03",
+        "name": "velocity_field_002.png",
+        "type": "image",
+        "format": "png",
+        "size": 55758,
+        "storage_path": "artifacts/simulated/geodynamics/tectonic-evolution/GEO-20260811-0010/velocity_field_002.png",
+        "preview_url": "/api/v1/files/ART-GEO-TV03/preview",
+        "download_url": "/api/v1/files/ART-GEO-TV03/download",
+        "created_at": "2026-09-09T18:06:00+08:00",
+        "source_type": "simulated"
+      },
+      {
+        "id": "ART-GEO-TT04",
+        "name": "temperature_field_003.png",
+        "type": "image",
+        "format": "png",
+        "size": 33353,
+        "storage_path": "artifacts/simulated/geodynamics/tectonic-evolution/GEO-20260811-0010/temperature_field_003.png",
+        "preview_url": "/api/v1/files/ART-GEO-TT04/preview",
+        "download_url": "/api/v1/files/ART-GEO-TT04/download",
+        "created_at": "2026-09-09T18:06:00+08:00",
+        "source_type": "simulated"
+      },
+      {
+        "id": "ART-GEO-TV04",
+        "name": "velocity_field_003.png",
+        "type": "image",
+        "format": "png",
+        "size": 55615,
+        "storage_path": "artifacts/simulated/geodynamics/tectonic-evolution/GEO-20260811-0010/velocity_field_003.png",
+        "preview_url": "/api/v1/files/ART-GEO-TV04/preview",
+        "download_url": "/api/v1/files/ART-GEO-TV04/download",
+        "created_at": "2026-09-09T18:06:00+08:00",
+        "source_type": "simulated"
+      },
+      {
+        "id": "ART-GEO-TT05",
+        "name": "temperature_field_004.png",
+        "type": "image",
+        "format": "png",
+        "size": 33235,
+        "storage_path": "artifacts/simulated/geodynamics/tectonic-evolution/GEO-20260811-0010/temperature_field_004.png",
+        "preview_url": "/api/v1/files/ART-GEO-TT05/preview",
+        "download_url": "/api/v1/files/ART-GEO-TT05/download",
+        "created_at": "2026-09-09T18:06:00+08:00",
+        "source_type": "simulated"
+      },
+      {
+        "id": "ART-GEO-TV05",
+        "name": "velocity_field_004.png",
+        "type": "image",
+        "format": "png",
+        "size": 55687,
+        "storage_path": "artifacts/simulated/geodynamics/tectonic-evolution/GEO-20260811-0010/velocity_field_004.png",
+        "preview_url": "/api/v1/files/ART-GEO-TV05/preview",
+        "download_url": "/api/v1/files/ART-GEO-TV05/download",
+        "created_at": "2026-09-09T18:06:00+08:00",
+        "source_type": "simulated"
+      },
+      {
+        "id": "ART-GEO-TT06",
+        "name": "temperature_field_005.png",
+        "type": "image",
+        "format": "png",
+        "size": 33385,
+        "storage_path": "artifacts/simulated/geodynamics/tectonic-evolution/GEO-20260811-0010/temperature_field_005.png",
+        "preview_url": "/api/v1/files/ART-GEO-TT06/preview",
+        "download_url": "/api/v1/files/ART-GEO-TT06/download",
+        "created_at": "2026-09-09T18:06:00+08:00",
+        "source_type": "simulated"
+      },
+      {
+        "id": "ART-GEO-TV06",
+        "name": "velocity_field_005.png",
+        "type": "image",
+        "format": "png",
+        "size": 55827,
+        "storage_path": "artifacts/simulated/geodynamics/tectonic-evolution/GEO-20260811-0010/velocity_field_005.png",
+        "preview_url": "/api/v1/files/ART-GEO-TV06/preview",
+        "download_url": "/api/v1/files/ART-GEO-TV06/download",
+        "created_at": "2026-09-09T18:06:00+08:00",
+        "source_type": "simulated"
+      },
+      {
+        "id": "ART-GEO-TT07",
+        "name": "temperature_field_006.png",
+        "type": "image",
+        "format": "png",
+        "size": 33106,
+        "storage_path": "artifacts/simulated/geodynamics/tectonic-evolution/GEO-20260811-0010/temperature_field_006.png",
+        "preview_url": "/api/v1/files/ART-GEO-TT07/preview",
+        "download_url": "/api/v1/files/ART-GEO-TT07/download",
+        "created_at": "2026-09-09T18:06:00+08:00",
+        "source_type": "simulated"
+      },
+      {
+        "id": "ART-GEO-TV07",
+        "name": "velocity_field_006.png",
+        "type": "image",
+        "format": "png",
+        "size": 55597,
+        "storage_path": "artifacts/simulated/geodynamics/tectonic-evolution/GEO-20260811-0010/velocity_field_006.png",
+        "preview_url": "/api/v1/files/ART-GEO-TV07/preview",
+        "download_url": "/api/v1/files/ART-GEO-TV07/download",
+        "created_at": "2026-09-09T18:06:00+08:00",
+        "source_type": "simulated"
+      },
+      {
+        "id": "ART-GEO-TT08",
+        "name": "temperature_field_007.png",
+        "type": "image",
+        "format": "png",
+        "size": 33341,
+        "storage_path": "artifacts/simulated/geodynamics/tectonic-evolution/GEO-20260811-0010/temperature_field_007.png",
+        "preview_url": "/api/v1/files/ART-GEO-TT08/preview",
+        "download_url": "/api/v1/files/ART-GEO-TT08/download",
+        "created_at": "2026-09-09T18:06:01+08:00",
+        "source_type": "simulated"
+      },
+      {
+        "id": "ART-GEO-TV08",
+        "name": "velocity_field_007.png",
+        "type": "image",
+        "format": "png",
+        "size": 55852,
+        "storage_path": "artifacts/simulated/geodynamics/tectonic-evolution/GEO-20260811-0010/velocity_field_007.png",
+        "preview_url": "/api/v1/files/ART-GEO-TV08/preview",
+        "download_url": "/api/v1/files/ART-GEO-TV08/download",
+        "created_at": "2026-09-09T18:06:01+08:00",
+        "source_type": "simulated"
+      },
+      {
+        "id": "ART-GEO-TCSV1",
+        "name": "temperature_series.csv",
+        "type": "dataset",
+        "format": "csv",
+        "size": 1129,
+        "storage_path": "artifacts/simulated/geodynamics/tectonic-evolution/GEO-20260811-0010/temperature_series.csv",
+        "preview_url": "/api/v1/files/ART-GEO-TCSV1/preview",
+        "download_url": "/api/v1/files/ART-GEO-TCSV1/download",
+        "created_at": "2026-09-09T18:06:01+08:00",
+        "source_type": "simulated"
+      }
+    ],
+    "domain_data": {
+      "source_type": "simulated",
+      "execution_mode": "simulated",
+      "scenario_id": "tectonic-evolution",
+      "scenario_alias": "plate-tectonics",
+      "temperature_series": [
+        {
+          "time": 0,
+          "max_temperature": 1251.99,
+          "avg_temperature": 901.99
+        },
+        {
+          "time": 2.128,
+          "max_temperature": 1264.26,
+          "avg_temperature": 907.2
+        },
+        {
+          "time": 4.255,
+          "max_temperature": 1286.36,
+          "avg_temperature": 922.47
+        },
+        {
+          "time": 6.383,
+          "max_temperature": 1307.75,
+          "avg_temperature": 937.46
+        },
+        {
+          "time": 8.511,
+          "max_temperature": 1340.67,
+          "avg_temperature": 964.62
+        },
+        {
+          "time": 10.638,
+          "max_temperature": 1336.12,
+          "avg_temperature": 955.13
+        },
+        {
+          "time": 12.766,
+          "max_temperature": 1382.26,
+          "avg_temperature": 997.29
+        },
+        {
+          "time": 14.894,
+          "max_temperature": 1373.43,
+          "avg_temperature": 985.58
+        },
+        {
+          "time": 17.021,
+          "max_temperature": 1392.56,
+          "avg_temperature": 1003.02
+        },
+        {
+          "time": 19.149,
+          "max_temperature": 1392.01,
+          "avg_temperature": 1002.02
+        },
+        {
+          "time": 21.277,
+          "max_temperature": 1385.41,
+          "avg_temperature": 996.22
+        },
+        {
+          "time": 23.404,
+          "max_temperature": 1410.11,
+          "avg_temperature": 1022.96
+        },
+        {
+          "time": 25.532,
+          "max_temperature": 1404.63,
+          "avg_temperature": 1020.68
+        },
+        {
+          "time": 27.66,
+          "max_temperature": 1406.19,
+          "avg_temperature": 1026.5
+        },
+        {
+          "time": 29.787,
+          "max_temperature": 1386.69,
+          "avg_temperature": 1012.19
+        },
+        {
+          "time": 31.915,
+          "max_temperature": 1390.91,
+          "avg_temperature": 1022.37
+        },
+        {
+          "time": 34.043,
+          "max_temperature": 1384.37,
+          "avg_temperature": 1022.37
+        },
+        {
+          "time": 36.17,
+          "max_temperature": 1371.57,
+          "avg_temperature": 1016.49
+        },
+        {
+          "time": 38.298,
+          "max_temperature": 1355.65,
+          "avg_temperature": 1007.65
+        },
+        {
+          "time": 40.426,
+          "max_temperature": 1322.19,
+          "avg_temperature": 981.2
+        },
+        {
+          "time": 42.553,
+          "max_temperature": 1325.88,
+          "avg_temperature": 991.63
+        },
+        {
+          "time": 44.681,
+          "max_temperature": 1310.16,
+          "avg_temperature": 982.14
+        },
+        {
+          "time": 46.809,
+          "max_temperature": 1280.44,
+          "avg_temperature": 957.97
+        },
+        {
+          "time": 48.936,
+          "max_temperature": 1282.26,
+          "avg_temperature": 964.48
+        },
+        {
+          "time": 51.064,
+          "max_temperature": 1247.6,
+          "avg_temperature": 933.49
+        },
+        {
+          "time": 53.191,
+          "max_temperature": 1227.45,
+          "avg_temperature": 915.89
+        },
+        {
+          "time": 55.319,
+          "max_temperature": 1216.73,
+          "avg_temperature": 906.52
+        },
+        {
+          "time": 57.447,
+          "max_temperature": 1207.55,
+          "avg_temperature": 897.44
+        },
+        {
+          "time": 59.574,
+          "max_temperature": 1196.73,
+          "avg_temperature": 885.47
+        },
+        {
+          "time": 61.702,
+          "max_temperature": 1185.48,
+          "avg_temperature": 871.85
+        },
+        {
+          "time": 63.83,
+          "max_temperature": 1175.66,
+          "avg_temperature": 858.52
+        },
+        {
+          "time": 65.957,
+          "max_temperature": 1172.13,
+          "avg_temperature": 850.46
+        },
+        {
+          "time": 68.085,
+          "max_temperature": 1147.49,
+          "avg_temperature": 820.39
+        },
+        {
+          "time": 70.213,
+          "max_temperature": 1150.83,
+          "avg_temperature": 817.58
+        },
+        {
+          "time": 72.34,
+          "max_temperature": 1147.05,
+          "avg_temperature": 807.13
+        },
+        {
+          "time": 74.468,
+          "max_temperature": 1134.82,
+          "avg_temperature": 787.92
+        },
+        {
+          "time": 76.596,
+          "max_temperature": 1145.27,
+          "avg_temperature": 791.28
+        },
+        {
+          "time": 78.723,
+          "max_temperature": 1145.17,
+          "avg_temperature": 784.23
+        },
+        {
+          "time": 80.851,
+          "max_temperature": 1152.39,
+          "avg_temperature": 784.83
+        },
+        {
+          "time": 82.979,
+          "max_temperature": 1165.14,
+          "avg_temperature": 791.52
+        },
+        {
+          "time": 85.106,
+          "max_temperature": 1163.04,
+          "avg_temperature": 784.09
+        },
+        {
+          "time": 87.234,
+          "max_temperature": 1164.71,
+          "avg_temperature": 781.35
+        },
+        {
+          "time": 89.362,
+          "max_temperature": 1162.49,
+          "avg_temperature": 775.76
+        },
+        {
+          "time": 91.489,
+          "max_temperature": 1176.9,
+          "avg_temperature": 787.95
+        },
+        {
+          "time": 93.617,
+          "max_temperature": 1192.19,
+          "avg_temperature": 802.25
+        },
+        {
+          "time": 95.745,
+          "max_temperature": 1186.84,
+          "avg_temperature": 797.15
+        },
+        {
+          "time": 97.872,
+          "max_temperature": 1211.94,
+          "avg_temperature": 823.75
+        },
+        {
+          "time": 100,
+          "max_temperature": 1205.66,
+          "avg_temperature": 820.17
+        }
+      ],
+      "velocity_series": [
+        {
+          "time": 0,
+          "max_velocity": 4.511e-9,
+          "avg_velocity": 1.757e-9
+        },
+        {
+          "time": 2.128,
+          "max_velocity": 4.473e-9,
+          "avg_velocity": 1.616e-9
+        },
+        {
+          "time": 4.255,
+          "max_velocity": 4.706e-9,
+          "avg_velocity": 1.752e-9
+        },
+        {
+          "time": 6.383,
+          "max_velocity": 4.762e-9,
+          "avg_velocity": 1.756e-9
+        },
+        {
+          "time": 8.511,
+          "max_velocity": 4.974e-9,
+          "avg_velocity": 1.799e-9
+        },
+        {
+          "time": 10.638,
+          "max_velocity": 5.219e-9,
+          "avg_velocity": 1.955e-9
+        },
+        {
+          "time": 12.766,
+          "max_velocity": 5.126e-9,
+          "avg_velocity": 1.98e-9
+        },
+        {
+          "time": 14.894,
+          "max_velocity": 5.178e-9,
+          "avg_velocity": 1.924e-9
+        },
+        {
+          "time": 17.021,
+          "max_velocity": 5.247e-9,
+          "avg_velocity": 1.912e-9
+        },
+        {
+          "time": 19.149,
+          "max_velocity": 5.197e-9,
+          "avg_velocity": 2.014e-9
+        },
+        {
+          "time": 21.277,
+          "max_velocity": 5.468e-9,
+          "avg_velocity": 2.084e-9
+        },
+        {
+          "time": 23.404,
+          "max_velocity": 5.401e-9,
+          "avg_velocity": 2.151e-9
+        },
+        {
+          "time": 25.532,
+          "max_velocity": 5.389e-9,
+          "avg_velocity": 2.01e-9
+        },
+        {
+          "time": 27.66,
+          "max_velocity": 5.396e-9,
+          "avg_velocity": 1.968e-9
+        },
+        {
+          "time": 29.787,
+          "max_velocity": 5.24e-9,
+          "avg_velocity": 1.854e-9
+        },
+        {
+          "time": 31.915,
+          "max_velocity": 5.411e-9,
+          "avg_velocity": 2.022e-9
+        },
+        {
+          "time": 34.043,
+          "max_velocity": 5.142e-9,
+          "avg_velocity": 2.012e-9
+        },
+        {
+          "time": 36.17,
+          "max_velocity": 5.169e-9,
+          "avg_velocity": 1.814e-9
+        },
+        {
+          "time": 38.298,
+          "max_velocity": 5.037e-9,
+          "avg_velocity": 1.81e-9
+        },
+        {
+          "time": 40.426,
+          "max_velocity": 5.025e-9,
+          "avg_velocity": 1.807e-9
+        },
+        {
+          "time": 42.553,
+          "max_velocity": 4.766e-9,
+          "avg_velocity": 1.826e-9
+        },
+        {
+          "time": 44.681,
+          "max_velocity": 4.485e-9,
+          "avg_velocity": 1.73e-9
+        },
+        {
+          "time": 46.809,
+          "max_velocity": 4.472e-9,
+          "avg_velocity": 1.657e-9
+        },
+        {
+          "time": 48.936,
+          "max_velocity": 4.338e-9,
+          "avg_velocity": 1.62e-9
+        },
+        {
+          "time": 51.064,
+          "max_velocity": 4.28e-9,
+          "avg_velocity": 1.587e-9
+        },
+        {
+          "time": 53.191,
+          "max_velocity": 4.105e-9,
+          "avg_velocity": 1.504e-9
+        },
+        {
+          "time": 55.319,
+          "max_velocity": 4.235e-9,
+          "avg_velocity": 1.56e-9
+        },
+        {
+          "time": 57.447,
+          "max_velocity": 3.862e-9,
+          "avg_velocity": 1.452e-9
+        },
+        {
+          "time": 59.574,
+          "max_velocity": 3.975e-9,
+          "avg_velocity": 1.569e-9
+        },
+        {
+          "time": 61.702,
+          "max_velocity": 3.721e-9,
+          "avg_velocity": 1.332e-9
+        },
+        {
+          "time": 63.83,
+          "max_velocity": 3.739e-9,
+          "avg_velocity": 1.339e-9
+        },
+        {
+          "time": 65.957,
+          "max_velocity": 3.529e-9,
+          "avg_velocity": 1.357e-9
+        },
+        {
+          "time": 68.085,
+          "max_velocity": 3.482e-9,
+          "avg_velocity": 1.328e-9
+        },
+        {
+          "time": 70.213,
+          "max_velocity": 3.431e-9,
+          "avg_velocity": 1.303e-9
+        },
+        {
+          "time": 72.34,
+          "max_velocity": 3.585e-9,
+          "avg_velocity": 1.382e-9
+        },
+        {
+          "time": 74.468,
+          "max_velocity": 3.529e-9,
+          "avg_velocity": 1.384e-9
+        },
+        {
+          "time": 76.596,
+          "max_velocity": 3.743e-9,
+          "avg_velocity": 1.365e-9
+        },
+        {
+          "time": 78.723,
+          "max_velocity": 3.65e-9,
+          "avg_velocity": 1.384e-9
+        },
+        {
+          "time": 80.851,
+          "max_velocity": 3.936e-9,
+          "avg_velocity": 1.503e-9
+        },
+        {
+          "time": 82.979,
+          "max_velocity": 4.061e-9,
+          "avg_velocity": 1.437e-9
+        },
+        {
+          "time": 85.106,
+          "max_velocity": 4.029e-9,
+          "avg_velocity": 1.422e-9
+        },
+        {
+          "time": 87.234,
+          "max_velocity": 4.02e-9,
+          "avg_velocity": 1.428e-9
+        },
+        {
+          "time": 89.362,
+          "max_velocity": 3.951e-9,
+          "avg_velocity": 1.473e-9
+        },
+        {
+          "time": 91.489,
+          "max_velocity": 4.184e-9,
+          "avg_velocity": 1.499e-9
+        },
+        {
+          "time": 93.617,
+          "max_velocity": 4.404e-9,
+          "avg_velocity": 1.655e-9
+        },
+        {
+          "time": 95.745,
+          "max_velocity": 4.686e-9,
+          "avg_velocity": 1.843e-9
+        },
+        {
+          "time": 97.872,
+          "max_velocity": 4.765e-9,
+          "avg_velocity": 1.683e-9
+        },
+        {
+          "time": 100,
+          "max_velocity": 4.767e-9,
+          "avg_velocity": 1.804e-9
+        }
+      ],
+      "nonlinear_series": [
+        {
+          "iteration": 1,
+          "residual": 0.1723420829
+        },
+        {
+          "iteration": 2,
+          "residual": 0.1351634507
+        },
+        {
+          "iteration": 3,
+          "residual": 0.1228620622
+        },
+        {
+          "iteration": 4,
+          "residual": 0.1095293091
+        },
+        {
+          "iteration": 5,
+          "residual": 0.0812595793
+        },
+        {
+          "iteration": 6,
+          "residual": 0.0745984626
+        },
+        {
+          "iteration": 7,
+          "residual": 0.0601669032
+        },
+        {
+          "iteration": 8,
+          "residual": 0.0521596327
+        },
+        {
+          "iteration": 9,
+          "residual": 0.0424236202
+        },
+        {
+          "iteration": 10,
+          "residual": 0.0385264513
+        },
+        {
+          "iteration": 11,
+          "residual": 0.0340920026
+        },
+        {
+          "iteration": 12,
+          "residual": 0.0276660088
+        },
+        {
+          "iteration": 13,
+          "residual": 0.0285613753
+        },
+        {
+          "iteration": 14,
+          "residual": 0.0185081294
+        },
+        {
+          "iteration": 15,
+          "residual": 0.015912877
+        },
+        {
+          "iteration": 16,
+          "residual": 0.0135892272
+        },
+        {
+          "iteration": 17,
+          "residual": 0.0117757072
+        },
+        {
+          "iteration": 18,
+          "residual": 0.009666591
+        },
+        {
+          "iteration": 19,
+          "residual": 0.0087559173
+        },
+        {
+          "iteration": 20,
+          "residual": 0.0069461895
+        },
+        {
+          "iteration": 21,
+          "residual": 0.0063065852
+        },
+        {
+          "iteration": 22,
+          "residual": 0.0051725285
+        },
+        {
+          "iteration": 23,
+          "residual": 0.0049368937
+        },
+        {
+          "iteration": 24,
+          "residual": 0.0037693426
+        },
+        {
+          "iteration": 25,
+          "residual": 0.0031779068
+        },
+        {
+          "iteration": 26,
+          "residual": 0.0025096042
+        },
+        {
+          "iteration": 27,
+          "residual": 0.0021506238
+        },
+        {
+          "iteration": 28,
+          "residual": 0.0017835599
+        },
+        {
+          "iteration": 29,
+          "residual": 0.0015972602
+        },
+        {
+          "iteration": 30,
+          "residual": 0.0013957701
+        },
+        {
+          "iteration": 31,
+          "residual": 0.0012100236
+        },
+        {
+          "iteration": 32,
+          "residual": 0.0009605632
+        },
+        {
+          "iteration": 33,
+          "residual": 0.0008356061
+        },
+        {
+          "iteration": 34,
+          "residual": 0.0007097877
+        },
+        {
+          "iteration": 35,
+          "residual": 0.0006158598
+        }
+      ],
+      "field_frames": [
+        {
+          "time": 0,
+          "temperature_preview": "/api/v1/files/ART-GEO-TT01/preview",
+          "velocity_preview": "/api/v1/files/ART-GEO-TV01/preview"
+        },
+        {
+          "time": 12.766,
+          "temperature_preview": "/api/v1/files/ART-GEO-TT02/preview",
+          "velocity_preview": "/api/v1/files/ART-GEO-TV02/preview"
+        },
+        {
+          "time": 25.532,
+          "temperature_preview": "/api/v1/files/ART-GEO-TT03/preview",
+          "velocity_preview": "/api/v1/files/ART-GEO-TV03/preview"
+        },
+        {
+          "time": 38.298,
+          "temperature_preview": "/api/v1/files/ART-GEO-TT04/preview",
+          "velocity_preview": "/api/v1/files/ART-GEO-TV04/preview"
+        },
+        {
+          "time": 51.064,
+          "temperature_preview": "/api/v1/files/ART-GEO-TT05/preview",
+          "velocity_preview": "/api/v1/files/ART-GEO-TV05/preview"
+        },
+        {
+          "time": 63.83,
+          "temperature_preview": "/api/v1/files/ART-GEO-TT06/preview",
+          "velocity_preview": "/api/v1/files/ART-GEO-TV06/preview"
+        },
+        {
+          "time": 76.596,
+          "temperature_preview": "/api/v1/files/ART-GEO-TT07/preview",
+          "velocity_preview": "/api/v1/files/ART-GEO-TV07/preview"
+        },
+        {
+          "time": 89.362,
+          "temperature_preview": "/api/v1/files/ART-GEO-TT08/preview",
+          "velocity_preview": "/api/v1/files/ART-GEO-TV08/preview"
+        }
+      ]
+    }
+  },
+  "timestamp": "2026-08-10T07:40:02+08:00"
+}

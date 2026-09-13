@@ -143,7 +143,7 @@ const extraSections = computed<ExtraSection[]>(() => {
   const metrics = detail.value?.metrics
   if (!metrics) return []
   const result: ExtraSection[] = []
-  const known = new Set(['progress', 'metrics'])
+  const known = new Set(['progress', 'metrics', 'domain_data'])
   for (const key of Object.keys(metrics)) {
     if (known.has(key)) continue
     const value = metrics[key]
@@ -159,6 +159,25 @@ const extraSections = computed<ExtraSection[]>(() => {
   }
   return result
 })
+
+const domainData = computed<unknown>(() => {
+  const run = detail.value
+  if (!run) return null
+  const metrics = run.metrics as Record<string, unknown> | undefined
+  if (metrics && metrics.domain_data) return metrics.domain_data
+  const extra = (run as unknown as Record<string, unknown>).domain_data
+  return extra ?? null
+})
+
+const domainDataKeyCount = computed(() => {
+  const value = domainData.value
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return 0
+  return Object.keys(value as Record<string, unknown>).length
+})
+
+function isObjectValue(value: unknown): boolean {
+  return value !== null && typeof value === 'object'
+}
 
 const resourceItems = computed(() => {
   const run = detail.value
@@ -395,7 +414,7 @@ function chartOption(section: ExtraSection): Record<string, unknown> | null {
                 </section>
               </div>
 
-              <div v-if="extraSections.length" class="run-data-extras">
+              <div v-if="extraSections.length || domainData" class="run-data-extras">
                 <section
                   v-for="section in extraSections"
                   :key="section.key"
@@ -466,9 +485,28 @@ function chartOption(section: ExtraSection): Record<string, unknown> | null {
                   <dl v-else class="run-extra-kv">
                     <div v-for="item in toKv(section.payload as Record<string, unknown>)" :key="item.label">
                       <dt>{{ item.label }}</dt>
-                      <dd>{{ formatNumber(item.value as string | number, 2) }}</dd>
+                      <dd>
+                        <DomainDataViewer v-if="isObjectValue(item.value)" :data="item.value" inline />
+                        <template v-else>{{ formatNumber(item.value as string | number, 2) }}</template>
+                      </dd>
                     </div>
                   </dl>
+                </section>
+
+                <section
+                  v-if="domainData"
+                  class="run-detail-section run-domain-data-section"
+                  aria-labelledby="run-domain-data-title"
+                >
+                  <div class="run-section-heading">
+                    <div>
+                      <h2 id="run-domain-data-title">领域专业数据</h2>
+                    </div>
+                    <span>{{ domainDataKeyCount }} 项</span>
+                  </div>
+                  <div class="run-domain-data-body">
+                    <DomainDataViewer :data="domainData" />
+                  </div>
                 </section>
               </div>
             </div>
@@ -809,6 +847,25 @@ function chartOption(section: ExtraSection): Record<string, unknown> | null {
 
 .run-data-extras .run-detail-section + .run-detail-section {
   border-top: 1px solid var(--scnet-divider);
+}
+
+.run-domain-data-body {
+  min-width: 0;
+  padding: 22px 32px;
+  background: #fff;
+}
+
+.run-domain-data-body :deep(.ddv-table th),
+.run-domain-data-body :deep(.ddv-table td) {
+  max-width: 280px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 700px) {
+  .run-domain-data-body {
+    padding: 18px 20px;
+  }
 }
 
 .run-records-panel .run-detail-section + .run-detail-section {

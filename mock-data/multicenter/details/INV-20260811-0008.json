@@ -1,0 +1,27 @@
+{
+  "code": 200,
+  "message": "success",
+  "data": {
+    "invocation_id": "INV-20260811-0008",
+    "function_id": "fn-fft",
+    "function_name": "FFT函数",
+    "cluster_id": "jinan",
+    "status": "success",
+    "source_type": "simulated",
+    "instance_id": "fn-fft-jinan-01",
+    "start_time": "2026-08-11T09:00:00+08:00",
+    "end_time": "2026-08-11T09:00:02+08:00",
+    "trace_id": "TRACE-17e4b3",
+    "total_latency_ms": 39.7,
+    "args": { "signal_length": 1048576, "dimensions": 2 },
+    "spans": [
+      { "seq": 1, "component": "api-gateway", "name": "API网关", "cluster_id": "global", "status": "success", "latency_ms": 5.1, "start_time": "2026-08-11T09:00:00.000+08:00" },
+      { "seq": 2, "component": "function-registry", "name": "函数注册中心", "cluster_id": "global", "status": "success", "latency_ms": 2.2, "start_time": "2026-08-11T09:00:00.005+08:00" },
+      { "seq": 3, "component": "global-scheduler", "name": "全局调度器", "cluster_id": "global", "status": "success", "latency_ms": 6.7, "start_time": "2026-08-11T09:00:00.008+08:00" },
+      { "seq": 4, "component": "center-agent", "name": "济南中心代理", "cluster_id": "jinan", "status": "success", "latency_ms": 12.4, "start_time": "2026-08-11T09:00:00.015+08:00" },
+      { "seq": 5, "component": "slurm-adapter", "name": "SLURM适配器", "cluster_id": "jinan", "status": "success", "latency_ms": 7.9, "start_time": "2026-08-11T09:00:00.028+08:00" },
+      { "seq": 6, "component": "function-runtime", "name": "函数运行时", "cluster_id": "jinan", "status": "success", "latency_ms": 5.4, "start_time": "2026-08-11T09:00:00.036+08:00" }
+    ]
+  },
+  "timestamp": "2026-08-11T09:00:02+08:00"
+}
