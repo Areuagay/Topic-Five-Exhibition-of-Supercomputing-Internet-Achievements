@@ -2,8 +2,8 @@
   "openapi": "3.0.1",
   "info": {
     "title": "课题五-第一性原理材料计算接口",
-    "description": "Apifox 导入兼容版。包含 13 个接口、中文接口名称、接口说明、请求/响应示例、字段中文名（title）、字段说明（description）和 Mock 规则（x-apifox-mock）。覆盖材料能带结构与态密度计算和高通量材料筛选两个场景。",
-    "version": "1.2.0"
+    "description": "Apifox 导入兼容版。包含 18 个接口、中文接口名称、接口说明、请求/响应示例、字段中文名（title）、字段说明（description）和 Mock 规则（x-apifox-mock）。覆盖材料能带结构与态密度计算和高通量材料筛选两个场景。",
+    "version": "1.3.0"
   },
   "tags": [
     {
@@ -21,6 +21,1056 @@
     }
   ],
   "paths": {
+    "/api/v1/dft/scenario-details": {
+      "get": {
+        "summary": "批量获取第一性原理材料计算全部场景详情",
+        "deprecated": false,
+        "description": "一次拉取第一性原理材料计算领域全部场景（band-dos、high-throughput-screening）的完整详情（摘要指标、支持计算中心、技术栈、应用背景、方法、技术流程、关联算子、成果亮点），供场景详情页与场景选择使用。",
+        "operationId": "getDFTScenarioDetails",
+        "tags": [
+          "场景管理"
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回的文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "第一性原理材料计算场景详情映射",
+                      "additionalProperties": {
+                        "type": "object",
+                        "title": "场景详情",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "title": "场景ID"
+                          },
+                          "name": {
+                            "type": "string",
+                            "title": "场景名称"
+                          },
+                          "category": {
+                            "type": "string",
+                            "title": "所属领域"
+                          },
+                          "description": {
+                            "type": "string",
+                            "title": "场景简介"
+                          },
+                          "summary_metrics": {
+                            "type": "array",
+                            "title": "核心指标",
+                            "items": {
+                              "type": "object",
+                              "title": "指标项",
+                              "properties": {
+                                "label": {
+                                  "type": "string",
+                                  "title": "指标名称"
+                                },
+                                "value": {
+                                  "type": "string",
+                                  "title": "指标数值"
+                                },
+                                "unit": {
+                                  "type": "string",
+                                  "title": "单位"
+                                }
+                              }
+                            }
+                          },
+                          "supported_clusters": {
+                            "type": "array",
+                            "title": "支持计算中心",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "tech_stack": {
+                            "type": "array",
+                            "title": "技术栈",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "background": {
+                            "type": "string",
+                            "title": "应用背景"
+                          },
+                          "method": {
+                            "type": "string",
+                            "title": "方法说明"
+                          },
+                          "architecture": {
+                            "type": "array",
+                            "title": "技术流程",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "operators": {
+                            "type": "array",
+                            "title": "关联算子",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "title": "算子ID"
+                                },
+                                "name": {
+                                  "type": "string",
+                                  "title": "算子名称"
+                                }
+                              }
+                            }
+                          },
+                          "highlights": {
+                            "type": "array",
+                            "title": "成果亮点",
+                            "items": {
+                              "type": "object",
+                              "title": "指标项",
+                              "properties": {
+                                "label": {
+                                  "type": "string",
+                                  "title": "指标名称"
+                                },
+                                "value": {
+                                  "type": "string",
+                                  "title": "指标数值"
+                                },
+                                "unit": {
+                                  "type": "string",
+                                  "title": "单位"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "description": "以场景 ID（band-dos、high-throughput-screening）为键的场景详情映射，前端兼容数组与键控对象两种形态。"
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T11:00:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "band-dos": {
+                      "id": "band-dos",
+                      "name": "材料能带结构与态密度计算",
+                      "category": "第一性原理材料计算",
+                      "description": "基于密度泛函理论（DFT）的材料电子结构计算，输出能带结构与态密度，支持半导体、金属等材料性质分析。",
+                      "summary_metrics": [
+                        {
+                          "label": "SCF迭代次数",
+                          "value": "18",
+                          "unit": "次"
+                        },
+                        {
+                          "label": "总能量",
+                          "value": "-108.324",
+                          "unit": "Ry"
+                        },
+                        {
+                          "label": "K点数量",
+                          "value": "240",
+                          "unit": "个"
+                        }
+                      ],
+                      "supported_clusters": [
+                        "changsha",
+                        "guangzhou",
+                        "kunshan",
+                        "jinan"
+                      ],
+                      "tech_stack": [
+                        "Quantum-Espresso",
+                        "VASP",
+                        "Wannier90",
+                        "MPI"
+                      ],
+                      "background": "能带结构与态密度是判断材料导电性、光学性质与稳定性的核心依据。依托超算互联网多中心并行，将 k 点与能带路径计算拆分调度，显著缩短电子结构计算周期。",
+                      "method": "先进行结构优化与 SCF 自洽场计算获得收敛电荷密度，再沿高对称路径计算能带、对不可约布里渊区积分获得态密度，最终由后处理节点生成能带图与态密度图。",
+                      "architecture": [
+                        "结构优化",
+                        "SCF自洽场计算",
+                        "能带计算",
+                        "态密度计算",
+                        "后处理"
+                      ],
+                      "operators": [
+                        {
+                          "id": "band-dos-post",
+                          "name": "能带与态密度后处理算子"
+                        },
+                        {
+                          "id": "scf-solver",
+                          "name": "SCF自洽场求解算子"
+                        }
+                      ],
+                      "highlights": [
+                        {
+                          "label": "并行加速比",
+                          "value": "3.2",
+                          "unit": "x"
+                        },
+                        {
+                          "label": "计算耗时",
+                          "value": "1560",
+                          "unit": "s"
+                        },
+                        {
+                          "label": "能量收敛精度",
+                          "value": "3.2e-7",
+                          "unit": "Ry"
+                        }
+                      ]
+                    },
+                    "high-throughput-screening": {
+                      "id": "high-throughput-screening",
+                      "name": "高通量材料筛选",
+                      "category": "第一性原理材料计算",
+                      "description": "面向大规模材料数据库的高通量第一性原理计算，批量评估材料稳定性与电子性质，加速新材料发现。",
+                      "summary_metrics": [
+                        {
+                          "label": "材料总数",
+                          "value": "1000",
+                          "unit": "个"
+                        },
+                        {
+                          "label": "吞吐量",
+                          "value": "42",
+                          "unit": "个/h"
+                        },
+                        {
+                          "label": "候选材料",
+                          "value": "37",
+                          "unit": "个"
+                        }
+                      ],
+                      "supported_clusters": [
+                        "changsha",
+                        "guangzhou",
+                        "kunshan",
+                        "jinan"
+                      ],
+                      "tech_stack": [
+                        "Quantum-Espresso",
+                        "pymatgen",
+                        "Materials Project",
+                        "MPI"
+                      ],
+                      "background": "传统材料筛选依赖人工逐一计算，效率低下。通过超算互联网将材料数据库批量分片调度至多中心并行执行 DFT 计算，实现千级材料的快速筛选与稳定性排序。",
+                      "method": "从材料数据库批量读取结构，分片调度至多中心并行执行结构优化与 SCF 计算，汇总能量与带隙数据，按稳定性判据筛选出候选材料。",
+                      "architecture": [
+                        "材料库分片",
+                        "批量结构优化",
+                        "批量SCF计算",
+                        "结果汇总",
+                        "候选筛选"
+                      ],
+                      "operators": [
+                        {
+                          "id": "band-dos-post",
+                          "name": "能带与态密度后处理算子"
+                        },
+                        {
+                          "id": "high-throughput-runner",
+                          "name": "高通量批处理算子"
+                        }
+                      ],
+                      "highlights": [
+                        {
+                          "label": "材料吞吐量",
+                          "value": "42",
+                          "unit": "个/h"
+                        },
+                        {
+                          "label": "并行加速比",
+                          "value": "3.8",
+                          "unit": "x"
+                        },
+                        {
+                          "label": "候选命中率",
+                          "value": "3.7",
+                          "unit": "%"
+                        }
+                      ]
+                    }
+                  },
+                  "timestamp": "2026-08-11T11:00:00+08:00"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/dft/params-schema": {
+      "get": {
+        "summary": "批量获取第一性原理材料计算全部场景参数模型",
+        "deprecated": false,
+        "description": "以场景 ID 为键一次返回第一性原理材料计算领域各场景（band-dos、high-throughput-screening）的可配置参数模型，供前端动态渲染参数表单。",
+        "operationId": "getDFTParamsSchemas",
+        "tags": [
+          "场景管理"
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回的文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "第一性原理材料计算参数模型映射",
+                      "description": "以场景 ID 为键的参数模型映射。",
+                      "additionalProperties": {
+                        "type": "object",
+                        "title": "场景参数模型",
+                        "properties": {
+                          "fields": {
+                            "type": "array",
+                            "title": "参数字段列表",
+                            "items": {
+                              "type": "object",
+                              "title": "参数字段",
+                              "properties": {
+                                "name": {
+                                  "type": "string",
+                                  "title": "字段名",
+                                  "description": "参数在请求体中的键名。"
+                                },
+                                "label": {
+                                  "type": "string",
+                                  "title": "字段显示名"
+                                },
+                                "type": {
+                                  "type": "string",
+                                  "title": "字段类型",
+                                  "description": "如 number / string / boolean / select。"
+                                },
+                                "unit": {
+                                  "type": "string",
+                                  "title": "单位"
+                                },
+                                "required": {
+                                  "type": "boolean",
+                                  "title": "是否必填"
+                                },
+                                "default_value": {
+                                  "title": "默认值",
+                                  "description": "字段默认值，类型随字段而定。"
+                                },
+                                "description": {
+                                  "type": "string",
+                                  "title": "字段说明"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T11:00:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "band-dos": {
+                      "fields": [
+                        {
+                          "name": "material_name",
+                          "label": "材料名称",
+                          "type": "string",
+                          "unit": "",
+                          "required": true,
+                          "default_value": "Si"
+                        },
+                        {
+                          "name": "crystal_structure",
+                          "label": "晶体结构文件",
+                          "type": "string",
+                          "unit": "",
+                          "required": true,
+                          "default_value": "si.pos"
+                        },
+                        {
+                          "name": "pseudo_type",
+                          "label": "赝势类型",
+                          "type": "select",
+                          "unit": "",
+                          "required": true,
+                          "default_value": "PAW"
+                        },
+                        {
+                          "name": "kpoint_grid",
+                          "label": "K点网格",
+                          "type": "string",
+                          "unit": "",
+                          "required": true,
+                          "default_value": "6x6x6"
+                        },
+                        {
+                          "name": "cutoff_energy",
+                          "label": "截断能",
+                          "type": "integer",
+                          "unit": "Ry",
+                          "required": true,
+                          "default_value": "60"
+                        },
+                        {
+                          "name": "scf_threshold",
+                          "label": "SCF收敛阈值",
+                          "type": "number",
+                          "unit": "Ry",
+                          "required": true,
+                          "default_value": "1e-6"
+                        }
+                      ]
+                    }
+                  },
+                  "timestamp": "2026-08-11T11:00:00+08:00"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/dft/benchmark": {
+      "get": {
+        "summary": "批量获取第一性原理材料计算全部场景性能对比",
+        "deprecated": false,
+        "description": "以场景 ID 为键一次返回第一性原理材料计算领域各场景（band-dos、high-throughput-screening）的多维性能对比数据（对比维度定义与各平台性能序列），用于性能对比展示。",
+        "operationId": "getDFTBenchmarks",
+        "tags": [
+          "运行监控与结果"
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回的文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "第一性原理材料计算性能对比映射",
+                      "description": "以场景 ID 为键的性能对比映射。",
+                      "additionalProperties": {
+                        "type": "object",
+                        "title": "场景性能对比",
+                        "properties": {
+                          "dimensions": {
+                            "type": "array",
+                            "title": "对比维度",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "key": {
+                                  "type": "string",
+                                  "title": "维度键"
+                                },
+                                "name": {
+                                  "type": "string",
+                                  "title": "维度名称"
+                                },
+                                "unit": {
+                                  "type": "string",
+                                  "title": "单位"
+                                }
+                              }
+                            }
+                          },
+                          "series": {
+                            "type": "array",
+                            "title": "对比序列",
+                            "items": {
+                              "type": "object",
+                              "title": "性能序列",
+                              "description": "键为维度 key，值为对应数值。",
+                              "properties": {
+                                "name": {
+                                  "type": "string",
+                                  "title": "序列名称",
+                                  "description": "序列标识（如平台/方案名称）。"
+                                }
+                              },
+                              "additionalProperties": {
+                                "type": "number"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T11:00:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "band-dos": {
+                      "dimensions": [
+                        {
+                          "key": "walltime",
+                          "name": "总耗时",
+                          "unit": "s"
+                        },
+                        {
+                          "key": "parallel_efficiency",
+                          "name": "并行效率",
+                          "unit": "%"
+                        },
+                        {
+                          "key": "energy_accuracy",
+                          "name": "能量精度",
+                          "unit": "Ry"
+                        },
+                        {
+                          "key": "speedup",
+                          "name": "加速比",
+                          "unit": "x"
+                        }
+                      ],
+                      "series": [
+                        {
+                          "name": "跨中心方案",
+                          "walltime": 1560,
+                          "parallel_efficiency": 78,
+                          "energy_accuracy": 3.2e-7,
+                          "speedup": 3.2
+                        },
+                        {
+                          "name": "单中心基准",
+                          "walltime": 4992,
+                          "parallel_efficiency": 100,
+                          "energy_accuracy": 3.2e-7,
+                          "speedup": 1
+                        }
+                      ]
+                    }
+                  },
+                  "timestamp": "2026-08-11T11:00:00+08:00"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/dft/operators": {
+      "get": {
+        "summary": "获取第一性原理材料计算算子列表",
+        "deprecated": false,
+        "description": "获取第一性原理材料计算领域已注册的科学计算算子（函数）列表及其运行时、资源规格与状态。",
+        "operationId": "getDFTOperators",
+        "tags": [
+          "算子管理"
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回的文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "array",
+                      "title": "第一性原理材料计算算子列表",
+                      "items": {
+                        "type": "object",
+                        "title": "算子信息",
+                        "properties": {
+                          "name": {
+                            "type": "string",
+                            "title": "算子名称"
+                          },
+                          "version": {
+                            "type": "string",
+                            "title": "算子版本"
+                          },
+                          "runtime_type": {
+                            "type": "string",
+                            "title": "运行时类型",
+                            "description": "如 binary / container / python。"
+                          },
+                          "runtime": {
+                            "type": "string",
+                            "title": "运行时"
+                          },
+                          "handler": {
+                            "type": "string",
+                            "title": "入口处理函数"
+                          },
+                          "cpu_cores": {
+                            "type": "number",
+                            "title": "CPU 核数"
+                          },
+                          "gpu_count": {
+                            "type": "number",
+                            "title": "GPU 卡数"
+                          },
+                          "memory_mb": {
+                            "type": "number",
+                            "title": "内存(MB)"
+                          },
+                          "status": {
+                            "type": "string",
+                            "title": "算子状态",
+                            "description": "如 ready / building / offline。"
+                          },
+                          "description": {
+                            "type": "string",
+                            "title": "算子说明"
+                          }
+                        }
+                      },
+                      "description": "第一性原理材料计算领域算子集合。"
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T11:00:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": [
+                    {
+                      "name": "scf-solver",
+                      "version": "1.4.0",
+                      "runtime_type": "container",
+                      "runtime": "docker://registry.dft.example/scf-solver:1.4.0",
+                      "handler": "main.run_scf",
+                      "cpu_cores": 512,
+                      "gpu_count": 0,
+                      "memory_mb": 1048576,
+                      "mpi_enabled": true,
+                      "mpi_command": "mpirun -np 64 run_scf",
+                      "status": "registered",
+                      "description": "SCF 自洽场求解算子，基于 Quantum-Espresso pw.x 支持跨中心并行。",
+                      "registered_at": "2026-08-01T08:00:00+08:00"
+                    }
+                  ],
+                  "timestamp": "2026-08-11T11:00:00+08:00"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/dft/runs": {
+      "get": {
+        "summary": "获取第一性原理材料计算任务运行列表",
+        "deprecated": false,
+        "description": "获取第一性原理材料计算领域全部仿真/训练任务列表，含状态、进度、执行中心、资源规格与指标快照，可按场景与状态过滤。",
+        "operationId": "getDFTRuns",
+        "tags": [
+          "任务运行"
+        ],
+        "parameters": [
+          {
+            "name": "scenario_id",
+            "in": "query",
+            "required": false,
+            "description": "按场景 ID 过滤，可选值：band-dos、high-throughput-screening。",
+            "schema": {
+              "type": "string"
+            },
+            "example": "band-dos"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "description": "按任务状态过滤。",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "queued",
+                "running",
+                "success",
+                "failed",
+                "stopped"
+              ]
+            },
+            "example": "running"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回的文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "array",
+                      "title": "第一性原理材料计算任务运行列表",
+                      "items": {
+                        "type": "object",
+                        "title": "任务运行",
+                        "properties": {
+                          "run_id": {
+                            "type": "string",
+                            "title": "任务ID"
+                          },
+                          "domain": {
+                            "type": "string",
+                            "title": "所属领域",
+                            "description": "学科域前缀，如 geodynamics / llm / automotive / uav / drug / dft。"
+                          },
+                          "scenario_id": {
+                            "type": "string",
+                            "title": "场景ID"
+                          },
+                          "scenario_name": {
+                            "type": "string",
+                            "title": "场景名称"
+                          },
+                          "status": {
+                            "type": "string",
+                            "title": "任务状态",
+                            "enum": [
+                              "queued",
+                              "running",
+                              "success",
+                              "failed",
+                              "stopped"
+                            ]
+                          },
+                          "progress": {
+                            "type": "integer",
+                            "title": "执行进度",
+                            "description": "0-100 的整数百分比。"
+                          },
+                          "execution_mode": {
+                            "type": "string",
+                            "title": "执行模式",
+                            "enum": [
+                              "real",
+                              "simulated",
+                              "replay"
+                            ]
+                          },
+                          "cluster_id": {
+                            "type": "string",
+                            "title": "集群ID"
+                          },
+                          "cluster_name": {
+                            "type": "string",
+                            "title": "集群名称"
+                          },
+                          "job_id": {
+                            "type": "string",
+                            "title": "作业ID"
+                          },
+                          "current_stage": {
+                            "type": "string",
+                            "title": "当前阶段"
+                          },
+                          "start_time": {
+                            "type": "string",
+                            "title": "开始时间"
+                          },
+                          "end_time": {
+                            "type": "string",
+                            "title": "结束时间"
+                          },
+                          "elapsed_seconds": {
+                            "type": "number",
+                            "title": "已运行时长(秒)"
+                          },
+                          "nodes": {
+                            "type": "number",
+                            "title": "节点数"
+                          },
+                          "cpu_cores": {
+                            "type": "number",
+                            "title": "CPU 核数"
+                          },
+                          "gpu_count": {
+                            "type": "number",
+                            "title": "GPU 卡数"
+                          },
+                          "memory_gb": {
+                            "type": "number",
+                            "title": "内存(GB)"
+                          },
+                          "core_hours": {
+                            "type": "number",
+                            "title": "核时"
+                          },
+                          "source_type": {
+                            "type": "string",
+                            "title": "数据来源类型",
+                            "enum": [
+                              "real",
+                              "simulated",
+                              "replay"
+                            ]
+                          },
+                          "has_detail": {
+                            "type": "boolean",
+                            "title": "是否有任务详情"
+                          },
+                          "metrics_snapshot": {
+                            "type": "array",
+                            "title": "指标快照",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "name": {
+                                  "type": "string",
+                                  "title": "指标名"
+                                },
+                                "label": {
+                                  "type": "string",
+                                  "title": "指标显示名"
+                                },
+                                "value": {
+                                  "type": "number",
+                                  "title": "当前值"
+                                },
+                                "total": {
+                                  "type": "number",
+                                  "title": "总量"
+                                },
+                                "unit": {
+                                  "type": "string",
+                                  "title": "单位"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "description": "第一性原理材料计算领域任务运行集合。"
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T11:00:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": [
+                    {
+                      "run_id": "DFT-20260811-0001",
+                      "domain": "dft",
+                      "scenario_id": "band-dos",
+                      "scenario_name": "材料能带结构与态密度计算",
+                      "status": "running",
+                      "progress": 54,
+                      "execution_mode": "simulated",
+                      "cluster_id": "changsha",
+                      "cluster_name": "长沙天河新一代",
+                      "job_id": "DFT-SLURM-71429",
+                      "current_stage": "scf",
+                      "start_time": "2026-08-11T09:00:00+08:00",
+                      "end_time": "",
+                      "elapsed_seconds": 842,
+                      "nodes": 8,
+                      "cpu_cores": 512,
+                      "gpu_count": 0,
+                      "memory_gb": 1024,
+                      "core_hours": 479.4,
+                      "source_type": "simulated",
+                      "has_detail": true,
+                      "metrics_snapshot": [
+                        {
+                          "name": "scf_iteration",
+                          "label": "SCF迭代次数",
+                          "value": 10,
+                          "total": 18,
+                          "unit": "次"
+                        },
+                        {
+                          "name": "total_energy",
+                          "label": "总能量",
+                          "value": -108.31,
+                          "total": 0,
+                          "unit": "Ry"
+                        },
+                        {
+                          "name": "energy_delta",
+                          "label": "能量变化",
+                          "value": 0.0011,
+                          "total": 0,
+                          "unit": "Ry"
+                        },
+                        {
+                          "name": "scf_converged",
+                          "label": "SCF收敛状态",
+                          "value": 0,
+                          "total": 1,
+                          "unit": ""
+                        },
+                        {
+                          "name": "kpoint_progress",
+                          "label": "K点计算进度",
+                          "value": 130,
+                          "total": 240,
+                          "unit": "个"
+                        },
+                        {
+                          "name": "cpu_utilization",
+                          "label": "CPU利用率",
+                          "value": 92,
+                          "total": 100,
+                          "unit": "%"
+                        }
+                      ]
+                    }
+                  ],
+                  "timestamp": "2026-08-11T11:00:00+08:00"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/dft/scenarios": {
       "get": {
         "summary": "获取第一性原理材料计算场景列表",

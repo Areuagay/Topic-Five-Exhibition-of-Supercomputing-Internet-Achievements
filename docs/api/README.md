@@ -8,13 +8,13 @@
 
 | 文件 | 接口标题 | 接口数 | 版本 | 路径前缀 | 覆盖场景 |
 | --- | --- | --- | --- | --- | --- |
-| [Topic5-GeoDynamics.openapi.json](Topic5-GeoDynamics.openapi.json) | 课题五-地球动力学模拟接口 | 13 | 1.2.0 | `/api/v1/geodynamics` | 地球动力学数值模拟 |
-| [Topic5-AI-LLM-Training.openapi.json](Topic5-AI-LLM-Training.openapi.json) | 课题五-AI 大模型训练接口 | 13 | 1.2.0 | `/api/v1/llm` | 大语言模型分布式预训练、PINN 科学计算 AI 加速 |
-| [Topic5-AutoStruct-Sim.openapi.json](Topic5-AutoStruct-Sim.openapi.json) | 课题五-汽车结构仿真接口 | 13 | 1.2.0 | `/api/v1/automotive` | 整车碰撞仿真、结构疲劳寿命预测 |
-| [Topic5-UAV-CoSim.openapi.json](Topic5-UAV-CoSim.openapi.json) | 课题五-大规模无人机协同仿真接口 | 13 | 1.2.0 | `/api/v1/uav` | 千架无人机集群协同控制、航迹规划与避障 |
-| [Topic5-CrossCenter-DrugScreen.openapi.json](Topic5-CrossCenter-DrugScreen.openapi.json) | 课题五-跨中心虚拟药物筛选接口 | 13 | 1.2.0 | `/api/v1/drug` | 百万级化合物库虚拟筛选、药物分子 ADMET 性质预测 |
-| [Topic5-DFT-MaterialCalc.openapi.json](Topic5-DFT-MaterialCalc.openapi.json) | 课题五-第一性原理材料计算接口 | 13 | 1.2.0 | `/api/v1/dft` | 材料能带结构与态密度计算、高通量材料筛选 |
-| [Topic5-MultiCenter-Debug.openapi.json](Topic5-MultiCenter-Debug.openapi.json) | 课题五-函数多中心联调接口 | 11 | 1.2.0 | `/api/v1/multicenter` | 四中心资源状态、函数部署矩阵、跨中心调用链路、工作负载扩缩容与迁移 |
+| [Topic5-GeoDynamics.openapi.json](Topic5-GeoDynamics.openapi.json) | 课题五-地球动力学模拟接口 | 18 | 1.3.0 | `/api/v1/geodynamics` | 地球动力学数值模拟 |
+| [Topic5-AI-LLM-Training.openapi.json](Topic5-AI-LLM-Training.openapi.json) | 课题五-AI 大模型训练接口 | 18 | 1.3.0 | `/api/v1/llm` | 大语言模型分布式预训练、PINN 科学计算 AI 加速 |
+| [Topic5-AutoStruct-Sim.openapi.json](Topic5-AutoStruct-Sim.openapi.json) | 课题五-汽车结构仿真接口 | 18 | 1.3.0 | `/api/v1/automotive` | 整车碰撞仿真、结构疲劳寿命预测 |
+| [Topic5-UAV-CoSim.openapi.json](Topic5-UAV-CoSim.openapi.json) | 课题五-大规模无人机协同仿真接口 | 18 | 1.3.0 | `/api/v1/uav` | 千架无人机集群协同控制、航迹规划与避障 |
+| [Topic5-CrossCenter-DrugScreen.openapi.json](Topic5-CrossCenter-DrugScreen.openapi.json) | 课题五-跨中心虚拟药物筛选接口 | 18 | 1.3.0 | `/api/v1/drug` | 百万级化合物库虚拟筛选、药物分子 ADMET 性质预测 |
+| [Topic5-DFT-MaterialCalc.openapi.json](Topic5-DFT-MaterialCalc.openapi.json) | 课题五-第一性原理材料计算接口 | 18 | 1.3.0 | `/api/v1/dft` | 材料能带结构与态密度计算、高通量材料筛选 |
+| [Topic5-MultiCenter-Debug.openapi.json](Topic5-MultiCenter-Debug.openapi.json) | 课题五-函数多中心联调接口 | 17 | 1.3.0 | `/api/v1/multicenter` | 四中心资源状态、函数部署矩阵、跨中心调用链路、工作负载扩缩容与迁移 |
 
 ## 学科仿真接口通用约定
 
@@ -23,6 +23,11 @@
 | 方法与路径 | 说明 |
 | --- | --- |
 | `GET  /{prefix}/scenarios` | 获取可仿真场景列表 |
+| `GET  /{prefix}/scenario-details` | 批量获取全部场景详情（前端场景列表/详情一次拉取） |
+| `GET  /{prefix}/params-schema` | 批量获取全部场景参数 Schema 映射（前端动态渲染表单） |
+| `GET  /{prefix}/benchmark` | 批量获取全部场景基准（Benchmark）数据映射，用于对比展示 |
+| `GET  /{prefix}/operators` | 获取算子（函数）列表 |
+| `GET  /{prefix}/runs` | 获取任务运行列表（支持按 `scenario_id`、`status` 过滤） |
 | `GET  /{prefix}/scenarios/{scenario_id}` | 获取单个场景详情 |
 | `GET  /{prefix}/scenarios/{scenario_id}/params-schema` | 获取场景参数 Schema（前端动态渲染表单） |
 | `GET  /{prefix}/scenarios/{scenario_id}/benchmark` | 获取场景基准（Benchmark）数据，用于对比展示 |
@@ -35,6 +40,19 @@
 | `GET  /{prefix}/runs/{run_id}/artifacts` | 获取任务产出物（结果文件、图表等） |
 | `POST /{prefix}/operators/register` | 注册科学计算算子 |
 | `POST /{prefix}/operators/{name}/{version}/invoke` | 调用已注册算子 |
+
+## 平台通用端点（收录于多中心联调文档）
+
+多中心联调文档除四中心资源、函数部署、调用链路、工作负载与迁移接口外，还收录了前端首页与结果文件相关的平台通用端点：
+
+| 方法与路径 | 说明 |
+| --- | --- |
+| `GET  /api/v1/index` | 获取成果展首页总览数据（学科域、场景与四中心基础信息） |
+| `GET  /api/v1/files/{artifact_id}/preview` | 预览运行结果文件（直接返回文件二进制流，内容类型随格式变化） |
+| `GET  /api/v1/files/{artifact_id}/download` | 下载运行结果文件（响应头含 `Content-Disposition` 附件信息） |
+| `GET  /api/v1/multicenter/deployment-matrix` | 获取函数部署矩阵（与 `/api/v1/multicenter/functions/deployment-matrix` 等价） |
+| `GET  /api/v1/multicenter/invocations` | 获取函数调用记录列表 |
+| `GET  /api/v1/multicenter/migrations` | 获取跨中心迁移记录列表 |
 
 ## 统一响应结构
 

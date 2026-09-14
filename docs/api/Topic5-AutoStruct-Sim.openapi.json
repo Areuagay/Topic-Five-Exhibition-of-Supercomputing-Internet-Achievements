@@ -2,8 +2,8 @@
   "openapi": "3.0.1",
   "info": {
     "title": "课题五-汽车结构仿真接口",
-    "description": "Apifox 导入兼容版。包含 13 个接口、中文接口名称、接口说明、请求/响应示例、字段中文名（title）、字段说明（description）和 Mock 规则（x-apifox-mock）。覆盖整车碰撞仿真与结构疲劳寿命预测两个场景。",
-    "version": "1.2.0"
+    "description": "Apifox 导入兼容版。包含 18 个接口、中文接口名称、接口说明、请求/响应示例、字段中文名（title）、字段说明（description）和 Mock 规则（x-apifox-mock）。覆盖整车碰撞仿真与结构疲劳寿命预测两个场景。",
+    "version": "1.3.0"
   },
   "tags": [
     {
@@ -21,6 +21,1009 @@
     }
   ],
   "paths": {
+    "/api/v1/automotive/scenario-details": {
+      "get": {
+        "summary": "批量获取汽车结构仿真全部场景详情",
+        "deprecated": false,
+        "description": "一次拉取汽车结构仿真领域全部场景（vehicle-crash、fatigue-life）的完整详情（摘要指标、支持计算中心、技术栈、应用背景、方法、技术流程、关联算子、成果亮点），供场景详情页与场景选择使用。",
+        "operationId": "getAutomotiveScenarioDetails",
+        "tags": [
+          "场景管理"
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回的文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "array",
+                      "title": "汽车结构仿真场景详情列表",
+                      "items": {
+                        "type": "object",
+                        "title": "场景详情",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "title": "场景ID"
+                          },
+                          "name": {
+                            "type": "string",
+                            "title": "场景名称"
+                          },
+                          "category": {
+                            "type": "string",
+                            "title": "所属领域"
+                          },
+                          "description": {
+                            "type": "string",
+                            "title": "场景简介"
+                          },
+                          "summary_metrics": {
+                            "type": "array",
+                            "title": "核心指标",
+                            "items": {
+                              "type": "object",
+                              "title": "指标项",
+                              "properties": {
+                                "label": {
+                                  "type": "string",
+                                  "title": "指标名称"
+                                },
+                                "value": {
+                                  "type": "string",
+                                  "title": "指标数值"
+                                },
+                                "unit": {
+                                  "type": "string",
+                                  "title": "单位"
+                                }
+                              }
+                            }
+                          },
+                          "supported_clusters": {
+                            "type": "array",
+                            "title": "支持计算中心",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "tech_stack": {
+                            "type": "array",
+                            "title": "技术栈",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "background": {
+                            "type": "string",
+                            "title": "应用背景"
+                          },
+                          "method": {
+                            "type": "string",
+                            "title": "方法说明"
+                          },
+                          "architecture": {
+                            "type": "array",
+                            "title": "技术流程",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "operators": {
+                            "type": "array",
+                            "title": "关联算子",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "title": "算子ID"
+                                },
+                                "name": {
+                                  "type": "string",
+                                  "title": "算子名称"
+                                }
+                              }
+                            }
+                          },
+                          "highlights": {
+                            "type": "array",
+                            "title": "成果亮点",
+                            "items": {
+                              "type": "object",
+                              "title": "指标项",
+                              "properties": {
+                                "label": {
+                                  "type": "string",
+                                  "title": "指标名称"
+                                },
+                                "value": {
+                                  "type": "string",
+                                  "title": "指标数值"
+                                },
+                                "unit": {
+                                  "type": "string",
+                                  "title": "单位"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "description": "汽车结构仿真领域全部场景的详情集合。"
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T11:00:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": [
+                    {
+                      "id": "vehicle-crash",
+                      "name": "整车碰撞仿真",
+                      "category": "汽车仿真",
+                      "description": "基于 LS-DYNA 的整车碰撞仿真示范，覆盖模型导入、网格检查、接触/材料/边界条件设置、区域分解、并行显式求解与安全指标验证全流程。",
+                      "summary_metrics": [
+                        {
+                          "label": "单元规模",
+                          "value": "1200万",
+                          "unit": "单元"
+                        },
+                        {
+                          "label": "仿真耗时",
+                          "value": "102",
+                          "unit": "min"
+                        },
+                        {
+                          "label": "加速度峰值",
+                          "value": "32.1",
+                          "unit": "g"
+                        },
+                        {
+                          "label": "总能量误差",
+                          "value": "2.8",
+                          "unit": "%"
+                        }
+                      ],
+                      "supported_clusters": [
+                        "changsha",
+                        "guangzhou",
+                        "kunshan"
+                      ],
+                      "tech_stack": [
+                        "LS-DYNA",
+                        "MPI",
+                        "OpenMP",
+                        "Slurm",
+                        "HyperMesh"
+                      ],
+                      "background": "整车碰撞仿真涉及千万级单元与复杂接触，需大规模并行显式求解；平台通过区域分解与负载均衡实现整车级仿真高效运行。",
+                      "method": "采用 LS-DYNA 显式动力学求解，MPI 区域分解并行，配合接触算法与质量缩放控制，输出能量守恒、加速度与变形等安全指标。",
+                      "architecture": [
+                        "前处理：模型导入与网格质量检查",
+                        "接触定义：自接触与罚函数接触",
+                        "区域分解：METIS 负载均衡分区",
+                        "并行求解：MPI 显式时间步进",
+                        "后处理：能量曲线与安全指标验证"
+                      ],
+                      "operators": [
+                        {
+                          "id": "crash-solver",
+                          "name": "碰撞与冲击仿真算子"
+                        },
+                        {
+                          "id": "structural-mechanics",
+                          "name": "结构力学求解器"
+                        },
+                        {
+                          "id": "sparse-matrix",
+                          "name": "稀疏矩阵运算"
+                        }
+                      ],
+                      "highlights": [
+                        {
+                          "label": "并行加速比",
+                          "value": "96",
+                          "unit": "x"
+                        },
+                        {
+                          "label": "CPU利用率",
+                          "value": "88",
+                          "unit": "%"
+                        },
+                        {
+                          "label": "总能量误差",
+                          "value": "2.8",
+                          "unit": "%"
+                        }
+                      ]
+                    }
+                  ],
+                  "timestamp": "2026-08-11T11:00:00+08:00"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/automotive/params-schema": {
+      "get": {
+        "summary": "批量获取汽车结构仿真全部场景参数模型",
+        "deprecated": false,
+        "description": "以场景 ID 为键一次返回汽车结构仿真领域各场景（vehicle-crash、fatigue-life）的可配置参数模型，供前端动态渲染参数表单。",
+        "operationId": "getAutomotiveParamsSchemas",
+        "tags": [
+          "场景管理"
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回的文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "汽车结构仿真参数模型映射",
+                      "description": "以场景 ID 为键的参数模型映射。",
+                      "additionalProperties": {
+                        "type": "object",
+                        "title": "场景参数模型",
+                        "properties": {
+                          "fields": {
+                            "type": "array",
+                            "title": "参数字段列表",
+                            "items": {
+                              "type": "object",
+                              "title": "参数字段",
+                              "properties": {
+                                "name": {
+                                  "type": "string",
+                                  "title": "字段名",
+                                  "description": "参数在请求体中的键名。"
+                                },
+                                "label": {
+                                  "type": "string",
+                                  "title": "字段显示名"
+                                },
+                                "type": {
+                                  "type": "string",
+                                  "title": "字段类型",
+                                  "description": "如 number / string / boolean / select。"
+                                },
+                                "unit": {
+                                  "type": "string",
+                                  "title": "单位"
+                                },
+                                "required": {
+                                  "type": "boolean",
+                                  "title": "是否必填"
+                                },
+                                "default_value": {
+                                  "title": "默认值",
+                                  "description": "字段默认值，类型随字段而定。"
+                                },
+                                "description": {
+                                  "type": "string",
+                                  "title": "字段说明"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T11:00:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "vehicle-crash": {
+                      "fields": [
+                        {
+                          "name": "operator",
+                          "label": "算子选择",
+                          "type": "select",
+                          "unit": "",
+                          "required": true,
+                          "default_value": "crash-solver",
+                          "description": "选择要执行的算子库函数，与后端 /action/invoke 对齐。"
+                        },
+                        {
+                          "name": "collision_type",
+                          "label": "碰撞类型",
+                          "type": "select",
+                          "unit": "",
+                          "required": true,
+                          "default_value": "frontal"
+                        },
+                        {
+                          "name": "collision_speed",
+                          "label": "碰撞速度",
+                          "type": "number",
+                          "unit": "km/h",
+                          "required": true,
+                          "default_value": "50"
+                        },
+                        {
+                          "name": "solver",
+                          "label": "求解器",
+                          "type": "select",
+                          "unit": "",
+                          "required": true,
+                          "default_value": "LS-DYNA"
+                        },
+                        {
+                          "name": "simulation_time",
+                          "label": "仿真时长",
+                          "type": "number",
+                          "unit": "s",
+                          "required": true,
+                          "default_value": "0.15"
+                        },
+                        {
+                          "name": "output_interval",
+                          "label": "结果输出间隔",
+                          "type": "number",
+                          "unit": "s",
+                          "required": true,
+                          "default_value": "0.001"
+                        }
+                      ]
+                    }
+                  },
+                  "timestamp": "2026-08-11T11:00:00+08:00"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/automotive/benchmark": {
+      "get": {
+        "summary": "批量获取汽车结构仿真全部场景性能对比",
+        "deprecated": false,
+        "description": "以场景 ID 为键一次返回汽车结构仿真领域各场景（vehicle-crash、fatigue-life）的多维性能对比数据（对比维度定义与各平台性能序列），用于性能对比展示。",
+        "operationId": "getAutomotiveBenchmarks",
+        "tags": [
+          "运行监控与结果"
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回的文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "汽车结构仿真性能对比映射",
+                      "description": "以场景 ID 为键的性能对比映射。",
+                      "additionalProperties": {
+                        "type": "object",
+                        "title": "场景性能对比",
+                        "properties": {
+                          "dimensions": {
+                            "type": "array",
+                            "title": "对比维度",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "key": {
+                                  "type": "string",
+                                  "title": "维度键"
+                                },
+                                "name": {
+                                  "type": "string",
+                                  "title": "维度名称"
+                                },
+                                "unit": {
+                                  "type": "string",
+                                  "title": "单位"
+                                }
+                              }
+                            }
+                          },
+                          "series": {
+                            "type": "array",
+                            "title": "对比序列",
+                            "items": {
+                              "type": "object",
+                              "title": "性能序列",
+                              "description": "键为维度 key，值为对应数值。",
+                              "properties": {
+                                "name": {
+                                  "type": "string",
+                                  "title": "序列名称",
+                                  "description": "序列标识（如平台/方案名称）。"
+                                }
+                              },
+                              "additionalProperties": {
+                                "type": "number"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T11:00:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "vehicle-crash": {
+                      "dimensions": [
+                        {
+                          "key": "walltime",
+                          "name": "仿真耗时",
+                          "unit": "min"
+                        },
+                        {
+                          "key": "parallel_efficiency",
+                          "name": "并行效率",
+                          "unit": "%"
+                        },
+                        {
+                          "key": "io_throughput",
+                          "name": "I/O吞吐",
+                          "unit": "GB/s"
+                        },
+                        {
+                          "key": "energy_error",
+                          "name": "总能量误差",
+                          "unit": "%"
+                        }
+                      ],
+                      "series": [
+                        {
+                          "name": "本方案（1024核）",
+                          "walltime": 102,
+                          "parallel_efficiency": 96,
+                          "io_throughput": 18.5,
+                          "energy_error": 2.8
+                        },
+                        {
+                          "name": "基准方案（256核）",
+                          "walltime": 486,
+                          "parallel_efficiency": 88,
+                          "io_throughput": 9.2,
+                          "energy_error": 3.6
+                        },
+                        {
+                          "name": "传统方案（64核）",
+                          "walltime": 2140,
+                          "parallel_efficiency": 75,
+                          "io_throughput": 4.1,
+                          "energy_error": 4.9
+                        }
+                      ]
+                    }
+                  },
+                  "timestamp": "2026-08-11T11:00:00+08:00"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/automotive/operators": {
+      "get": {
+        "summary": "获取汽车结构仿真算子列表",
+        "deprecated": false,
+        "description": "获取汽车结构仿真领域已注册的科学计算算子（函数）列表及其运行时、资源规格与状态。",
+        "operationId": "getAutomotiveOperators",
+        "tags": [
+          "算子管理"
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回的文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "array",
+                      "title": "汽车结构仿真算子列表",
+                      "items": {
+                        "type": "object",
+                        "title": "算子信息",
+                        "properties": {
+                          "name": {
+                            "type": "string",
+                            "title": "算子名称"
+                          },
+                          "version": {
+                            "type": "string",
+                            "title": "算子版本"
+                          },
+                          "runtime_type": {
+                            "type": "string",
+                            "title": "运行时类型",
+                            "description": "如 binary / container / python。"
+                          },
+                          "runtime": {
+                            "type": "string",
+                            "title": "运行时"
+                          },
+                          "handler": {
+                            "type": "string",
+                            "title": "入口处理函数"
+                          },
+                          "cpu_cores": {
+                            "type": "number",
+                            "title": "CPU 核数"
+                          },
+                          "gpu_count": {
+                            "type": "number",
+                            "title": "GPU 卡数"
+                          },
+                          "memory_mb": {
+                            "type": "number",
+                            "title": "内存(MB)"
+                          },
+                          "status": {
+                            "type": "string",
+                            "title": "算子状态",
+                            "description": "如 ready / building / offline。"
+                          },
+                          "description": {
+                            "type": "string",
+                            "title": "算子说明"
+                          }
+                        }
+                      },
+                      "description": "汽车结构仿真领域算子集合。"
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T11:00:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": [
+                    {
+                      "name": "crash-solver",
+                      "version": "2024.1",
+                      "runtime_type": "container",
+                      "runtime": "docker://registry.cae.example/crash-solver:2024.1",
+                      "handler": "main.run_crash",
+                      "cpu_cores": 1024,
+                      "gpu_count": 0,
+                      "memory_mb": 4194304,
+                      "mpi_enabled": true,
+                      "mpi_command": "mpirun -np 128 lsdyna i=crash.k",
+                      "status": "registered",
+                      "description": "基于 LS-DYNA 的整车碰撞与冲击仿真算子，支持显式动力学并行求解。",
+                      "registered_at": "2026-08-01T09:00:00+08:00"
+                    }
+                  ],
+                  "timestamp": "2026-08-11T11:00:00+08:00"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/automotive/runs": {
+      "get": {
+        "summary": "获取汽车结构仿真任务运行列表",
+        "deprecated": false,
+        "description": "获取汽车结构仿真领域全部仿真/训练任务列表，含状态、进度、执行中心、资源规格与指标快照，可按场景与状态过滤。",
+        "operationId": "getAutomotiveRuns",
+        "tags": [
+          "任务运行"
+        ],
+        "parameters": [
+          {
+            "name": "scenario_id",
+            "in": "query",
+            "required": false,
+            "description": "按场景 ID 过滤，可选值：vehicle-crash、fatigue-life。",
+            "schema": {
+              "type": "string"
+            },
+            "example": "vehicle-crash"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "description": "按任务状态过滤。",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "queued",
+                "running",
+                "success",
+                "failed",
+                "stopped"
+              ]
+            },
+            "example": "running"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回的文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "array",
+                      "title": "汽车结构仿真任务运行列表",
+                      "items": {
+                        "type": "object",
+                        "title": "任务运行",
+                        "properties": {
+                          "run_id": {
+                            "type": "string",
+                            "title": "任务ID"
+                          },
+                          "domain": {
+                            "type": "string",
+                            "title": "所属领域",
+                            "description": "学科域前缀，如 geodynamics / llm / automotive / uav / drug / dft。"
+                          },
+                          "scenario_id": {
+                            "type": "string",
+                            "title": "场景ID"
+                          },
+                          "scenario_name": {
+                            "type": "string",
+                            "title": "场景名称"
+                          },
+                          "status": {
+                            "type": "string",
+                            "title": "任务状态",
+                            "enum": [
+                              "queued",
+                              "running",
+                              "success",
+                              "failed",
+                              "stopped"
+                            ]
+                          },
+                          "progress": {
+                            "type": "integer",
+                            "title": "执行进度",
+                            "description": "0-100 的整数百分比。"
+                          },
+                          "execution_mode": {
+                            "type": "string",
+                            "title": "执行模式",
+                            "enum": [
+                              "real",
+                              "simulated",
+                              "replay"
+                            ]
+                          },
+                          "cluster_id": {
+                            "type": "string",
+                            "title": "集群ID"
+                          },
+                          "cluster_name": {
+                            "type": "string",
+                            "title": "集群名称"
+                          },
+                          "job_id": {
+                            "type": "string",
+                            "title": "作业ID"
+                          },
+                          "current_stage": {
+                            "type": "string",
+                            "title": "当前阶段"
+                          },
+                          "start_time": {
+                            "type": "string",
+                            "title": "开始时间"
+                          },
+                          "end_time": {
+                            "type": "string",
+                            "title": "结束时间"
+                          },
+                          "elapsed_seconds": {
+                            "type": "number",
+                            "title": "已运行时长(秒)"
+                          },
+                          "nodes": {
+                            "type": "number",
+                            "title": "节点数"
+                          },
+                          "cpu_cores": {
+                            "type": "number",
+                            "title": "CPU 核数"
+                          },
+                          "gpu_count": {
+                            "type": "number",
+                            "title": "GPU 卡数"
+                          },
+                          "memory_gb": {
+                            "type": "number",
+                            "title": "内存(GB)"
+                          },
+                          "core_hours": {
+                            "type": "number",
+                            "title": "核时"
+                          },
+                          "source_type": {
+                            "type": "string",
+                            "title": "数据来源类型",
+                            "enum": [
+                              "real",
+                              "simulated",
+                              "replay"
+                            ]
+                          },
+                          "has_detail": {
+                            "type": "boolean",
+                            "title": "是否有任务详情"
+                          },
+                          "metrics_snapshot": {
+                            "type": "array",
+                            "title": "指标快照",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "name": {
+                                  "type": "string",
+                                  "title": "指标名"
+                                },
+                                "label": {
+                                  "type": "string",
+                                  "title": "指标显示名"
+                                },
+                                "value": {
+                                  "type": "number",
+                                  "title": "当前值"
+                                },
+                                "total": {
+                                  "type": "number",
+                                  "title": "总量"
+                                },
+                                "unit": {
+                                  "type": "string",
+                                  "title": "单位"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "description": "汽车结构仿真领域任务运行集合。"
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T11:00:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": [
+                    {
+                      "run_id": "AUTO-20260811-0001",
+                      "domain": "automotive",
+                      "scenario_id": "vehicle-crash",
+                      "scenario_name": "整车碰撞仿真",
+                      "status": "running",
+                      "progress": 68,
+                      "execution_mode": "simulated",
+                      "cluster_id": "changsha",
+                      "cluster_name": "长沙天河新一代",
+                      "job_id": "210011",
+                      "current_stage": "solver",
+                      "start_time": "2026-08-11T09:00:00+08:00",
+                      "end_time": "",
+                      "elapsed_seconds": 4320,
+                      "nodes": 16,
+                      "cpu_cores": 1024,
+                      "gpu_count": 0,
+                      "memory_gb": 4096,
+                      "core_hours": 1228.8,
+                      "source_type": "simulated",
+                      "has_detail": true,
+                      "metrics_snapshot": [
+                        {
+                          "name": "simulation_time",
+                          "label": "当前仿真时间",
+                          "value": 0.102,
+                          "total": 0.15,
+                          "unit": "s"
+                        },
+                        {
+                          "name": "kinetic_energy",
+                          "label": "动能",
+                          "value": 241.4,
+                          "total": 0,
+                          "unit": "kJ"
+                        },
+                        {
+                          "name": "internal_energy",
+                          "label": "内能",
+                          "value": 196.8,
+                          "total": 0,
+                          "unit": "kJ"
+                        },
+                        {
+                          "name": "hourglass_energy_ratio",
+                          "label": "沙漏能占比",
+                          "value": 3.1,
+                          "total": 100,
+                          "unit": "%"
+                        },
+                        {
+                          "name": "total_energy_error",
+                          "label": "总能量误差",
+                          "value": 2.8,
+                          "total": 100,
+                          "unit": "%"
+                        },
+                        {
+                          "name": "peak_acceleration",
+                          "label": "加速度峰值",
+                          "value": 32.1,
+                          "total": 0,
+                          "unit": "g"
+                        },
+                        {
+                          "name": "cpu_utilization",
+                          "label": "CPU利用率",
+                          "value": 88,
+                          "total": 100,
+                          "unit": "%"
+                        }
+                      ]
+                    }
+                  ],
+                  "timestamp": "2026-08-11T11:00:00+08:00"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/automotive/scenarios": {
       "get": {
         "summary": "获取汽车结构仿真场景列表",

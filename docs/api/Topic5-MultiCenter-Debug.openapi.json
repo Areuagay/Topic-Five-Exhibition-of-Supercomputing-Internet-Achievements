@@ -2,8 +2,8 @@
   "openapi": "3.0.1",
   "info": {
     "title": "课题五-函数多中心联调接口",
-    "description": "Apifox 导入兼容版。包含 11 个接口、中文接口名称、接口说明、请求/响应示例、字段中文名（title）、字段说明（description）和 Mock 规则（x-apifox-mock）。用于四中心资源状态、函数服务部署矩阵、跨中心函数调用链路、工作负载扩缩容及跨中心迁移联调。所有联调模拟数据均通过 source_type=simulated 或 execution_mode=simulated 明确标记，不得直接作为真实跨中心验收实测数据。",
-    "version": "1.2.0"
+    "description": "Apifox 导入兼容版。包含 17 个接口、中文接口名称、接口说明、请求/响应示例、字段中文名（title）、字段说明（description）和 Mock 规则（x-apifox-mock）。用于四中心资源状态、函数服务部署矩阵、跨中心函数调用链路、工作负载扩缩容及跨中心迁移联调。所有联调模拟数据均通过 source_type=simulated 或 execution_mode=simulated 明确标记，不得直接作为真实跨中心验收实测数据。",
+    "version": "1.3.0"
   },
   "tags": [
     {
@@ -21,9 +21,1079 @@
     {
       "name": "算子管理",
       "description": "算子库函数注册、调用与状态管理接口。"
+    },
+    {
+      "name": "平台总览",
+      "description": "成果展首页总览数据接口。"
+    },
+    {
+      "name": "结果文件",
+      "description": "运行结果文件预览与下载接口。"
     }
   ],
   "paths": {
+    "/api/v1/index": {
+      "get": {
+        "summary": "获取首页总览数据",
+        "deprecated": false,
+        "description": "获取成果展首页总览数据：平台标题、记录总数、各学科域与函数多中心联调入口信息，以及四中心基础信息。",
+        "operationId": "getIndex",
+        "tags": [
+          "平台总览"
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回的文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "首页总览数据",
+                      "properties": {
+                        "title": {
+                          "type": "string",
+                          "title": "平台标题"
+                        },
+                        "generated_at": {
+                          "type": "string",
+                          "title": "数据生成时间"
+                        },
+                        "total_records": {
+                          "type": "integer",
+                          "title": "总记录数"
+                        },
+                        "domains": {
+                          "type": "array",
+                          "title": "学科域列表",
+                          "items": {
+                            "type": "object",
+                            "title": "学科域信息",
+                            "properties": {
+                              "domain": {
+                                "type": "string",
+                                "title": "领域标识"
+                              },
+                              "prefix": {
+                                "type": "string",
+                                "title": "路由前缀"
+                              },
+                              "name": {
+                                "type": "string",
+                                "title": "领域名称"
+                              },
+                              "short_name": {
+                                "type": "string",
+                                "title": "领域简称"
+                              },
+                              "category": {
+                                "type": "string",
+                                "title": "所属类别"
+                              },
+                              "icon": {
+                                "type": "string",
+                                "title": "图标标识"
+                              },
+                              "description": {
+                                "type": "string",
+                                "title": "领域简介"
+                              },
+                              "scenario_count": {
+                                "type": "integer",
+                                "title": "场景数量"
+                              },
+                              "run_count": {
+                                "type": "integer",
+                                "title": "任务数量"
+                              },
+                              "status": {
+                                "type": "string",
+                                "title": "可用状态"
+                              },
+                              "scenarios": {
+                                "type": "array",
+                                "title": "场景标识列表",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              "cluster_hint": {
+                                "type": "array",
+                                "title": "推荐计算中心",
+                                "items": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "clusters": {
+                          "type": "array",
+                          "title": "计算中心列表",
+                          "items": {
+                            "type": "object",
+                            "title": "计算中心",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "title": "中心标识"
+                              },
+                              "name": {
+                                "type": "string",
+                                "title": "中心名称"
+                              },
+                              "location": {
+                                "type": "string",
+                                "title": "所在地"
+                              },
+                              "architecture": {
+                                "type": "string",
+                                "title": "体系架构"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "description": "首页总览业务数据。"
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T11:00:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "title": "课题五-超算互联网应用成果展",
+                    "generated_at": "2026-08-11T12:00:00+08:00",
+                    "total_records": 100,
+                    "domains": [
+                      {
+                        "domain": "geodynamics",
+                        "prefix": "geodynamics",
+                        "name": "地球动力学模拟",
+                        "short_name": "地球动力学",
+                        "category": "地球科学",
+                        "icon": "geo",
+                        "description": "地震波传播模拟与板块构造数值模拟，展示有限差分/有限元方法在超算上的并行能力。",
+                        "scenario_count": 2,
+                        "run_count": 14,
+                        "status": "available",
+                        "scenarios": [
+                          "wave-propagation",
+                          "tectonic-evolution"
+                        ],
+                        "cluster_hint": [
+                          "changsha",
+                          "guangzhou"
+                        ]
+                      },
+                      {
+                        "domain": "llm",
+                        "prefix": "llm",
+                        "name": "AI 大模型训练",
+                        "short_name": "AI大模型",
+                        "category": "AI大模型",
+                        "icon": "llm",
+                        "description": "大语言模型分布式预训练与 PINN 科学计算 AI 加速，多节点多 GPU 并行训练示范。",
+                        "scenario_count": 2,
+                        "run_count": 14,
+                        "status": "available",
+                        "scenarios": [
+                          "llm-pretraining",
+                          "pinn-acceleration"
+                        ],
+                        "cluster_hint": [
+                          "kunshan",
+                          "guangzhou"
+                        ]
+                      },
+                      {
+                        "domain": "automotive",
+                        "prefix": "automotive",
+                        "name": "汽车结构仿真",
+                        "short_name": "汽车仿真",
+                        "category": "工程仿真",
+                        "icon": "auto",
+                        "description": "整车碰撞仿真与结构疲劳寿命预测，基于显式动力学的大规模并行有限元计算。",
+                        "scenario_count": 2,
+                        "run_count": 14,
+                        "status": "available",
+                        "scenarios": [
+                          "vehicle-crash",
+                          "fatigue-life"
+                        ],
+                        "cluster_hint": [
+                          "changsha",
+                          "guangzhou",
+                          "kunshan"
+                        ]
+                      },
+                      {
+                        "domain": "uav",
+                        "prefix": "uav",
+                        "name": "大规模无人机协同仿真",
+                        "short_name": "无人机协同",
+                        "category": "多智能体",
+                        "icon": "uav",
+                        "description": "千架无人机集群协同控制仿真与三维航迹规划避障，多智能体并行仿真示范。",
+                        "scenario_count": 2,
+                        "run_count": 14,
+                        "status": "available",
+                        "scenarios": [
+                          "swarm-coordination",
+                          "path-planning"
+                        ],
+                        "cluster_hint": [
+                          "changsha",
+                          "kunshan"
+                        ]
+                      },
+                      {
+                        "domain": "drug",
+                        "prefix": "drug",
+                        "name": "跨中心虚拟药物筛选",
+                        "short_name": "药物筛选",
+                        "category": "生物计算",
+                        "icon": "drug",
+                        "description": "百万级化合物库跨中心虚拟筛选与药物分子 ADMET 性质预测。",
+                        "scenario_count": 2,
+                        "run_count": 14,
+                        "status": "available",
+                        "scenarios": [
+                          "virtual-screening",
+                          "admet-prediction"
+                        ],
+                        "cluster_hint": [
+                          "changsha",
+                          "guangzhou",
+                          "kunshan",
+                          "jinan"
+                        ]
+                      },
+                      {
+                        "domain": "dft",
+                        "prefix": "dft",
+                        "name": "第一性原理材料计算",
+                        "short_name": "材料计算",
+                        "category": "量子化学",
+                        "icon": "dft",
+                        "description": "材料能带结构与态密度计算、高通量材料筛选，基于 DFT 的第一性原理计算。",
+                        "scenario_count": 2,
+                        "run_count": 14,
+                        "status": "available",
+                        "scenarios": [
+                          "band-dos",
+                          "high-throughput-screening"
+                        ],
+                        "cluster_hint": [
+                          "changsha",
+                          "jinan"
+                        ]
+                      },
+                      {
+                        "domain": "multicenter",
+                        "prefix": "multicenter",
+                        "name": "函数多中心联调",
+                        "short_name": "多中心联调",
+                        "category": "平台能力",
+                        "icon": "multi",
+                        "description": "四中心资源状态、函数部署矩阵、跨中心调用链路、工作负载扩缩容与迁移。",
+                        "scenario_count": 0,
+                        "run_count": 16,
+                        "status": "available",
+                        "scenarios": [],
+                        "cluster_hint": [
+                          "changsha",
+                          "guangzhou",
+                          "kunshan",
+                          "jinan"
+                        ]
+                      }
+                    ],
+                    "clusters": [
+                      {
+                        "id": "changsha",
+                        "name": "长沙天河新一代",
+                        "location": "长沙",
+                        "architecture": "飞腾CPU + 迈创DSP"
+                      },
+                      {
+                        "id": "guangzhou",
+                        "name": "广州天河二号",
+                        "location": "广州",
+                        "architecture": "Intel CPU"
+                      },
+                      {
+                        "id": "kunshan",
+                        "name": "昆山昆仑",
+                        "location": "昆山",
+                        "architecture": "曙光CPU + 曙光DCU"
+                      },
+                      {
+                        "id": "jinan",
+                        "name": "济南神威蓝光",
+                        "location": "济南",
+                        "architecture": "申威CPU"
+                      }
+                    ]
+                  },
+                  "timestamp": "2026-08-11T11:00:00+08:00"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/files/{artifact_id}/preview": {
+      "get": {
+        "summary": "预览结果文件",
+        "deprecated": false,
+        "description": "按 artifact_id 预览运行结果文件（图片 / CSV / JSON 等），直接返回文件二进制流，响应内容类型随文件格式变化。",
+        "operationId": "previewArtifact",
+        "tags": [
+          "结果文件"
+        ],
+        "parameters": [
+          {
+            "name": "artifact_id",
+            "in": "path",
+            "required": true,
+            "description": "结果文件唯一标识（artifacts/simulated/artifact_index.json 中登记的 id，如 ART-GEO-W001）。",
+            "schema": {
+              "type": "string"
+            },
+            "example": "ART-GEO-W001"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "文件二进制流。",
+            "content": {
+              "image/png": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "text/csv": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "结果文件不存在。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "错误响应",
+                  "description": "统一错误响应结构。",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "example": 404
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "错误消息"
+                    },
+                    "data": {
+                      "type": "object",
+                      "nullable": true,
+                      "title": "数据",
+                      "description": "错误时固定为 null。",
+                      "example": null
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/files/{artifact_id}/download": {
+      "get": {
+        "summary": "下载结果文件",
+        "deprecated": false,
+        "description": "按 artifact_id 下载运行结果文件，响应头包含 Content-Disposition 附件信息，直接返回文件二进制流。",
+        "operationId": "downloadArtifact",
+        "tags": [
+          "结果文件"
+        ],
+        "parameters": [
+          {
+            "name": "artifact_id",
+            "in": "path",
+            "required": true,
+            "description": "结果文件唯一标识（artifacts/simulated/artifact_index.json 中登记的 id，如 ART-GEO-W001）。",
+            "schema": {
+              "type": "string"
+            },
+            "example": "ART-GEO-W001"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "文件二进制流（含附件下载头）。",
+            "content": {
+              "image/png": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "text/csv": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "结果文件不存在。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "错误响应",
+                  "description": "统一错误响应结构。",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "example": 404
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "错误消息"
+                    },
+                    "data": {
+                      "type": "object",
+                      "nullable": true,
+                      "title": "数据",
+                      "description": "错误时固定为 null。",
+                      "example": null
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/multicenter/deployment-matrix": {
+      "get": {
+        "summary": "获取函数部署矩阵",
+        "deprecated": false,
+        "description": "获取每个函数在长沙、广州、昆山、济南各中心的部署状态和实例副本数。与 /api/v1/multicenter/functions/deployment-matrix 等价。",
+        "operationId": "getDeploymentMatrix",
+        "tags": [
+          "函数注册与部署"
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回的文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "title": "函数部署矩阵",
+                      "properties": {
+                        "clusters": {
+                          "type": "array",
+                          "title": "计算中心列表",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "title": "中心标识"
+                              },
+                              "name": {
+                                "type": "string",
+                                "title": "中心名称"
+                              }
+                            }
+                          }
+                        },
+                        "functions": {
+                          "type": "array",
+                          "title": "函数部署列表",
+                          "items": {
+                            "type": "object",
+                            "title": "函数部署",
+                            "properties": {
+                              "function_id": {
+                                "type": "string",
+                                "title": "函数ID"
+                              },
+                              "function_name": {
+                                "type": "string",
+                                "title": "函数名称"
+                              },
+                              "deployments": {
+                                "type": "array",
+                                "title": "各中心部署实例",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "cluster_id": {
+                                      "type": "string",
+                                      "title": "中心标识"
+                                    },
+                                    "replicas": {
+                                      "type": "integer",
+                                      "title": "副本数"
+                                    },
+                                    "status": {
+                                      "type": "string",
+                                      "title": "部署状态",
+                                      "enum": [
+                                        "ready",
+                                        "deploying",
+                                        "offline"
+                                      ]
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "description": "各函数在各中心的部署情况。"
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T11:00:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": {
+                    "clusters": [
+                      {
+                        "id": "changsha",
+                        "name": "长沙天河新一代"
+                      },
+                      {
+                        "id": "guangzhou",
+                        "name": "广州天河二号"
+                      },
+                      {
+                        "id": "kunshan",
+                        "name": "昆山昆仑"
+                      },
+                      {
+                        "id": "jinan",
+                        "name": "济南神威蓝光"
+                      }
+                    ],
+                    "functions": [
+                      {
+                        "function_id": "fn-matrix-multiply",
+                        "function_name": "矩阵乘法函数",
+                        "deployments": [
+                          {
+                            "cluster_id": "changsha",
+                            "replicas": 2,
+                            "status": "ready"
+                          },
+                          {
+                            "cluster_id": "guangzhou",
+                            "replicas": 1,
+                            "status": "ready"
+                          },
+                          {
+                            "cluster_id": "kunshan",
+                            "replicas": 2,
+                            "status": "ready"
+                          },
+                          {
+                            "cluster_id": "jinan",
+                            "replicas": 0,
+                            "status": "offline"
+                          }
+                        ]
+                      },
+                      {
+                        "function_id": "fn-fft",
+                        "function_name": "FFT函数",
+                        "deployments": [
+                          {
+                            "cluster_id": "changsha",
+                            "replicas": 1,
+                            "status": "ready"
+                          },
+                          {
+                            "cluster_id": "guangzhou",
+                            "replicas": 1,
+                            "status": "ready"
+                          },
+                          {
+                            "cluster_id": "kunshan",
+                            "replicas": 1,
+                            "status": "deploying"
+                          },
+                          {
+                            "cluster_id": "jinan",
+                            "replicas": 1,
+                            "status": "ready"
+                          }
+                        ]
+                      },
+                      {
+                        "function_id": "fn-file-convert",
+                        "function_name": "文件格式转换函数",
+                        "deployments": [
+                          {
+                            "cluster_id": "changsha",
+                            "replicas": 1,
+                            "status": "ready"
+                          },
+                          {
+                            "cluster_id": "guangzhou",
+                            "replicas": 1,
+                            "status": "ready"
+                          },
+                          {
+                            "cluster_id": "kunshan",
+                            "replicas": 0,
+                            "status": "offline"
+                          },
+                          {
+                            "cluster_id": "jinan",
+                            "replicas": 1,
+                            "status": "ready"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  "timestamp": "2026-08-11T11:00:00+08:00"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/multicenter/invocations": {
+      "get": {
+        "summary": "获取函数调用记录列表",
+        "deprecated": false,
+        "description": "获取跨中心函数调用记录列表，含调用状态、来源类型、执行中心与总时延。",
+        "operationId": "getInvocations",
+        "tags": [
+          "函数注册与部署"
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回的文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "array",
+                      "title": "函数调用记录列表",
+                      "items": {
+                        "type": "object",
+                        "title": "函数调用记录",
+                        "properties": {
+                          "invocation_id": {
+                            "type": "string",
+                            "title": "调用ID"
+                          },
+                          "function_id": {
+                            "type": "string",
+                            "title": "函数ID"
+                          },
+                          "function_name": {
+                            "type": "string",
+                            "title": "函数名称"
+                          },
+                          "cluster_id": {
+                            "type": "string",
+                            "title": "执行中心"
+                          },
+                          "status": {
+                            "type": "string",
+                            "title": "调用状态",
+                            "enum": [
+                              "running",
+                              "success",
+                              "failed"
+                            ]
+                          },
+                          "source_type": {
+                            "type": "string",
+                            "title": "数据来源类型",
+                            "enum": [
+                              "real",
+                              "simulated",
+                              "replay"
+                            ]
+                          },
+                          "instance_id": {
+                            "type": "string",
+                            "title": "实例ID"
+                          },
+                          "start_time": {
+                            "type": "string",
+                            "title": "开始时间"
+                          },
+                          "end_time": {
+                            "type": "string",
+                            "title": "结束时间"
+                          },
+                          "total_latency_ms": {
+                            "type": "number",
+                            "title": "总时延(毫秒)"
+                          },
+                          "args": {
+                            "type": "object",
+                            "title": "调用参数",
+                            "additionalProperties": {
+                              "oneOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "number"
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      },
+                      "description": "函数调用记录集合。"
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T11:00:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": [
+                    {
+                      "invocation_id": "INV-20260811-0001",
+                      "function_id": "fn-matrix-multiply",
+                      "function_name": "矩阵乘法函数",
+                      "cluster_id": "changsha",
+                      "status": "running",
+                      "source_type": "simulated",
+                      "instance_id": "fn-matrix-changsha-02",
+                      "start_time": "2026-08-11T10:30:00+08:00",
+                      "end_time": "",
+                      "total_latency_ms": 38.6,
+                      "args": {
+                        "matrix_size": "8192x8192",
+                        "blocks": 4
+                      }
+                    }
+                  ],
+                  "timestamp": "2026-08-11T11:00:00+08:00"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/multicenter/migrations": {
+      "get": {
+        "summary": "获取跨中心迁移记录列表",
+        "deprecated": false,
+        "description": "获取工作负载跨中心迁移记录列表，含迁移进度、源/目标中心与迁移事件时间线。",
+        "operationId": "getMigrations",
+        "tags": [
+          "跨中心迁移"
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "统一响应",
+                  "description": "平台统一响应结构。",
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "业务状态码",
+                      "description": "业务返回码，成功固定为 200。",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "返回消息",
+                      "description": "接口返回的文字说明。",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "array",
+                      "title": "跨中心迁移记录列表",
+                      "items": {
+                        "type": "object",
+                        "title": "跨中心迁移记录",
+                        "properties": {
+                          "migration_id": {
+                            "type": "string",
+                            "title": "迁移ID"
+                          },
+                          "workload_id": {
+                            "type": "string",
+                            "title": "工作负载ID"
+                          },
+                          "function_id": {
+                            "type": "string",
+                            "title": "函数ID"
+                          },
+                          "status": {
+                            "type": "string",
+                            "title": "迁移状态",
+                            "enum": [
+                              "pending",
+                              "migrating",
+                              "success",
+                              "failed"
+                            ]
+                          },
+                          "progress": {
+                            "type": "integer",
+                            "title": "迁移进度"
+                          },
+                          "from_cluster": {
+                            "type": "string",
+                            "title": "源中心"
+                          },
+                          "to_cluster": {
+                            "type": "string",
+                            "title": "目标中心"
+                          },
+                          "source_type": {
+                            "type": "string",
+                            "title": "数据来源类型",
+                            "enum": [
+                              "real",
+                              "simulated",
+                              "replay"
+                            ]
+                          },
+                          "start_time": {
+                            "type": "string",
+                            "title": "开始时间"
+                          },
+                          "end_time": {
+                            "type": "string",
+                            "title": "结束时间"
+                          },
+                          "events": {
+                            "type": "array",
+                            "title": "迁移事件",
+                            "items": {
+                              "type": "object",
+                              "title": "迁移事件",
+                              "properties": {
+                                "seq": {
+                                  "type": "integer",
+                                  "title": "序号"
+                                },
+                                "event": {
+                                  "type": "string",
+                                  "title": "事件标识"
+                                },
+                                "name": {
+                                  "type": "string",
+                                  "title": "事件名称"
+                                },
+                                "status": {
+                                  "type": "string",
+                                  "title": "事件状态"
+                                },
+                                "timestamp": {
+                                  "type": "string",
+                                  "title": "事件时间"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "description": "跨中心迁移记录集合。"
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "title": "响应时间",
+                      "description": "服务端生成响应的 ISO 8601 时间。",
+                      "example": "2026-08-11T11:00:00+08:00"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "message": "success",
+                  "data": [
+                    {
+                      "migration_id": "MIG-20260811-0001",
+                      "workload_id": "WL-FN-MATRIX",
+                      "function_id": "fn-matrix-multiply",
+                      "status": "migrating",
+                      "progress": 75,
+                      "from_cluster": "jinan",
+                      "to_cluster": "changsha",
+                      "source_type": "simulated",
+                      "start_time": "2026-08-11T10:45:00+08:00",
+                      "end_time": "",
+                      "events": [
+                        {
+                          "seq": 1,
+                          "event": "source_unavailable",
+                          "name": "源中心资源不足",
+                          "status": "success",
+                          "timestamp": "2026-08-11T10:45:00+08:00"
+                        },
+                        {
+                          "seq": 2,
+                          "event": "migration_started",
+                          "name": "迁移启动",
+                          "status": "success",
+                          "timestamp": "2026-08-11T10:45:02+08:00"
+                        },
+                        {
+                          "seq": 3,
+                          "event": "state_transfer",
+                          "name": "状态数据迁移",
+                          "status": "running",
+                          "timestamp": "2026-08-11T10:45:10+08:00"
+                        }
+                      ]
+                    }
+                  ],
+                  "timestamp": "2026-08-11T11:00:00+08:00"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/multicenter/clusters": {
       "get": {
         "summary": "获取多中心计算资源列表",
