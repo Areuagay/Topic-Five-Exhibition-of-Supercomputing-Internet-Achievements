@@ -164,8 +164,8 @@ test('workflow DAG uses a collision-safe node-anchored popover', async () => {
 
   assert.match(dag, /const selectedNode = computed/)
   assert.match(dag, /function updatePopoverPosition/)
-  assert.match(dag, /const spaceAbove/)
-  assert.match(dag, /const spaceBelow/)
+  assert.match(dag, /positionDagPopover\(/)
+  assert.match(dag, /'--arrow-left':/)
   assert.match(dag, /class="dag-node-popover(?:\s|")/)
   assert.match(dag, /data-placement/)
   assert.match(dag, /aria-live="polite"/)

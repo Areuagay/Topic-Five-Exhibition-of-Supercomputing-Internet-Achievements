@@ -198,6 +198,8 @@ export interface Artifact {
   preview_url?: string
   download_url?: string
   created_at?: string
+  source_type?: string
+  preview_supported?: boolean
 }
 
 /** 运行详情 metrics：通用 metrics + 各域附加指标（scf_series / gpu_metrics / ...） */

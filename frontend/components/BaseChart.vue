@@ -1,16 +1,23 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import * as echarts from 'echarts/core'
-import { BarChart, GraphChart, LineChart, PieChart } from 'echarts/charts'
-import { GridComponent, LegendComponent, TooltipComponent } from 'echarts/components'
+import { BarChart, GraphChart, HeatmapChart, LineChart, PieChart, FunnelChart, RadarChart, ScatterChart } from 'echarts/charts'
+import { GridComponent, LegendComponent, TooltipComponent, VisualMapComponent, MarkLineComponent, RadarComponent } from 'echarts/components'
 import { CanvasRenderer } from 'echarts/renderers'
 import type { EChartsCoreOption, Payload } from 'echarts/core'
 
 echarts.use([
+  ScatterChart,
+  FunnelChart,
+  RadarChart,
+  RadarComponent,
   LineChart,
   BarChart,
   PieChart,
   GraphChart,
+  HeatmapChart,
+  VisualMapComponent,
+  MarkLineComponent,
   GridComponent,
   TooltipComponent,
   LegendComponent,

@@ -1,0 +1,21 @@
+.ai-workspace { min-width: 0; font-family: var(--scnet-font-sans); color: var(--scnet-text); font-weight: 500; }
+.ai-section { min-width: 0; padding: 24px 32px; }
+.ai-section + .ai-section { border-top: 1px solid var(--scnet-divider); }
+.ai-two-column + .ai-section { border-top: 1px solid var(--scnet-divider); }
+.ai-two-column { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); }
+.ai-two-column > .ai-section + .ai-section { border-top: 0; border-left: 1px solid var(--scnet-divider); }
+.ai-chart-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+h3 { margin: 0 0 18px; font-size: 17px; font-weight: 600; }
+h4 { margin: 0 0 12px; font-size: 15px; font-weight: 600; }
+.ai-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 0; }
+.ai-stats > div { padding: 14px 16px; border: 1px solid #e2e8f0; border-radius: 6px; background: #fbfcfe; min-width: 0; }
+dt { font-size: 14px; font-weight: 600; color: var(--scnet-text-secondary); }
+dd { margin: 8px 0 0; font-family: var(--scnet-font-mono); font-size: 21px; font-weight: 600; overflow-wrap: anywhere; }
+.ai-controls { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+button { min-height: 44px; padding: 8px 14px; border: 1px solid #dfe3e8; border-radius: 6px; color: var(--scnet-text-secondary); background: #fff; cursor: pointer; font: inherit; }
+button[aria-pressed="true"] { border-color: #85abe8; color: var(--scnet-primary); background: #edf3fd; }
+button:focus-visible { outline: 2px solid var(--scnet-primary); outline-offset: 2px; }
+.ai-empty { min-height: 120px; display: grid; place-items: center; color: var(--scnet-text-secondary); font-size: 14px; }
+.ai-caption { font-size: 14px; color: var(--scnet-text-secondary); margin: 12px 0; }
+@media (max-width: 1100px) { .ai-two-column { grid-template-columns: 1fr; } .ai-two-column > .ai-section + .ai-section { border-left: 0; border-top: 1px solid var(--scnet-divider); } }
+@media (max-width: 700px) { .ai-section { padding: 18px; } .ai-chart-pair, .ai-stats { grid-template-columns: 1fr; } }

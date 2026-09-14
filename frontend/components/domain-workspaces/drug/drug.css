@@ -1,0 +1,26 @@
+.drug-workspace { min-width:0; font-family:var(--scnet-font-sans); font-weight:500; color:var(--scnet-text); }
+.drug-section { min-width:0; padding:24px 32px; }
+.drug-section + .drug-section, .drug-split + .drug-section { border-top:1px solid var(--scnet-divider); }
+.drug-split { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); }
+.drug-split > .drug-section + .drug-section { border-top:0; border-left:1px solid var(--scnet-divider); }
+h3 { font-size:17px; font-weight:600; margin:0 0 18px; }
+.drug-stats { display:flex; flex-wrap:wrap; gap:16px; margin:0 0 24px; }
+.drug-stats > div { flex:1; min-width:120px; padding:16px; border:1px solid #e2e8f0; border-radius:6px; background:#fbfcfe; }
+dt { color:var(--scnet-text-secondary); font-size:14px; font-weight:600; }
+dd { margin:8px 0 0; font-family:var(--scnet-font-mono); font-size:22px; font-weight:600; overflow-wrap:anywhere; }
+.drug-toolbar { display:flex; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:18px; font-size:14px; }
+input, select, button { min-height:44px; box-sizing:border-box; padding:8px 12px; border:1px solid #dfe3e8; border-radius:6px; background:#fff; color:var(--scnet-text); font:inherit; }
+input { width:220px; max-width:100%; } select { max-width:100%; }
+button { cursor:pointer; } button[aria-pressed="true"] { background:#edf3fd; color:var(--scnet-primary); border-color:#85abe8; }
+button:focus-visible, input:focus-visible, select:focus-visible, .drug-table:focus-visible { outline:2px solid var(--scnet-primary); outline-offset:2px; }
+.drug-table { max-height:420px; overflow:auto; border:1px solid #e2e8f0; border-radius:6px; }
+table { width:100%; border-collapse:collapse; text-align:left; font-size:14px; }
+th { position:sticky; top:0; background:#f5f8fc; z-index:1; font-weight:600; }
+td, th { padding:11px 14px; border-bottom:1px solid #edf1f5; white-space:nowrap; }
+td { font-variant-numeric:tabular-nums; } td button { color:var(--scnet-primary); border-color:transparent; background:transparent; padding:4px 8px; }
+tr.selected { background:#edf3fd; }
+.drug-empty { display:grid; place-items:center; min-height:160px; color:var(--scnet-text-secondary); font-size:14px; }
+.drug-note { margin:14px 0; font-size:14px; color:var(--scnet-text-secondary); line-height:1.7; overflow-wrap:anywhere; }
+.subheading { margin-top:24px; }.status-pass { color:#34755b; }.status-fail { color:#a46528; }
+@media(max-width:1100px) { .drug-split { grid-template-columns:1fr; }.drug-split > .drug-section + .drug-section { border-left:0; border-top:1px solid var(--scnet-divider); } }
+@media(max-width:700px) { .drug-section { padding:18px; }.drug-stats { gap:8px; } }

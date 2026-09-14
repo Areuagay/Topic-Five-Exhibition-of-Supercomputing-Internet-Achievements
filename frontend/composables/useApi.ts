@@ -18,6 +18,7 @@ import type {
   TraceDetail,
   Workload,
 } from '~/types'
+import type { RunMetrics } from '~/types/domain-data'
 
 /**
  * API 访问层。
@@ -55,7 +56,15 @@ export function useApi() {
     getOperators: (domain: string) => request<Operator[]>(`/${domain}/operators`),
     getRuns: (domain: string) => request<Run[]>(`/${domain}/runs`),
     getRunDetail: (domain: string, runId: string) =>
-      request<RunDetail>(`/${domain}/runs/${runId}`),
+      request<Omit<RunDetail, 'workflow' | 'metrics' | 'logs' | 'artifacts'>>(`/${domain}/runs/${runId}`),
+    getRunWorkflow: (domain: string, runId: string) =>
+      request<RunDetail['workflow']>(`/${domain}/runs/${runId}/workflow`),
+    getRunMetrics: (domain: string, runId: string) =>
+      request<RunMetrics>(`/${domain}/runs/${runId}/metrics`),
+    getRunLogs: (domain: string, runId: string) =>
+      request<RunDetail['logs']>(`/${domain}/runs/${runId}/logs`),
+    getRunArtifacts: (domain: string, runId: string) =>
+      request<RunDetail['artifacts']>(`/${domain}/runs/${runId}/artifacts`),
 
     // 函数多中心联调
     getClusters: () => request<MultiCluster[]>('/multicenter/clusters'),
