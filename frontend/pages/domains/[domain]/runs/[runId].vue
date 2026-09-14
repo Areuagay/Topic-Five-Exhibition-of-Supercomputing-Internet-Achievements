@@ -1,5 +1,10 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
+import ResourceState from '~/components/run/ResourceState.vue'
+import ScenarioWorkspace from '~/components/run/ScenarioWorkspace.vue'
+import ArtifactActions from '~/components/run/ArtifactActions.vue'
+import { metricUnit, quantityLabel, unitText } from '~/utils/workspace'
+import type { Artifact } from '~/types'
 import { useApi } from '~/composables/useApi'
 import { useAppStore } from '~/stores/app'
 import {
@@ -11,11 +16,13 @@ import {
   statusText,
 } from '~/composables/useFormat'
 
+definePageMeta({ key: route => route.fullPath })
 const route = useRoute()
 const domain = String(route.params.domain)
 const runId = String(route.params.runId)
+const scfMetric = ref<'total_energy' | 'energy_delta'>('total_energy')
 
-const { getRunDetail, getIndex, getScenarios } = useApi()
+const { getRunDetail, getIndex, getScenarios, getRunWorkflow, getRunMetrics, getRunLogs, getRunArtifacts } = useApi()
 const appStore = useAppStore()
 
 const { data: indexData } = await useAsyncData('index', () => getIndex(), { default: () => null })
@@ -23,16 +30,29 @@ if (indexData.value) {
   appStore.setIndex(indexData.value.domains, indexData.value.clusters)
 }
 
-const { data: detail } = await useAsyncData(
-  `run-detail-${domain}-${runId}`,
-  () => getRunDetail(domain, runId),
-  { default: () => null },
-)
-const { data: scenarios } = await useAsyncData(
-  `scenarios-${domain}`,
-  () => getScenarios(domain),
-  { default: () => [] },
-)
+// Separate resources: failure in metrics/files must not discard the task summary.
+const [summaryRequest, workflowRequest, metricsRequest, logsRequest, artifactsRequest, scenariosRequest] = await Promise.all([
+  useAsyncData(`run-detail-${domain}-${runId}`, () => getRunDetail(domain, runId)),
+  useAsyncData(`run-workflow-${domain}-${runId}`, () => getRunWorkflow(domain, runId), { server: false, lazy: true }),
+  useAsyncData(`run-metrics-${domain}-${runId}`, () => getRunMetrics(domain, runId), { server: false, lazy: true }),
+  useAsyncData(`run-logs-${domain}-${runId}`, () => getRunLogs(domain, runId), { server: false, lazy: true }),
+  useAsyncData(`run-artifacts-${domain}-${runId}`, () => getRunArtifacts(domain, runId), { server: false, lazy: true }),
+  useAsyncData(`scenarios-${domain}`, () => getScenarios(domain), { default: () => [] }),
+])
+const { data: summary, pending: summaryPending, error: summaryError, refresh: refreshSummary } = summaryRequest
+const { data: workflow, pending: workflowPending, error: workflowError, refresh: refreshWorkflow } = workflowRequest
+const { data: metrics, pending: metricsPending, error: metricsError, refresh: refreshMetrics } = metricsRequest
+const { data: logs, pending: logsPending, error: logsError, refresh: refreshLogs } = logsRequest
+const { data: artifacts, pending: artifactsPending, error: artifactsError, refresh: refreshArtifacts } = artifactsRequest
+const { data: scenarios } = scenariosRequest
+// This view model retains the existing template while ignoring embedded legacy subresources.
+const detail = computed(() => summary.value ? {
+  ...summary.value,
+  workflow: workflow.value ?? { nodes: [], edges: [] },
+  metrics: { ...metrics.value, metrics: metrics.value?.metrics ?? [] },
+  logs: logs.value ?? { lines: [], next_offset: 0, has_more: false },
+  artifacts: artifacts.value ?? [],
+} : null)
 
 const domainInfo = computed(() => appStore.domains.find((item) => item.domain === domain))
 const clusterName = computed(() => {
@@ -140,10 +160,10 @@ function toKv(obj: Record<string, unknown>): { label: string; value: unknown }[]
 }
 
 const extraSections = computed<ExtraSection[]>(() => {
-  const metrics = detail.value?.metrics
+  const metrics = metricsRequest.data.value
   if (!metrics) return []
   const result: ExtraSection[] = []
-  const known = new Set(['progress', 'metrics'])
+  const known = new Set(['progress', 'metrics', 'domain_data', 'units', 'run_id', 'scenario_id', 'source_type', 'execution_mode'])
   for (const key of Object.keys(metrics)) {
     if (known.has(key)) continue
     const value = metrics[key]
@@ -219,16 +239,17 @@ function lineOption(
     },
     yAxis: {
       type: 'value',
+      scale: true,
       splitLine: { lineStyle: { color: '#edf1f5' } },
       axisLabel: { color: '#7d899a' },
     },
     series: yKeys.map((key, index) => ({
-      name: yNames?.[index] ?? key,
+      name: quantityLabel(yNames?.[index] ?? key, metricUnit(metrics.value, key)),
       type: 'line',
       smooth: true,
       showSymbol: false,
       lineStyle: { width: 2 },
-      data: rows.map((row) => Number(row[key] ?? 0)),
+      data: rows.map((row) => typeof row[key] === 'number' && Number.isFinite(row[key]) ? row[key] : null),
     })),
   }
 }
@@ -243,16 +264,24 @@ function barOption(rows: Record<string, unknown>[]): Record<string, unknown> | n
       axisLine: { lineStyle: { color: '#dfe5ed' } },
       axisLabel: { color: '#7d899a' },
     },
-    yAxis: {
+    grid: { left: 58, right: 78, top: 42, bottom: 46 },
+    yAxis: [{
       type: 'value',
       max: 100,
       splitLine: { lineStyle: { color: '#edf1f5' } },
       axisLabel: { color: '#7d899a' },
-    },
+    }, {
+      type: 'value',
+      scale: true,
+      position: 'right',
+      name: quantityLabel('温度', metricUnit(metrics.value, 'temperature')),
+      splitLine: { show: false },
+      axisLabel: { color: '#7d899a' },
+    }],
     series: [
-      { name: '利用率 %', type: 'bar', barMaxWidth: 28, data: rows.map((row) => Number(row.utilization ?? 0)) },
-      { name: '显存 %', type: 'bar', barMaxWidth: 28, data: rows.map((row) => Number(row.memory_utilization ?? 0)) },
-      { name: '温度 ℃', type: 'line', smooth: true, data: rows.map((row) => Number(row.temperature ?? 0)) },
+      { name: quantityLabel('利用率', metricUnit(metrics.value, 'utilization')), type: 'bar', barMaxWidth: 28, data: rows.map((row) => Number(row.utilization ?? 0)) },
+      { name: quantityLabel('显存', metricUnit(metrics.value, 'memory_utilization')), type: 'bar', barMaxWidth: 28, data: rows.map((row) => Number(row.memory_utilization ?? 0)) },
+      { name: quantityLabel('温度', metricUnit(metrics.value, 'temperature')), type: 'line', yAxisIndex: 1, smooth: true, data: rows.map((row) => typeof row.temperature === 'number' && Number.isFinite(row.temperature) ? row.temperature : null) },
     ],
   }
 }
@@ -261,7 +290,16 @@ function chartOption(section: ExtraSection): Record<string, unknown> | null {
   const rows = section.payload as Record<string, unknown>[]
   if (section.kind === 'bar') return barOption(rows)
   if (section.key === 'scf_series') {
-    return lineOption(rows, 'iteration', ['total_energy', 'energy_delta'], ['总能量', '能量变化'])
+    const metricName = scfMetric.value === 'total_energy' ? '总能量' : '能量变化'
+    const option = lineOption(rows, 'iteration', [scfMetric.value], [metricName])
+    if (!option) return null
+    const axis = option.yAxis as Record<string, unknown>
+    return {
+      ...option,
+      legend: { show: false },
+      grid: { left: 80, right: 24, top: 42, bottom: 36 },
+      yAxis: { ...axis, scale: scfMetric.value === 'total_energy', name: quantityLabel(metricName, metricUnit(metrics.value, scfMetric.value)), position: 'left' },
+    }
   }
   if (section.key === 'energy_series') {
     return lineOption(rows, 'time', ['kinetic', 'internal', 'hourglass'], ['动能', '内能', '沙漏能'])
@@ -285,10 +323,13 @@ function chartOption(section: ExtraSection): Record<string, unknown> | null {
       />
 
       <div class="run-detail-workspace">
-        <section v-if="!detail" class="run-detail-empty" aria-live="polite">
+        <ResourceState v-if="summaryPending || summaryError" :pending="summaryPending" :error="summaryError" label="任务摘要" @retry="refreshSummary()">
+          <template #actions><NuxtLink class="summary-back" :to="`/domains/${domain}/runs`">返回运行列表</NuxtLink></template>
+        </ResourceState>
+        <section v-else-if="!detail" class="run-detail-empty" aria-live="polite">
           <strong>未找到该运行详情</strong>
           <p>该记录可能不存在，或尚未生成可查看的运行数据。</p>
-          <NuxtLink :to="`/domains/${domain}/runs`">返回运行记录</NuxtLink>
+          <NuxtLink :to="`/domains/${domain}/runs`">返回运行列表</NuxtLink>
         </section>
 
         <article v-else class="run-detail-record">
@@ -347,7 +388,9 @@ function chartOption(section: ExtraSection): Record<string, unknown> | null {
 
           <section class="run-workflow-panel" aria-label="工作流与资源消耗">
             <div class="run-dag-section">
-              <WorkflowDag :nodes="detail.workflow.nodes" :edges="detail.workflow.edges" />
+              <ResourceState :pending="workflowPending" :error="workflowError" :empty="!detail.workflow.nodes.length" label="工作流" @retry="refreshWorkflow()">
+                <WorkflowDag :nodes="detail.workflow.nodes" :edges="detail.workflow.edges" />
+              </ResourceState>
             </div>
 
             <dl class="run-resource-strip" aria-label="资源消耗">
@@ -368,14 +411,16 @@ function chartOption(section: ExtraSection): Record<string, unknown> | null {
                     </div>
                     <span>{{ detail.metrics.metrics.length }} 项</span>
                   </div>
+                  <ResourceState :pending="metricsPending" :error="metricsError" :empty="!detail.metrics.metrics.length" label="运行指标" @retry="refreshMetrics()">
                   <dl class="run-metric-grid">
                     <div v-for="metric in detail.metrics.metrics" :key="metric.name">
                       <dt>{{ metric.label }}</dt>
                       <dd>
-                        {{ formatNumber(metric.value, 2) }}<small v-if="metric.unit">{{ metric.unit }}</small>
+                        {{ formatNumber(metric.value, 2) }}<small v-if="unitText(metric.unit)">{{ unitText(metric.unit) }}</small>
                       </dd>
                     </div>
                   </dl>
+                  </ResourceState>
                 </section>
               </div>
 
@@ -409,6 +454,10 @@ function chartOption(section: ExtraSection): Record<string, unknown> | null {
                   </div>
 
                   <div v-if="section.kind === 'line' || section.kind === 'bar'" class="run-chart-region">
+                    <div v-if="section.key === 'scf_series'" class="scf-metric-controls" role="group" aria-label="SCF 收敛指标切换">
+                      <button type="button" :aria-pressed="scfMetric === 'total_energy'" @click="scfMetric = 'total_energy'">总能量</button>
+                      <button type="button" :aria-pressed="scfMetric === 'energy_delta'" @click="scfMetric = 'energy_delta'">能量变化</button>
+                    </div>
                     <BaseChart v-if="chartOption(section)" :option="chartOption(section)!" height="300px" />
                     <div v-else class="run-inline-empty">暂无数据</div>
                   </div>
@@ -474,6 +523,21 @@ function chartOption(section: ExtraSection): Record<string, unknown> | null {
             </div>
           </section>
 
+          <ScenarioWorkspace
+            :key="`${domain}-${runId}`"
+            :scenario-id="detail.scenario_id"
+            :domain="domain"
+            :data="metrics?.domain_data"
+            :artifacts="artifacts ?? []"
+            :artifacts-pending="artifactsPending"
+            :artifacts-error="artifactsError"
+            @retry-artifacts="refreshArtifacts()"
+            :source-type="metrics?.source_type || detail.source_type"
+            :pending="metricsPending"
+            :error="metricsError"
+            @retry="refreshMetrics()"
+          />
+
           <section class="run-records-panel" aria-label="记录与产物">
             <section class="run-detail-section" aria-labelledby="run-logs-title">
               <div class="run-section-heading">
@@ -482,6 +546,7 @@ function chartOption(section: ExtraSection): Record<string, unknown> | null {
                 </div>
                 <span>{{ detail.logs.lines.length }} 条</span>
               </div>
+              <ResourceState :pending="logsPending" :error="logsError" :empty="!detail.logs.lines.length" label="运行日志" @retry="refreshLogs()">
               <div v-if="detail.logs.lines.length" class="run-log-panel" role="log" aria-live="off">
                 <div v-for="(line, index) in detail.logs.lines" :key="line.seq ?? index" class="run-log-line">
                   <span class="run-log-prompt" aria-hidden="true">›</span>
@@ -496,6 +561,7 @@ function chartOption(section: ExtraSection): Record<string, unknown> | null {
                 </div>
               </div>
               <div v-else class="run-inline-empty">暂无日志</div>
+              </ResourceState>
             </section>
 
             <section class="run-detail-section run-artifacts-section" aria-labelledby="run-artifacts-title">
@@ -505,6 +571,7 @@ function chartOption(section: ExtraSection): Record<string, unknown> | null {
                 </div>
                 <span>{{ detail.artifacts.length }} 项</span>
               </div>
+              <ResourceState :pending="artifactsPending" :error="artifactsError" :empty="!detail.artifacts.length" label="输出产物" @retry="refreshArtifacts()">
               <div class="run-detail-table-region">
                 <el-table :data="detail.artifacts" stripe empty-text="暂无输出产物">
                   <el-table-column label="类型" width="100">
@@ -526,22 +593,14 @@ function chartOption(section: ExtraSection): Record<string, unknown> | null {
                       <span class="mono" translate="no">{{ row.storage_path || '-' }}</span>
                     </template>
                   </el-table-column>
-                  <el-table-column label="操作" width="90" fixed="right">
+                  <el-table-column label="操作" width="150" fixed="right">
                     <template #default="{ row }">
-                      <a
-                        v-if="row.download_url"
-                        class="run-download-link"
-                        :href="row.download_url"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        下载
-                      </a>
-                      <span v-else class="run-unavailable">-</span>
+                      <ArtifactActions :artifact="row as Artifact" :source-type="detail.source_type" />
                     </template>
                   </el-table-column>
                 </el-table>
               </div>
+              </ResourceState>
             </section>
           </section>
         </article>
@@ -551,6 +610,11 @@ function chartOption(section: ExtraSection): Record<string, unknown> | null {
 </template>
 
 <style scoped>
+.summary-back { display:inline-flex; align-items:center; justify-content:center; min-height:44px; box-sizing:border-box; padding:0 16px; border:1px solid #dce3ec; border-radius:6px; background:#fff; color:var(--scnet-text-secondary); font-size:14px; text-decoration:none; }.summary-back:hover { color:var(--scnet-primary); border-color:#a9c3e8; }.summary-back:focus-visible { outline:2px solid var(--scnet-primary); outline-offset:2px; }
+.scf-metric-controls { display: flex; gap: 10px; margin-bottom: 16px; }
+.scf-metric-controls button { min-height: 44px; padding: 8px 16px; border: 1px solid #dfe3e8; border-radius: 6px; background: #fff; color: var(--scnet-text-secondary); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
+.scf-metric-controls button[aria-pressed="true"] { color: var(--scnet-primary); background: #edf3fd; border-color: #85abe8; }
+.scf-metric-controls button:focus-visible { outline: 2px solid var(--scnet-primary); outline-offset: 2px; }
 /* 运行详情采用展示型分层：宏观区域独立，字段内部保持平面化。 */
 .run-detail-page {
   width: 100%;

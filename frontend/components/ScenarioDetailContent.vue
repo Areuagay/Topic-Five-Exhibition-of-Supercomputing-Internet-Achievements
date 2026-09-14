@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { unitText } from '~/utils/workspace'
 import { formatNumber } from '~/composables/useFormat'
 import type { Benchmark, MetricKV, ParamField, ScenarioDetail } from '~/types'
 
@@ -14,7 +15,7 @@ function metricValue(metric: MetricKV): string {
 }
 
 function metricUnit(unit?: string): string {
-  return unit === 'x' ? '×' : (unit ?? '')
+  return unitText(unit) === 'x' ? '×' : unitText(unit)
 }
 
 function architectureName(item: ScenarioDetail['architecture'][number]): string {
@@ -48,7 +49,7 @@ function architectureDescription(item: ScenarioDetail['architecture'][number]): 
           <dt>{{ metric.label }}</dt>
           <dd>
             <span class="scenario-summary-value">{{ metricValue(metric) }}</span>
-            <small v-if="metric.unit">{{ metricUnit(metric.unit) }}</small>
+            <small v-if="metricUnit(metric.unit)">{{ metricUnit(metric.unit) }}</small>
           </dd>
         </div>
       </dl>
@@ -140,7 +141,7 @@ function architectureDescription(item: ScenarioDetail['architecture'][number]): 
           <dt>{{ metric.label }}</dt>
           <dd>
             <span class="scenario-highlight-value">{{ metricValue(metric) }}</span>
-            <small v-if="metric.unit">{{ metricUnit(metric.unit) }}</small>
+            <small v-if="metricUnit(metric.unit)">{{ metricUnit(metric.unit) }}</small>
           </dd>
         </div>
       </dl>

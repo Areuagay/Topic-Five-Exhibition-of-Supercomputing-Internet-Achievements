@@ -12,6 +12,7 @@ import {
 } from '@vue-flow/core'
 import { Background } from '@vue-flow/background'
 import type { WorkflowEdge, WorkflowNode } from '~/types'
+import { positionDagPopover } from '~/utils/dag-popover'
 import '@vue-flow/core/dist/style.css'
 import '@vue-flow/core/dist/theme-default.css'
 
@@ -27,6 +28,7 @@ interface PopoverPosition {
   left: number
   top: number
   placement: 'top' | 'bottom'
+  arrow: number
 }
 
 const FLOW_ID = 'run-workflow'
@@ -36,14 +38,13 @@ const LAYER_GAP = 80
 const ROW_GAP = 28
 const CANVAS_PADDING = 48
 const POPOVER_WIDTH = 280
-const POPOVER_EDGE_GAP = 12
-const POPOVER_NODE_GAP = 12
 const POPOVER_FALLBACK_HEIGHT = 124
 
 const frame = ref<HTMLDivElement>()
 const popoverElement = ref<HTMLElement>()
 const selectedNodeId = ref<string | null>(null)
-const popover = ref<PopoverPosition>({ left: 0, top: 0, placement: 'top' })
+const popover = ref<PopoverPosition>({ left: 0, top: 0, placement: 'top', arrow: 140 })
+const popoverReady = ref(false)
 let resizeObserver: ResizeObserver | null = null
 let updateFrame = 0
 
@@ -211,30 +212,20 @@ function updatePopoverPosition(): void {
   const nodeElement = frame.value.querySelector<HTMLElement>(
     `.vue-flow__node[data-id="${CSS.escape(selectedNodeId.value)}"]`,
   )
-  if (!nodeElement) return
+  if (!nodeElement) { clearSelection(); return }
 
   const nodeRect = nodeElement.getBoundingClientRect()
   const frameRect = frame.value.getBoundingClientRect()
   const popoverHeight = popoverElement.value?.offsetHeight ?? POPOVER_FALLBACK_HEIGHT
-  const halfWidth = POPOVER_WIDTH / 2
-  const center = nodeRect.left - frameRect.left + nodeRect.width / 2
-  const left = Math.min(
-    frameRect.width - halfWidth - POPOVER_EDGE_GAP,
-    Math.max(halfWidth + POPOVER_EDGE_GAP, center),
+  const originX = frameRect.left + frame.value.clientLeft, originY = frameRect.top + frame.value.clientTop
+  const position = positionDagPopover(
+    { width: frame.value.clientWidth, height: frame.value.clientHeight },
+    { left:nodeRect.left-originX, right:nodeRect.right-originX, top:nodeRect.top-originY, bottom:nodeRect.bottom-originY },
+    popoverElement.value?.offsetWidth ?? Math.min(POPOVER_WIDTH,frame.value.clientWidth-24), popoverHeight,
   )
-  const nodeTop = nodeRect.top - frameRect.top
-  const nodeBottom = nodeRect.bottom - frameRect.top
-  const spaceAbove = nodeTop - POPOVER_NODE_GAP - POPOVER_EDGE_GAP
-  const spaceBelow = frameRect.height - nodeBottom - POPOVER_NODE_GAP - POPOVER_EDGE_GAP
-  const placeAbove = spaceAbove >= popoverHeight || spaceAbove >= spaceBelow
-
-  popover.value = {
-    left,
-    top: placeAbove
-      ? nodeTop - POPOVER_NODE_GAP
-      : nodeBottom + POPOVER_NODE_GAP,
-    placement: placeAbove ? 'top' : 'bottom',
-  }
+  if (!position) { clearSelection(); return }
+  popover.value = position
+  popoverReady.value = true
 
   if (!popoverElement.value) void nextTick(schedulePopoverUpdate)
 }
@@ -246,6 +237,7 @@ function handleNodeClick({ node }: NodeMouseEvent): void {
   }
 
   selectedNodeId.value = node.id
+  popoverReady.value = false
   void nextTick(schedulePopoverUpdate)
 }
 
@@ -266,10 +258,12 @@ function handleCanvasKeydown(event: KeyboardEvent): void {
   const node = findNode(id)
   if (node) addSelectedNodes([node])
   selectedNodeId.value = id
+  popoverReady.value = false
   void nextTick(schedulePopoverUpdate)
 }
 
 function clearSelection(): void {
+  popoverReady.value = false
   selectedNodeId.value = null
   removeSelectedElements()
 }
@@ -402,7 +396,7 @@ onBeforeUnmount(() => {
             ref="popoverElement"
             class="dag-node-popover nodrag nopan nowheel"
             :data-placement="popover.placement"
-            :style="{ left: `${popover.left}px`, top: `${popover.top}px` }"
+            :style="{ left: `${popover.left}px`, top: `${popover.top}px`, '--arrow-left': `${popover.arrow}px`, visibility: popoverReady ? 'visible' : 'hidden' }"
             aria-live="polite"
           >
             <div class="dag-node-popover-heading">
@@ -546,7 +540,7 @@ onBeforeUnmount(() => {
 }
 .dag-node-popover[data-placement='top'] { transform: translate(-50%, -100%); transform-origin: bottom center; }
 .dag-node-popover[data-placement='bottom'] { transform: translate(-50%, 0); transform-origin: top center; }
-.dag-node-popover::after { position: absolute; left: 50%; width: 10px; height: 10px; border-right: 1px solid #d9e2ed; border-bottom: 1px solid #d9e2ed; background: #fff; content: ''; }
+.dag-node-popover::after { position: absolute; left: var(--arrow-left, 50%); width: 10px; height: 10px; border-right: 1px solid #d9e2ed; border-bottom: 1px solid #d9e2ed; background: #fff; content: ''; }
 .dag-node-popover[data-placement='top']::after { bottom: -6px; transform: translateX(-50%) rotate(45deg); }
 .dag-node-popover[data-placement='bottom']::after { top: -6px; transform: translateX(-50%) rotate(225deg); }
 .dag-node-popover-heading { min-width: 0; display: grid; grid-template-columns: 4px minmax(0, 1fr); align-items: center; gap: 11px; }

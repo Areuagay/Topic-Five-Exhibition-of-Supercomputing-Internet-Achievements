@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { formatNumber } from '~/composables/useFormat'
+import { quantityLabel, unitText } from '~/utils/workspace'
 import type { Benchmark, BenchmarkSeries } from '~/types'
 
 const props = defineProps<{
@@ -38,11 +39,11 @@ function seriesColor(index: number): string {
       v-for="dimension in benchmark.dimensions"
       :key="dimension.key"
       class="benchmark-metric-row"
-      :aria-label="`${dimension.name}，单位 ${dimension.unit}`"
+      :aria-label="quantityLabel(dimension.name, dimension.unit)"
     >
       <div class="benchmark-metric-name">
         <h4>{{ dimension.name }}</h4>
-        <p>{{ dimension.unit }}</p>
+        <p v-if="unitText(dimension.unit)">{{ unitText(dimension.unit) }}</p>
       </div>
 
       <div
