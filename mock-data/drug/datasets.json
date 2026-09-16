@@ -1,0 +1,91 @@
+{
+  "code": 200,
+  "message": "success",
+  "data": [
+    {
+      "dataset_id": "DS-VS-0001",
+      "scenario_id": "virtual-screening",
+      "name": "百万级化合物库",
+      "type": "compound_library",
+      "format": "SDF",
+      "size_bytes": 34359738368,
+      "grid": "128 万分子",
+      "source": "ZINC20 化合物库",
+      "status": "ready",
+      "updated_at": "2026-08-09T10:20:00+08:00"
+    },
+    {
+      "dataset_id": "DS-VS-0002",
+      "scenario_id": "virtual-screening",
+      "name": "靶点蛋白结构",
+      "type": "target_protein",
+      "format": "PDB",
+      "size_bytes": 5242880,
+      "grid": "1 靶点 / 4 构象",
+      "source": "PDB 蛋白质数据库",
+      "status": "ready",
+      "updated_at": "2026-08-09T10:24:00+08:00"
+    },
+    {
+      "dataset_id": "DS-VS-0003",
+      "scenario_id": "virtual-screening",
+      "name": "分子对接参数配置",
+      "type": "docking_params",
+      "format": "JSON",
+      "size_bytes": 16384,
+      "grid": "-",
+      "source": "模拟生成",
+      "status": "ready",
+      "updated_at": "2026-08-09T10:28:00+08:00"
+    },
+    {
+      "dataset_id": "DS-VS-0004",
+      "scenario_id": "virtual-screening",
+      "name": "已知活性参考配体",
+      "type": "reference_ligand",
+      "format": "SDF",
+      "size_bytes": 1048576,
+      "grid": "256 配体",
+      "source": "ChEMBL 活性数据",
+      "status": "processing",
+      "updated_at": "2026-08-11T09:18:00+08:00"
+    },
+    {
+      "dataset_id": "DS-ADMET-0001",
+      "scenario_id": "admet-prediction",
+      "name": "候选分子描述符集",
+      "type": "molecular_descriptors",
+      "format": "CSV",
+      "size_bytes": 8388608,
+      "grid": "2048 分子 × 186 描述符",
+      "source": "分子特征化流程",
+      "status": "ready",
+      "updated_at": "2026-08-08T15:00:00+08:00"
+    },
+    {
+      "dataset_id": "DS-ADMET-0002",
+      "scenario_id": "admet-prediction",
+      "name": "ADMET 预测模型权重",
+      "type": "admet_model",
+      "format": "HDF5",
+      "size_bytes": 268435456,
+      "grid": "8 性质模型",
+      "source": "预训练 ADMET 模型",
+      "status": "ready",
+      "updated_at": "2026-08-08T15:05:00+08:00"
+    },
+    {
+      "dataset_id": "DS-ADMET-0003",
+      "scenario_id": "admet-prediction",
+      "name": "ADMET 标注参考数据集",
+      "type": "reference_dataset",
+      "format": "CSV",
+      "size_bytes": 41943040,
+      "grid": "12 万标注分子",
+      "source": "TDC 公开数据集",
+      "status": "ready",
+      "updated_at": "2026-08-08T15:10:00+08:00"
+    }
+  ],
+  "timestamp": "2026-08-11T10:00:00+08:00"
+}

@@ -1,0 +1,115 @@
+{
+  "code": 200,
+  "message": "success",
+  "data": [
+    {
+      "dataset_id": "DS-WAVE-0001",
+      "scenario_id": "wave-propagation",
+      "name": "三维分层速度模型",
+      "type": "velocity_model",
+      "format": "HDF5",
+      "size_bytes": 34359738368,
+      "grid": "2048 × 2048 × 2048",
+      "source": "中国地震局地质研究所",
+      "status": "ready",
+      "updated_at": "2026-08-09T15:20:00+08:00"
+    },
+    {
+      "dataset_id": "DS-WAVE-0002",
+      "scenario_id": "wave-propagation",
+      "name": "震源矩张量与时序配置",
+      "type": "source_model",
+      "format": "JSON",
+      "size_bytes": 26624,
+      "grid": "-",
+      "source": "模拟生成",
+      "status": "ready",
+      "updated_at": "2026-08-09T15:22:00+08:00"
+    },
+    {
+      "dataset_id": "DS-WAVE-0003",
+      "scenario_id": "wave-propagation",
+      "name": "吸收边界条件参数",
+      "type": "boundary_condition",
+      "format": "JSON",
+      "size_bytes": 8192,
+      "grid": "-",
+      "source": "模拟生成",
+      "status": "ready",
+      "updated_at": "2026-08-09T15:24:00+08:00"
+    },
+    {
+      "dataset_id": "DS-WAVE-0004",
+      "scenario_id": "wave-propagation",
+      "name": "地表台站观测系统布设",
+      "type": "station_geometry",
+      "format": "CSV",
+      "size_bytes": 1258291,
+      "grid": "480 台站",
+      "source": "中国地震台网中心",
+      "status": "ready",
+      "updated_at": "2026-08-10T08:05:00+08:00"
+    },
+    {
+      "dataset_id": "DS-WAVE-0005",
+      "scenario_id": "wave-propagation",
+      "name": "初至走时拾取结果",
+      "type": "travel_time",
+      "format": "CSV",
+      "size_bytes": 655360,
+      "grid": "11520 拾取点",
+      "source": "自动拾取流程",
+      "status": "processing",
+      "updated_at": "2026-08-11T09:35:00+08:00"
+    },
+    {
+      "dataset_id": "DS-TEC-0001",
+      "scenario_id": "tectonic-evolution",
+      "name": "岩石圈几何模型",
+      "type": "lithosphere_geometry",
+      "format": "HDF5",
+      "size_bytes": 12884901888,
+      "grid": "1024 × 512 × 256",
+      "source": "中国科学院地质与地球物理研究所",
+      "status": "ready",
+      "updated_at": "2026-08-08T11:40:00+08:00"
+    },
+    {
+      "dataset_id": "DS-TEC-0002",
+      "scenario_id": "tectonic-evolution",
+      "name": "热-力学物性参数集",
+      "type": "rheology_params",
+      "format": "JSON",
+      "size_bytes": 43008,
+      "grid": "-",
+      "source": "实验室测定汇总",
+      "status": "ready",
+      "updated_at": "2026-08-08T11:42:00+08:00"
+    },
+    {
+      "dataset_id": "DS-TEC-0003",
+      "scenario_id": "tectonic-evolution",
+      "name": "板块运动速率场",
+      "type": "plate_motion",
+      "format": "CSV",
+      "size_bytes": 942080,
+      "grid": "2048 测点",
+      "source": "GNSS 观测反演",
+      "status": "ready",
+      "updated_at": "2026-08-08T11:45:00+08:00"
+    },
+    {
+      "dataset_id": "DS-TEC-0004",
+      "scenario_id": "tectonic-evolution",
+      "name": "地幔对初始温度场",
+      "type": "mantle_temperature",
+      "format": "HDF5",
+      "size_bytes": 6979321856,
+      "grid": "1024 × 512 × 256",
+      "source": "地震层析成像反演",
+      "status": "ready",
+      "updated_at": "2026-08-08T11:50:00+08:00"
+    }
+  ],
+  "timestamp": "2026-08-11T10:00:00+08:00"
+}

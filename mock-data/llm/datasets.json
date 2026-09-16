@@ -1,0 +1,91 @@
+{
+  "code": 200,
+  "message": "success",
+  "data": [
+    {
+      "dataset_id": "DS-LLM-0001",
+      "scenario_id": "llm-pretraining",
+      "name": "中英文混合预训练语料",
+      "type": "training_corpus",
+      "format": "JSONL",
+      "size_bytes": 2199023255552,
+      "grid": "1.6 万亿 Token",
+      "source": "公开语料清洗流水线",
+      "status": "ready",
+      "updated_at": "2026-08-07T18:00:00+08:00"
+    },
+    {
+      "dataset_id": "DS-LLM-0002",
+      "scenario_id": "llm-pretraining",
+      "name": "BPE 分词器词表",
+      "type": "tokenizer",
+      "format": "JSON",
+      "size_bytes": 12582912,
+      "grid": "12.8 万词表",
+      "source": "分词器训练流程",
+      "status": "ready",
+      "updated_at": "2026-08-07T18:05:00+08:00"
+    },
+    {
+      "dataset_id": "DS-LLM-0003",
+      "scenario_id": "llm-pretraining",
+      "name": "基座模型初始化检查点",
+      "type": "model_checkpoint",
+      "format": "safetensors",
+      "size_bytes": 68719476736,
+      "grid": "130 亿参数",
+      "source": "开源基座模型",
+      "status": "ready",
+      "updated_at": "2026-08-07T18:10:00+08:00"
+    },
+    {
+      "dataset_id": "DS-LLM-0004",
+      "scenario_id": "llm-pretraining",
+      "name": "混合并行策略配置",
+      "type": "parallel_config",
+      "format": "JSON",
+      "size_bytes": 8192,
+      "grid": "DP 8 × TP 4 × PP 8",
+      "source": "模拟生成",
+      "status": "processing",
+      "updated_at": "2026-08-11T09:05:00+08:00"
+    },
+    {
+      "dataset_id": "DS-PINN-0001",
+      "scenario_id": "pinn-acceleration",
+      "name": "PDE 物理约束配置",
+      "type": "physics_config",
+      "format": "JSON",
+      "size_bytes": 12288,
+      "grid": "-",
+      "source": "模拟生成",
+      "status": "ready",
+      "updated_at": "2026-08-08T15:20:00+08:00"
+    },
+    {
+      "dataset_id": "DS-PINN-0002",
+      "scenario_id": "pinn-acceleration",
+      "name": "求解域采样点网格",
+      "type": "sample_grid",
+      "format": "HDF5",
+      "size_bytes": 1073741824,
+      "grid": "512 × 512 × 256",
+      "source": "模拟生成",
+      "status": "ready",
+      "updated_at": "2026-08-08T15:25:00+08:00"
+    },
+    {
+      "dataset_id": "DS-PINN-0003",
+      "scenario_id": "pinn-acceleration",
+      "name": "初边值条件数据",
+      "type": "boundary_condition",
+      "format": "JSON",
+      "size_bytes": 65536,
+      "grid": "-",
+      "source": "模拟生成",
+      "status": "ready",
+      "updated_at": "2026-08-08T15:30:00+08:00"
+    }
+  ],
+  "timestamp": "2026-08-11T10:00:00+08:00"
+}

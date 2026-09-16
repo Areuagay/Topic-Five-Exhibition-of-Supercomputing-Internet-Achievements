@@ -1,0 +1,115 @@
+{
+  "code": 200,
+  "message": "success",
+  "data": [
+    {
+      "dataset_id": "DS-CRASH-0001",
+      "scenario_id": "vehicle-crash",
+      "name": "整车碰撞几何模型",
+      "type": "cad_model",
+      "format": "STEP",
+      "size_bytes": 2147483648,
+      "grid": "整车装配体",
+      "source": "整车厂商 CAD 数据",
+      "status": "ready",
+      "updated_at": "2026-08-09T14:10:00+08:00"
+    },
+    {
+      "dataset_id": "DS-CRASH-0002",
+      "scenario_id": "vehicle-crash",
+      "name": "白车身有限元网格",
+      "type": "mesh_model",
+      "format": "LSDA",
+      "size_bytes": 8589934592,
+      "grid": "1280 万单元",
+      "source": "HyperMesh 网格划分",
+      "status": "ready",
+      "updated_at": "2026-08-09T14:25:00+08:00"
+    },
+    {
+      "dataset_id": "DS-CRASH-0003",
+      "scenario_id": "vehicle-crash",
+      "name": "车身材料本构参数集",
+      "type": "material_params",
+      "format": "JSON",
+      "size_bytes": 51200,
+      "grid": "-",
+      "source": "材料试验数据库",
+      "status": "ready",
+      "updated_at": "2026-08-09T14:30:00+08:00"
+    },
+    {
+      "dataset_id": "DS-CRASH-0004",
+      "scenario_id": "vehicle-crash",
+      "name": "正面 100% 重叠碰撞边界条件",
+      "type": "boundary_condition",
+      "format": "JSON",
+      "size_bytes": 16384,
+      "grid": "-",
+      "source": "C-NCAP 法规工况",
+      "status": "processing",
+      "updated_at": "2026-08-11T09:12:00+08:00"
+    },
+    {
+      "dataset_id": "DS-CRASH-0005",
+      "scenario_id": "vehicle-crash",
+      "name": "整车自接触与焊点连接定义",
+      "type": "contact_definition",
+      "format": "JSON",
+      "size_bytes": 245760,
+      "grid": "186 万接触面",
+      "source": "模拟生成",
+      "status": "ready",
+      "updated_at": "2026-08-10T08:40:00+08:00"
+    },
+    {
+      "dataset_id": "DS-FATIGUE-0001",
+      "scenario_id": "fatigue-life",
+      "name": "法规疲劳载荷工况定义",
+      "type": "test_standard",
+      "format": "JSON",
+      "size_bytes": 20480,
+      "grid": "-",
+      "source": "整车可靠性试验标准",
+      "status": "ready",
+      "updated_at": "2026-08-08T10:05:00+08:00"
+    },
+    {
+      "dataset_id": "DS-FATIGUE-0002",
+      "scenario_id": "fatigue-life",
+      "name": "道路载荷谱采集数据",
+      "type": "load_spectrum",
+      "format": "CSV",
+      "size_bytes": 4194304,
+      "grid": "32 通道 × 1200 万采样",
+      "source": "实车道路载荷采集",
+      "status": "ready",
+      "updated_at": "2026-08-08T10:12:00+08:00"
+    },
+    {
+      "dataset_id": "DS-FATIGUE-0003",
+      "scenario_id": "fatigue-life",
+      "name": "关键材料 S-N 曲线",
+      "type": "sn_curve",
+      "format": "CSV",
+      "size_bytes": 32768,
+      "grid": "18 条曲线",
+      "source": "材料疲劳试验",
+      "status": "processing",
+      "updated_at": "2026-08-11T09:30:00+08:00"
+    },
+    {
+      "dataset_id": "DS-FATIGUE-0004",
+      "scenario_id": "fatigue-life",
+      "name": "疲劳分析材料参数集",
+      "type": "material_params",
+      "format": "JSON",
+      "size_bytes": 40960,
+      "grid": "-",
+      "source": "材料试验数据库",
+      "status": "ready",
+      "updated_at": "2026-08-08T10:20:00+08:00"
+    }
+  ],
+  "timestamp": "2026-08-11T10:00:00+08:00"
+}

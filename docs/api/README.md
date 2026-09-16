@@ -8,12 +8,12 @@
 
 | 文件 | 接口标题 | 接口数 | 版本 | 路径前缀 | 覆盖场景 |
 | --- | --- | --- | --- | --- | --- |
-| [Topic5-GeoDynamics.openapi.json](Topic5-GeoDynamics.openapi.json) | 课题五-地球动力学模拟接口 | 18 | 1.3.0 | `/api/v1/geodynamics` | 地球动力学数值模拟 |
-| [Topic5-AI-LLM-Training.openapi.json](Topic5-AI-LLM-Training.openapi.json) | 课题五-AI 大模型训练接口 | 18 | 1.3.0 | `/api/v1/llm` | 大语言模型分布式预训练、PINN 科学计算 AI 加速 |
-| [Topic5-AutoStruct-Sim.openapi.json](Topic5-AutoStruct-Sim.openapi.json) | 课题五-汽车结构仿真接口 | 18 | 1.3.0 | `/api/v1/automotive` | 整车碰撞仿真、结构疲劳寿命预测 |
-| [Topic5-UAV-CoSim.openapi.json](Topic5-UAV-CoSim.openapi.json) | 课题五-大规模无人机协同仿真接口 | 18 | 1.3.0 | `/api/v1/uav` | 千架无人机集群协同控制、航迹规划与避障 |
-| [Topic5-CrossCenter-DrugScreen.openapi.json](Topic5-CrossCenter-DrugScreen.openapi.json) | 课题五-跨中心虚拟药物筛选接口 | 18 | 1.3.0 | `/api/v1/drug` | 百万级化合物库虚拟筛选、药物分子 ADMET 性质预测 |
-| [Topic5-DFT-MaterialCalc.openapi.json](Topic5-DFT-MaterialCalc.openapi.json) | 课题五-第一性原理材料计算接口 | 18 | 1.3.0 | `/api/v1/dft` | 材料能带结构与态密度计算、高通量材料筛选 |
+| [Topic5-GeoDynamics.openapi.json](Topic5-GeoDynamics.openapi.json) | 课题五-地球动力学模拟接口 | 19 | 1.4.0 | `/api/v1/geodynamics` | 地球动力学数值模拟（含一键体验数据准备数据集接口） |
+| [Topic5-AI-LLM-Training.openapi.json](Topic5-AI-LLM-Training.openapi.json) | 课题五-AI 大模型训练接口 | 19 | 1.4.0 | `/api/v1/llm` | 大语言模型分布式预训练、PINN 科学计算 AI 加速（含一键体验数据准备数据集接口） |
+| [Topic5-AutoStruct-Sim.openapi.json](Topic5-AutoStruct-Sim.openapi.json) | 课题五-汽车结构仿真接口 | 19 | 1.4.0 | `/api/v1/automotive` | 整车碰撞仿真、结构疲劳寿命预测（含一键体验数据准备数据集接口） |
+| [Topic5-UAV-CoSim.openapi.json](Topic5-UAV-CoSim.openapi.json) | 课题五-大规模无人机协同仿真接口 | 19 | 1.4.0 | `/api/v1/uav` | 千架无人机集群协同控制、航迹规划与避障（含一键体验数据准备数据集接口） |
+| [Topic5-CrossCenter-DrugScreen.openapi.json](Topic5-CrossCenter-DrugScreen.openapi.json) | 课题五-跨中心虚拟药物筛选接口 | 19 | 1.4.0 | `/api/v1/drug` | 百万级化合物库虚拟筛选、药物分子 ADMET 性质预测（含一键体验数据准备数据集接口） |
+| [Topic5-DFT-MaterialCalc.openapi.json](Topic5-DFT-MaterialCalc.openapi.json) | 课题五-第一性原理材料计算接口 | 19 | 1.4.0 | `/api/v1/dft` | 材料能带结构与态密度计算、高通量材料筛选（含一键体验数据准备数据集接口） |
 | [Topic5-MultiCenter-Debug.openapi.json](Topic5-MultiCenter-Debug.openapi.json) | 课题五-函数多中心联调接口 | 17 | 1.3.0 | `/api/v1/multicenter` | 四中心资源状态、函数部署矩阵、跨中心调用链路、工作负载扩缩容与迁移 |
 
 ## 学科仿真接口通用约定
@@ -23,6 +23,7 @@
 | 方法与路径 | 说明 |
 | --- | --- |
 | `GET  /{prefix}/scenarios` | 获取可仿真场景列表 |
+| `GET  /{prefix}/datasets` | 获取本学科仿真输入数据集清单（一键体验「数据准备」步骤） |
 | `GET  /{prefix}/scenario-details` | 批量获取全部场景详情（前端场景列表/详情一次拉取） |
 | `GET  /{prefix}/params-schema` | 批量获取全部场景参数 Schema 映射（前端动态渲染表单） |
 | `GET  /{prefix}/benchmark` | 批量获取全部场景基准（Benchmark）数据映射，用于对比展示 |
@@ -40,6 +41,8 @@
 | `GET  /{prefix}/runs/{run_id}/artifacts` | 获取任务产出物（结果文件、图表等） |
 | `POST /{prefix}/operators/register` | 注册科学计算算子 |
 | `POST /{prefix}/operators/{name}/{version}/invoke` | 调用已注册算子 |
+
+> **一键体验扩展**：六个学科文档（`/api/v1/geodynamics`、`/api/v1/llm`、`/api/v1/automotive`、`/api/v1/uav`、`/api/v1/drug`、`/api/v1/dft`）均提供 `GET /{prefix}/datasets`，返回本学科仿真输入数据集清单，用于「一键体验」流程的**数据准备**步骤展示。
 
 ## 平台通用端点（收录于多中心联调文档）
 

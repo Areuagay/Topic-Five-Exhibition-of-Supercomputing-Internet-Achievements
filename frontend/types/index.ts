@@ -131,6 +131,21 @@ export interface Operator {
   description: string
 }
 
+/* ==================== 一键体验 · 数据准备 ==================== */
+
+export interface DatasetItem {
+  dataset_id: string
+  scenario_id: string
+  name: string
+  type: string
+  format: string
+  size_bytes: number
+  grid?: string
+  source?: string
+  status: string
+  updated_at?: string
+}
+
 /* ==================== 运行任务 ==================== */
 
 export interface MetricItem {

@@ -1,0 +1,91 @@
+{
+  "code": 200,
+  "message": "success",
+  "data": [
+    {
+      "dataset_id": "DS-SWARM-0001",
+      "scenario_id": "swarm-coordination",
+      "name": "千机集群初始化配置",
+      "type": "swarm_config",
+      "format": "JSON",
+      "size_bytes": 262144,
+      "grid": "1024 架无人机",
+      "source": "模拟生成",
+      "status": "ready",
+      "updated_at": "2026-08-09T09:10:00+08:00"
+    },
+    {
+      "dataset_id": "DS-SWARM-0002",
+      "scenario_id": "swarm-coordination",
+      "name": "集群通信拓扑结构",
+      "type": "comm_topology",
+      "format": "JSON",
+      "size_bytes": 786432,
+      "grid": "1024 节点 / 8192 链路",
+      "source": "模拟生成",
+      "status": "ready",
+      "updated_at": "2026-08-09T09:14:00+08:00"
+    },
+    {
+      "dataset_id": "DS-SWARM-0003",
+      "scenario_id": "swarm-coordination",
+      "name": "目标编队构型定义",
+      "type": "formation_shape",
+      "format": "JSON",
+      "size_bytes": 32768,
+      "grid": "5 种编队",
+      "source": "模拟生成",
+      "status": "ready",
+      "updated_at": "2026-08-09T09:18:00+08:00"
+    },
+    {
+      "dataset_id": "DS-SWARM-0004",
+      "scenario_id": "swarm-coordination",
+      "name": "三维环境地形数据",
+      "type": "environment_map",
+      "format": "HDF5",
+      "size_bytes": 2147483648,
+      "grid": "4096 × 4096 高程场",
+      "source": "地形测绘数据",
+      "status": "processing",
+      "updated_at": "2026-08-11T09:22:00+08:00"
+    },
+    {
+      "dataset_id": "DS-PATH-0001",
+      "scenario_id": "path-planning",
+      "name": "三维环境地图",
+      "type": "environment_map",
+      "format": "HDF5",
+      "size_bytes": 1610612736,
+      "grid": "2048 × 2048 × 256",
+      "source": "地形测绘数据",
+      "status": "ready",
+      "updated_at": "2026-08-08T14:00:00+08:00"
+    },
+    {
+      "dataset_id": "DS-PATH-0002",
+      "scenario_id": "path-planning",
+      "name": "静态与动态障碍物数据",
+      "type": "obstacle_data",
+      "format": "JSON",
+      "size_bytes": 524288,
+      "grid": "1860 障碍",
+      "source": "模拟生成",
+      "status": "ready",
+      "updated_at": "2026-08-08T14:05:00+08:00"
+    },
+    {
+      "dataset_id": "DS-PATH-0003",
+      "scenario_id": "path-planning",
+      "name": "集群任务规划输入",
+      "type": "mission_plan",
+      "format": "JSON",
+      "size_bytes": 131072,
+      "grid": "1024 航迹任务",
+      "source": "模拟生成",
+      "status": "ready",
+      "updated_at": "2026-08-08T14:10:00+08:00"
+    }
+  ],
+  "timestamp": "2026-08-11T10:00:00+08:00"
+}

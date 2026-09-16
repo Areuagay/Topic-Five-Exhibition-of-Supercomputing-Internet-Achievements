@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import ExperienceFlow from '~/components/experience/ExperienceFlow.vue'
 import { useApi } from '~/composables/useApi'
 import { useAppStore } from '~/stores/app'
+import { getScenarioExperience } from '~/config/scenario-experience'
 import type { Benchmark, ParamsSchemas, ScenarioDetail } from '~/types'
 
 const route = useRoute()
@@ -71,6 +73,8 @@ const selectedBenchmark = computed(() => (
 const params = computed(() => (
   (paramsSchemas.value as ParamsSchemas | null)?.[selectedScenarioId.value]?.fields ?? []
 ))
+// 仅对已预置一键体验样式的场景启用体验容器，其余场景保持原有详情展示
+const experienceEnabled = computed(() => !!getScenarioExperience(selectedScenarioId.value))
 
 function selectScenario(id: string): void {
   if (id === selectedScenarioId.value) return
@@ -107,7 +111,18 @@ function clusterName(id: string): string {
         />
 
         <main class="scenario-detail-region">
+          <ExperienceFlow
+            v-if="experienceEnabled"
+            :key="selectedScenarioId"
+            :domain="domain"
+            :scenario-id="selectedScenarioId"
+            :detail="selectedDetail"
+            :benchmark="selectedBenchmark"
+            :params="params"
+            :cluster-name="clusterName"
+          />
           <ScenarioDetailContent
+            v-else
             :key="selectedScenarioId"
             :detail="selectedDetail"
             :benchmark="selectedBenchmark"

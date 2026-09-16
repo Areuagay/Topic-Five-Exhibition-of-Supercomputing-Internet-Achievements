@@ -1,6 +1,7 @@
 import type {
   ApiResponse,
   Benchmark,
+  DatasetItem,
   DeploymentMatrix,
   FunctionInfo,
   IndexData,
@@ -53,6 +54,7 @@ export function useApi() {
     getParamsSchemas: (domain: string) =>
       request<ParamsSchemas>(`/${domain}/params-schema`),
     getBenchmarks: (domain: string) => request<Benchmark>(`/${domain}/benchmark`),
+    getDatasets: (domain: string) => request<DatasetItem[]>(`/${domain}/datasets`),
     getOperators: (domain: string) => request<Operator[]>(`/${domain}/operators`),
     getRuns: (domain: string) => request<Run[]>(`/${domain}/runs`),
     getRunDetail: (domain: string, runId: string) =>
