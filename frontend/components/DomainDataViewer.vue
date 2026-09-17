@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { isCompactValue, layoutDataBlocks } from '~/utils/domain-data-layout'
 
 interface Props {
   data: unknown
@@ -21,6 +22,11 @@ const MAX_CHIPS = 24
 const MAX_INLINE_CHIPS = 8
 
 const showAllRows = ref(false)
+const inlineDetailsMounted = ref(false)
+
+function onInlineToggle(event: Event) {
+  if ((event.currentTarget as HTMLDetailsElement).open) inlineDetailsMounted.value = true
+}
 
 const ENUM_TEXT: Record<string, Record<string, string>> = {
   source_type: { simulated: '模拟数据', real: '真实数据' },
@@ -205,6 +211,7 @@ const LABELS: Record<string, string> = {
   distribution: '分布',
   metabolism: '代谢',
   excretion: '排泄',
+  toxicity: '毒性',
   risk_distribution: '风险分布',
   risk_level: '风险等级',
   property_distribution: '性质分布',
@@ -239,6 +246,7 @@ const LABELS: Record<string, string> = {
   material_id: '材料编号',
   formula: '化学式',
   formation_energy: '形成能',
+  formation_energy_lt: '形成能阈值',
   band_gap: '带隙',
   stability_score: '稳定性评分',
   cluster_id: '簇编号',
@@ -348,28 +356,18 @@ const objectEntries = computed<{ key: string; value: unknown }[]>(() => {
 })
 
 const scalarEntries = computed(() =>
-  objectEntries.value.filter((entry) => entry.value === null || typeof entry.value !== 'object'),
+  objectEntries.value.filter(entry => props.report ? isCompactValue(entry.value) : entry.value === null || typeof entry.value !== 'object'),
 )
 
-function isFactBlock(value: unknown): boolean {
-  return !!value && !Array.isArray(value) && typeof value === 'object'
-    && Object.values(value).every(item => item === null || typeof item !== 'object')
-}
-
 const blockEntries = computed(() => {
-  const entries = objectEntries.value.filter(entry => entry.value !== null && typeof entry.value === 'object')
+  const entries = objectEntries.value.filter(entry => !scalarEntries.value.includes(entry))
   if (!props.report) return entries.map(entry => ({ ...entry, fullWidth: false }))
-  const facts = entries.filter(entry => isFactBlock(entry.value))
-  const groups = entries.filter(entry => !isFactBlock(entry.value))
-  return [
-    ...facts.map(entry => ({ ...entry, fullWidth: true })),
-    ...groups.map((entry, index) => ({ ...entry, fullWidth: groups.length % 2 === 1 && index === groups.length - 1 })),
-  ]
+  return layoutDataBlocks(entries)
 })
 </script>
 
 <template>
-  <div class="ddv" :class="inline ? 'ddv-inline' : 'ddv-block'">
+  <div class="ddv" :class="[inline ? 'ddv-inline' : 'ddv-block', { 'ddv-report': report }]">
     <template v-if="kind === 'scalar'">
       <a
         v-if="isUrl"
@@ -394,9 +392,9 @@ const blockEntries = computed(() => {
       <span v-if="chipHidden" class="ddv-chip ddv-chip-more">+{{ chipHidden }}</span>
     </div>
 
-    <details v-else-if="kind === 'table' && inline" class="ddv-inline-details">
+    <details v-else-if="kind === 'table' && inline" class="ddv-inline-details" @toggle="onInlineToggle">
       <summary>{{ rawSummary }}</summary>
-      <DomainDataViewer :data="data" :field-key="fieldKey" :depth="depth + 1" />
+      <DomainDataViewer v-if="inlineDetailsMounted" :data="data" :field-key="fieldKey" :depth="depth + 1" />
     </details>
 
     <div v-else-if="kind === 'table'" class="ddv-table-wrap">
@@ -424,21 +422,21 @@ const blockEntries = computed(() => {
       </p>
     </div>
 
-    <details v-else-if="kind === 'object' && inline" class="ddv-inline-details">
+    <details v-else-if="kind === 'object' && inline" class="ddv-inline-details" @toggle="onInlineToggle">
       <summary>{{ rawSummary }}</summary>
-      <DomainDataViewer :data="data" :field-key="fieldKey" :depth="depth + 1" />
+      <DomainDataViewer v-if="inlineDetailsMounted" :data="data" :field-key="fieldKey" :depth="depth + 1" />
     </details>
 
     <div v-else-if="kind === 'object'" class="ddv-object">
       <dl v-if="scalarEntries.length" class="ddv-facts">
         <div v-for="entry in scalarEntries" :key="entry.key">
           <dt>{{ prettifyKey(entry.key) }}</dt>
-          <dd>{{ formatScalar(entry.key, entry.value) }}</dd>
+          <dd><DomainDataViewer v-if="Array.isArray(entry.value)" :data="entry.value" :field-key="entry.key" inline /><template v-else>{{ formatScalar(entry.key, entry.value) }}</template></dd>
         </div>
       </dl>
       <section v-for="entry in blockEntries" :key="entry.key" class="ddv-block" :class="{ 'ddv-block-wide': entry.fullWidth }">
         <h4 v-if="entry.key" class="ddv-block-title">{{ prettifyKey(entry.key) }}</h4>
-        <DomainDataViewer :data="entry.value" :field-key="entry.key" :depth="depth + 1" />
+        <DomainDataViewer :data="entry.value" :field-key="entry.key" :depth="depth + 1" :report="report" />
       </section>
     </div>
   </div>
@@ -547,6 +545,15 @@ const blockEntries = computed(() => {
 .ddv-table-scroll {
   max-width: 100%;
   overflow-x: auto;
+}
+
+.ddv-report > .ddv-object > .ddv-facts {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr));
+}
+@media (min-width: 1100px) {
+  .ddv-report > .ddv-object { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 28px; align-items: start; }
+  .ddv-report > .ddv-object > .ddv-facts,
+  .ddv-report > .ddv-object > .ddv-block-wide { grid-column: 1 / -1; }
 }
 
 .ddv-table-scroll:focus-visible {

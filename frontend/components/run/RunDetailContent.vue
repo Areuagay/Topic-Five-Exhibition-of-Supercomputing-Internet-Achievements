@@ -935,18 +935,6 @@ function chartOption(section: ExtraSection): Record<string, unknown> | null {
   gap: 20px;
 }
 
-@media (min-width: 1100px) {
-  .run-domain-data-body > :deep(.ddv > .ddv-object) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 24px 28px;
-    align-items: start;
-  }
-  .run-domain-data-body > :deep(.ddv > .ddv-object > .ddv-facts),
-  .run-domain-data-body > :deep(.ddv > .ddv-object > .ddv-block-wide) {
-    grid-column: 1 / -1;
-  }
-}
-
 .run-domain-data-body :deep(.ddv-table th) {
   background: #f5f7fa;
 }
