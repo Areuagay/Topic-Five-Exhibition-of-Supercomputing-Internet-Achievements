@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import WorkflowDag from '~/components/WorkflowDag.vue'
 import { getStageLabels } from '~/config/scenario-experience'
 import { formatDuration, formatNumber, statusText } from '~/composables/useFormat'
-import type { Run, RunDetail } from '~/types'
+import type { Operator, Run, RunDetail } from '~/types'
 
 const props = defineProps<{
   domain: string
@@ -11,6 +11,7 @@ const props = defineProps<{
   selectedRunId: string
   workflow?: RunDetail['workflow'] | null
   pending?: boolean
+  chosenOperators: Operator[]
 }>()
 
 const emit = defineEmits<{
@@ -36,6 +37,11 @@ function selectRun(value: string): void {
 
 <template>
   <div class="exp-workflow">
+    <section class="exp-chosen-operators" aria-label="本次体验已选算子">
+      <div><strong>本次体验已选算子 · {{ chosenOperators.length }}</strong><p>下方展示所选运行记录的已有工作流。</p></div>
+      <ul v-if="chosenOperators.length"><li v-for="operator in chosenOperators" :key="operator.name">{{ operator.description.includes('：') ? operator.description.split('：')[0] : operator.name }}</li></ul>
+      <p v-else>尚未选择，可返回「算子选择」添加。</p>
+    </section>
     <div class="exp-toolbar">
       <label class="exp-toolbar-field">
         <span>运行记录</span>
@@ -83,6 +89,11 @@ function selectRun(value: string): void {
 </template>
 
 <style scoped>
+.exp-chosen-operators { padding: 20px 24px; border: 1px solid var(--scnet-divider); border-radius: 10px; background: #fff; }
+.exp-chosen-operators strong { font-size: 14px; color: var(--scnet-text); }
+.exp-chosen-operators p { margin: 6px 0 0; color: var(--scnet-text-secondary); font-size: 13px; }
+.exp-chosen-operators ul { display: flex; flex-wrap: wrap; gap: 8px; padding: 0; margin: 14px 0 0; list-style: none; }
+.exp-chosen-operators li { max-width: 100%; overflow-wrap: anywhere; padding: 5px 10px; border-radius: 5px; background: #f2f6fc; color: var(--scnet-primary); font-size: 12px; }
 .exp-workflow {
   display: grid;
   gap: 18px;

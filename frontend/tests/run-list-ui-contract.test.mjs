@@ -71,9 +71,9 @@ test('run rows use restrained status-aware hover feedback', async () => {
 
   assert.match(page, /function runRowClassName\(/)
   assert.match(page, /:row-class-name="runRowClassName"/)
-  assert.match(page, /tr\.run-row-status-running:hover > td\.el-table__cell\)\s*\{[^}]*background:\s*#f2f6fc/s)
-  assert.match(page, /tr\.run-row-status-success:hover > td\.el-table__cell\)\s*\{[^}]*background:\s*#f2f8f4/s)
-  assert.match(page, /tr\.run-row-status-failed:hover > td\.el-table__cell\)\s*\{[^}]*background:\s*#fdf3f3/s)
-  assert.match(page, /tr\.run-row-status-(?:queued|pending):hover > td\.el-table__cell\)\s*\{[^}]*background:\s*#faf6ef/s)
+  assert.match(page, /tr\.run-row-status-running:hover > td\.el-table__cell\)\s*\{[^}]*background:\s*var\(--scnet-hover-bg\)/s)
+  assert.match(page, /tr\.run-row-status-success:hover > td\.el-table__cell\)\s*\{[^}]*background:\s*var\(--scnet-hover-success-bg\)/s)
+  assert.match(page, /tr\.run-row-status-failed:hover > td\.el-table__cell\)\s*\{[^}]*background:\s*var\(--scnet-hover-danger-bg\)/s)
+  assert.match(page, /tr\.run-row-status-(?:queued|pending):hover > td\.el-table__cell\)\s*\{[^}]*background:\s*var\(--scnet-hover-warning-bg\)/s)
   assert.doesNotMatch(page, /transition:\s*all/)
 })

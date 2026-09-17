@@ -86,6 +86,7 @@ export function timeAgo(iso?: string | null): string {
 /* ==================== 状态 → 文案 / Element Plus Tag 类型 ==================== */
 
 const STATUS_TEXT: Record<string, string> = {
+  registered: '已注册',
   pending: '排队中',
   queued: '排队中',
   running: '运行中',
@@ -116,11 +117,11 @@ const STATUS_TAG: Record<string, 'success' | 'warning' | 'danger' | 'info' | 'pr
   ok: 'success',
   running: 'primary',
   active: 'primary',
-  migrating: 'warning',
+  migrating: 'primary',
   degraded: 'warning',
   queued: 'warning',
-  pending: 'info',
-  stopped: 'warning',
+  pending: 'warning',
+  stopped: 'info',
   offline: 'info',
   unknown: 'info',
   failed: 'danger',

@@ -38,7 +38,7 @@ export const experienceSteps: ExperienceStep[] = [
     index: 1,
     title: '数据准备',
     english: 'Data Preparation',
-    summary: '准备速度模型、震源参数与边界条件等仿真输入数据',
+    summary: '查看当前场景的输入数据与准备状态',
     mode: 'live',
   },
   {
@@ -46,7 +46,7 @@ export const experienceSteps: ExperienceStep[] = [
     index: 2,
     title: '资源调度',
     english: 'Resource Scheduling',
-    summary: '选择算力中心与资源池并提交调度策略',
+    summary: '对比算力中心配置、资源负载与场景适配情况',
     mode: 'external',
   },
   {
@@ -54,7 +54,7 @@ export const experienceSteps: ExperienceStep[] = [
     index: 3,
     title: '算子选择',
     english: 'Operator Selection',
-    summary: '选择本次仿真所需的科学计算算子',
+    summary: '浏览场景推荐算子与计算资源要求',
     mode: 'external',
   },
   {
@@ -78,7 +78,7 @@ export const experienceSteps: ExperienceStep[] = [
     index: 6,
     title: '结果展示',
     english: 'Result Display',
-    summary: '内联展示流程编排所选运行记录的完整详情',
+    summary: '查看所选任务的计算结果、图表与成果文件',
     mode: 'live',
   },
 ]

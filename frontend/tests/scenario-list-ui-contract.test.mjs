@@ -177,7 +177,7 @@ test('scenario hero keeps real metrics compact and typography roles intentional'
 
   assert.match(
     detail,
-    /<header class="scenario-result-hero">\s*<div class="scenario-result-heading">[\s\S]*class="scenario-tech-stack"[\s\S]*<\/div>\s*<dl[^>]+class="scenario-summary-metrics"[\s\S]*<\/dl>\s*<\/header>/s,
+    /<header[^>]*class="scenario-result-hero"[^>]*>\s*<div class="scenario-result-heading">[\s\S]*class="scenario-tech-stack"[\s\S]*<\/div>\s*<dl[^>]+class="scenario-summary-metrics"[\s\S]*<\/dl>\s*<\/header>/s,
   )
   assert.match(detail, /\.scenario-result-hero\s*\{[^}]*display:\s*grid[^}]*grid-template-columns:\s*minmax\(0, 960px\) minmax\(420px, 640px\)[^}]*justify-content:\s*space-between/s)
   assert.match(detail, /\.scenario-summary-metrics\s*\{[^}]*width:\s*100%[^}]*display:\s*grid[^}]*grid-template-columns:\s*repeat\(auto-fit, minmax\(120px, 1fr\)\)[^}]*margin:\s*0[^}]*border-left:\s*1px solid var\(--scnet-divider\)/s)

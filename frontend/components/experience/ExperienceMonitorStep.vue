@@ -25,11 +25,19 @@ const statusCards = computed(() => {
 })
 
 function rowClass({ row }: { row: Run }): string {
-  return row.run_id === props.selectedRunId ? 'is-current' : ''
+  return `run-row-status-${row.status}${row.run_id === props.selectedRunId ? ' is-current' : ''}`
 }
 
 function selectRun(value: string): void {
   emit('update:selectedRunId', value)
+}
+
+function progressColor(status: string): string {
+  if (status === 'success') return 'var(--scnet-success)'
+  if (status === 'failed') return 'var(--scnet-danger)'
+  if (status === 'stopped') return '#8995a5'
+  if (status === 'queued' || status === 'pending') return '#b98745'
+  return 'var(--scnet-primary)'
 }
 
 function inspect(value: string): void {
@@ -59,6 +67,7 @@ function inspect(value: string): void {
         <el-table-column label="状态" width="100">
           <template #default="{ row }">
             <el-tag
+              :class="{ 'queue-status-tag': ['queued', 'pending'].includes(row.status) }"
               :type="row.status === 'success' ? 'success' : row.status === 'running' ? 'primary' : row.status === 'failed' ? 'danger' : 'info'"
               effect="light"
               size="small"
@@ -69,7 +78,7 @@ function inspect(value: string): void {
         </el-table-column>
         <el-table-column label="进度" min-width="160">
           <template #default="{ row }">
-            <el-progress :percentage="Number(row.progress) || 0" :stroke-width="8" />
+            <el-progress :percentage="Number(row.progress) || 0" :stroke-width="6" :color="progressColor(row.status)" />
           </template>
         </el-table-column>
         <el-table-column prop="cluster_name" label="集群" min-width="150" />
@@ -103,6 +112,12 @@ function inspect(value: string): void {
 </template>
 
 <style scoped>
+.queue-status-tag {
+  --el-tag-text-color: #92632e;
+  --el-tag-bg-color: #fff1dc;
+  --el-tag-border-color: #ecd4af;
+}
+
 .exp-monitor {
   display: grid;
   gap: 18px;
@@ -132,7 +147,7 @@ function inspect(value: string): void {
 }
 
 .exp-status-item dt {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--scnet-text-muted);
 }
 
@@ -155,6 +170,9 @@ function inspect(value: string): void {
 .exp-status-item.is-failed dd {
   color: var(--scnet-danger);
 }
+.exp-status-item.is-queued dd, .exp-status-item.is-pending dd { color: #92632e; }
+.exp-status-item.is-stopped dd { color: #8995a5; }
+.exp-table-wrap :deep(.el-progress__text) { min-width: 48px; font-family: var(--scnet-font-mono); font-variant-numeric: tabular-nums; }
 
 .exp-table-wrap {
   border: 1px solid var(--scnet-divider);
@@ -166,10 +184,53 @@ function inspect(value: string): void {
 
 .exp-table-wrap :deep(.el-table) {
   font-size: 14px;
+  --el-table-row-hover-bg-color: var(--scnet-hover-bg);
 }
 
-.exp-table-wrap :deep(.el-table .is-current) {
-  --el-table-tr-bg-color: var(--scnet-primary-soft);
+.exp-table-wrap :deep(.el-table th.el-table__cell) {
+  height: 48px;
+  background: #f7f9fc;
+  color: var(--scnet-text-secondary);
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.exp-table-wrap :deep(.el-table td.el-table__cell) {
+  height: 56px;
+  transition: background-color var(--scnet-hover-duration) var(--scnet-hover-easing);
+}
+
+.exp-table-wrap :deep(.el-table__row) {
+  cursor: pointer;
+}
+
+.exp-table-wrap :deep(.run-row-status-success) {
+  --el-table-row-hover-bg-color: var(--scnet-hover-success-bg);
+}
+
+.exp-table-wrap :deep(.run-row-status-failed) {
+  --el-table-row-hover-bg-color: var(--scnet-hover-danger-bg);
+}
+
+.exp-table-wrap :deep(.run-row-status-queued),
+.exp-table-wrap :deep(.run-row-status-pending) {
+  --el-table-row-hover-bg-color: var(--scnet-hover-warning-bg);
+}
+
+.exp-table-wrap :deep(.run-row-status-stopped) {
+  --el-table-row-hover-bg-color: var(--scnet-hover-neutral-bg);
+}
+
+.exp-table-wrap :deep(.el-table__body tr:hover > td.el-table__cell),
+.exp-table-wrap :deep(.el-table__body tr.hover-row > td.el-table__cell),
+.exp-table-wrap :deep(.el-table__body tr:focus-within > td.el-table__cell) {
+  background-color: var(--el-table-row-hover-bg-color);
+}
+
+.exp-table-wrap :deep(.el-table .is-current > td.el-table__cell:first-child) {
+  box-shadow: inset 3px 0 0 var(--scnet-primary);
+  color: var(--scnet-primary);
+  font-weight: 600;
 }
 
 .exp-table-wrap :deep(.el-table td.mono .cell) {

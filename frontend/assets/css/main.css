@@ -1,3 +1,5 @@
+@import './motion.css';
+
 :root {
   --el-color-primary: #0b5bd3;
   --el-color-primary-light-3: #4f86dd;
@@ -18,6 +20,15 @@
   --scnet-radius: 6px;
   --scnet-danger: #e64a4a;
   --scnet-success: #39a96b;
+  --scnet-hover-bg: #f7faff;
+  --scnet-hover-warning-bg: #fff9f0;
+  --scnet-hover-success-bg: #f2f8f4;
+  --scnet-hover-danger-bg: #fdf3f3;
+  --scnet-hover-neutral-bg: #f6f7f9;
+  --scnet-hover-warning-shadow: inset 0 0 0 1px rgba(217, 140, 40, 0.24);
+  --scnet-hover-duration: 280ms;
+  --scnet-hover-easing: cubic-bezier(0.22, 1, 0.36, 1);
+  --scnet-hover-transition: background-color var(--scnet-hover-duration) var(--scnet-hover-easing), border-color var(--scnet-hover-duration) var(--scnet-hover-easing), box-shadow var(--scnet-hover-duration) var(--scnet-hover-easing);
   --scnet-font-sans: 'Noto Sans SC', 'MiSans', 'PingFang SC', 'Microsoft YaHei UI', 'Microsoft YaHei', sans-serif;
   --scnet-font-mono: 'Cascadia Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
 }
@@ -200,10 +211,18 @@ a:hover { color: var(--el-color-primary-light-3); }
 .el-table {
   --el-table-border-color: var(--scnet-divider);
   --el-table-header-bg-color: #f7f9fc;
-  --el-table-row-hover-bg-color: #f3f7fd;
+  --el-table-row-hover-bg-color: var(--scnet-hover-bg);
   color: var(--scnet-text-secondary);
 }
 .el-breadcrumb { padding: 0 4px; }
+
+.el-table__body td.el-table__cell {
+  transition: background-color var(--scnet-hover-duration) var(--scnet-hover-easing);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --scnet-hover-duration: 0.01ms; }
+}
 
 @media (max-width: 900px) {
   .page-header { padding: 16px; }

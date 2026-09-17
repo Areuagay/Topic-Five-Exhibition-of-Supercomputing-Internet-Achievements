@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onDeactivated, ref, watch } from 'vue'
 import type { EChartsCoreOption } from 'echarts/core'
 import type { WavePropagationData } from '~/types/domain-data'
 import BaseChart from '~/components/BaseChart.vue'
@@ -29,6 +29,7 @@ function selectFrame(event: Event) {
 }
 watch(() => props.data, () => { stop(); frameIndex.value = 0 })
 onBeforeUnmount(stop)
+onDeactivated(stop)
 
 function chart(rows: Record<string, unknown>[] | undefined, x: string, y: string, name: string, xName: string, yName: string, logarithmic = false): EChartsCoreOption {
   return {

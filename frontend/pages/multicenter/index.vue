@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, nextTick, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
+import { useSlidingHighlight } from '~/composables/useSlidingHighlight'
 import { usePreferredReducedMotion } from '@vueuse/core'
 import { useApi } from '~/composables/useApi'
 import { useAppStore } from '~/stores/app'
@@ -42,13 +43,18 @@ if (indexData.value) {
   appStore.setIndex(indexData.value.domains, indexData.value.clusters)
 }
 
-const { data: clusters } = await useAsyncData<MultiCluster[]>('mc-clusters', () => getClusters(), { default: () => [] })
-const { data: topology } = await useAsyncData<Topology | null>('mc-topology', () => getTopology(), { default: () => null })
-const { data: functions } = await useAsyncData<FunctionInfo[]>('mc-functions', () => getFunctions(), { default: () => [] })
-const { data: matrix } = await useAsyncData<DeploymentMatrix | null>('mc-matrix', () => getDeploymentMatrix(), { default: () => null })
-const { data: workloads } = await useAsyncData<Workload[]>('mc-workloads', () => getWorkloads(), { default: () => [] })
-const { data: invocations } = await useAsyncData<Invocation[]>('mc-invocations', () => getInvocations(), { default: () => [] })
-const { data: migrations } = await useAsyncData<Migration[]>('mc-migrations', () => getMigrations(), { default: () => [] })
+const [
+  { data: clusters }, { data: topology }, { data: functions }, { data: matrix },
+  { data: workloads }, { data: invocations }, { data: migrations },
+] = await Promise.all([
+  useAsyncData<MultiCluster[]>('mc-clusters', () => getClusters(), { default: () => [] }),
+  useAsyncData<Topology | null>('mc-topology', () => getTopology(), { default: () => null }),
+  useAsyncData<FunctionInfo[]>('mc-functions', () => getFunctions(), { default: () => [] }),
+  useAsyncData<DeploymentMatrix | null>('mc-matrix', () => getDeploymentMatrix(), { default: () => null }),
+  useAsyncData<Workload[]>('mc-workloads', () => getWorkloads(), { default: () => [] }),
+  useAsyncData<Invocation[]>('mc-invocations', () => getInvocations(), { default: () => [] }),
+  useAsyncData<Migration[]>('mc-migrations', () => getMigrations(), { default: () => [] }),
+])
 
 const route = useRoute()
 const router = useRouter()
@@ -58,6 +64,33 @@ const initialTab = typeof route.query.view === 'string' && validTabNames.has(rou
   : 'overview'
 const activeTab = ref(initialTab)
 const preferredMotion = usePreferredReducedMotion()
+const surface = ref<HTMLElement>()
+const inspector = ref<HTMLElement>()
+const tabOrder = ['overview', 'functions', 'invocations', 'workloads']
+let panelAnimation: Animation | undefined
+let inspectorAnimation: Animation | undefined
+let motionRevision = 0
+
+// Preserve charts and table state. Only animate composited properties, never page height.
+watch(activeTab, async (view, previous) => {
+  const revision = ++motionRevision
+  const content = surface.value?.querySelector<HTMLElement>('.el-tabs__content')
+  panelAnimation?.cancel()
+  await nextTick()
+  if (revision !== motionRevision || preferredMotion.value === 'reduce' || !content) return
+  const panel = content.querySelector<HTMLElement>(`#pane-${view}`)
+  const direction = tabOrder.indexOf(view) >= tabOrder.indexOf(previous) ? 1 : -1
+  panelAnimation = panel?.animate([
+    { opacity: 0.65, transform: `translateX(${direction * 6}px)` },
+    { opacity: 1, transform: 'translateX(0)' },
+  ], { duration: 220, easing: 'cubic-bezier(.22,1,.36,1)' })
+})
+
+onBeforeUnmount(() => {
+  motionRevision++
+  panelAnimation?.cancel()
+  inspectorAnimation?.cancel()
+})
 
 watch(activeTab, (view) => {
   const query = { ...route.query }
@@ -114,6 +147,17 @@ const selectedClusterLinks = computed(() => {
   return topologyLinks.value.filter((link) => link.source === id || link.target === id)
 })
 
+const clusterActiveIndex = computed(() => clusterList.value.findIndex(c => c.id === selectedCluster.value?.id))
+const { track: clusterTrack, ready: clusterHighlightReady, style: clusterHighlightStyle } = useSlidingHighlight(clusterActiveIndex)
+watch([selectedCluster, selectedLink], () => {
+  inspectorAnimation?.cancel()
+  if (preferredMotion.value === 'reduce') return
+  inspectorAnimation = inspector.value?.animate([
+    { opacity: 0.7 },
+    { opacity: 1 },
+  ], { duration: 180, easing: 'ease-out' })
+}, { flush: 'post' })
+
 function linkKey(source: string, target: string): string {
   return [source, target].sort().join('::')
 }
@@ -140,6 +184,12 @@ function selectCluster(id: string): void {
 function selectLink(link: TopoLink): void {
   selectedLinkKey.value = linkKey(link.source, link.target)
   clearTopologySelection()
+  const dataIndex = topologyLinks.value.findIndex(item => linkKey(item.source, item.target) === selectedLinkKey.value)
+  const endpoints = (topology.value?.nodes ?? []).flatMap((node, index) =>
+    node.id === link.source || node.id === link.target ? [index] : [],
+  )
+  topologyChart.value?.dispatchAction({ type: 'select', seriesIndex: 0, dataType: 'node', dataIndex: endpoints })
+  topologyChart.value?.dispatchAction({ type: 'highlight', seriesIndex: 0, dataType: 'edge', dataIndex })
 }
 
 function topologyNodeIndexes(): number[] {
@@ -151,6 +201,9 @@ function clearTopologySelection(): void {
   if (!dataIndex.length) return
   topologyChart.value?.dispatchAction({ type: 'downplay', seriesIndex: 0, dataIndex })
   topologyChart.value?.dispatchAction({ type: 'unselect', seriesIndex: 0, dataIndex })
+  const edgeIndexes = topologyLinks.value.map((_, index) => index)
+  topologyChart.value?.dispatchAction({ type: 'downplay', seriesIndex: 0, dataType: 'edge', dataIndex: edgeIndexes })
+  topologyChart.value?.dispatchAction({ type: 'unselect', seriesIndex: 0, dataType: 'edge', dataIndex: edgeIndexes })
 }
 
 function syncTopologySelection(id: string): void {
@@ -183,7 +236,7 @@ function handleTopologyClick(params: unknown): void {
 function resetTopology(): void {
   topologyResetToken.value += 1
   void nextTick(() => {
-    if (selectedLink.value) clearTopologySelection()
+    if (selectedLink.value) selectLink(selectedLink.value)
     else if (selectedCluster.value) syncTopologySelection(selectedCluster.value.id)
   })
 }
@@ -199,6 +252,7 @@ const topoOption = computed<EChartsCoreOption | null>(() => {
     animationDurationUpdate: 320,
     tooltip: {
       trigger: 'item',
+      triggerOn: 'none',
       confine: true,
       backgroundColor: 'rgba(35, 45, 61, 0.96)',
       borderWidth: 0,
@@ -221,7 +275,7 @@ const topoOption = computed<EChartsCoreOption | null>(() => {
         layout: 'force',
         roam: true,
         draggable: true,
-        selectedMode: 'single',
+        selectedMode: 'multiple',
         cursor: 'grab',
         label: {
           show: true,
@@ -251,8 +305,9 @@ const topoOption = computed<EChartsCoreOption | null>(() => {
         lineStyle: { color: '#aebaca', width: 1.5, opacity: 0.8 },
         emphasis: {
           focus: 'adjacency',
-          lineStyle: { width: 2.5, opacity: 1 },
+          lineStyle: { width: 2.5, opacity: 1, color: '#0b5bd3' },
         },
+        blur: { itemStyle: { opacity: 1 }, label: { opacity: 0.45 }, lineStyle: { opacity: 0.12 } },
         data: t.nodes.map((n) => {
           const cluster = clusterList.value.find((item) => item.id === n.id)
           return {
@@ -288,6 +343,7 @@ const topoOption = computed<EChartsCoreOption | null>(() => {
           latency_ms: l.latency_ms,
           bandwidth_mbps: l.bandwidth_mbps,
           packet_loss_percent: l.packet_loss_percent,
+          select: { disabled: true },
           lineStyle: {
             color: l.status === 'degraded' ? '#c18a41' : '#a9b6c6',
             width: l.status === 'degraded' ? 2.2 : 1.5,
@@ -540,7 +596,7 @@ async function openMig(id: string): Promise<void> {
 </script>
 
 <template>
-  <section class="multicenter-surface">
+  <section ref="surface" class="multicenter-surface">
     <header class="multicenter-surface-header">
       <div class="multicenter-heading-row">
         <NuxtLink to="/" class="multicenter-home-link" aria-label="返回主页">
@@ -599,16 +655,18 @@ async function openMig(id: string): Promise<void> {
             </header>
 
             <div class="topology-workspace">
-              <aside class="topology-cluster-rail" aria-label="计算中心列表">
+              <aside ref="clusterTrack" class="topology-cluster-rail" :class="{ 'has-sliding-highlight': clusterHighlightReady }" aria-label="计算中心列表">
                 <div class="cluster-rail-heading">
                   <span>计算中心</span>
                   <strong>{{ clusterList.length }}</strong>
                 </div>
+                <span class="scnet-sliding-highlight" :class="{ 'is-ready': clusterHighlightReady }" :style="[clusterHighlightStyle, { opacity: selectedLink ? 0 : 1 }]" aria-hidden="true" />
                 <button
                   v-for="c in clusterList"
                   :key="c.id"
                   type="button"
                   class="cluster-rail-button"
+                  data-highlight-item
                   :class="[
                     `is-${c.status}`,
                     { 'is-active': !selectedLink && selectedCluster?.id === c.id },
@@ -638,9 +696,14 @@ async function openMig(id: string): Promise<void> {
                   />
                   <el-empty v-else description="暂无拓扑数据" />
                 </div>
+                <div v-if="selectedLink" class="topology-link-selection" role="status">
+                  <strong>{{ nameOf(selectedLink.source) }} ↔ {{ nameOf(selectedLink.target) }}</strong>
+                  <span>时延 {{ selectedLink.latency_ms }} ms · 带宽 {{ formatBandwidth(selectedLink.bandwidth_mbps) }}</span>
+                </div>
               </div>
 
               <aside class="topology-inspector" aria-live="polite">
+                <div ref="inspector" class="topology-inspector-body">
                 <template v-if="selectedLink">
                   <div class="inspector-heading">
                     <p>链路详情</p>
@@ -697,6 +760,7 @@ async function openMig(id: string): Promise<void> {
                     </button>
                   </div>
                 </template>
+                </div>
               </aside>
             </div>
           </section>
@@ -938,6 +1002,7 @@ async function openMig(id: string): Promise<void> {
     <el-dialog
       v-model="traceVisible"
       class="trace-detail-dialog"
+      transition="mc-dialog"
       title="调用链路追踪"
       width="min(960px, calc(100vw - 40px))"
       align-center
@@ -1018,6 +1083,7 @@ async function openMig(id: string): Promise<void> {
     <el-dialog
       v-model="migVisible"
       class="migration-detail-dialog"
+      transition="mc-dialog"
       title="迁移事件详情"
       width="min(920px, calc(100vw - 40px))"
       align-center
@@ -1201,19 +1267,39 @@ async function openMig(id: string): Promise<void> {
   background: #3f9a63;
 }
 
-.multicenter-tabs { background: #f5f7fa; }
+.multicenter-tabs { --mc-tab-padding: 22px; background: #f5f7fa; }
 .multicenter-tabs :deep(.el-tabs__header) { margin: 0; padding: 0 28px; background: #fff; }
 .multicenter-tabs :deep(.el-tabs__nav-wrap::after) { height: 1px; background: var(--scnet-divider); }
 .multicenter-tabs :deep(.el-tabs__item) {
   height: 46px;
-  padding: 0 22px;
+  padding: 0 var(--mc-tab-padding);
   color: #657287;
   font-size: 13px;
   font-weight: 500;
 }
+/* Override Element Plus's first/last tab padding reset for a balanced hover surface. */
+.multicenter-tabs.el-tabs--top :deep(.el-tabs__header .el-tabs__item) { padding-inline: var(--mc-tab-padding); }
 .multicenter-tabs :deep(.el-tabs__item.is-active) { color: var(--scnet-primary); font-weight: 600; }
 .multicenter-tabs :deep(.el-tabs__active-bar) { height: 2px; }
 .multicenter-tabs :deep(.el-tabs__content) { overflow: visible; padding: 22px; }
+.multicenter-tabs :deep(.el-tabs__item) { border-radius: 6px 6px 0 0; transition: color 200ms ease, background-color 200ms ease; }
+.multicenter-tabs :deep(.el-tabs__item:hover) { color: var(--scnet-primary); background: #f2f7ff; }
+.multicenter-tabs :deep(.el-tabs__item:focus-visible) { outline: 2px solid #8db4eb; outline-offset: -3px; }
+.topology-cluster-rail.has-sliding-highlight .cluster-rail-button.is-active { background: transparent; border-color: transparent; }
+.topology-cluster-rail.has-sliding-highlight .cluster-rail-button.is-active::before { display: none; }
+.topology-cluster-rail .scnet-sliding-highlight { border-left: 3px solid var(--scnet-primary); }
+.topology-cluster-rail .cluster-rail-button:hover { background: rgb(11 91 211 / 5%); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .multicenter-surface-header { animation: scnet-reveal 320ms var(--scnet-hover-easing) backwards; }
+  .multicenter-tabs :deep(.el-tabs__active-bar) { transition: transform 300ms var(--scnet-hover-easing), width 300ms var(--scnet-hover-easing); }
+  .inspector-utilization b { transition: width 360ms var(--scnet-hover-easing); }
+  .inspector-links button { transition: background-color 200ms ease, padding 200ms var(--scnet-hover-easing); }
+  .inspector-links button:hover { padding-inline: 7px; background: #f2f7ff; }
+  .topology-reset-button svg { transition: transform 320ms var(--scnet-hover-easing); }
+  .topology-reset-button:hover svg { transform: rotate(-35deg); }
+  .topology-reset-button:active, .cluster-rail-button:active { transform: translateY(1px); }
+}
 
 .invocation-table-region {
   min-width: 0;
@@ -1246,7 +1332,7 @@ async function openMig(id: string): Promise<void> {
   height: 56px;
   padding: 0;
   border-bottom-color: var(--scnet-divider);
-  transition: background-color 160ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: background-color var(--scnet-hover-duration) var(--scnet-hover-easing);
 }
 
 .invocation-table-region :deep(.el-table .cell) {
@@ -1254,13 +1340,13 @@ async function openMig(id: string): Promise<void> {
   line-height: 1.45;
 }
 
-.invocation-table-region :deep(.el-table__row:hover > td.el-table__cell) { background: #f7f9fc; }
-.invocation-table-region :deep(.el-table__body tr.invocation-row-status-running:hover > td.el-table__cell) { background: #f2f6fc; }
-.invocation-table-region :deep(.el-table__body tr.invocation-row-status-success:hover > td.el-table__cell) { background: #f2f8f4; }
-.invocation-table-region :deep(.el-table__body tr.invocation-row-status-failed:hover > td.el-table__cell) { background: #fdf3f3; }
+.invocation-table-region :deep(.el-table__row:hover > td.el-table__cell) { background: var(--scnet-hover-bg); }
+.invocation-table-region :deep(.el-table__body tr.invocation-row-status-running:hover > td.el-table__cell) { background: var(--scnet-hover-bg); }
+.invocation-table-region :deep(.el-table__body tr.invocation-row-status-success:hover > td.el-table__cell) { background: var(--scnet-hover-success-bg); }
+.invocation-table-region :deep(.el-table__body tr.invocation-row-status-failed:hover > td.el-table__cell) { background: var(--scnet-hover-danger-bg); }
 .invocation-table-region :deep(.el-table__body tr.invocation-row-status-queued:hover > td.el-table__cell),
-.invocation-table-region :deep(.el-table__body tr.invocation-row-status-pending:hover > td.el-table__cell) { background: #faf6ef; }
-.invocation-table-region :deep(.el-table__body tr.invocation-row-status-stopped:hover > td.el-table__cell) { background: #f6f7f9; }
+.invocation-table-region :deep(.el-table__body tr.invocation-row-status-pending:hover > td.el-table__cell) { background: var(--scnet-hover-warning-bg); }
+.invocation-table-region :deep(.el-table__body tr.invocation-row-status-stopped:hover > td.el-table__cell) { background: var(--scnet-hover-neutral-bg); }
 
 .invocation-table-region :deep(td.mono.el-table__cell) {
   color: var(--scnet-text-secondary);
@@ -1678,11 +1764,12 @@ async function openMig(id: string): Promise<void> {
 .migration-table-region :deep(.el-table .cell) { padding: 0 16px; line-height: 1.45; }
 .migration-table-region :deep(td.mono.el-table__cell) { color: #5e6c81; font-family: var(--scnet-font-mono); font-size: 12px; }
 .migration-table-region :deep(.el-table__body tr.migration-row-status-migrating:hover > td.el-table__cell),
-.migration-table-region :deep(.el-table__body tr.migration-row-status-running:hover > td.el-table__cell) { background: #f2f6fc; }
-.migration-table-region :deep(.el-table__body tr.migration-row-status-success:hover > td.el-table__cell) { background: #f2f8f4; }
-.migration-table-region :deep(.el-table__body tr.migration-row-status-failed:hover > td.el-table__cell) { background: #fdf3f3; }
+.migration-table-region :deep(.el-table__body tr.migration-row-status-running:hover > td.el-table__cell) { background: var(--scnet-hover-bg); }
+.migration-table-region :deep(.el-table__body tr.migration-row-status-success:hover > td.el-table__cell) { background: var(--scnet-hover-success-bg); }
+.migration-table-region :deep(.el-table__body tr.migration-row-status-failed:hover > td.el-table__cell) { background: var(--scnet-hover-danger-bg); }
 .migration-table-region :deep(.el-table__body tr.migration-row-status-pending:hover > td.el-table__cell),
-.migration-table-region :deep(.el-table__body tr.migration-row-status-queued:hover > td.el-table__cell) { background: #faf6ef; }
+.migration-table-region :deep(.el-table__body tr.migration-row-status-queued:hover > td.el-table__cell) { background: var(--scnet-hover-warning-bg); }
+.migration-table-region :deep(.el-table__body tr.migration-row-status-stopped:hover > td.el-table__cell) { background: var(--scnet-hover-neutral-bg); }
 
 .migration-route-cell { min-width: 0; display: flex; align-items: center; gap: 8px; color: #7b8798; }
 .migration-route-cell span,
@@ -1692,11 +1779,12 @@ async function openMig(id: string): Promise<void> {
 
 .migration-progress-cell { display: grid; grid-template-columns: minmax(58px, 1fr) 38px; align-items: center; gap: 8px; }
 .migration-progress-track { height: 6px; overflow: hidden; border-radius: 3px; background: #edf1f5; }
-.migration-progress-track i { display: block; height: 100%; border-radius: inherit; background: #6088bd; transition: width 260ms cubic-bezier(0.22, 1, 0.36, 1); }
-.migration-progress-cell.is-success .migration-progress-track i { background: #5d9a72; }
-.migration-progress-cell.is-failed .migration-progress-track i { background: #c96767; }
+.migration-progress-track i { display: block; height: 100%; border-radius: inherit; background: var(--scnet-primary); transition: width 260ms cubic-bezier(0.22, 1, 0.36, 1); }
+.migration-progress-cell.is-success .migration-progress-track i { background: var(--scnet-success); }
+.migration-progress-cell.is-failed .migration-progress-track i { background: var(--scnet-danger); }
 .migration-progress-cell.is-pending .migration-progress-track i,
-.migration-progress-cell.is-queued .migration-progress-track i { background: #b18447; }
+.migration-progress-cell.is-queued .migration-progress-track i { background: #92632e; }
+.migration-progress-cell.is-stopped .migration-progress-track i { background: #8995a5; }
 .migration-progress-cell strong { color: #69768a; font-family: var(--scnet-font-mono); font-size: 11.5px; font-weight: 600; }
 .migration-detail-button { min-height: 36px; font-weight: 600; }
 
@@ -1983,6 +2071,27 @@ async function openMig(id: string): Promise<void> {
 }
 
 .topology-stage { position: relative; min-width: 0; overflow: hidden; }
+.topology-link-selection {
+  position: absolute;
+  z-index: 1;
+  right: 18px;
+  bottom: 18px;
+  left: 18px;
+  width: fit-content;
+  max-width: calc(100% - 36px);
+  margin-inline: auto;
+  padding: 12px 16px;
+  border-radius: 8px;
+  background: rgba(35, 45, 61, 0.96);
+  color: #fff;
+  box-shadow: 0 8px 24px rgb(25 35 49 / 16%);
+  pointer-events: none;
+  font-size: 13px;
+  line-height: 1.7;
+}
+.topology-link-selection strong, .topology-link-selection span { display: block; }
+.topology-link-selection strong { font-weight: 600; }
+.topology-inspector-body { min-height: 480px; }
 .topology-canvas {
   height: clamp(520px, 58vh, 680px);
   min-height: 520px;
@@ -2011,7 +2120,7 @@ async function openMig(id: string): Promise<void> {
 .inspector-heading span.is-degraded { background: #faf3e9; color: #99641f; }
 .inspector-heading span.is-offline { background: #f1f3f6; color: #69778a; }
 .topology-inspector h3 { margin: 0; color: #2d3a50; font-size: 15px; font-weight: 650; line-height: 1.45; }
-.inspector-description { margin: 5px 0 19px; color: #8894a4; font-size: 11.5px; line-height: 1.65; }
+.inspector-description { min-height: 38px; margin: 5px 0 19px; color: #8894a4; font-size: 11.5px; line-height: 1.65; }
 
 .inspector-utilization { display: grid; gap: 15px; padding: 15px 0 18px; border-top: 1px solid var(--scnet-divider); }
 .inspector-utilization > div { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 6px 10px; }
@@ -2361,14 +2470,18 @@ async function openMig(id: string): Promise<void> {
   .topology-workspace { grid-template-columns: 220px minmax(0, 1fr); }
   .topology-inspector {
     grid-column: 1 / -1;
-    display: grid;
-    grid-template-columns: minmax(220px, 0.8fr) minmax(280px, 1.2fr);
-    gap: 18px 28px;
     border-top: 1px solid var(--scnet-divider);
     border-left: 0;
   }
+  .topology-inspector-body {
+    display: grid;
+    grid-template-columns: minmax(220px, 0.8fr) minmax(280px, 1.2fr);
+    min-height: 500px;
+    align-content: start;
+    gap: 18px 28px;
+  }
   .inspector-heading,
-  .topology-inspector > h3,
+  .topology-inspector-body > h3,
   .inspector-description { grid-column: 1; }
   .inspector-utilization,
   .inspector-facts,
@@ -2401,7 +2514,7 @@ async function openMig(id: string): Promise<void> {
   .multicenter-heading-row h1 { font-size: 20px; }
   .multicenter-home-link span { display: none; }
   .multicenter-tabs :deep(.el-tabs__header) { padding: 0 12px; }
-  .multicenter-tabs :deep(.el-tabs__item) { padding: 0 12px; }
+  .multicenter-tabs { --mc-tab-padding: 12px; }
   .multicenter-tabs :deep(.el-tabs__content) { padding: 12px; }
   .multicenter-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .multicenter-summary > div:nth-child(2)::after { display: none; }
@@ -2412,6 +2525,7 @@ async function openMig(id: string): Promise<void> {
   .topology-cluster-rail { order: 2; border-top: 1px solid var(--scnet-divider); border-right: 0; }
   .topology-stage { order: 1; }
   .topology-inspector { order: 3; grid-column: 1; display: block; }
+  .topology-inspector-body { display: block; min-height: 480px; }
   .topology-canvas { height: clamp(430px, 64vh, 560px); min-height: 430px; }
   :global(.trace-detail-dialog) {
     width: calc(100vw - 24px) !important;

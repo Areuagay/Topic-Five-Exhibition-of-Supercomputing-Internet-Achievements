@@ -1,5 +1,5 @@
 <template>
   <NuxtLayout>
-    <NuxtPage />
+    <NuxtPage :transition="{ name: 'scnet-page', mode: 'out-in' }" />
   </NuxtLayout>
 </template>

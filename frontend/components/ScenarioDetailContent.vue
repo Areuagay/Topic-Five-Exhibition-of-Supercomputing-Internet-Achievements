@@ -8,6 +8,7 @@ defineProps<{
   benchmark?: Benchmark[string]
   params: ParamField[]
   clusterName: (id: string) => string
+  hideOverview?: boolean
 }>()
 
 function metricValue(metric: MetricKV): string {
@@ -33,7 +34,7 @@ function architectureDescription(item: ScenarioDetail['architecture'][number]): 
   </section>
 
   <article v-else class="scenario-result-panel">
-    <header class="scenario-result-hero">
+    <header v-if="!hideOverview" class="scenario-result-hero">
       <div class="scenario-result-heading">
         <h2 class="scenario-result-title">{{ detail.name }}</h2>
         <p class="scenario-result-description">{{ detail.description }}</p>
@@ -464,7 +465,7 @@ function architectureDescription(item: ScenarioDetail['architecture'][number]): 
 
 .scenario-table-wrap :deep(.el-table) {
   --el-table-header-bg-color: #f7f9fc;
-  --el-table-row-hover-bg-color: #f3f7fd;
+  --el-table-row-hover-bg-color: var(--scnet-hover-bg);
   font-size: 16px;
 }
 

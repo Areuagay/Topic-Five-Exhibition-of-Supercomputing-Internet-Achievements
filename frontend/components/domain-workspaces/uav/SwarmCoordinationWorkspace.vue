@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, onBeforeUnmount, watch } from 'vue'
+import { computed, ref, onBeforeUnmount, onDeactivated, watch } from 'vue'
 import type { SwarmCoordinationData } from '~/types/domain-data'
 import BaseChart from '~/components/BaseChart.vue'
 import SpatialPlot from './SpatialPlot.vue'
@@ -40,6 +40,7 @@ function play() {
 function seek(e: Event) { stop(); frame.value = Number((e.target as HTMLInputElement).value) }
 watch(() => props.data, () => { stop(); frame.value = 0; selected.value = ''; eventIndex.value = -1 })
 onBeforeUnmount(stop)
+onDeactivated(stop)
 </script>
 <template>
   <div class="auto-workspace swarm-workspace">

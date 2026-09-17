@@ -13,25 +13,24 @@ const stepComponents = [
   'ExperienceResultStep.vue',
 ]
 
-test('experience flow exposes a reserved one-click CTA without any behaviour', async () => {
+test('experience flow keeps the original scenario context without an inactive CTA', async () => {
   const flow = await read('../components/experience/ExperienceFlow.vue')
 
-  assert.match(flow, /一键体验/)
-  assert.match(flow, /class="experience-cta"/)
-  const ctaTag = flow.match(/<button[^>]*class="experience-cta"[^>]*>/)
-  assert.ok(ctaTag, 'expected a reserved one-click CTA button')
-  assert.doesNotMatch(ctaTag[0], /@click/)
-  assert.match(flow, /title="一键体验（自动引导功能开发中）"/)
+  assert.match(flow, /detail\?\.description/)
+  assert.match(flow, /aria-label="关键指标"/)
+  assert.doesNotMatch(flow, /class="experience-cta"|自动引导功能开发中|主前端/)
 })
 
 test('experience flow renders the six ordered steps as navigation', async () => {
   const flow = await read('../components/experience/ExperienceFlow.vue')
 
-  assert.match(flow, /<nav class="experience-steps" aria-label="体验流程步骤">/)
+  assert.match(flow, /<nav[^>]*class="experience-steps"[^>]*aria-label="体验流程步骤"/)
   assert.match(flow, /v-for="step in experienceSteps"/)
   assert.match(flow, /:aria-current="step\.key === activeKey \? 'step' : undefined"/)
   assert.match(flow, /@click="selectStep\(step\.key\)"/)
-  assert.match(flow, /下一步：\{\{ nextStep\.title \}\} →/)
+  assert.match(flow, /:disabled="!previousStep"/)
+  assert.match(flow, /:disabled="!nextStep"/)
+  assert.doesNotMatch(flow, /v-if="(?:nextStep|previousStep)"/)
 
   for (const component of stepComponents) {
     assert.match(flow, new RegExp(`import ${component.replace('.vue', '')} from '\\./${component.replace('.', '\\.')}'`))
@@ -165,18 +164,19 @@ test('data preparation step embeds the current scenario content and dataset tabl
   assert.match(step, /scenarioDatasets/)
   assert.match(step, /item\.scenario_id === props\.scenarioId/)
   assert.match(step, /formatBytes/)
-  assert.match(step, /GET \/api\/v1\/\{\{ domain \}\}\/datasets/)
+  assert.doesNotMatch(step, /GET \/api\/v1/)
 })
 
-test('resource and operator steps are simulated pages with main-frontend hints', async () => {
+test('resource and operator views distinguish scene recommendations from execution', async () => {
   const resource = await read('../components/experience/ExperienceResourceStep.vue')
   assert.match(resource, /supportedClusters/)
   assert.match(resource, /is-supported/)
-  assert.match(resource, /getClusters|multicenter\/clusters|资源调度/)
+  assert.match(resource, /算力资源/)
+  assert.doesNotMatch(resource, /将跳转主前端|GET \/api\/v1/)
 
   const operator = await read('../components/experience/ExperienceOperatorStep.vue')
   assert.match(operator, /selectedOperators/)
-  assert.match(operator, /GET \/api\/v1\/\{\{ domain \}\}\/operators/)
+  assert.doesNotMatch(operator, /已选用|将跳转主前端|GET \/api\/v1/)
   assert.match(operator, /formatBytes/)
 })
 
@@ -207,7 +207,7 @@ test('result step inlines the selected run record detail instead of navigating',
   const config = await read('../config/scenario-experience.ts')
   assert.match(config, /export type ExperienceStepMode = 'live' \| 'external'/)
   assert.doesNotMatch(config, /'navigate'/)
-  assert.match(config, /summary: '内联展示流程编排所选运行记录的完整详情'/)
+  assert.match(config, /summary: '查看所选任务的计算结果、图表与成果文件'/)
   assert.match(config, /mode: 'live'/)
 })
 

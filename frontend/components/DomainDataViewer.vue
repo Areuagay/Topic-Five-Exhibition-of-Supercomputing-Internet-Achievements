@@ -386,7 +386,7 @@ const blockEntries = computed(() =>
     </details>
 
     <div v-else-if="kind === 'table'" class="ddv-table-wrap">
-      <div class="ddv-table-scroll">
+      <div class="ddv-table-scroll" tabindex="0" role="region" :aria-label="prettifyKey(fieldKey) || '数据表格'">
         <table class="ddv-table">
           <thead>
             <tr>
@@ -535,6 +535,11 @@ const blockEntries = computed(() =>
   overflow-x: auto;
 }
 
+.ddv-table-scroll:focus-visible {
+  outline: 2px solid var(--scnet-primary);
+  outline-offset: 2px;
+}
+
 .ddv-table {
   width: 100%;
   border-collapse: collapse;
@@ -557,6 +562,14 @@ const blockEntries = computed(() =>
   background: #fbfcfe;
   color: #687588;
   font-weight: 600;
+}
+
+.ddv-table tbody > tr > td {
+  transition: background-color var(--scnet-hover-duration) var(--scnet-hover-easing);
+}
+
+.ddv-table tbody > tr:hover > td {
+  background: var(--scnet-hover-bg);
 }
 
 .ddv-table-note {

@@ -459,7 +459,7 @@ function runRowClassName({ row }: { row: { status?: string } }): string {
   height: 56px;
   padding: 0;
   border-bottom-color: var(--scnet-divider);
-  transition: background-color 160ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: background-color var(--scnet-hover-duration) var(--scnet-hover-easing);
 }
 
 .run-table-region :deep(.el-table .cell) {
@@ -468,28 +468,28 @@ function runRowClassName({ row }: { row: { status?: string } }): string {
 }
 
 .run-table-region :deep(.el-table__row:hover > td.el-table__cell) {
-  background: #f7f9fc;
+  background: var(--scnet-hover-bg);
 }
 
 .run-table-region :deep(.el-table__body tr.run-row-status-running:hover > td.el-table__cell) {
-  background: #f2f6fc;
+  background: var(--scnet-hover-bg);
 }
 
 .run-table-region :deep(.el-table__body tr.run-row-status-success:hover > td.el-table__cell) {
-  background: #f2f8f4;
+  background: var(--scnet-hover-success-bg);
 }
 
 .run-table-region :deep(.el-table__body tr.run-row-status-failed:hover > td.el-table__cell) {
-  background: #fdf3f3;
+  background: var(--scnet-hover-danger-bg);
 }
 
 .run-table-region :deep(.el-table__body tr.run-row-status-queued:hover > td.el-table__cell),
 .run-table-region :deep(.el-table__body tr.run-row-status-pending:hover > td.el-table__cell) {
-  background: #faf6ef;
+  background: var(--scnet-hover-warning-bg);
 }
 
 .run-table-region :deep(.el-table__body tr.run-row-status-stopped:hover > td.el-table__cell) {
-  background: #f6f7f9;
+  background: var(--scnet-hover-neutral-bg);
 }
 
 .run-table-region :deep(td.mono.el-table__cell) {

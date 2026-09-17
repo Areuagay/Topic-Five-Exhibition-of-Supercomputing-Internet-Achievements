@@ -80,7 +80,7 @@ function utilization(value: number): string {
     </header>
 
     <div v-if="error" class="application-error">
-      <el-result icon="error" title="应用数据加载失败" sub-title="请确认 3001 模拟后端已启动">
+      <el-result icon="error" title="应用数据加载失败" sub-title="请刷新重试或检查服务连接">
         <template #extra>
           <el-button type="primary" @click="refresh()">重新加载</el-button>
         </template>
@@ -121,8 +121,8 @@ function utilization(value: number): string {
           </div>
           <p class="application-description">{{ domain.description }}</p>
           <div class="application-meta">
-            <span>{{ domain.scenario_count }} 个应用场景</span>
-            <span>{{ domain.run_count }} 条运行记录</span>
+            <span><strong>{{ domain.scenario_count }}</strong> 个应用场景</span>
+            <span><strong>{{ domain.run_count }}</strong> 条运行记录</span>
           </div>
           <div class="application-clusters">
             <span v-for="cluster in domain.cluster_hint" :key="cluster">
@@ -400,15 +400,11 @@ function utilization(value: number): string {
   line-height: 1.45;
 }
 .application-description {
-  min-height: 52px;
-  display: -webkit-box;
-  overflow: hidden;
+  min-height: 3.5em;
   margin: 18px 0 0;
   color: var(--scnet-text-secondary);
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.75;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
 }
 .application-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
 .application-meta span,
@@ -420,6 +416,10 @@ function utilization(value: number): string {
   font-size: 11px;
 }
 .application-clusters { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 20px; }
+.application-meta { gap: 16px; }
+.application-meta span { padding: 0; background: transparent; font-size: 13px; }
+.application-meta strong { color: var(--scnet-text); font-weight: 600; font-variant-numeric: tabular-nums; }
+.application-clusters span { border: 1px solid #edf0f4; background: #f8fafc; font-size: 12px; }
 .application-card-entry {
   min-height: 62px;
   display: flex;
@@ -483,6 +483,8 @@ function utilization(value: number): string {
 }
 .multicenter-card {
   position: relative;
+  isolation: isolate;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   padding: 22px;
@@ -493,11 +495,29 @@ function utilization(value: number): string {
   text-decoration: none;
   touch-action: manipulation;
   transition:
-    background-color 240ms cubic-bezier(0.22, 1, 0.36, 1);
+    background-color 280ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 280ms ease;
+}
+.multicenter-card::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(110deg, #e6f0ff, #f2f7ff);
+  transform: scaleX(0);
+  transform-origin: left;
+  content: '';
+  pointer-events: none;
+}
+.multicenter-card:is(:hover, :focus-visible)::before { transform: scaleX(1); }
+@media (prefers-reduced-motion: no-preference) {
+  .multicenter-card::before { transition: transform 420ms var(--scnet-hover-easing); }
+  .multicenter-card .multicenter-link { transition: translate 300ms var(--scnet-hover-easing); }
+  .multicenter-card:is(:hover, :focus-visible) .multicenter-link { translate: 3px 0; }
+  .multicenter-card:active .multicenter-link { translate: 1px 0; }
 }
 .multicenter-card:hover,
 .multicenter-card:focus-visible {
   background: #f2f7ff;
+  box-shadow: inset 3px 0 0 var(--scnet-primary);
 }
 .multicenter-card:focus-visible {
   outline: 2px solid var(--scnet-primary);
@@ -633,9 +653,7 @@ function utilization(value: number): string {
 .cluster-status-card {
   padding: 18px 20px;
   background: #fff;
-  transition:
-    background-color 280ms cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 280ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: var(--scnet-hover-transition);
 }
 .cluster-status-card:hover { background: #f7faff; }
 .cluster-status-card.is-degraded:hover {

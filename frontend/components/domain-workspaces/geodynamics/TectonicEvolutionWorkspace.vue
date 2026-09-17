@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onDeactivated, ref, watch } from 'vue'
 import type { EChartsCoreOption } from 'echarts/core'
 import type { TectonicEvolutionData } from '~/types/domain-data'
 import BaseChart from '~/components/BaseChart.vue'
@@ -39,6 +39,7 @@ function selectField(value: 'temperature' | 'velocity') { stop(); field.value = 
 function selectFrame(event: Event) { stop(); frameIndex.value = Number((event.target as HTMLInputElement).value) }
 watch(() => props.data, () => { stop(); frameIndex.value = 0 })
 onBeforeUnmount(stop)
+onDeactivated(stop)
 
 function chart(seriesRows: Record<string, unknown>[] | undefined, xKey: string, keys: string[], names: string[], residual = false): EChartsCoreOption {
   return {

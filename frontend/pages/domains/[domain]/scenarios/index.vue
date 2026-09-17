@@ -96,7 +96,7 @@ function clusterName(id: string): string {
       <el-alert
         v-if="loadError"
         class="scenario-load-alert"
-        title="部分成果数据加载失败，请确认 3001 模拟后端已启动"
+        title="部分成果数据加载失败，请刷新重试或检查服务连接"
         type="error"
         :closable="false"
         show-icon

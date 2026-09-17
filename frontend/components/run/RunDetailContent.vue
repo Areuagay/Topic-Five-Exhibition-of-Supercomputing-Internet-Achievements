@@ -23,6 +23,11 @@ const props = defineProps<{
 }>()
 
 const scfMetric = ref<'total_energy' | 'energy_delta'>('total_energy')
+const dataDetailsMounted = ref(false)
+
+function mountDataDetails(event: Event): void {
+  if ((event.currentTarget as HTMLDetailsElement).open) dataDetailsMounted.value = true
+}
 
 const { getRunDetail, getRunWorkflow, getRunMetrics, getRunLogs, getRunArtifacts } = useApi()
 const appStore = useAppStore()
@@ -114,20 +119,6 @@ function stageText(stage?: string): string {
   return stageLabels.value[stage] ?? stage
 }
 
-function executionModeText(mode?: string): string {
-  if (!mode) return '-'
-  if (mode === 'simulated') return '模拟执行'
-  if (mode === 'real') return '真实执行'
-  return mode
-}
-
-function sourceTypeText(source?: string): string {
-  if (!source) return '-'
-  if (source === 'simulated') return '模拟数据'
-  if (source === 'real') return '真实数据'
-  return source
-}
-
 function artifactType(type?: string): string {
   return (type && ARTIFACT_TYPES[type]) || '文件'
 }
@@ -170,9 +161,11 @@ const domainData = computed<unknown>(() => {
   const run = detail.value
   if (!run) return null
   const metrics = run.metrics as Record<string, unknown> | undefined
-  if (metrics && metrics.domain_data) return metrics.domain_data
   const extra = (run as unknown as Record<string, unknown>).domain_data
-  return extra ?? null
+  const value = metrics?.domain_data ?? extra
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return value ?? null
+  // Keep provenance in API payloads; omit implementation metadata from the exhibition view.
+  return Object.fromEntries(Object.entries(value).filter(([key]) => !['source_type', 'execution_mode'].includes(key)))
 })
 
 const domainDataKeyCount = computed(() => {
@@ -207,8 +200,6 @@ const taskFacts = computed(() => {
     { label: '开始时间', value: formatTimestamp(run.start_time) },
     { label: '结束时间', value: run.end_time ? formatTimestamp(run.end_time) : '-' },
     { label: '运行耗时', value: formatDuration(run.elapsed_seconds) },
-    { label: '执行模式', value: executionModeText(run.execution_mode) },
-    { label: '数据来源', value: sourceTypeText(run.source_type) },
     { label: '当前阶段', value: stageText(run.current_stage) },
   ]
 })
@@ -432,7 +423,7 @@ function chartOption(section: ExtraSection): Record<string, unknown> | null {
             </section>
           </div>
 
-          <div v-if="extraSections.length || domainData" class="run-data-extras">
+          <div v-if="extraSections.length" class="run-data-extras">
             <section
               v-for="section in extraSections"
               :key="section.key"
@@ -515,21 +506,6 @@ function chartOption(section: ExtraSection): Record<string, unknown> | null {
               </dl>
             </section>
 
-            <section
-              v-if="domainData"
-              class="run-detail-section run-domain-data-section"
-              aria-labelledby="run-domain-data-title"
-            >
-              <div class="run-section-heading">
-                <div>
-                  <h2 id="run-domain-data-title">领域专业数据</h2>
-                </div>
-                <span>{{ domainDataKeyCount }} 项</span>
-              </div>
-              <div class="run-domain-data-body">
-                <DomainDataViewer :data="domainData" />
-              </div>
-            </section>
           </div>
         </div>
       </section>
@@ -548,6 +524,17 @@ function chartOption(section: ExtraSection): Record<string, unknown> | null {
         :error="metricsError"
         @retry="refreshMetrics()"
       />
+
+      <details v-if="domainData" class="run-data-disclosure" @toggle="mountDataDetails">
+        <summary>
+          <span class="run-data-disclosure-title">查看数据明细</span>
+          <span class="run-data-disclosure-meta">{{ domainDataKeyCount }} 组数据</span>
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7 4 6 6-6 6" /></svg>
+        </summary>
+        <div class="run-domain-data-body">
+          <DomainDataViewer v-if="dataDetailsMounted" :data="domainData" />
+        </div>
+      </details>
 
       <section class="run-records-panel" aria-label="记录与产物">
         <section class="run-detail-section" aria-labelledby="run-logs-title">
@@ -871,23 +858,76 @@ function chartOption(section: ExtraSection): Record<string, unknown> | null {
   border-top: 1px solid var(--scnet-divider);
 }
 
+.run-data-disclosure {
+  min-width: 0;
+  border: 1px solid var(--scnet-divider);
+  border-radius: 10px;
+  background: #fff;
+}
+
+.run-data-disclosure > summary {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-height: 68px;
+  padding: 18px 32px;
+  border-radius: 10px;
+  list-style: none;
+  cursor: pointer;
+  transition: var(--scnet-hover-transition);
+}
+
+.run-data-disclosure > summary::-webkit-details-marker { display: none; }
+.run-data-disclosure > summary:hover { background: var(--scnet-hover-bg); }
+.run-data-disclosure > summary:focus-visible { outline: 2px solid var(--scnet-primary); outline-offset: 3px; }
+.run-data-disclosure-title { font-size: 16px; font-weight: 600; color: var(--scnet-text); }
+.run-data-disclosure-meta { margin-left: auto; font-size: 13px; color: var(--scnet-text-secondary); }
+.run-data-disclosure svg { width: 16px; height: 16px; flex: 0 0 auto; fill: none; stroke: #687588; stroke-width: 1.6; }
+.run-data-disclosure[open] > summary { border-bottom: 1px solid var(--scnet-divider); border-radius: 10px 10px 0 0; }
+.run-data-disclosure[open] svg { transform: rotate(90deg); }
+
 .run-domain-data-body {
   min-width: 0;
   padding: 22px 32px;
   background: #fff;
 }
 
-.run-domain-data-body :deep(.ddv-table th),
-.run-domain-data-body :deep(.ddv-table td) {
-  max-width: 280px;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.run-domain-data-body :deep(.ddv-table-scroll) {
+  max-height: 320px;
+  overflow: auto;
+  border: 1px solid var(--scnet-divider);
+  border-radius: 6px;
+}
+
+.run-domain-data-body :deep(.ddv-table) {
+  width: 100%;
+  font-variant-numeric: tabular-nums;
+}
+
+.run-domain-data-body :deep(.ddv > .ddv-object) {
+  gap: 20px;
+}
+
+@media (min-width: 1100px) {
+  .run-domain-data-body > :deep(.ddv > .ddv-object) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px 28px;
+    align-items: start;
+  }
+  .run-domain-data-body > :deep(.ddv > .ddv-object > .ddv-facts) {
+    grid-column: 1 / -1;
+  }
+}
+
+.run-domain-data-body :deep(.ddv-table th) {
+  background: #f5f7fa;
 }
 
 @media (max-width: 700px) {
   .run-domain-data-body {
     padding: 18px 20px;
   }
+  .run-data-disclosure > summary { padding: 18px 20px; gap: 10px; }
 }
 
 .run-records-panel .run-detail-section + .run-detail-section {

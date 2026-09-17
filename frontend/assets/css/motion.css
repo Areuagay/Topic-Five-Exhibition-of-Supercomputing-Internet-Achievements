@@ -1,0 +1,97 @@
+/* Motion is optional: all content remains visible without animations. */
+/* Dialog backdrop and surface move together without the default large zoom. */
+@media (prefers-reduced-motion: no-preference) {
+  .mc-dialog-enter-active { transition: opacity 260ms ease; }
+  .mc-dialog-leave-active { transition: opacity 180ms ease; }
+  .mc-dialog-enter-active .el-dialog { transition: transform 300ms cubic-bezier(.22,1,.36,1); }
+  .mc-dialog-leave-active .el-dialog { transition: transform 180ms ease; }
+  .mc-dialog-enter-from, .mc-dialog-leave-to { opacity: 0; }
+  .mc-dialog-enter-from .el-dialog { transform: translateY(16px) scale(.985); }
+  .mc-dialog-leave-to .el-dialog { transform: translateY(8px); }
+}
+.scnet-segmented { position: relative; isolation: isolate; padding: 4px; border: 1px solid var(--scnet-divider); border-radius: 9px; background: #f7f9fc; }
+.scnet-segmented > button { position: relative; z-index: 1; }
+.scnet-sliding-highlight { position: absolute; top: 0; left: 0; z-index: -1; border-radius: 6px; background: #eaf2ff; box-shadow: inset 0 0 0 1px rgb(11 91 211 / 7%); pointer-events: none; visibility: hidden; }
+.scnet-sliding-highlight.is-ready { visibility: visible; }
+@media (prefers-reduced-motion: no-preference) {
+  .scnet-sliding-highlight.is-ready { transition: transform 300ms var(--scnet-hover-easing), width 300ms var(--scnet-hover-easing), height 300ms var(--scnet-hover-easing); }
+}
+
+@keyframes scnet-reveal {
+  from { opacity: 0; translate: 0 10px; }
+  to { opacity: 1; translate: 0 0; }
+}
+
+@keyframes scnet-meter-reveal {
+  from { scale: 0 1; }
+  to { scale: 1 1; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .scnet-page-enter-active { transition: opacity 220ms ease-out; }
+  .scnet-page-leave-active { transition: opacity 100ms ease-in; }
+  .scnet-page-enter-from,
+  .scnet-page-leave-to { opacity: 0; }
+
+  .application-overview,
+  .experience-overview,
+  .experience-body > :not(.exp-result) {
+    animation: scnet-reveal 360ms var(--scnet-hover-easing) backwards;
+  }
+
+  .application-card-grid > .application-card {
+    animation: scnet-reveal 440ms var(--scnet-hover-easing) backwards;
+  }
+  .application-card-grid > :nth-child(2) { animation-delay: 45ms; }
+  .application-card-grid > :nth-child(3) { animation-delay: 90ms; }
+  .application-card-grid > :nth-child(4) { animation-delay: 135ms; }
+  .application-card-grid > :nth-child(5) { animation-delay: 180ms; }
+  .application-card-grid > :nth-child(6) { animation-delay: 225ms; }
+
+  .application-card-entry > span:last-child,
+  .multicenter-link > span,
+  .operator-symbol,
+  .resource-icon {
+    transition: translate 240ms var(--scnet-hover-easing);
+  }
+  .application-card:is(:hover, :focus-visible) .application-card-entry > span:last-child,
+  .multicenter-card:is(:hover, :focus-visible) .multicenter-link > span {
+    translate: 4px 0;
+  }
+  .operator-item:is(:hover, :focus-within) .operator-symbol,
+  .resource-card:is(:hover, :focus-within) .resource-icon {
+    translate: 0 -2px;
+  }
+
+  .experience-flow .experience-step::after {
+    background: var(--scnet-primary);
+    scale: 0 1;
+    opacity: 0;
+    transition: scale 280ms var(--scnet-hover-easing), opacity 180ms ease;
+  }
+  .experience-flow .experience-step.is-active::after { scale: 1 1; opacity: 1; }
+  .experience-step-index {
+    transition: background-color 240ms ease, color 240ms ease, translate 240ms var(--scnet-hover-easing);
+  }
+  .experience-step:hover .experience-step-index { translate: 0 -2px; }
+
+  .resource-filters button,
+  .operator-filters button {
+    transition: var(--scnet-hover-transition), translate 180ms var(--scnet-hover-easing);
+  }
+  .resource-filters button:active,
+  .operator-filters button:active { translate: 0 1px; }
+
+  .run-data-disclosure svg { transition: transform 240ms var(--scnet-hover-easing); }
+  .run-data-disclosure[open] > .run-domain-data-body,
+  .operator-details[open] > dl,
+  .exp-scenario-details[open] > :not(summary) {
+    animation: scnet-reveal 280ms var(--scnet-hover-easing);
+  }
+
+  .utilization-track > span {
+    transform-origin: left center;
+    animation: scnet-meter-reveal 600ms var(--scnet-hover-easing) backwards;
+    transition: width 400ms var(--scnet-hover-easing);
+  }
+}
