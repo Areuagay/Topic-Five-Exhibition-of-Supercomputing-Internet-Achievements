@@ -1,11 +1,40 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 import { useSlidingHighlight } from '~/composables/useSlidingHighlight'
 import { formatNumber, formatTimestamp, statusText } from '~/composables/useFormat'
 import type { MultiCluster } from '~/types'
 
 const props = defineProps<{ clusters: MultiCluster[]; supportedClusters: string[] }>()
 const onlySupported = ref(false)
+const gridFrame = ref<HTMLElement>()
+let resizeAnimation: Animation | undefined
+watch(onlySupported, async () => {
+  const frame = gridFrame.value
+  if (!frame) return
+  const from = frame.getBoundingClientRect().height
+  await nextTick()
+  if (gridFrame.value !== frame) return
+  const to = frame.querySelector<HTMLElement>('.resource-grid')?.offsetHeight
+  resizeAnimation?.cancel()
+  if (to === undefined || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+  resizeAnimation = frame.animate([{ height: `${from}px` }, { height: `${to}px` }], {
+    duration: 320, easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+    delay: from > to ? 100 : 0, fill: 'backwards',
+  })
+})
+onBeforeUnmount(() => resizeAnimation?.cancel())
+function positionLeavingCard(element: Element) {
+  const card = element as HTMLElement
+  // Preserve the outgoing card's grid position while its neighbours move.
+  Object.assign(card.style, {
+    left: `${card.offsetLeft}px`, top: `${card.offsetTop}px`,
+    width: `${card.offsetWidth}px`, height: `${card.offsetHeight}px`,
+  })
+}
+function clearCardPosition(element: Element) {
+  const card = element as HTMLElement
+  for (const property of ['left', 'top', 'width', 'height']) card.style.removeProperty(property)
+}
 const { track: filterTrack, ready: filterReady, style: filterStyle } = useSlidingHighlight(computed(() => Number(onlySupported.value)))
 const supportedSet = computed(() => new Set(props.supportedClusters))
 const supported = computed(() => props.clusters.filter((item) => supportedSet.value.has(item.id)))
@@ -39,14 +68,15 @@ function usage(value: number): number {
       </div>
       <span class="resource-note">容量为中心总量，负载按最近更新展示</span>
     </div>
-    <div v-if="ordered.length" class="resource-grid">
-      <article v-for="cluster in ordered" :key="cluster.id" class="resource-card" :class="{ 'is-supported': supportedSet.has(cluster.id), 'is-degraded': cluster.status === 'degraded' }">
+    <div ref="gridFrame" class="resource-grid-frame">
+    <TransitionGroup tag="div" name="resource-filter" class="resource-grid" @before-leave="positionLeavingCard" @after-leave="clearCardPosition" @leave-cancelled="clearCardPosition" @before-enter="clearCardPosition">
+      <article v-for="cluster in ordered" :key="cluster.id" class="resource-card" :class="{ 'is-supported': supportedSet.has(cluster.id), 'is-unavailable': !supportedSet.has(cluster.id), 'is-degraded': cluster.status === 'degraded' }">
         <header class="resource-card-head">
           <div class="resource-identity">
             <span class="resource-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="7" rx="1.5"/><rect x="4" y="14" width="16" height="7" rx="1.5"/><path d="M8 6.5h.01M8 17.5h.01M12 6.5h4M12 17.5h4M12 10v4"/></svg>
             </span>
-            <div><h4>{{ cluster.name }}</h4><p>{{ cluster.location }} · {{ cluster.scheduler }}</p></div>
+            <div><h4>{{ cluster.name }}</h4><p>{{ cluster.location }} · {{ cluster.scheduler }}</p><span v-if="!supportedSet.has(cluster.id)" class="resource-unavailable-label">未适配本场景</span></div>
           </div>
           <span class="resource-status" :class="{ 'is-online': cluster.status === 'online', 'is-warning': cluster.status === 'degraded' }">
             <i aria-hidden="true" />{{ statusText(cluster.status) }}
@@ -69,12 +99,13 @@ function usage(value: number): number {
           </div>
         </div>
         <footer class="resource-card-foot">
-          <span class="resource-fit" :class="{ 'is-fit': supportedSet.has(cluster.id) }">{{ supportedSet.has(cluster.id) ? '支持本场景' : '未配置本场景' }}</span>
+          <span class="resource-fit" :class="{ 'is-fit': supportedSet.has(cluster.id) }">{{ supportedSet.has(cluster.id) ? '支持本场景' : '本场景暂不可用' }}</span>
           <p>运行 <strong>{{ formatNumber(cluster.active_jobs) }}</strong><span aria-hidden="true"> · </span>排队 <strong>{{ formatNumber(cluster.queue_length) }}</strong></p>
         </footer>
       </article>
+    </TransitionGroup>
     </div>
-    <div v-else class="resource-empty">
+    <div v-if="!ordered.length" class="resource-empty">
       <el-empty :description="onlySupported ? '暂无适配本场景的中心' : '暂无算力中心数据'" :image-size="60" />
       <button v-if="onlySupported" type="button" @click="onlySupported = false">查看全部中心</button>
     </div>
@@ -103,11 +134,22 @@ function usage(value: number): number {
 .resource-filters > .scnet-sliding-highlight { margin: 0; }
 .resource-filters span { margin-left: 6px; font-family: var(--scnet-font-mono); font-size: 12px; }
 .resource-note { font-size: 12px; color: #687588; }
-.resource-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; padding: 0 30px 30px; }
-.resource-card { min-width: 0; padding: 24px; border: 1px solid var(--scnet-border); border-radius: 8px; background: #fff; transition: var(--scnet-hover-transition); }
+.resource-grid-frame { overflow: hidden; overflow-anchor: none; }
+.resource-grid { position: relative; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; padding: 0 30px 30px; }
+.resource-card { box-sizing: border-box; min-width: 0; padding: 24px; border: 1px solid var(--scnet-border); border-radius: 8px; background: #fff; transition: var(--scnet-hover-transition); }
 .resource-card:hover { background: var(--scnet-hover-bg); }
 .resource-card.is-degraded:hover { background: var(--scnet-hover-warning-bg); box-shadow: var(--scnet-hover-warning-shadow); }
 .resource-card.is-supported { border-color: #bdcfe7; }
+.resource-card.is-unavailable { border-style: dashed; border-color: #b8c2cf; background: #f5f6f8; }
+.resource-card.is-unavailable:hover { background: #edf0f4; }
+.resource-unavailable-label { display: inline-flex; margin-top: 8px; padding: 3px 8px; border: 1px solid #c6ced9; border-radius: 4px; background: #e7ebf1; color: #526176; font-size: 12px; font-weight: 600; }
+.is-unavailable .resource-fit { color: #526176; font-weight: 600; }
+.is-unavailable meter::-webkit-meter-optimum-value { background: #8b9aaf; }
+.is-unavailable meter::-moz-meter-bar { background: #8b9aaf; }
+.resource-filter-move { transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1); }
+.resource-filter-enter-active { transition: opacity 240ms ease, transform 320ms cubic-bezier(0.22, 1, 0.36, 1); }
+.resource-filter-leave-active { position: absolute; pointer-events: none; transition: opacity 180ms ease, transform 220ms ease; }
+.resource-filter-enter-from, .resource-filter-leave-to { opacity: 0; transform: translateY(8px) scale(.985); }
 .resource-card-head, .resource-identity { display: flex; align-items: center; gap: 12px; }
 .resource-card-head { justify-content: space-between; align-items: flex-start; }
 .resource-identity { min-width: 0; }
@@ -142,6 +184,9 @@ meter::-moz-meter-bar { background: #3979ce; border-radius: 3px; }
 .resource-empty { padding-bottom: 24px; text-align: center; }
 .resource-empty button { min-height: 44px; border: 0; background: none; color: var(--scnet-primary); cursor: pointer; }
 button:focus-visible { outline: 2px solid var(--scnet-primary); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) {
+  .resource-filter-move, .resource-filter-enter-active, .resource-filter-leave-active { transition: none; }
+}
 @media (max-width: 1050px) { .resource-grid { gap: 16px; } .resource-card { padding: 20px; } .resource-capacity dd { font-size: 18px; } }
 @media (max-width: 850px) { .resource-grid { grid-template-columns: 1fr; } }
 @media (max-width: 560px) {

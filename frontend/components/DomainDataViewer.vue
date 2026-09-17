@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import DomainTrajectoryDetails from './DomainTrajectoryDetails.vue'
+import DomainBandDetails from './DomainBandDetails.vue'
 import { isCompactValue, layoutDataBlocks } from '~/utils/domain-data-layout'
 
 interface Props {
@@ -429,6 +430,8 @@ const blockEntries = computed(() => {
       <summary>{{ rawSummary }}</summary>
       <DomainDataViewer v-if="inlineDetailsMounted" :data="data" :field-key="fieldKey" :depth="depth + 1" />
     </details>
+
+    <DomainBandDetails v-else-if="kind === 'object' && fieldKey === 'band_structure' && !inline" :data="data" />
 
     <div v-else-if="kind === 'object'" class="ddv-object">
       <dl v-if="scalarEntries.length" class="ddv-facts">
