@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import DomainTrajectoryDetails from './DomainTrajectoryDetails.vue'
 import { isCompactValue, layoutDataBlocks } from '~/utils/domain-data-layout'
 
 interface Props {
@@ -396,6 +397,8 @@ const blockEntries = computed(() => {
       <summary>{{ rawSummary }}</summary>
       <DomainDataViewer v-if="inlineDetailsMounted" :data="data" :field-key="fieldKey" :depth="depth + 1" />
     </details>
+
+    <DomainTrajectoryDetails v-else-if="kind === 'table' && fieldKey === 'trajectory_samples' && !inline" :samples="tableRowsAll" />
 
     <div v-else-if="kind === 'table'" class="ddv-table-wrap">
       <div class="ddv-table-scroll" tabindex="0" role="region" :aria-label="prettifyKey(fieldKey) || '数据表格'">
