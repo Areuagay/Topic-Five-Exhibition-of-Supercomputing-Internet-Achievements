@@ -6,12 +6,14 @@ interface Props {
   fieldKey?: string
   depth?: number
   inline?: boolean
+  report?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
   fieldKey: '',
   depth: 0,
   inline: false,
+  report: false,
 })
 
 const MAX_TABLE_ROWS = 40
@@ -349,9 +351,21 @@ const scalarEntries = computed(() =>
   objectEntries.value.filter((entry) => entry.value === null || typeof entry.value !== 'object'),
 )
 
-const blockEntries = computed(() =>
-  objectEntries.value.filter((entry) => entry.value !== null && typeof entry.value === 'object'),
-)
+function isFactBlock(value: unknown): boolean {
+  return !!value && !Array.isArray(value) && typeof value === 'object'
+    && Object.values(value).every(item => item === null || typeof item !== 'object')
+}
+
+const blockEntries = computed(() => {
+  const entries = objectEntries.value.filter(entry => entry.value !== null && typeof entry.value === 'object')
+  if (!props.report) return entries.map(entry => ({ ...entry, fullWidth: false }))
+  const facts = entries.filter(entry => isFactBlock(entry.value))
+  const groups = entries.filter(entry => !isFactBlock(entry.value))
+  return [
+    ...facts.map(entry => ({ ...entry, fullWidth: true })),
+    ...groups.map((entry, index) => ({ ...entry, fullWidth: groups.length % 2 === 1 && index === groups.length - 1 })),
+  ]
+})
 </script>
 
 <template>
@@ -422,7 +436,7 @@ const blockEntries = computed(() =>
           <dd>{{ formatScalar(entry.key, entry.value) }}</dd>
         </div>
       </dl>
-      <section v-for="entry in blockEntries" :key="entry.key" class="ddv-block">
+      <section v-for="entry in blockEntries" :key="entry.key" class="ddv-block" :class="{ 'ddv-block-wide': entry.fullWidth }">
         <h4 v-if="entry.key" class="ddv-block-title">{{ prettifyKey(entry.key) }}</h4>
         <DomainDataViewer :data="entry.value" :field-key="entry.key" :depth="depth + 1" />
       </section>

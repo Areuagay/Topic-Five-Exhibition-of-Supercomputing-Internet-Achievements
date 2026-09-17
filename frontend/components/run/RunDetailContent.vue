@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, nextTick, ref } from 'vue'
 import ResourceState from '~/components/run/ResourceState.vue'
 import ScenarioWorkspace from '~/components/run/ScenarioWorkspace.vue'
 import ArtifactActions from '~/components/run/ArtifactActions.vue'
@@ -27,6 +27,18 @@ const dataDetailsMounted = ref(false)
 
 function mountDataDetails(event: Event): void {
   if ((event.currentTarget as HTMLDetailsElement).open) dataDetailsMounted.value = true
+}
+
+async function prepareDataDetails(event: MouseEvent): Promise<void> {
+  if (dataDetailsMounted.value) return
+  event.preventDefault()
+  const disclosure = (event.currentTarget as HTMLElement).parentElement as HTMLDetailsElement
+  dataDetailsMounted.value = true
+  await nextTick()
+  if (!disclosure.isConnected) return
+  // Mount the tables while still closed so the first transition has its final height.
+  void disclosure.offsetHeight
+  disclosure.open = true
 }
 
 const { getRunDetail, getRunWorkflow, getRunMetrics, getRunLogs, getRunArtifacts } = useApi()
@@ -526,13 +538,13 @@ function chartOption(section: ExtraSection): Record<string, unknown> | null {
       />
 
       <details v-if="domainData" class="run-data-disclosure" @toggle="mountDataDetails">
-        <summary>
+        <summary @click="prepareDataDetails">
           <span class="run-data-disclosure-title">查看数据明细</span>
           <span class="run-data-disclosure-meta">{{ domainDataKeyCount }} 组数据</span>
           <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7 4 6 6-6 6" /></svg>
         </summary>
         <div class="run-domain-data-body">
-          <DomainDataViewer v-if="dataDetailsMounted" :data="domainData" />
+          <DomainDataViewer v-if="dataDetailsMounted" :data="domainData" report />
         </div>
       </details>
 
@@ -886,6 +898,21 @@ function chartOption(section: ExtraSection): Record<string, unknown> | null {
 .run-data-disclosure[open] > summary { border-bottom: 1px solid var(--scnet-divider); border-radius: 10px 10px 0 0; }
 .run-data-disclosure[open] svg { transform: rotate(90deg); }
 
+@supports (interpolate-size: allow-keywords) and (transition-behavior: allow-discrete) {
+  .run-data-disclosure { interpolate-size: allow-keywords; }
+  .run-data-disclosure::details-content {
+    block-size: 0;
+    opacity: 0;
+    overflow: clip;
+    transition: block-size 340ms var(--scnet-hover-easing), opacity 220ms ease, content-visibility 340ms allow-discrete;
+  }
+  .run-data-disclosure[open]::details-content { block-size: auto; opacity: 1; }
+  .run-data-disclosure[open] > .run-domain-data-body { animation: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .run-data-disclosure::details-content { transition: none; }
+}
+
 .run-domain-data-body {
   min-width: 0;
   padding: 22px 32px;
@@ -914,7 +941,8 @@ function chartOption(section: ExtraSection): Record<string, unknown> | null {
     gap: 24px 28px;
     align-items: start;
   }
-  .run-domain-data-body > :deep(.ddv > .ddv-object > .ddv-facts) {
+  .run-domain-data-body > :deep(.ddv > .ddv-object > .ddv-facts),
+  .run-domain-data-body > :deep(.ddv > .ddv-object > .ddv-block-wide) {
     grid-column: 1 / -1;
   }
 }
