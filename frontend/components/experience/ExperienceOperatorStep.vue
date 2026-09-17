@@ -148,7 +148,7 @@ function memoryText(memoryMb: number): string {
 .operator-search input::placeholder { color: #687588; }
 .operator-search:focus-within { outline: 2px solid var(--scnet-primary); outline-offset: 2px; }
 .operator-search-result { margin: 18px 30px 0; color: var(--scnet-text-secondary); font-size: 13px; }
-.operator-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 20px; padding: 4px 30px 30px; }
+.operator-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; gap: 20px; padding: 4px 30px 30px; }
 .operator-item { position: relative; isolation: isolate; display: flex; flex-direction: column; min-width: 0; padding: 24px; border: 1px solid var(--scnet-border); border-radius: 9px; background: #fff; transition: var(--scnet-hover-transition); }
 .operator-item::before { content: ''; position: absolute; inset: 0; z-index: -1; border-radius: inherit; background: #edf4ff; transform: scaleX(0); transform-origin: left center; transition: transform 360ms var(--scnet-hover-easing); pointer-events: none; }
 .operator-item.is-chosen::before { transform: scaleX(1); }
@@ -165,7 +165,7 @@ function memoryText(memoryMb: number): string {
 .operator-description { min-height: 3.5em; margin: 18px 0; color: var(--scnet-text-secondary); font-size: 15px; line-height: 1.75; }
 .operator-status { flex: 0 0 auto; color: var(--scnet-text-secondary); font-size: 12px; }
 .operator-status.is-ready { color: #49735d; }
-.operator-bottom { margin-top: auto; }
+.operator-bottom { margin-top: 0; }
 .operator-requirements { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; padding: 16px 0; margin: 0; border-block: 1px solid #e3eaf4; }
 .operator-requirements > div { display: grid; align-content: start; gap: 6px; min-width: 0; }
 .operator-requirements dt { font-size: 12px; color: #687588; }
@@ -173,10 +173,21 @@ function memoryText(memoryMb: number): string {
 .operator-requirements small { font: 12px var(--scnet-font-sans); }
 .operator-runtime { text-transform: capitalize; }
 .operator-actions { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: 0 16px; margin-top: 16px; }
-.operator-details { display: contents; }
-.operator-details summary { display: list-item; width: fit-content; min-height: 44px; padding-block: 11px; color: var(--scnet-primary); cursor: pointer; font-size: 13px; }
-.operator-details dl { grid-column: 1 / -1; grid-row: 2; display: grid; gap: 12px; margin: 12px 0 0; padding: 16px 20px; background: #f7f9fc; border-radius: 6px; }
-.operator-actions > button { grid-column: 2; grid-row: 1; }
+.operator-details { grid-column: 1 / -1; grid-row: 1; min-width: 0; }
+.operator-details summary { display: list-item; width: fit-content; max-width: calc(100% - 136px); min-height: 44px; padding-block: 11px; color: var(--scnet-primary); cursor: pointer; font-size: 13px; }
+.operator-details dl { display: grid; gap: 12px; margin: 12px 0 0; padding: 16px 20px; background: #f7f9fc; border-radius: 6px; }
+.operator-actions > button { grid-column: 2; grid-row: 1; position: relative; z-index: 1; }
+@supports (interpolate-size: allow-keywords) and (transition-behavior: allow-discrete) {
+  .operator-details { interpolate-size: allow-keywords; }
+  .operator-details::details-content {
+    block-size: 0;
+    opacity: 0;
+    overflow: clip;
+    transition: block-size 280ms var(--scnet-hover-easing), opacity 180ms ease, content-visibility 280ms allow-discrete;
+  }
+  .operator-details[open]::details-content { block-size: auto; opacity: 1; }
+  .operator-details[open] > dl { animation: none; }
+}
 .operator-details dl > div { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 12px; }
 .operator-details dt { color: #687588; font-size: 12px; }
 .operator-details dd { margin: 0; font: 12px/1.7 var(--scnet-font-mono); overflow-wrap: anywhere; }
@@ -201,6 +212,7 @@ button:focus-visible, summary:focus-visible { outline: 2px solid var(--scnet-pri
   .operator-selection-bar { padding-inline: 20px; }
 }
 @media (prefers-reduced-motion: reduce) {
+  .operator-details::details-content { transition: none; }
   .operator-item::before, .operator-select-button, .operator-select-icon > span, .operator-select-icon path { transition: none; }
 }
 </style>
