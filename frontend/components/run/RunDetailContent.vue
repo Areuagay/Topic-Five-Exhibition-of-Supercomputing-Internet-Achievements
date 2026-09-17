@@ -20,7 +20,9 @@ import {
 const props = defineProps<{
   domain: string
   runId: string
+  embedded?: boolean
 }>()
+const emit = defineEmits<{ 'back-to-monitor': [] }>()
 
 const scfMetric = ref<'total_energy' | 'energy_delta'>('total_energy')
 const dataDetailsMounted = ref(false)
@@ -319,12 +321,13 @@ function chartOption(section: ExtraSection): Record<string, unknown> | null {
 <template>
   <div class="run-detail-workspace">
     <ResourceState v-if="summaryPending || summaryError" :pending="summaryPending" :error="summaryError" label="任务摘要" @retry="refreshSummary()">
-      <template #actions><NuxtLink class="summary-back" :to="`/domains/${domain}/runs`">返回运行列表</NuxtLink></template>
+      <template #actions><button v-if="embedded" type="button" class="summary-back" @click="emit('back-to-monitor')">返回执行监控</button><NuxtLink v-else class="summary-back" :to="`/domains/${domain}/runs`">返回运行列表</NuxtLink></template>
     </ResourceState>
     <section v-else-if="!detail" class="run-detail-empty" aria-live="polite">
       <strong>未找到该运行详情</strong>
       <p>该记录可能不存在，或尚未生成可查看的运行数据。</p>
-      <NuxtLink :to="`/domains/${domain}/runs`">返回运行列表</NuxtLink>
+      <button v-if="embedded" type="button" class="summary-back" @click="emit('back-to-monitor')">返回执行监控</button>
+      <NuxtLink v-else :to="`/domains/${domain}/runs`">返回运行列表</NuxtLink>
     </section>
 
     <article v-else class="run-detail-record">
@@ -339,6 +342,7 @@ function chartOption(section: ExtraSection): Record<string, unknown> | null {
           </div>
 
           <NuxtLink
+            v-if="!embedded"
             class="run-detail-back-link"
             :to="`/domains/${domain}/runs`"
           >
@@ -348,6 +352,7 @@ function chartOption(section: ExtraSection): Record<string, unknown> | null {
             <span>返回运行记录</span>
           </NuxtLink>
         </header>
+        <p v-if="embedded && !['success', 'completed'].includes(detail.status)" class="run-result-note">{{ ['failed', 'stopped', 'cancelled'].includes(detail.status) ? '任务未成功完成，以下展示已产生的数据与产物。' : '任务尚未完成，以下展示当前已有数据与阶段性结果。' }}</p>
 
         <section class="run-summary-strip" aria-label="运行摘要">
           <div class="run-progress-summary">
@@ -690,6 +695,7 @@ function chartOption(section: ExtraSection): Record<string, unknown> | null {
   box-shadow: 0 2px 8px rgb(31 45 61 / 3.5%);
 }
 
+.run-result-note { margin: 0; padding: 0 28px 18px; color: #687588; font-size: 13px; line-height: 1.6; }
 .run-record-header {
   min-height: 88px;
   display: flex;

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
+import { useExperienceNavigation } from '~/composables/useExperienceNavigation'
 import { useSlidingHighlight } from '~/composables/useSlidingHighlight'
 import ExperienceDataPrepStep from './ExperienceDataPrepStep.vue'
 import ExperienceResourceStep from './ExperienceResourceStep.vue'
@@ -64,12 +65,13 @@ const { data: runs } = await useAsyncData<Run[]>(
 )
 
 const scenarioRuns = computed(() => (runs.value ?? []).filter((run) => run.scenario_id === props.scenarioId))
+const { activeKey, selectedRunId, navigate } = useExperienceNavigation(props.domain, props.scenarioId, scenarioRuns)
 
 const supportedClusters = computed(() => props.detail?.supported_clusters ?? [])
 const selectedOperators = computed(() => props.detail?.operators ?? [])
 const chosenOperatorIds = useState<string[] | null>(`experience-operators-selection-${props.domain}-${props.scenarioId}`, () => null)
 const chosenOperators = computed(() => (operators.value ?? []).filter((item) => chosenOperatorIds.value?.includes(item.name)))
-const guideActive = ref(false)
+const guideActive = useState<boolean>(`experience-guide-${props.domain}-${props.scenarioId}`, () => false)
 const experienceSession = ref(0)
 const guideBar = ref<HTMLElement>()
 const actionFeedback = ref('')
@@ -92,10 +94,10 @@ async function startExperience(): Promise<void> {
   chosenOperatorIds.value = (operators.value ?? [])
     .filter((item) => recommended.has(item.name) && ['registered', 'available'].includes(item.status))
     .map((item) => item.name)
-  selectedRunId.value = (scenarioRuns.value.find((run) => run.has_detail) ?? scenarioRuns.value[0])?.run_id ?? ''
+  const defaultRunId = (scenarioRuns.value.find((run) => run.has_detail) ?? scenarioRuns.value[0])?.run_id ?? ''
   experienceSession.value++
   guideActive.value = true
-  activeKey.value = 'data'
+  navigate('data', defaultRunId)
   feedbackTimer = setTimeout(() => { actionFeedback.value = '' }, 2800)
   await nextTick()
   guideBar.value?.scrollIntoView({ block: 'nearest' })
@@ -103,7 +105,6 @@ async function startExperience(): Promise<void> {
 }
 
 /* ---------------- 步骤状态 ---------------- */
-const activeKey = ref('data')
 const activeStep = computed(
   () => experienceSteps.find((step) => step.key === activeKey.value) ?? experienceSteps[0],
 )
@@ -122,7 +123,6 @@ function goNext(): void {
 }
 
 /* ---------------- 运行记录相关资源 ---------------- */
-const selectedRunId = ref('')
 const runWorkflow = ref<RunDetail['workflow'] | null>(null)
 const runResourcesPending = ref(false)
 
@@ -143,19 +143,13 @@ async function loadRunResources(runId: string): Promise<void> {
   }
 }
 
-function initializeRun(): void {
-  const list = scenarioRuns.value
-  if (list.some((run) => run.run_id === selectedRunId.value)) return
-  const preferred = list.find((run) => run.has_detail) ?? list[0]
-  selectedRunId.value = preferred?.run_id ?? ''
-}
-
-watch(scenarioRuns, initializeRun, { immediate: true })
 watch(selectedRunId, (runId) => { void loadRunResources(runId) }, { immediate: true })
 
 function handleInspect(runId: string): void {
-  selectedRunId.value = runId
-  activeKey.value = 'workflow'
+  navigate('workflow', runId)
+}
+function handleResult(runId: string): void {
+  navigate('result', runId)
 }
 </script>
 
@@ -219,7 +213,7 @@ function handleInspect(runId: string): void {
     </div>
 
     <div class="experience-body">
-      <KeepAlive :key="experienceSession" include="ExperienceResultStep" :max="1">
+      <KeepAlive :key="experienceSession" include="ExperienceMonitorStep,ExperienceResultStep" :max="2">
       <ExperienceDataPrepStep
         v-if="activeKey === 'data'"
         :domain="domain"
@@ -264,12 +258,14 @@ function handleInspect(runId: string): void {
         :selected-run-id="selectedRunId"
         @update:selected-run-id="(value) => (selectedRunId = value)"
         @inspect="handleInspect"
+        @result="handleResult"
       />
 
       <ExperienceResultStep
         v-else-if="activeKey === 'result'"
         :domain="domain"
         :run-id="selectedRunId"
+        @back-to-monitor="selectStep('monitor')"
       />
       </KeepAlive>
     </div>

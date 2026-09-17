@@ -6,6 +6,7 @@ const props = defineProps<{
   domain: string
   runId: string
 }>()
+const emit = defineEmits<{ 'back-to-monitor': [] }>()
 
 const resultRoot = ref<HTMLElement>()
 let active = false
@@ -34,6 +35,8 @@ onBeforeUnmount(() => entryAnimation?.cancel())
         :key="props.runId"
         :domain="props.domain"
         :run-id="props.runId"
+        embedded
+        @back-to-monitor="emit('back-to-monitor')"
       />
       <template #fallback>
         <div class="exp-result-loading" role="status" aria-busy="true">
@@ -45,7 +48,8 @@ onBeforeUnmount(() => entryAnimation?.cancel())
     </Suspense>
     <div v-else class="exp-result-empty" role="status">
       <strong>暂无可展示的运行记录</strong>
-      <p>请先在「流程编排」步骤中选择一条运行记录，再查看对应的结果详情。</p>
+      <p>请在「执行监控」中选择一条运行记录，查看对应的结果详情。</p>
+      <button type="button" @click="emit('back-to-monitor')">返回执行监控</button>
     </div>
   </section>
 </template>
@@ -69,4 +73,5 @@ onBeforeUnmount(() => entryAnimation?.cancel())
 }
 .exp-result-empty strong { color: var(--scnet-text); font-size: 16px; }
 .exp-result-empty p { margin: 0; color: var(--scnet-text-muted); font-size: 13px; }
+.exp-result-empty button { padding: 8px 14px; border: 1px solid #bfd5f3; border-radius: 6px; background: #edf4ff; color: var(--scnet-primary); cursor: pointer; }
 </style>

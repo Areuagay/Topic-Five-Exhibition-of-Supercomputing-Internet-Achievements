@@ -12,6 +12,7 @@ const props = defineProps<{
 const emit = defineEmits<{
   'update:selectedRunId': [value: string]
   inspect: [value: string]
+  result: [value: string]
 }>()
 
 const statusOrder = ['running', 'success', 'failed', 'stopped', 'pending', 'queued']
@@ -93,14 +94,14 @@ function inspect(value: string): void {
           <template #default="{ row }">
             <div class="exp-row-actions">
               <button type="button" class="exp-link" @click.stop="inspect(row.run_id)">查看工作流</button>
-              <NuxtLink
+              <button
                 v-if="row.has_detail"
+                type="button"
                 class="exp-link"
-                :to="`/domains/${domain}/runs/${row.run_id}`"
-                @click.stop
+                @click.stop="emit('result', row.run_id)"
               >
-                详情
-              </NuxtLink>
+                查看结果
+              </button>
             </div>
           </template>
         </el-table-column>

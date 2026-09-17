@@ -188,7 +188,8 @@ test('workflow and monitor steps reuse the run-detail capability', async () => {
   const monitor = await read('../components/experience/ExperienceMonitorStep.vue')
   assert.match(monitor, /emit\('inspect'/)
   assert.match(monitor, /has_detail/)
-  assert.match(monitor, /`\/domains\/\$\{domain\}\/runs\//)
+  assert.match(monitor, /emit\('result', row\.run_id\)/)
+  assert.doesNotMatch(monitor, /<NuxtLink/)
 })
 
 test('result step inlines the selected run record detail instead of navigating', async () => {

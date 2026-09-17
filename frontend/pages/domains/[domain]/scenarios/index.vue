@@ -78,7 +78,8 @@ const experienceEnabled = computed(() => !!getScenarioExperience(selectedScenari
 
 function selectScenario(id: string): void {
   if (id === selectedScenarioId.value) return
-  router.push({ query: { ...route.query, scenario: id } })
+  const { step, run, ...query } = route.query
+  router.push({ query: { ...query, scenario: id } })
 }
 
 function clusterName(id: string): string {

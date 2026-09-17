@@ -49,7 +49,8 @@ test('scenario selection falls back to the first real scenario and keeps URL sta
 
   assert.match(page, /scenarioList\.value\.some\(\(item\) => item\.id === requested\)/)
   assert.match(page, /scenarioList\.value\[0\]\?\.id/)
-  assert.match(page, /query:\s*\{\s*\.\.\.route\.query,\s*scenario:\s*id\s*\}/s)
+  assert.match(page, /const \{ step, run, \.\.\.query \} = route\.query/)
+  assert.match(page, /query:\s*\{\s*\.\.\.query,\s*scenario:\s*id\s*\}/s)
   assert.doesNotMatch(page, /const selectedScenarioId = ref/)
 })
 
