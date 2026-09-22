@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, ref } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import ResourceState from '~/components/run/ResourceState.vue'
 import ScenarioWorkspace from '~/components/run/ScenarioWorkspace.vue'
 import ArtifactActions from '~/components/run/ArtifactActions.vue'
@@ -133,6 +133,37 @@ function stageText(stage?: string): string {
   return stageLabels.value[stage] ?? stage
 }
 
+/** 首个学科域（地球动力学）体验联动：结果页随运行推进动态刷新总进度与指标 */
+const isGeodynamics = computed(() => props.domain === 'geodynamics')
+const runRunning = computed(() => detail.value?.status === 'running')
+const durationLabel = computed(() => (isGeodynamics.value ? '累计耗时' : '运行耗时'))
+const metricsTitle = computed(() => (isGeodynamics.value && !runRunning.value ? '指标展示' : '实时指标'))
+
+let pollTimer: ReturnType<typeof setInterval> | undefined
+function stopPolling(): void {
+  if (pollTimer !== undefined) {
+    clearInterval(pollTimer)
+    pollTimer = undefined
+  }
+}
+function syncPolling(): void {
+  if (props.embedded && isGeodynamics.value && runRunning.value) {
+    if (pollTimer === undefined) {
+      pollTimer = setInterval(() => {
+        void refreshSummary()
+        void refreshWorkflow()
+        void refreshMetrics()
+      }, 1500)
+    }
+  } else {
+    stopPolling()
+  }
+}
+watch(runRunning, syncPolling)
+watch(() => props.runId, syncPolling)
+onMounted(syncPolling)
+onBeforeUnmount(stopPolling)
+
 function artifactType(type?: string): string {
   return (type && ARTIFACT_TYPES[type]) || '文件'
 }
@@ -213,7 +244,7 @@ const taskFacts = computed(() => {
     { label: '应用场景', value: run.scenario_name || run.scenario_id || '-' },
     { label: '开始时间', value: formatTimestamp(run.start_time) },
     { label: '结束时间', value: run.end_time ? formatTimestamp(run.end_time) : '-' },
-    { label: '运行耗时', value: formatDuration(run.elapsed_seconds) },
+    { label: durationLabel.value, value: formatDuration(run.elapsed_seconds) },
     { label: '当前阶段', value: stageText(run.current_stage) },
   ]
 })
@@ -380,7 +411,7 @@ function chartOption(section: ExtraSection): Record<string, unknown> | null {
             <strong>{{ detail.cluster_name || detail.cluster_id || '-' }}</strong>
           </div>
           <div class="run-summary-item">
-            <span>运行耗时</span>
+            <span>{{ durationLabel }}</span>
             <strong>{{ formatDuration(detail.elapsed_seconds) }}</strong>
           </div>
         </section>
@@ -407,7 +438,7 @@ function chartOption(section: ExtraSection): Record<string, unknown> | null {
             <section class="run-detail-section" aria-labelledby="run-metrics-title">
               <div class="run-section-heading">
                 <div>
-                  <h2 id="run-metrics-title">实时指标</h2>
+                  <h2 id="run-metrics-title">{{ metricsTitle }}</h2>
                 </div>
                 <span>{{ detail.metrics.metrics.length }} 项</span>
               </div>

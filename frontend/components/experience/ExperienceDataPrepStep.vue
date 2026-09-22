@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onBeforeUnmount, ref } from 'vue'
 import ScenarioDetailContent from '~/components/ScenarioDetailContent.vue'
 import { getDatasetTypeLabels } from '~/config/scenario-experience'
 import { formatBytes, formatTimestamp } from '~/composables/useFormat'
-import type { Benchmark, DatasetItem, ParamField, ScenarioDetail } from '~/types'
+import { useApi } from '~/composables/useApi'
+import type { Benchmark, DatasetItem, ImportResult, ParamField, ScenarioDetail } from '~/types'
 
 const props = defineProps<{
   domain: string
@@ -14,6 +15,28 @@ const props = defineProps<{
   clusterName: (id: string) => string
   datasets: DatasetItem[]
 }>()
+
+const emit = defineEmits<{
+  refresh: []
+  imported: [result: ImportResult]
+}>()
+
+const { uploadDataset, resetDataset, importDatasets } = useApi()
+
+/** 上传 / 恢复未上传 / 一键导入仅在首个学科域（地球动力学）启用，其他学科域保持只读 */
+const interactive = computed(() => props.domain === 'geodynamics')
+const uploadingId = ref('')
+const resettingId = ref('')
+const importing = ref(false)
+const importMessage = ref('')
+let messageTimer: ReturnType<typeof setTimeout> | undefined
+onBeforeUnmount(() => clearTimeout(messageTimer))
+
+function showImportMessage(text: string): void {
+  importMessage.value = text
+  clearTimeout(messageTimer)
+  messageTimer = setTimeout(() => { importMessage.value = '' }, 3600)
+}
 
 const STATUS_LABELS: Record<string, string> = {
   ready: '就绪',
@@ -47,6 +70,62 @@ function statusTagType(status: string): 'success' | 'warning' | 'info' | 'danger
   if (status === 'failed') return 'danger'
   return 'info'
 }
+
+/** 未上传的数据集：大小、来源、状态、更新时间均留空（HDF5 数据默认视为已上传） */
+function isUploaded(row: DatasetItem): boolean {
+  return !interactive.value || row.uploaded === true
+}
+
+function displayedSize(row: DatasetItem): string {
+  return isUploaded(row) ? formatBytes(row.size_bytes) : ''
+}
+
+function displayedSource(row: DatasetItem): string {
+  return isUploaded(row) ? row.source ?? '' : ''
+}
+
+function displayedUpdated(row: DatasetItem): string {
+  return isUploaded(row) && row.updated_at ? formatTimestamp(row.updated_at) : ''
+}
+
+async function handleUpload(row: DatasetItem): Promise<void> {
+  if (!interactive.value || row.uploaded || uploadingId.value) return
+  uploadingId.value = row.dataset_id
+  try {
+    await uploadDataset(props.domain, row.dataset_id)
+    emit('refresh')
+  } finally {
+    uploadingId.value = ''
+  }
+}
+
+/** 「删除」不删除整行，而是把该数据集恢复为未上传状态（隐藏大小/来源/状态/更新时间） */
+async function handleReset(row: DatasetItem): Promise<void> {
+  if (!interactive.value || resettingId.value) return
+  // HDF5 为内置数据，不支持恢复未上传：按钮保持常规外观但点击无响应
+  if (row.format === 'HDF5') return
+  resettingId.value = row.dataset_id
+  try {
+    await resetDataset(props.domain, row.dataset_id)
+    emit('refresh')
+  } finally {
+    resettingId.value = ''
+  }
+}
+
+async function handleImport(): Promise<void> {
+  if (!interactive.value || importing.value) return
+  importing.value = true
+  try {
+    const result = await importDatasets(props.domain, props.scenarioId)
+    showImportMessage(result.message)
+    emit('imported', result)
+  } catch {
+    showImportMessage('导入失败，请稍后重试')
+  } finally {
+    importing.value = false
+  }
+}
 </script>
 
 <template>
@@ -54,7 +133,16 @@ function statusTagType(status: string): 'success' | 'warning' | 'info' | 'danger
     <section class="exp-block">
       <div class="exp-block-head">
         <div><h3>输入数据</h3><p class="exp-block-description">当前场景所需的数据集、参数与输入文件。</p></div>
-        <span class="exp-block-note">{{ scenarioDatasets.filter(item => item.status === 'ready').length }} / {{ scenarioDatasets.length }} 项就绪</span>
+        <div class="exp-block-actions">
+          <span v-if="importMessage" class="exp-import-message" role="status">{{ importMessage }}</span>
+          <span class="exp-block-note">{{ scenarioDatasets.filter(item => item.status === 'ready').length }} / {{ scenarioDatasets.length }} 项就绪</span>
+          <el-button
+            v-if="interactive"
+            type="primary"
+            :loading="importing"
+            @click="handleImport"
+          >{{ importing ? '导入中…' : '一键导入' }}</el-button>
+        </div>
       </div>
 
       <div v-if="scenarioDatasets.length" class="exp-table-wrap">
@@ -66,18 +154,49 @@ function statusTagType(status: string): 'success' | 'warning' | 'info' | 'danger
           <el-table-column prop="format" label="格式" width="90" class-name="mono" />
           <el-table-column prop="grid" label="规模" min-width="140" class-name="mono" />
           <el-table-column label="大小" width="110" class-name="mono">
-            <template #default="{ row }">{{ formatBytes(row.size_bytes) }}</template>
+            <template #default="{ row }">{{ displayedSize(row as DatasetItem) }}</template>
           </el-table-column>
-          <el-table-column prop="source" label="来源" min-width="200" />
+          <el-table-column label="来源" min-width="200">
+            <template #default="{ row }">{{ displayedSource(row as DatasetItem) }}</template>
+          </el-table-column>
           <el-table-column label="状态" width="100">
             <template #default="{ row }">
-              <el-tag :type="statusTagType(row.status)" effect="light" size="small">
+              <el-tag v-if="isUploaded(row as DatasetItem)" :type="statusTagType(row.status)" effect="light" size="small">
                 {{ statusLabel(row.status) }}
               </el-tag>
             </template>
           </el-table-column>
           <el-table-column label="更新时间" width="150" class-name="mono">
-            <template #default="{ row }">{{ formatTimestamp(row.updated_at) }}</template>
+            <template #default="{ row }">{{ displayedUpdated(row as DatasetItem) }}</template>
+          </el-table-column>
+          <el-table-column v-if="interactive" label="操作" width="176" fixed="right">
+            <template #default="{ row }">
+              <div class="exp-dataset-actions">
+                <el-button
+                  size="small"
+                  plain
+                  :type="row.uploaded ? 'success' : 'primary'"
+                  :loading="uploadingId === row.dataset_id"
+                  :disabled="row.uploaded"
+                  @click="handleUpload(row as DatasetItem)"
+                >{{ row.uploaded ? '已上传' : '上传' }}</el-button>
+                <!-- HDF5 为内置数据，此处删除按钮仅作页面装饰：不绑定点击事件，也不设置禁用 -->
+                <el-button
+                  v-if="row.format === 'HDF5'"
+                  size="small"
+                  type="danger"
+                  plain
+                >删除</el-button>
+                <el-button
+                  v-else
+                  size="small"
+                  type="danger"
+                  plain
+                  :loading="resettingId === row.dataset_id"
+                  @click="handleReset(row as DatasetItem)"
+                >删除</el-button>
+              </div>
+            </template>
           </el-table-column>
         </el-table>
       </div>
@@ -131,6 +250,21 @@ function statusTagType(status: string): 'success' | 'warning' | 'info' | 'danger
   color: var(--scnet-text);
 }
 
+.exp-block-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.exp-import-message {
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: #eaf6ee;
+  color: #1e7a3e;
+  font-size: 13px;
+}
+
 .exp-block-note {
   font-size: 13px;
   color: var(--scnet-text-secondary);
@@ -171,6 +305,10 @@ function statusTagType(status: string): 'success' | 'warning' | 'info' | 'danger
 
 .exp-table-wrap :deep(.el-table td.mono .cell) {
   font-family: var(--scnet-font-mono);
+}
+.exp-dataset-actions {
+  display: flex;
+  gap: 8px;
 }
 
 .exp-scenario-details { min-width: 0; }

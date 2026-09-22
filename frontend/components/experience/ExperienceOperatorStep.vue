@@ -4,10 +4,15 @@ import { useSlidingHighlight } from '~/composables/useSlidingHighlight'
 import { formatBytes, formatNumber, statusText } from '~/composables/useFormat'
 import type { Operator, OperatorRef } from '~/types'
 
-const props = defineProps<{ domain: string; operators: Operator[]; selectedOperators: OperatorRef[]; chosenIds: string[] }>()
-const emit = defineEmits<{ 'update:chosenIds': [value: string[]] }>()
+const props = defineProps<{ domain: string; operators: Operator[]; selectedOperators: OperatorRef[]; chosenIds: string[]; submitting?: boolean; submittedMessage?: string }>()
+const emit = defineEmits<{ 'update:chosenIds': [value: string[]]; submit: [] }>()
 const chosenSet = computed(() => new Set(props.chosenIds))
 const chosenCount = computed(() => props.operators.filter((item) => chosenSet.value.has(item.name)).length)
+/** 提交按钮仅在首个学科域（地球动力学）体验中启用 */
+const interactive = computed(() => props.domain === 'geodynamics')
+const submittedNames = computed(() => props.operators.filter((item) => chosenSet.value.has(item.name)).map((item) => displayName(item)))
+const submitting = computed(() => props.submitting === true)
+const showSubmitPanel = computed(() => submitting.value || !!props.submittedMessage)
 const actionFeedback = ref<'recommended' | 'cleared' | null>(null)
 let feedbackTimer: ReturnType<typeof setTimeout> | undefined
 function showActionFeedback(action: 'recommended' | 'cleared') {
@@ -118,8 +123,21 @@ function memoryText(memoryMb: number): string {
           <span class="operator-batch-icon" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M4 8a6 6 0 1 1 0 5M4 3v5h5" /></svg></span>
           <span class="operator-batch-label"><span :class="{ 'is-hidden': actionFeedback === 'cleared' }">清空选择</span><span v-if="actionFeedback === 'cleared'" class="operator-batch-feedback">已清空</span></span>
         </button>
+        <button v-if="interactive" type="button" class="operator-batch-button is-submit" :disabled="!chosenCount || submitting" @click="emit('submit')">
+          <span class="operator-batch-icon" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M3 11l4.5 4.5L17 5" /></svg></span>
+          <span class="operator-batch-label">{{ submitting ? '提交中…' : '提交算子' }}</span>
+        </button>
         <span class="operator-action-status" role="status">{{ actionFeedback === 'recommended' ? '已采用场景推荐算子' : actionFeedback === 'cleared' ? '已清空算子选择' : '' }}</span>
       </div>
+    </div>
+    <div v-if="showSubmitPanel" class="operator-submit-panel" role="status">
+      <div class="operator-submit-head">
+        <span v-if="submitting" class="operator-submit-spinner" aria-hidden="true" />
+        <strong>{{ submitting ? '正在提交本次体验所选算子…' : props.submittedMessage }}</strong>
+      </div>
+      <ul v-if="submittedNames.length" class="operator-submit-list" aria-label="本次提交的算子">
+        <li v-for="name in submittedNames" :key="name">{{ name }}</li>
+      </ul>
     </div>
     <p v-if="query.trim()" class="operator-search-result" role="status">找到 {{ ordered.length }} 个匹配算子</p>
     <div ref="listFrame" class="operator-list-frame">
@@ -185,6 +203,14 @@ function memoryText(memoryMb: number): string {
 .operator-batch-label .is-hidden { visibility: hidden; }
 .operator-batch-feedback { animation: operator-feedback 180ms ease-out; }
 .operator-action-status { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.operator-batch-button.is-submit { border-color: var(--scnet-primary); background: var(--scnet-primary); color: #fff; }
+.operator-batch-button.is-submit:enabled:hover { border-color: #0b5bd3; background: #0b5bd3; }
+.operator-submit-panel { display: grid; gap: 10px; margin: 0 30px 18px; padding: 14px 18px; border: 1px solid #dce7f7; border-radius: 8px; background: #f5f8fe; }
+.operator-submit-head { display: flex; align-items: center; gap: 10px; color: var(--scnet-primary); font-size: 14px; }
+.operator-submit-spinner { width: 16px; height: 16px; flex: 0 0 16px; border: 2px solid #bfd5f3; border-top-color: var(--scnet-primary); border-radius: 50%; animation: operator-spin 700ms linear infinite; }
+.operator-submit-list { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.operator-submit-list li { padding: 3px 10px; border: 1px solid #d5dfeb; border-radius: 999px; background: #fff; color: var(--scnet-text-secondary); font-size: 12px; }
+@keyframes operator-spin { to { transform: rotate(360deg); } }
 @keyframes operator-confirm { from { stroke-dashoffset: 22; } to { stroke-dashoffset: 0; } }
 @keyframes operator-feedback { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: translateY(0); } }
 .operator-select-button { display: inline-flex; justify-content: center; align-items: center; gap: 7px; min-width: 118px; min-height: 44px; padding: 0 14px; border: 1px solid #d2dce9; border-radius: 6px; background: #fff; color: var(--scnet-primary); font-size: 14px; cursor: pointer; transition: var(--scnet-hover-transition), color 180ms ease, transform 180ms ease; }
@@ -287,11 +313,12 @@ button:focus-visible, summary:focus-visible { outline: 2px solid var(--scnet-pri
   .operator-main { flex-wrap: wrap; }
   .operator-content { flex-basis: 55%; }
   .operator-selection-bar { padding-inline: 20px; }
+  .operator-submit-panel { margin-inline: 20px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .operator-batch-button, .operator-batch-icon svg { transition: none; }
   .operator-batch-button:enabled:hover, .operator-batch-button:enabled:active, .operator-batch-button .operator-batch-icon svg { transform: none; }
-  .is-primary.is-confirmed .operator-batch-icon path, .operator-batch-feedback { animation: none; }
+  .is-primary.is-confirmed .operator-batch-icon path, .operator-batch-feedback, .operator-submit-spinner { animation: none; }
   .operator-filter-move, .operator-filter-enter-active, .operator-filter-leave-active { transition: none; }
   .operator-details::details-content { transition: none; }
   .operator-item::before, .operator-select-button, .operator-select-icon > span, .operator-select-icon path { transition: none; }

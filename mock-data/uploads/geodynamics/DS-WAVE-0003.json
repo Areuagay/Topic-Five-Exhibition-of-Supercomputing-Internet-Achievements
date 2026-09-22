@@ -1,0 +1,11 @@
+{
+  "dataset_id": "DS-WAVE-0003",
+  "scenario_id": "wave-propagation",
+  "type": "boundary_condition",
+  "description": "吸收边界条件参数（手动上传样例）",
+  "boundary_type": "PML",
+  "layers": 20,
+  "damping_profile": "cosine",
+  "reflection_coefficient": 0.001,
+  "source_type": "simulated"
+}

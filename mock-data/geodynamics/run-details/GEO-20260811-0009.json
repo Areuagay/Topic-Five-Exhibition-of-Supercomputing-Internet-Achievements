@@ -5,16 +5,16 @@
     "run_id": "GEO-20260811-0009",
     "scenario_id": "tectonic-evolution",
     "scenario_name": "板块构造数值模拟",
-    "status": "running",
-    "progress": 58,
+    "status": "success",
+    "progress": 100,
     "execution_mode": "simulated",
     "cluster_id": "kunshan",
     "cluster_name": "昆山昆仑",
     "job_id": "45210",
-    "current_stage": "coupled-solving",
-    "start_time": "2026-08-11T08:00:00+08:00",
-    "end_time": "",
-    "elapsed_seconds": 9000,
+    "current_stage": "completed",
+    "start_time": "2026-09-22T20:32:55+08:00",
+    "end_time": "2026-09-22T20:33:23+08:00",
+    "elapsed_seconds": 2400,
     "nodes": 16,
     "cpu_cores": 1024,
     "gpu_count": 0,
@@ -40,15 +40,15 @@
         {
           "id": "solver",
           "name": "耦合求解",
-          "status": "running",
-          "progress": 58,
+          "status": "success",
+          "progress": 100,
           "cluster_id": "kunshan"
         },
         {
           "id": "post",
           "name": "结果后处理",
-          "status": "pending",
-          "progress": 0,
+          "status": "success",
+          "progress": 100,
           "cluster_id": "kunshan"
         }
       ],
@@ -68,12 +68,12 @@
       ]
     },
     "metrics": {
-      "progress": 58,
+      "progress": 100,
       "metrics": [
         {
           "name": "time_step",
           "label": "当前时间步",
-          "value": 2900,
+          "value": 5000,
           "total": 5000,
           "unit": ""
         },
@@ -1738,7 +1738,12 @@
           "velocity_preview": "/api/v1/files/ART-GEO-TV08/preview"
         }
       ]
-    }
+    },
+    "selected_operator_ids": [
+      "fem-pde-solver",
+      "fft-operator",
+      "sparse-matrix"
+    ]
   },
-  "timestamp": "2026-08-10T07:40:02+08:00"
+  "timestamp": "2026-09-22T20:33:23+08:00"
 }

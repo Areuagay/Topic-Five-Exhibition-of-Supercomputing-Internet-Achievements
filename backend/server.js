@@ -24,7 +24,7 @@
  *   POST /api/v1/llm/runs                     -> 模拟成功响应（回显 body）
  */
 import { createServer } from 'node:http'
-import { existsSync, readFileSync, statSync } from 'node:fs'
+import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs'
 import { basename, extname, resolve, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -33,6 +33,7 @@ const __dirname = resolve(fileURLToPath(import.meta.url), '..')
 const HOST = process.env.BACKEND_HOST || '127.0.0.1'
 const PORT = Number(process.env.BACKEND_PORT || 3001)
 const MOCK_DATA_DIR = process.env.MOCK_DATA_DIR || resolve(__dirname, '..', 'mock-data')
+const UPLOADS_DIR = resolve(MOCK_DATA_DIR, 'uploads')
 const REPO_ROOT = resolve(__dirname, '..')
 const ARTIFACTS_ROOT = resolve(REPO_ROOT, 'artifacts')
 const ARTIFACT_INDEX = resolve(ARTIFACTS_ROOT, 'simulated', 'artifact_index.json')
@@ -237,6 +238,368 @@ function applyLookup(lookup, data) {
   return { value: data }
 }
 
+/* -------------------------------------------------------------------------- */
+/* 地球动力学体验流程：写接口（直接改动 mock-data 下的 JSON，无数据库）          */
+/* -------------------------------------------------------------------------- */
+
+const GEO_DOMAIN = 'geodynamics'
+const ADVANCE_STEP = 20
+
+/** 当前时间 ISO 字符串（带本地时区偏移，风格与 mock 数据一致） */
+function nowIso() {
+  const now = new Date()
+  const pad = (n) => String(Math.abs(n)).padStart(2, '0')
+  const offset = -now.getTimezoneOffset()
+  const sign = offset >= 0 ? '+' : '-'
+  const oh = pad(Math.floor(Math.abs(offset) / 60))
+  const om = pad(Math.abs(offset) % 60)
+  return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}${sign}${oh}:${om}`
+}
+
+/** 将对象写回 mock-data 下相对路径的 JSON 文件 */
+function writeJson(relPath, payload) {
+  const file = resolve(MOCK_DATA_DIR, relPath)
+  writeFileSync(file, `${JSON.stringify(payload, null, 2)}\n`, 'utf-8')
+}
+
+/** 在 uploads/{domain} 下查找以 {datasetId}. 开头的上传样例文件 */
+function findSampleFile(domain, datasetId) {
+  const dir = resolve(UPLOADS_DIR, domain)
+  if (!existsSync(dir) || !datasetId) return null
+  try {
+    const matched = readdirSync(dir).find((f) => f.startsWith(`${datasetId}.`))
+    if (!matched) return null
+    const abs = resolve(dir, matched)
+    if (!existsSync(abs) || !statSync(abs).isFile()) return null
+    return {
+      file_name: matched,
+      format: extname(matched).replace(/^\./, '').toUpperCase(),
+      size_bytes: statSync(abs).size,
+    }
+  } catch {
+    return null
+  }
+}
+
+/** 列出 uploads/{domain} 下的上传样例文件清单 */
+function listUploadSamples(domain) {
+  const dir = resolve(UPLOADS_DIR, domain)
+  if (!existsSync(dir)) return []
+  try {
+    return readdirSync(dir)
+      .filter((f) => {
+        const abs = resolve(dir, f)
+        return existsSync(abs) && statSync(abs).isFile()
+      })
+      .map((f) => {
+        const abs = resolve(dir, f)
+        return {
+          file_name: f,
+          dataset_id: f.split('.')[0],
+          format: extname(f).replace(/^\./, '').toUpperCase(),
+          size_bytes: statSync(abs).size,
+        }
+      })
+  } catch {
+    return []
+  }
+}
+
+/** 上传数据集：标记 uploaded、按样例文件补齐 size，并写回 datasets.json */
+function uploadGeodynamicsDataset(datasetId) {
+  const envelope = readJson(`${GEO_DOMAIN}/datasets.json`)
+  if (!envelope || !Array.isArray(envelope.data)) return { error: 'datasets.json not found' }
+  const item = envelope.data.find((d) => d.dataset_id === datasetId)
+  if (!item) return { error: `dataset not found: ${datasetId}` }
+
+  const sample = findSampleFile(GEO_DOMAIN, datasetId)
+  const now = nowIso()
+  // 首次上传前记录原始字段快照，便于「恢复未上传」时还原为原始数据
+  if (!item._pristine) {
+    item._pristine = {
+      size_bytes: item.size_bytes,
+      source: item.source,
+      status: item.status,
+      updated_at: item.updated_at,
+    }
+  }
+  item.uploaded = true
+  item.imported = false
+  item.status = 'ready'
+  if (sample) {
+    item.size_bytes = sample.size_bytes
+    if (!item.format || item.format === '-') item.format = sample.format
+  }
+  // 数据来源沿用该数据集在 mock 数据中模拟的原始来源，不写成通用文案
+  item.updated_at = now
+  envelope.timestamp = now
+  writeJson(`${GEO_DOMAIN}/datasets.json`, envelope)
+  return { dataset: item }
+}
+
+/** 恢复数据集为未上传状态：保留该行，重置 uploaded/imported 并还原原始字段 */
+function resetGeodynamicsDataset(datasetId) {
+  const envelope = readJson(`${GEO_DOMAIN}/datasets.json`)
+  if (!envelope || !Array.isArray(envelope.data)) return { error: 'datasets.json not found' }
+  const item = envelope.data.find((d) => d.dataset_id === datasetId)
+  if (!item) return { error: `dataset not found: ${datasetId}` }
+  // HDF5 数据集为内置数据，不支持撤销上传
+  if (item.format === 'HDF5') return { error: `HDF5 数据集不支持恢复未上传：${datasetId}`, code: 400 }
+  // 上传前保存过原始快照则还原为原始数据，否则当前字段即为原始数据
+  if (item._pristine) {
+    item.size_bytes = item._pristine.size_bytes
+    item.source = item._pristine.source
+    item.status = item._pristine.status
+    item.updated_at = item._pristine.updated_at
+    delete item._pristine
+  }
+  item.uploaded = false
+  item.imported = false
+  envelope.timestamp = nowIso()
+  writeJson(`${GEO_DOMAIN}/datasets.json`, envelope)
+  return { dataset: item }
+}
+
+/** 依据累计导入数更新各算力中心的 CPU / 内存利用率（仅在导入新数据时变化） */
+function updateClusterUtilization(importedTotal) {
+  const envelope = readJson('multicenter/clusters.json')
+  if (!envelope || !Array.isArray(envelope.data)) return []
+  const now = nowIso()
+  envelope.data.forEach((c) => {
+    if (typeof c.base_cpu_utilization !== 'number') c.base_cpu_utilization = c.cpu_utilization
+    if (typeof c.base_memory_utilization !== 'number') c.base_memory_utilization = c.memory_utilization
+    c.cpu_utilization = Math.max(0, Math.min(99, Math.round(c.base_cpu_utilization + importedTotal * 3)))
+    c.memory_utilization = Math.max(0, Math.min(99, Math.round(c.base_memory_utilization + importedTotal * 2)))
+    c.updated_at = now
+  })
+  envelope.timestamp = now
+  writeJson('multicenter/clusters.json', envelope)
+  return envelope.data
+}
+
+/** 一键导入：将已上传且未导入的数据集标记为 imported，并更新算力利用率 */
+function importGeodynamicsDatasets(scenarioId) {
+  const envelope = readJson(`${GEO_DOMAIN}/datasets.json`)
+  if (!envelope || !Array.isArray(envelope.data)) return { error: 'datasets.json not found' }
+
+  const scope = envelope.data.filter((d) => !scenarioId || d.scenario_id === scenarioId)
+  const uploaded = scope.filter((d) => d.uploaded)
+  const newly = uploaded.filter((d) => !d.imported)
+
+  if (!newly.length) {
+    const totalImported = envelope.data.filter((d) => d.imported).length
+    return {
+      status: 'already_all',
+      message: '已全部导入',
+      newly_count: 0,
+      total_imported: totalImported,
+      total_uploaded: uploaded.length,
+    }
+  }
+
+  newly.forEach((d) => {
+    d.imported = true
+  })
+  const totalImported = envelope.data.filter((d) => d.imported).length
+  envelope.timestamp = nowIso()
+  writeJson(`${GEO_DOMAIN}/datasets.json`, envelope)
+
+  const clusters = updateClusterUtilization(totalImported)
+  return {
+    status: 'imported',
+    message: `已导入 ${totalImported} 个，本次新导入 ${newly.length} 个`,
+    newly_count: newly.length,
+    total_imported: totalImported,
+    total_uploaded: uploaded.length,
+    cluster_ids: clusters.map((c) => c.id),
+  }
+}
+
+/** 找到某场景下具有详情的主运行（running + has_detail 优先） */
+function findPrimaryRun(scenarioId) {
+  const envelope = readJson(`${GEO_DOMAIN}/runs.json`)
+  if (!envelope || !Array.isArray(envelope.data)) return null
+  const candidates = envelope.data.filter((r) => (!scenarioId || r.scenario_id === scenarioId) && r.has_detail)
+  return candidates.find((r) => r.status === 'running') || candidates[0] || null
+}
+
+/** 将运行详情中的关键字段同步回 runs.json 列表项 */
+function syncRunSummary(runId, detail) {
+  const envelope = readJson(`${GEO_DOMAIN}/runs.json`)
+  if (!envelope || !Array.isArray(envelope.data)) return
+  const item = envelope.data.find((r) => r.run_id === runId)
+  if (!item) return
+  const now = nowIso()
+  item.status = detail.status
+  item.progress = detail.progress
+  item.current_stage = detail.current_stage
+  item.elapsed_seconds = detail.elapsed_seconds
+  item.start_time = detail.start_time
+  item.end_time = detail.end_time
+  if (Array.isArray(detail.metrics?.metrics)) {
+    item.metrics_snapshot = detail.metrics.metrics.map((m) => ({ ...m }))
+  }
+  item.core_hours = Number((((detail.cpu_cores || 0) * (detail.elapsed_seconds || 0)) / 3600).toFixed(1))
+  envelope.timestamp = now
+  writeJson(`${GEO_DOMAIN}/runs.json`, envelope)
+}
+
+/** 算子提交：重置该场景主运行的工作流为待执行状态，使流程编排产生对应变化 */
+function submitGeodynamicsOperators(scenarioId, payload) {
+  const run = findPrimaryRun(scenarioId)
+  if (!run) return { error: `primary run not found for scenario: ${scenarioId}` }
+  const relPath = `${GEO_DOMAIN}/run-details/${run.run_id}.json`
+  const detailEnvelope = readJson(relPath)
+  if (!detailEnvelope || !detailEnvelope.data) return { error: `run detail not found: ${run.run_id}` }
+  const detail = detailEnvelope.data
+  const now = nowIso()
+
+  if (detail.workflow && Array.isArray(detail.workflow.nodes)) {
+    detail.workflow.nodes.forEach((n) => {
+      n.status = 'pending'
+      n.progress = 0
+    })
+  }
+  detail.status = 'running'
+  detail.progress = 0
+  detail.current_stage = detail.workflow?.nodes?.[0]?.id || 'prepare'
+  detail.start_time = now
+  detail.end_time = ''
+  detail.elapsed_seconds = 0
+  detail.selected_operator_ids = Array.isArray(payload?.operator_ids) ? payload.operator_ids : []
+  if (detail.metrics) {
+    detail.metrics.progress = 0
+    if (Array.isArray(detail.metrics.metrics)) {
+      detail.metrics.metrics.forEach((m) => {
+        if (m.name === 'time_step') m.value = 0
+        if (m.name === 'cpu_utilization') m.value = 0
+      })
+    }
+  }
+  detailEnvelope.timestamp = now
+  writeJson(relPath, detailEnvelope)
+  syncRunSummary(run.run_id, detail)
+
+  return {
+    run_id: run.run_id,
+    workflow: detail.workflow,
+    progress: detail.progress,
+    selected_operator_ids: detail.selected_operator_ids,
+  }
+}
+
+/** 推进主运行：将首个未完成的工作流节点推进一段进度，换算总进度并回写 */
+function advanceGeodynamicsRun(runId) {
+  const relPath = `${GEO_DOMAIN}/run-details/${runId}.json`
+  const detailEnvelope = readJson(relPath)
+  if (!detailEnvelope || !detailEnvelope.data) return { error: `run detail not found: ${runId}` }
+  const detail = detailEnvelope.data
+  const nodes = detail.workflow?.nodes
+  if (!Array.isArray(nodes) || !nodes.length) return { error: `workflow not found: ${runId}` }
+
+  const target = nodes.find((n) => (n.progress || 0) < 100)
+  if (target) {
+    target.progress = Math.min(100, (target.progress || 0) + ADVANCE_STEP)
+  }
+
+  // 顺序依赖：已完成节点 success；首个未完成节点 running；其余 pending
+  let blocked = false
+  nodes.forEach((n) => {
+    if ((n.progress || 0) >= 100) {
+      n.status = 'success'
+    } else if (!blocked) {
+      n.status = 'running'
+      blocked = true
+    } else {
+      n.status = 'pending'
+    }
+  })
+
+  const overall = Math.round(nodes.reduce((sum, n) => sum + (n.progress || 0), 0) / nodes.length)
+  const now = nowIso()
+  const allDone = nodes.every((n) => (n.progress || 0) >= 100)
+  detail.progress = overall
+  if (allDone) {
+    detail.status = 'success'
+    detail.current_stage = 'completed'
+    detail.end_time = now
+  } else {
+    detail.status = 'running'
+    detail.current_stage = nodes.find((n) => n.status === 'running')?.id || detail.current_stage
+  }
+  detail.elapsed_seconds = (detail.elapsed_seconds || 0) + 120
+
+  if (detail.metrics) {
+    detail.metrics.progress = overall
+    if (Array.isArray(detail.metrics.metrics)) {
+      detail.metrics.metrics.forEach((m) => {
+        if (m.name === 'time_step' && m.total) m.value = Math.round((m.total * overall) / 100)
+        if (m.name === 'cpu_utilization') m.value = 70 + Math.round(overall / 5)
+      })
+    }
+  }
+
+  detailEnvelope.timestamp = now
+  writeJson(relPath, detailEnvelope)
+  syncRunSummary(runId, detail)
+
+  return {
+    run_id: runId,
+    workflow: detail.workflow,
+    progress: detail.progress,
+    elapsed_seconds: detail.elapsed_seconds,
+    status: detail.status,
+    current_stage: detail.current_stage,
+    metrics: detail.metrics?.metrics || [],
+  }
+}
+
+/**
+ * 处理 geodynamics 体验流程写操作。
+ * 返回 { code, message, data }；未命中返回 null（交由通用写回显处理）。
+ */
+function handleGeodynamicsWrite(method, parts, body) {
+  if (parts[0] !== GEO_DOMAIN) return null
+  const [, resource, arg1, arg2, arg3] = parts
+
+  // POST /geodynamics/datasets/{id}/upload
+  if (resource === 'datasets' && method === 'POST' && arg1 && arg2 === 'upload') {
+    const result = uploadGeodynamicsDataset(arg1)
+    if (result.error) return { code: 404, message: result.error, data: null }
+    return { code: 200, message: '上传成功', data: result.dataset }
+  }
+
+  // DELETE /geodynamics/datasets/{id} —— 不删除整行，仅恢复为未上传状态
+  if (resource === 'datasets' && method === 'DELETE' && arg1) {
+    const result = resetGeodynamicsDataset(arg1)
+    if (result.error) return { code: result.code || 404, message: result.error, data: null }
+    return { code: 200, message: '已恢复未上传状态', data: result.dataset }
+  }
+
+  // POST /geodynamics/scenarios/{scenarioId}/import
+  if (resource === 'scenarios' && method === 'POST' && arg1 && arg2 === 'import') {
+    const result = importGeodynamicsDatasets(arg1)
+    if (result.error) return { code: 404, message: result.error, data: null }
+    return { code: 200, message: result.message, data: result }
+  }
+
+  // POST /geodynamics/scenarios/{scenarioId}/operators/submit
+  if (resource === 'scenarios' && method === 'POST' && arg1 && arg2 === 'operators' && arg3 === 'submit') {
+    const result = submitGeodynamicsOperators(arg1, body)
+    if (result.error) return { code: 404, message: result.error, data: null }
+    return { code: 200, message: '算子已提交', data: result }
+  }
+
+  // POST /geodynamics/runs/{runId}/advance
+  if (resource === 'runs' && method === 'POST' && arg1 && arg2 === 'advance') {
+    const result = advanceGeodynamicsRun(arg1)
+    if (result.error) return { code: 404, message: result.error, data: null }
+    return { code: 200, message: 'success', data: result }
+  }
+
+  return null
+}
+
 const server = createServer(async (req, res) => {
   const method = (req.method || 'GET').toUpperCase()
   const url = req.url || '/'
@@ -287,6 +650,17 @@ const server = createServer(async (req, res) => {
           timestamp: new Date().toISOString(),
         })
       }
+      return
+    }
+
+    // GET /api/v1/geodynamics/upload-samples → 上传样例文件清单
+    if (parts[0] === GEO_DOMAIN && parts[1] === 'upload-samples') {
+      sendJSON(res, 200, {
+        code: 200,
+        message: 'success',
+        data: listUploadSamples(GEO_DOMAIN),
+        timestamp: new Date().toISOString(),
+      })
       return
     }
 
@@ -344,6 +718,20 @@ const server = createServer(async (req, res) => {
   } catch {
     body = null
   }
+
+  // geodynamics 体验流程写接口：直接改动 mock JSON 数据
+  const writeParts = pathname.slice(API_PREFIX.length).split('/').filter(Boolean)
+  const geodynamicsResult = handleGeodynamicsWrite(method, writeParts, body)
+  if (geodynamicsResult) {
+    sendJSON(res, geodynamicsResult.code || 200, {
+      code: geodynamicsResult.code || 200,
+      message: geodynamicsResult.message || 'success',
+      data: geodynamicsResult.data,
+      timestamp: new Date().toISOString(),
+    })
+    return
+  }
+
   const echo =
     body && typeof body === 'object'
       ? body

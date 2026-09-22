@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useExperienceNavigation } from '~/composables/useExperienceNavigation'
 import { useSlidingHighlight } from '~/composables/useSlidingHighlight'
 import ExperienceDataPrepStep from './ExperienceDataPrepStep.vue'
@@ -15,6 +15,7 @@ import { experienceSteps, getScenarioExperience } from '~/config/scenario-experi
 import type {
   Benchmark,
   DatasetItem,
+  ImportResult,
   MultiCluster,
   Operator,
   ParamField,
@@ -38,17 +39,22 @@ const {
   getOperators,
   getRuns,
   getRunWorkflow,
+  submitOperators,
+  advanceRun,
 } = useApi()
+
+/** 交互式体验（上传/导入/提交/动态推进）仅在首个学科域（地球动力学）启用 */
+const interactiveDomain = computed(() => props.domain === 'geodynamics')
 
 const experience = computed(() => getScenarioExperience(props.scenarioId))
 
 /** 步骤目录与基础数据（随场景挂载，数据经后端接口下发） */
-const { data: datasets } = await useAsyncData<DatasetItem[]>(
+const { data: datasets, refresh: refreshDatasets } = await useAsyncData<DatasetItem[]>(
   `experience-datasets-${props.domain}-${props.scenarioId}`,
   () => getDatasets(props.domain),
   { default: () => [] },
 )
-const { data: clusters } = await useAsyncData<MultiCluster[]>(
+const { data: clusters, refresh: refreshClusters } = await useAsyncData<MultiCluster[]>(
   'experience-clusters',
   () => getClusters(),
   { default: () => [] },
@@ -58,7 +64,7 @@ const { data: operators } = await useAsyncData<Operator[]>(
   () => getOperators(props.domain),
   { default: () => [] },
 )
-const { data: runs } = await useAsyncData<Run[]>(
+const { data: runs, refresh: refreshRuns } = await useAsyncData<Run[]>(
   `experience-runs-${props.domain}`,
   () => getRuns(props.domain),
   { default: () => [] },
@@ -151,6 +157,113 @@ function handleInspect(runId: string): void {
 function handleResult(runId: string): void {
   navigate('result', runId)
 }
+
+/* ---------------- 01 数据准备：上传/删除后刷新、一键导入 ---------------- */
+async function handleDataRefresh(): Promise<void> {
+  await refreshDatasets()
+}
+
+async function handleImported(result: ImportResult): Promise<void> {
+  await refreshDatasets()
+  // 一键导入有新数据时：刷新算力利用率并自动进入资源调度
+  if (result.status === 'imported') {
+    await refreshClusters()
+    navigate('resource')
+  }
+}
+
+/* ---------------- 03 算子选择：提交后重置工作流并跳转流程编排 ---------------- */
+const operatorSubmitting = ref(false)
+const operatorSubmitMessage = ref('')
+let submitTimer: ReturnType<typeof setTimeout> | undefined
+onBeforeUnmount(() => clearTimeout(submitTimer))
+
+async function handleOperatorSubmit(): Promise<void> {
+  if (!interactiveDomain.value || operatorSubmitting.value) return
+  const ids = chosenOperatorIds.value ?? []
+  if (!ids.length) {
+    operatorSubmitMessage.value = '请先选择本次体验的算子'
+    submitTimer = setTimeout(() => { operatorSubmitMessage.value = '' }, 2400)
+    return
+  }
+  operatorSubmitting.value = true
+  operatorSubmitMessage.value = ''
+  try {
+    const result = await submitOperators(props.domain, props.scenarioId, ids)
+    selectedRunId.value = result.run_id
+    runWorkflow.value = result.workflow
+    await refreshRuns()
+    operatorSubmitMessage.value = `已提交 ${ids.length} 个算子，正在进入流程编排…`
+    submitTimer = setTimeout(() => { navigate('workflow', result.run_id) }, 1500)
+  } catch {
+    operatorSubmitMessage.value = '算子提交失败，请稍后重试'
+  } finally {
+    operatorSubmitting.value = false
+  }
+}
+
+/* ---------------- 04/05/06 动态进度推进（流程编排 / 执行监控 / 结果展示） ---------------- */
+let advanceTimer: ReturnType<typeof setInterval> | undefined
+
+function currentRun(): Run | undefined {
+  return scenarioRuns.value.find((run) => run.run_id === selectedRunId.value)
+}
+
+function workflowDone(): boolean {
+  const nodes = runWorkflow.value?.nodes ?? []
+  return nodes.length > 0 && nodes.every((node) => (node.progress ?? 0) >= 100)
+}
+
+function stopAdvance(): void {
+  if (advanceTimer) {
+    clearInterval(advanceTimer)
+    advanceTimer = undefined
+  }
+}
+
+async function advanceTick(): Promise<void> {
+  const runId = selectedRunId.value
+  if (!runId) {
+    stopAdvance()
+    return
+  }
+  const run = currentRun()
+  if (!run || run.status !== 'running' || workflowDone()) {
+    stopAdvance()
+    return
+  }
+  try {
+    const result = await advanceRun(props.domain, runId)
+    if (selectedRunId.value === result.run_id) runWorkflow.value = result.workflow
+    await refreshRuns()
+    if (result.status !== 'running' || workflowDone()) stopAdvance()
+  } catch {
+    stopAdvance()
+  }
+}
+
+function syncAdvance(): void {
+  if (import.meta.server) return
+  if (!interactiveDomain.value) {
+    stopAdvance()
+    return
+  }
+  const onLiveStep = ['workflow', 'monitor', 'result'].includes(activeKey.value)
+  const run = currentRun()
+  const canAdvance = onLiveStep && run?.status === 'running' && !workflowDone()
+  if (canAdvance) {
+    if (!advanceTimer) {
+      advanceTimer = setInterval(() => { void advanceTick() }, 1300)
+    }
+  } else {
+    stopAdvance()
+  }
+}
+
+watch(activeKey, () => syncAdvance())
+watch(selectedRunId, () => syncAdvance())
+onMounted(() => syncAdvance())
+onBeforeUnmount(stopAdvance)
 </script>
 
 <template>
@@ -223,6 +336,8 @@ function handleResult(runId: string): void {
         :params="params"
         :cluster-name="clusterName"
         :datasets="datasets ?? []"
+        @refresh="handleDataRefresh"
+        @imported="handleImported"
       />
 
       <ExperienceResourceStep
@@ -237,7 +352,10 @@ function handleResult(runId: string): void {
         :operators="operators ?? []"
         :selected-operators="selectedOperators"
         :chosen-ids="chosenOperatorIds ?? []"
+        :submitting="operatorSubmitting"
+        :submitted-message="operatorSubmitMessage"
         @update:chosen-ids="chosenOperatorIds = $event"
+        @submit="handleOperatorSubmit"
       />
 
       <ExperienceWorkflowStep

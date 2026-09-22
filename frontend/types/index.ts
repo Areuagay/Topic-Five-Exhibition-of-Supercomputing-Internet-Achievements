@@ -144,6 +144,47 @@ export interface DatasetItem {
   source?: string
   status: string
   updated_at?: string
+  /** 是否已上传（HDF5 数据集默认为已上传，其余需用户手动上传） */
+  uploaded?: boolean
+  /** 是否已一键导入至资源调度 */
+  imported?: boolean
+}
+
+/** 上传样例文件（mock-data/uploads/{domain} 下的模拟数据） */
+export interface UploadSample {
+  file_name: string
+  dataset_id: string
+  format: string
+  size_bytes: number
+}
+
+/** 一键导入结果汇总 */
+export interface ImportResult {
+  status: 'imported' | 'already_all'
+  message: string
+  newly_count: number
+  total_imported: number
+  total_uploaded: number
+  cluster_ids?: string[]
+}
+
+/** 算子提交结果（会重置该场景主运行的工作流） */
+export interface OperatorSubmitResult {
+  run_id: string
+  workflow: RunDetail['workflow']
+  progress: number
+  selected_operator_ids: string[]
+}
+
+/** 运行推进结果（流程编排/执行监控动态进度来源） */
+export interface RunAdvanceResult {
+  run_id: string
+  workflow: RunDetail['workflow']
+  progress: number
+  elapsed_seconds: number
+  status: string
+  current_stage: string
+  metrics: MetricItem[]
 }
 
 /* ==================== 运行任务 ==================== */

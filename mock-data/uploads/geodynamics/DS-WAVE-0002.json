@@ -1,0 +1,15 @@
+{
+  "dataset_id": "DS-WAVE-0002",
+  "scenario_id": "wave-propagation",
+  "type": "source_model",
+  "description": "震源矩张量与时序配置（手动上传样例）",
+  "moment_tensor": [
+    [1.0, 0.0, 0.0],
+    [0.0, 0.5, 0.0],
+    [0.0, 0.0, -1.5]
+  ],
+  "source_location": { "x": 1024, "y": 1024, "z": 1536 },
+  "time_step_seconds": 0.001,
+  "total_steps": 10000,
+  "source_type": "simulated"
+}

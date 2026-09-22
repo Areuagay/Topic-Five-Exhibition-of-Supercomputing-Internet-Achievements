@@ -7,28 +7,52 @@
       "domain": "geodynamics",
       "scenario_id": "wave-propagation",
       "scenario_name": "地震波传播模拟",
-      "status": "running",
-      "progress": 63,
+      "status": "success",
+      "progress": 100,
       "execution_mode": "simulated",
       "cluster_id": "changsha",
       "cluster_name": "长沙天河新一代",
       "job_id": "210001",
-      "current_stage": "time-stepping",
-      "start_time": "2026-08-11T09:00:00+08:00",
-      "end_time": "",
-      "elapsed_seconds": 4680,
+      "current_stage": "completed",
+      "start_time": "2026-09-22T21:04:26+08:00",
+      "end_time": "2026-09-22T21:04:53+08:00",
+      "elapsed_seconds": 2400,
       "nodes": 8,
       "cpu_cores": 512,
       "gpu_count": 0,
       "memory_gb": 2048,
-      "core_hours": 665.6,
+      "core_hours": 341.3,
       "source_type": "simulated",
       "has_detail": true,
       "metrics_snapshot": [
-        { "name": "time_step", "label": "当前时间步", "value": 6300, "total": 10000, "unit": "" },
-        { "name": "residual", "label": "残差", "value": 1.2e-07, "total": 0, "unit": "" },
-        { "name": "step_time", "label": "单步耗时", "value": 0.82, "total": 0, "unit": "s" },
-        { "name": "cpu_utilization", "label": "CPU利用率", "value": 87, "total": 100, "unit": "%" }
+        {
+          "name": "time_step",
+          "label": "当前时间步",
+          "value": 10000,
+          "total": 10000,
+          "unit": ""
+        },
+        {
+          "name": "residual",
+          "label": "残差",
+          "value": 1.2e-7,
+          "total": 0,
+          "unit": ""
+        },
+        {
+          "name": "step_time",
+          "label": "单步耗时",
+          "value": 0.82,
+          "total": 0,
+          "unit": "s"
+        },
+        {
+          "name": "cpu_utilization",
+          "label": "CPU利用率",
+          "value": 90,
+          "total": 100,
+          "unit": "%"
+        }
       ]
     },
     {
@@ -54,10 +78,34 @@
       "source_type": "simulated",
       "has_detail": false,
       "metrics_snapshot": [
-        { "name": "time_step", "label": "当前时间步", "value": 10000, "total": 10000, "unit": "" },
-        { "name": "residual", "label": "残差", "value": 4.5e-08, "total": 0, "unit": "" },
-        { "name": "step_time", "label": "单步耗时", "value": 0.81, "total": 0, "unit": "s" },
-        { "name": "cpu_utilization", "label": "CPU利用率", "value": 89, "total": 100, "unit": "%" }
+        {
+          "name": "time_step",
+          "label": "当前时间步",
+          "value": 10000,
+          "total": 10000,
+          "unit": ""
+        },
+        {
+          "name": "residual",
+          "label": "残差",
+          "value": 4.5e-8,
+          "total": 0,
+          "unit": ""
+        },
+        {
+          "name": "step_time",
+          "label": "单步耗时",
+          "value": 0.81,
+          "total": 0,
+          "unit": "s"
+        },
+        {
+          "name": "cpu_utilization",
+          "label": "CPU利用率",
+          "value": 89,
+          "total": 100,
+          "unit": "%"
+        }
       ]
     },
     {
@@ -83,10 +131,34 @@
       "source_type": "simulated",
       "has_detail": false,
       "metrics_snapshot": [
-        { "name": "time_step", "label": "当前时间步", "value": 10000, "total": 10000, "unit": "" },
-        { "name": "residual", "label": "残差", "value": 5.1e-08, "total": 0, "unit": "" },
-        { "name": "step_time", "label": "单步耗时", "value": 0.93, "total": 0, "unit": "s" },
-        { "name": "cpu_utilization", "label": "CPU利用率", "value": 85, "total": 100, "unit": "%" }
+        {
+          "name": "time_step",
+          "label": "当前时间步",
+          "value": 10000,
+          "total": 10000,
+          "unit": ""
+        },
+        {
+          "name": "residual",
+          "label": "残差",
+          "value": 5.1e-8,
+          "total": 0,
+          "unit": ""
+        },
+        {
+          "name": "step_time",
+          "label": "单步耗时",
+          "value": 0.93,
+          "total": 0,
+          "unit": "s"
+        },
+        {
+          "name": "cpu_utilization",
+          "label": "CPU利用率",
+          "value": 85,
+          "total": 100,
+          "unit": "%"
+        }
       ]
     },
     {
@@ -112,10 +184,34 @@
       "source_type": "simulated",
       "has_detail": false,
       "metrics_snapshot": [
-        { "name": "time_step", "label": "当前时间步", "value": 3200, "total": 10000, "unit": "" },
-        { "name": "residual", "label": "残差", "value": 8.9e-03, "total": 0, "unit": "" },
-        { "name": "step_time", "label": "单步耗时", "value": 1.62, "total": 0, "unit": "s" },
-        { "name": "cpu_utilization", "label": "CPU利用率", "value": 71, "total": 100, "unit": "%" }
+        {
+          "name": "time_step",
+          "label": "当前时间步",
+          "value": 3200,
+          "total": 10000,
+          "unit": ""
+        },
+        {
+          "name": "residual",
+          "label": "残差",
+          "value": 0.0089,
+          "total": 0,
+          "unit": ""
+        },
+        {
+          "name": "step_time",
+          "label": "单步耗时",
+          "value": 1.62,
+          "total": 0,
+          "unit": "s"
+        },
+        {
+          "name": "cpu_utilization",
+          "label": "CPU利用率",
+          "value": 71,
+          "total": 100,
+          "unit": "%"
+        }
       ]
     },
     {
@@ -137,14 +233,38 @@
       "cpu_cores": 256,
       "gpu_count": 0,
       "memory_gb": 1024,
-      "core_hours": 128.0,
+      "core_hours": 128,
       "source_type": "simulated",
       "has_detail": false,
       "metrics_snapshot": [
-        { "name": "time_step", "label": "当前时间步", "value": 4500, "total": 10000, "unit": "" },
-        { "name": "residual", "label": "残差", "value": 2.3e-07, "total": 0, "unit": "" },
-        { "name": "step_time", "label": "单步耗时", "value": 0.9, "total": 0, "unit": "s" },
-        { "name": "cpu_utilization", "label": "CPU利用率", "value": 86, "total": 100, "unit": "%" }
+        {
+          "name": "time_step",
+          "label": "当前时间步",
+          "value": 4500,
+          "total": 10000,
+          "unit": ""
+        },
+        {
+          "name": "residual",
+          "label": "残差",
+          "value": 2.3e-7,
+          "total": 0,
+          "unit": ""
+        },
+        {
+          "name": "step_time",
+          "label": "单步耗时",
+          "value": 0.9,
+          "total": 0,
+          "unit": "s"
+        },
+        {
+          "name": "cpu_utilization",
+          "label": "CPU利用率",
+          "value": 86,
+          "total": 100,
+          "unit": "%"
+        }
       ]
     },
     {
@@ -170,10 +290,34 @@
       "source_type": "simulated",
       "has_detail": false,
       "metrics_snapshot": [
-        { "name": "time_step", "label": "当前时间步", "value": 10000, "total": 10000, "unit": "" },
-        { "name": "residual", "label": "残差", "value": 3.9e-08, "total": 0, "unit": "" },
-        { "name": "step_time", "label": "单步耗时", "value": 0.55, "total": 0, "unit": "s" },
-        { "name": "cpu_utilization", "label": "CPU利用率", "value": 91, "total": 100, "unit": "%" }
+        {
+          "name": "time_step",
+          "label": "当前时间步",
+          "value": 10000,
+          "total": 10000,
+          "unit": ""
+        },
+        {
+          "name": "residual",
+          "label": "残差",
+          "value": 3.9e-8,
+          "total": 0,
+          "unit": ""
+        },
+        {
+          "name": "step_time",
+          "label": "单步耗时",
+          "value": 0.55,
+          "total": 0,
+          "unit": "s"
+        },
+        {
+          "name": "cpu_utilization",
+          "label": "CPU利用率",
+          "value": 91,
+          "total": 100,
+          "unit": "%"
+        }
       ]
     },
     {
@@ -195,7 +339,7 @@
       "cpu_cores": 512,
       "gpu_count": 0,
       "memory_gb": 2048,
-      "core_hours": 0.0,
+      "core_hours": 0,
       "source_type": "simulated",
       "has_detail": false,
       "metrics_snapshot": []
@@ -223,10 +367,34 @@
       "source_type": "simulated",
       "has_detail": false,
       "metrics_snapshot": [
-        { "name": "time_step", "label": "当前时间步", "value": 7100, "total": 10000, "unit": "" },
-        { "name": "residual", "label": "残差", "value": 6.7e-07, "total": 0, "unit": "" },
-        { "name": "step_time", "label": "单步耗时", "value": 0.88, "total": 0, "unit": "s" },
-        { "name": "cpu_utilization", "label": "CPU利用率", "value": 84, "total": 100, "unit": "%" }
+        {
+          "name": "time_step",
+          "label": "当前时间步",
+          "value": 7100,
+          "total": 10000,
+          "unit": ""
+        },
+        {
+          "name": "residual",
+          "label": "残差",
+          "value": 6.7e-7,
+          "total": 0,
+          "unit": ""
+        },
+        {
+          "name": "step_time",
+          "label": "单步耗时",
+          "value": 0.88,
+          "total": 0,
+          "unit": "s"
+        },
+        {
+          "name": "cpu_utilization",
+          "label": "CPU利用率",
+          "value": 84,
+          "total": 100,
+          "unit": "%"
+        }
       ]
     },
     {
@@ -234,28 +402,52 @@
       "domain": "geodynamics",
       "scenario_id": "tectonic-evolution",
       "scenario_name": "板块构造数值模拟",
-      "status": "running",
-      "progress": 58,
+      "status": "success",
+      "progress": 100,
       "execution_mode": "simulated",
       "cluster_id": "kunshan",
       "cluster_name": "昆山昆仑",
       "job_id": "45210",
-      "current_stage": "coupled-solving",
-      "start_time": "2026-08-11T08:00:00+08:00",
-      "end_time": "",
-      "elapsed_seconds": 9000,
+      "current_stage": "completed",
+      "start_time": "2026-09-22T20:32:55+08:00",
+      "end_time": "2026-09-22T20:33:23+08:00",
+      "elapsed_seconds": 2400,
       "nodes": 16,
       "cpu_cores": 1024,
       "gpu_count": 0,
       "memory_gb": 8192,
-      "core_hours": 2560.0,
+      "core_hours": 682.7,
       "source_type": "simulated",
       "has_detail": true,
       "metrics_snapshot": [
-        { "name": "time_step", "label": "当前时间步", "value": 2900, "total": 5000, "unit": "" },
-        { "name": "nonlinear_iter", "label": "Newton迭代", "value": 4, "total": 0, "unit": "次" },
-        { "name": "step_time", "label": "单步耗时", "value": 1.15, "total": 0, "unit": "s" },
-        { "name": "cpu_utilization", "label": "CPU利用率", "value": 90, "total": 100, "unit": "%" }
+        {
+          "name": "time_step",
+          "label": "当前时间步",
+          "value": 5000,
+          "total": 5000,
+          "unit": ""
+        },
+        {
+          "name": "nonlinear_iter",
+          "label": "Newton迭代",
+          "value": 4,
+          "total": 0,
+          "unit": "次"
+        },
+        {
+          "name": "step_time",
+          "label": "单步耗时",
+          "value": 1.15,
+          "total": 0,
+          "unit": "s"
+        },
+        {
+          "name": "cpu_utilization",
+          "label": "CPU利用率",
+          "value": 90,
+          "total": 100,
+          "unit": "%"
+        }
       ]
     },
     {
@@ -281,10 +473,34 @@
       "source_type": "simulated",
       "has_detail": true,
       "metrics_snapshot": [
-        { "name": "time_step", "label": "当前时间步", "value": 5000, "total": 5000, "unit": "" },
-        { "name": "nonlinear_iter", "label": "Newton迭代", "value": 4, "total": 0, "unit": "次" },
-        { "name": "step_time", "label": "单步耗时", "value": 1.12, "total": 0, "unit": "s" },
-        { "name": "cpu_utilization", "label": "CPU利用率", "value": 92, "total": 100, "unit": "%" }
+        {
+          "name": "time_step",
+          "label": "当前时间步",
+          "value": 5000,
+          "total": 5000,
+          "unit": ""
+        },
+        {
+          "name": "nonlinear_iter",
+          "label": "Newton迭代",
+          "value": 4,
+          "total": 0,
+          "unit": "次"
+        },
+        {
+          "name": "step_time",
+          "label": "单步耗时",
+          "value": 1.12,
+          "total": 0,
+          "unit": "s"
+        },
+        {
+          "name": "cpu_utilization",
+          "label": "CPU利用率",
+          "value": 92,
+          "total": 100,
+          "unit": "%"
+        }
       ]
     },
     {
@@ -310,10 +526,34 @@
       "source_type": "simulated",
       "has_detail": false,
       "metrics_snapshot": [
-        { "name": "time_step", "label": "当前时间步", "value": 5000, "total": 5000, "unit": "" },
-        { "name": "nonlinear_iter", "label": "Newton迭代", "value": 5, "total": 0, "unit": "次" },
-        { "name": "step_time", "label": "单步耗时", "value": 1.42, "total": 0, "unit": "s" },
-        { "name": "cpu_utilization", "label": "CPU利用率", "value": 88, "total": 100, "unit": "%" }
+        {
+          "name": "time_step",
+          "label": "当前时间步",
+          "value": 5000,
+          "total": 5000,
+          "unit": ""
+        },
+        {
+          "name": "nonlinear_iter",
+          "label": "Newton迭代",
+          "value": 5,
+          "total": 0,
+          "unit": "次"
+        },
+        {
+          "name": "step_time",
+          "label": "单步耗时",
+          "value": 1.42,
+          "total": 0,
+          "unit": "s"
+        },
+        {
+          "name": "cpu_utilization",
+          "label": "CPU利用率",
+          "value": 88,
+          "total": 100,
+          "unit": "%"
+        }
       ]
     },
     {
@@ -339,10 +579,34 @@
       "source_type": "simulated",
       "has_detail": false,
       "metrics_snapshot": [
-        { "name": "time_step", "label": "当前时间步", "value": 1050, "total": 5000, "unit": "" },
-        { "name": "nonlinear_iter", "label": "Newton迭代", "value": 9, "total": 0, "unit": "次" },
-        { "name": "step_time", "label": "单步耗时", "value": 2.31, "total": 0, "unit": "s" },
-        { "name": "cpu_utilization", "label": "CPU利用率", "value": 66, "total": 100, "unit": "%" }
+        {
+          "name": "time_step",
+          "label": "当前时间步",
+          "value": 1050,
+          "total": 5000,
+          "unit": ""
+        },
+        {
+          "name": "nonlinear_iter",
+          "label": "Newton迭代",
+          "value": 9,
+          "total": 0,
+          "unit": "次"
+        },
+        {
+          "name": "step_time",
+          "label": "单步耗时",
+          "value": 2.31,
+          "total": 0,
+          "unit": "s"
+        },
+        {
+          "name": "cpu_utilization",
+          "label": "CPU利用率",
+          "value": 66,
+          "total": 100,
+          "unit": "%"
+        }
       ]
     },
     {
@@ -364,7 +628,7 @@
       "cpu_cores": 512,
       "gpu_count": 0,
       "memory_gb": 4096,
-      "core_hours": 0.0,
+      "core_hours": 0,
       "source_type": "simulated",
       "has_detail": false,
       "metrics_snapshot": []
@@ -388,16 +652,40 @@
       "cpu_cores": 512,
       "gpu_count": 0,
       "memory_gb": 4096,
-      "core_hours": 768.0,
+      "core_hours": 768,
       "source_type": "simulated",
       "has_detail": false,
       "metrics_snapshot": [
-        { "name": "time_step", "label": "当前时间步", "value": 1800, "total": 5000, "unit": "" },
-        { "name": "nonlinear_iter", "label": "Newton迭代", "value": 4, "total": 0, "unit": "次" },
-        { "name": "step_time", "label": "单步耗时", "value": 1.2, "total": 0, "unit": "s" },
-        { "name": "cpu_utilization", "label": "CPU利用率", "value": 89, "total": 100, "unit": "%" }
+        {
+          "name": "time_step",
+          "label": "当前时间步",
+          "value": 1800,
+          "total": 5000,
+          "unit": ""
+        },
+        {
+          "name": "nonlinear_iter",
+          "label": "Newton迭代",
+          "value": 4,
+          "total": 0,
+          "unit": "次"
+        },
+        {
+          "name": "step_time",
+          "label": "单步耗时",
+          "value": 1.2,
+          "total": 0,
+          "unit": "s"
+        },
+        {
+          "name": "cpu_utilization",
+          "label": "CPU利用率",
+          "value": 89,
+          "total": 100,
+          "unit": "%"
+        }
       ]
     }
   ],
-  "timestamp": "2026-08-11T12:00:00+08:00"
+  "timestamp": "2026-09-22T21:04:53+08:00"
 }
