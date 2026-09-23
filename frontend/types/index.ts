@@ -168,7 +168,7 @@ export interface ImportResult {
   cluster_ids?: string[]
 }
 
-/** 算子提交结果（会重置该场景主运行的工作流） */
+/** 算子提交结果（每次提交新增一条运行记录，返回该记录的 id 与待执行工作流） */
 export interface OperatorSubmitResult {
   run_id: string
   workflow: RunDetail['workflow']

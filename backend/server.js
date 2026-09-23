@@ -244,6 +244,7 @@ function applyLookup(lookup, data) {
 
 const GEO_DOMAIN = 'geodynamics'
 const ADVANCE_STEP = 20
+const ADVANCE_SECONDS = 120
 
 /** 当前时间 ISO 字符串（带本地时区偏移，风格与 mock 数据一致） */
 function nowIso() {
@@ -415,12 +416,80 @@ function importGeodynamicsDatasets(scenarioId) {
   }
 }
 
-/** 找到某场景下具有详情的主运行（running + has_detail 优先） */
-function findPrimaryRun(scenarioId) {
-  const envelope = readJson(`${GEO_DOMAIN}/runs.json`)
-  if (!envelope || !Array.isArray(envelope.data)) return null
-  const candidates = envelope.data.filter((r) => (!scenarioId || r.scenario_id === scenarioId) && r.has_detail)
-  return candidates.find((r) => r.status === 'running') || candidates[0] || null
+/** 找到某场景下可作为运行模板的运行（优先“成功且有详情”，保证结果页图表/成果文件可复用） */
+function findTemplateRun(scenarioId, runs) {
+  const candidates = runs.filter((r) => !scenarioId || r.scenario_id === scenarioId)
+  return (
+    candidates.find((r) => r.has_detail && r.status === 'success') ||
+    candidates.find((r) => r.has_detail) ||
+    candidates[0] ||
+    null
+  )
+}
+
+/** 在已有运行基础上分配全局唯一的新运行 ID（如 GEO-20260811-0015） */
+function allocateRunId(runs) {
+  const parsed = runs
+    .map((r) => /^(GEO-\d{8})-(\d+)$/.exec(r.run_id || ''))
+    .filter(Boolean)
+    .map((m) => ({ prefix: m[1], seq: Number(m[2]) }))
+  const base = parsed.length
+    ? parsed.reduce((a, b) => (b.seq > a.seq ? b : a))
+    : { prefix: `GEO-${nowIso().slice(0, 10).replace(/-/g, '')}`, seq: 0 }
+  const seq = base.seq + 1
+  return { seq, runId: `${base.prefix}-${String(seq).padStart(4, '0')}` }
+}
+
+/** 模板运行缺失时兜底生成默认工作流 */
+function defaultGeodynamicsWorkflow(clusterId) {
+  const nodes = [
+    { id: 'prepare', name: '数据预处理' },
+    { id: 'partition', name: '网格划分与域分解' },
+    { id: 'solver', name: '并行求解' },
+    { id: 'post', name: '结果后处理' },
+  ].map((n) => ({ ...n, status: 'pending', progress: 0, cluster_id: clusterId }))
+  const edges = nodes.slice(1).map((n, i) => ({ source: nodes[i].id, target: n.id }))
+  return { nodes, edges }
+}
+
+/** 读取 geodynamics 算子元数据（含 cpu_cores），用于推导运行时间画像 */
+function readGeodynamicsOperators() {
+  const envelope = readJson(`${GEO_DOMAIN}/operators.json`)
+  return Array.isArray(envelope?.data) ? envelope.data : []
+}
+
+/**
+ * 依据本次所选算子推导该运行的推进画像：
+ * - per_node_ticks：每个工作流节点需要的推进轮数（负载越高轮数越多，流程编排更慢）
+ * - tick_seconds：每轮推进折算的模拟耗时（秒），负载越高单步越久
+ * 以算子 cpu_cores 为负载依据，并叠加基于运行序号的轻微抖动，
+ * 保证不同算子组合（甚至相同组合的不同记录）的耗时与核时都不会完全相同。
+ */
+function geodynamicsTimingPlan(operatorIds, seq) {
+  const byName = new Map(readGeodynamicsOperators().map((op) => [op.name, op]))
+  const chosen = (operatorIds || []).map((id) => byName.get(id)).filter(Boolean)
+  const cpuSum = chosen.reduce((sum, op) => sum + (op.cpu_cores || 0), 0)
+  const opCount = chosen.length
+  // 负载指数：以 fd-wave-solver(64 核) 作为 1.0 基准；未匹配到算子元数据时取中性值
+  const loadIndex = opCount ? cpuSum / 64 : 0.5
+  // 每节点推进轮数随负载上升（3~7 轮）；求解节点按 2 倍计，体现其权重最高
+  const perNodeBase = Math.max(3, Math.min(7, Math.round(3 + loadIndex)))
+  // 单步模拟时长：负载与算子数量共同放大
+  const baseTick = Math.round(90 + loadIndex * 90 + opCount * 15)
+  const jitter = ((seq * 37) % 11) - 5 // -5 ~ +5 (%)，让相同算子组合也略有差异
+  const tickSeconds = Math.max(30, Math.round(baseTick * (1 + jitter / 100)))
+  return {
+    per_node_ticks: {
+      prepare: perNodeBase,
+      partition: perNodeBase,
+      solver: perNodeBase * 2,
+      post: perNodeBase,
+    },
+    tick_seconds: tickSeconds,
+    load_index: Number(loadIndex.toFixed(3)),
+    operator_cpu_sum: cpuSum,
+    operator_count: opCount,
+  }
 }
 
 /** 将运行详情中的关键字段同步回 runs.json 列表项 */
@@ -444,29 +513,54 @@ function syncRunSummary(runId, detail) {
   writeJson(`${GEO_DOMAIN}/runs.json`, envelope)
 }
 
-/** 算子提交：重置该场景主运行的工作流为待执行状态，使流程编排产生对应变化 */
-function submitGeodynamicsOperators(scenarioId, payload) {
-  const run = findPrimaryRun(scenarioId)
-  if (!run) return { error: `primary run not found for scenario: ${scenarioId}` }
-  const relPath = `${GEO_DOMAIN}/run-details/${run.run_id}.json`
-  const detailEnvelope = readJson(relPath)
-  if (!detailEnvelope || !detailEnvelope.data) return { error: `run detail not found: ${run.run_id}` }
-  const detail = detailEnvelope.data
-  const now = nowIso()
+/**
+ * 算子提交：为选定场景新增一条运行记录（running），并生成对应的运行详情与工作流。
+ * 与旧逻辑（重置已有主运行）不同，这里每次提交都会追加一条全新记录，
+ * 使「流程编排 / 执行监控 / 结果展示」都能看到并推进这条新记录。
+ */
+function createGeodynamicsRun(scenarioId, payload) {
+  const envelope = readJson(`${GEO_DOMAIN}/runs.json`)
+  if (!envelope || !Array.isArray(envelope.data)) return { error: 'runs.json not found' }
 
-  if (detail.workflow && Array.isArray(detail.workflow.nodes)) {
-    detail.workflow.nodes.forEach((n) => {
-      n.status = 'pending'
-      n.progress = 0
-    })
-  }
+  const template = findTemplateRun(scenarioId, envelope.data)
+  if (!template) return { error: `run not found for scenario: ${scenarioId}` }
+
+  const { seq, runId } = allocateRunId(envelope.data)
+  const now = nowIso()
+  const operatorIds = Array.isArray(payload?.operator_ids) ? payload.operator_ids : []
+  const timing = geodynamicsTimingPlan(operatorIds, seq)
+
+  // 优先克隆同场景已有详情作为模板（含 domain_data / artifacts），保证结果可查看
+  const templateDetail = readJson(`${GEO_DOMAIN}/run-details/${template.run_id}.json`)
+  const detail = templateDetail?.data ? JSON.parse(JSON.stringify(templateDetail.data)) : {}
+  const workflow = detail.workflow?.nodes?.length ? detail.workflow : defaultGeodynamicsWorkflow(template.cluster_id)
+
+  detail.run_id = runId
+  detail.scenario_id = scenarioId
+  detail.scenario_name = template.scenario_name
   detail.status = 'running'
   detail.progress = 0
-  detail.current_stage = detail.workflow?.nodes?.[0]?.id || 'prepare'
+  detail.execution_mode = template.execution_mode || 'simulated'
+  detail.cluster_id = template.cluster_id
+  detail.cluster_name = template.cluster_name
+  detail.job_id = String(200000 + seq)
+  detail.current_stage = workflow.nodes[0]?.id || 'prepare'
   detail.start_time = now
   detail.end_time = ''
   detail.elapsed_seconds = 0
-  detail.selected_operator_ids = Array.isArray(payload?.operator_ids) ? payload.operator_ids : []
+  detail.nodes = template.nodes
+  detail.cpu_cores = template.cpu_cores
+  detail.gpu_count = template.gpu_count
+  detail.memory_gb = template.memory_gb
+  detail.source_type = 'simulated'
+  detail.selected_operator_ids = operatorIds
+  detail.timing = timing
+  detail.workflow = workflow
+  workflow.nodes.forEach((n) => {
+    n.status = 'pending'
+    n.progress = 0
+    n.tick = 0
+  })
   if (detail.metrics) {
     detail.metrics.progress = 0
     if (Array.isArray(detail.metrics.metrics)) {
@@ -476,15 +570,47 @@ function submitGeodynamicsOperators(scenarioId, payload) {
       })
     }
   }
-  detailEnvelope.timestamp = now
-  writeJson(relPath, detailEnvelope)
-  syncRunSummary(run.run_id, detail)
+
+  writeJson(`${GEO_DOMAIN}/run-details/${runId}.json`, {
+    code: 200,
+    message: 'success',
+    data: detail,
+    timestamp: now,
+  })
+
+  const summary = {
+    run_id: runId,
+    domain: GEO_DOMAIN,
+    scenario_id: scenarioId,
+    scenario_name: template.scenario_name,
+    status: 'running',
+    progress: 0,
+    execution_mode: template.execution_mode || 'simulated',
+    cluster_id: template.cluster_id,
+    cluster_name: template.cluster_name,
+    job_id: detail.job_id,
+    current_stage: detail.current_stage,
+    start_time: now,
+    end_time: '',
+    elapsed_seconds: 0,
+    nodes: template.nodes,
+    cpu_cores: template.cpu_cores,
+    gpu_count: template.gpu_count,
+    memory_gb: template.memory_gb,
+    core_hours: 0,
+    source_type: 'simulated',
+    has_detail: true,
+    metrics_snapshot: Array.isArray(detail.metrics?.metrics) ? detail.metrics.metrics.map((m) => ({ ...m })) : [],
+  }
+  envelope.data.unshift(summary)
+  envelope.timestamp = now
+  writeJson(`${GEO_DOMAIN}/runs.json`, envelope)
 
   return {
-    run_id: run.run_id,
+    run_id: runId,
     workflow: detail.workflow,
-    progress: detail.progress,
-    selected_operator_ids: detail.selected_operator_ids,
+    progress: 0,
+    selected_operator_ids: operatorIds,
   }
 }
 
@@ -497,9 +623,20 @@ function advanceGeodynamicsRun(runId) {
   const nodes = detail.workflow?.nodes
   if (!Array.isArray(nodes) || !nodes.length) return { error: `workflow not found: ${runId}` }
 
+  // 推进节拍与单步时长来自提交时按算子推导的画像：不同算子组合得到不同的耗时/核时与推进速度
+  const timing = detail.timing && typeof detail.timing === 'object' ? detail.timing : null
+  const tickSeconds = Number(timing?.tick_seconds) > 0 ? Number(timing.tick_seconds) : ADVANCE_SECONDS
+  const perNodeTicks = timing?.per_node_ticks || null
+
   const target = nodes.find((n) => (n.progress || 0) < 100)
   if (target) {
-    target.progress = Math.min(100, (target.progress || 0) + ADVANCE_STEP)
+    if (perNodeTicks) {
+      const total = Number(perNodeTicks[target.id]) > 0 ? Number(perNodeTicks[target.id]) : 1
+      target.tick = (target.tick || 0) + 1
+      target.progress = Math.min(100, Math.round((target.tick / total) * 100))
+    } else {
+      target.progress = Math.min(100, (target.progress || 0) + ADVANCE_STEP)
+    }
   }
 
   // 顺序依赖：已完成节点 success；首个未完成节点 running；其余 pending
@@ -527,7 +664,7 @@ function advanceGeodynamicsRun(runId) {
     detail.status = 'running'
     detail.current_stage = nodes.find((n) => n.status === 'running')?.id || detail.current_stage
   }
-  detail.elapsed_seconds = (detail.elapsed_seconds || 0) + 120
+  detail.elapsed_seconds = (detail.elapsed_seconds || 0) + tickSeconds
 
   if (detail.metrics) {
     detail.metrics.progress = overall
@@ -583,11 +720,11 @@ function handleGeodynamicsWrite(method, parts, body) {
     return { code: 200, message: result.message, data: result }
   }
 
-  // POST /geodynamics/scenarios/{scenarioId}/operators/submit
+  // POST /geodynamics/scenarios/{scenarioId}/operators/submit —— 每次提交新增一条运行记录
   if (resource === 'scenarios' && method === 'POST' && arg1 && arg2 === 'operators' && arg3 === 'submit') {
-    const result = submitGeodynamicsOperators(arg1, body)
+    const result = createGeodynamicsRun(arg1, body)
     if (result.error) return { code: 404, message: result.error, data: null }
-    return { code: 200, message: '算子已提交', data: result }
+    return { code: 200, message: '算子已提交，已新增运行记录', data: result }
   }
 
   // POST /geodynamics/runs/{runId}/advance

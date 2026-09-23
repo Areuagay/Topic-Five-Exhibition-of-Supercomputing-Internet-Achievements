@@ -172,7 +172,7 @@ async function handleImported(result: ImportResult): Promise<void> {
   }
 }
 
-/* ---------------- 03 算子选择：提交后重置工作流并跳转流程编排 ---------------- */
+/* ---------------- 03 算子选择：提交后新增运行记录并跳转流程编排 ---------------- */
 const operatorSubmitting = ref(false)
 const operatorSubmitMessage = ref('')
 let submitTimer: ReturnType<typeof setTimeout> | undefined
@@ -190,10 +190,11 @@ async function handleOperatorSubmit(): Promise<void> {
   operatorSubmitMessage.value = ''
   try {
     const result = await submitOperators(props.domain, props.scenarioId, ids)
+    // 后端已新增一条运行记录：先刷新运行列表，再选中新记录，避免选中值被导航校验回退
+    await refreshRuns()
     selectedRunId.value = result.run_id
     runWorkflow.value = result.workflow
-    await refreshRuns()
-    operatorSubmitMessage.value = `已提交 ${ids.length} 个算子，正在进入流程编排…`
+    operatorSubmitMessage.value = `已提交 ${ids.length} 个算子，新增运行记录 ${result.run_id}，正在进入流程编排…`
     submitTimer = setTimeout(() => { navigate('workflow', result.run_id) }, 1500)
   } catch {
     operatorSubmitMessage.value = '算子提交失败，请稍后重试'
