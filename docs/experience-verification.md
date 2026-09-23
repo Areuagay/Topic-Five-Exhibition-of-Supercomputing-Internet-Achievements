@@ -38,6 +38,7 @@ node --test frontend/tests/*.test.mjs backend/tests/*.test.mjs
 node scripts/verify_experience_ui.mjs
 node scripts/verify_experience_resilience.mjs
 node scripts/verify_experience_motion.mjs
+node scripts/verify_upload_feedback.mjs
 ```
 
 第一个脚本覆盖十二场景的上传、导入、提交、动态监控、刷新恢复、完成及结果入口，输出截图和 `.runtime-logs/experience-qa/report.json`。第二个脚本覆盖网络错误恢复、延迟响应竞态、上传失败重试、离开页面取消以及 390px 布局。
@@ -46,10 +47,16 @@ node scripts/verify_experience_motion.mjs
 
 ## 按钮与动效
 
-六领域共用蓝白控制样式，主要按钮采用细描边、顶部高光和分层阴影，配合 Lucide 图标；次要操作降低视觉权重。Motion 负责步骤内容的短距离定向进入，导航与筛选指示块连续移动。算子选择联动卡片底色、描绘勾选标记、数量切换和可移除标签，标签区域平滑展开收起，上传与完成状态短暂淡入淡出。
+全站共用配色、边框、控件圆角与文字层级，主要按钮使用纯色，保留悬停抬升、按压回弹和图标反馈，不再使用镜面高光。桌面六步体验使用左侧流程导航，窄屏保持上方导航。Motion 负责步骤内容的短距离定向进入，导航与筛选指示块连续移动。算子选择联动卡片底色、勾选标记、数量切换和可移除标签，标签区域平滑展开收起。
 
 选择反馈使用独立的 CSS `scale` 动画，筛选列表独立管理 `transform`，避免快速操作时相互覆盖。所有动效尊重 `prefers-reduced-motion`；操作立即更新状态，不等待动画完成。
 
 冷启动时，服务端已渲染的体验控件在 Vue 完成事件绑定后才开放交互，避免首击丢失。监控进度条保留成功、失败等状态色，上传渐变限定在上传区域。
+
+上传操作使用固定尺寸的进度控件，完成后直接采用服务端返回的数据。通知在固定位置切换，不推挤表格；成功为绿色、移除为红色的方向扫光，浅色尾部跟随较深前沿，从左侧进入并连续穿出右侧，没有停留后消失的阶段。两个动画名称使连续上传后立即移除也能从头播放。减少动态效果时改为短暂静态着色。
+
+`verify_upload_feedback.mjs` 逐帧检查行高与文档位置保持稳定、两种扫光完整从左右边界穿过、按钮悬停反馈和上边框。当前功能与视觉重做前的回退检查点为 `34e2c82`。
+
+本地体验前端通过隐藏的独立进程运行，输出位于 `.runtime-logs/frontend-service.out.log` 与 `.runtime-logs/frontend-service.err.log`，关闭验证浏览器不停止前后端。
 
 验收脚本会通过正常接口在本地模拟目录创建演示任务。这些运行记录保留，方便随后人工体验。

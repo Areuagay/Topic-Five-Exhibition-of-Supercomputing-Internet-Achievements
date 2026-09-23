@@ -14,9 +14,9 @@ test('global shell is content-only and ready to embed in SCNet', async () => {
   assert.match(layout, /class="layout-content"/)
   assert.doesNotMatch(layout, /<AppHeader/)
   assert.doesNotMatch(layout, /app-footer/)
-  assert.match(css, /--scnet-bg:\s*#f5f7fa/)
-  assert.match(css, /--scnet-primary:\s*#0b5bd3/)
-  assert.match(css, /--scnet-radius:\s*6px/)
+  assert.match(css, /--scnet-bg:\s*#f4f6f9/)
+  assert.match(css, /--scnet-primary:\s*#2563eb/)
+  assert.match(css, /--scnet-radius:\s*8px/)
 })
 
 test('application landing is a direct six-domain hub without redundant filters', async () => {

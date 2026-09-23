@@ -1,7 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
-  devtools: { enabled: true },
+  devtools: { enabled: false },
   // 关闭匿名数据收集询问，避免首次启动时交互式提示阻塞 dev server 初始化
   telemetry: false,
 

@@ -2,7 +2,7 @@
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useExperienceNavigation } from '~/composables/useExperienceNavigation'
 import { useExperienceMotion } from '~/composables/useExperienceMotion'
-import { ArrowLeft, ArrowRight } from '@lucide/vue'
+import { ArrowLeft, ArrowRight, LoaderCircle } from '@lucide/vue'
 import { useSlidingHighlight } from '~/composables/useSlidingHighlight'
 import ExperienceDataPrepStep from './ExperienceDataPrepStep.vue'
 import ExperienceResourceStep from './ExperienceResourceStep.vue'
@@ -126,7 +126,7 @@ async function startExperience(): Promise<void> {
   navigate('data', defaultRunId)
   feedbackTimer = setTimeout(() => { actionFeedback.value = '' }, 2800)
   await nextTick()
-  guideBar.value?.scrollIntoView({ block: 'nearest' })
+  guideBar.value?.scrollIntoView({ block: 'nearest', behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' })
   guideBar.value?.querySelector<HTMLButtonElement>('.experience-next')?.focus({ preventScroll: true })
 }
 
@@ -135,6 +135,7 @@ const activeStep = computed(
   () => experienceSteps.find((step) => step.key === activeKey.value) ?? experienceSteps[0],
 )
 const motionRoot = ref<HTMLElement>()
+const dataStep = ref<InstanceType<typeof ExperienceDataPrepStep>>()
 useExperienceMotion(motionRoot, computed(() => activeStep.value.index))
 const nextStep = computed(() => experienceSteps[activeStep.value.index] ?? null)
 const previousStep = computed(() => experienceSteps[activeStep.value.index - 2] ?? null)
@@ -145,6 +146,8 @@ function selectStep(key: string): void {
 }
 
 function goNext(): void {
+  if (activeKey.value === 'data') { void dataStep.value?.handleImport(); return }
+  if (activeKey.value === 'operator') { void handleOperatorSubmit(); return }
   const target = nextStep.value
   if (!target) return
   activeKey.value = target.key
@@ -152,18 +155,22 @@ function goNext(): void {
 
 /* ---------------- 运行记录相关资源 ---------------- */
 const runWorkflow = ref<RunDetail['workflow'] | null>(null)
+const workflowRunId = ref('')
 const runResourcesPending = ref(false)
 
 async function loadRunResources(runId: string): Promise<void> {
   if (import.meta.server) return
   if (!runId) {
     runWorkflow.value = null
+    workflowRunId.value = ''
+    runResourcesPending.value = false
     return
   }
+  if (workflowRunId.value === runId && runWorkflow.value) { runResourcesPending.value = false; return }
   runResourcesPending.value = true
   try {
     const workflow = await getRunWorkflow(props.domain, runId)
-    if (selectedRunId.value === runId) runWorkflow.value = workflow
+    if (selectedRunId.value === runId) { runWorkflow.value = workflow; workflowRunId.value = runId }
   } catch {
     if (selectedRunId.value === runId) runWorkflow.value = null
   } finally {
@@ -181,8 +188,8 @@ function handleResult(runId: string): void {
 }
 
 /* ---------------- 01 数据准备：上传/删除后刷新、一键导入 ---------------- */
-async function handleDataRefresh(): Promise<void> {
-  await refreshDatasets()
+function handleDatasetUpdated(updated: DatasetItem): void {
+  datasets.value = datasets.value.map(item => item.dataset_id === updated.dataset_id ? updated : item)
 }
 
 async function handleImported(result: ImportResult): Promise<void> {
@@ -197,6 +204,9 @@ async function handleImported(result: ImportResult): Promise<void> {
 /* ---------------- 03 算子选择：提交后新增运行记录并跳转流程编排 ---------------- */
 const operatorSubmitting = ref(false)
 const operatorSubmitMessage = ref('')
+const nextBusy = computed(() => activeKey.value === 'operator' ? operatorSubmitting.value : activeKey.value === 'data' && !!dataStep.value?.importing)
+const nextDisabled = computed(() => !nextStep.value || (activeKey.value === 'operator' && (!chosenOperators.value.length || operatorSubmitting.value)) || (activeKey.value === 'data' && (!dataStep.value?.uploadedCount || dataStep.value?.busy)))
+const nextLabel = computed(() => activeKey.value === 'operator' ? (operatorSubmitting.value ? '提交中…' : '提交并编排') : activeKey.value === 'data' ? (dataStep.value?.importing ? '导入中…' : dataStep.value?.pendingImport ? '导入并继续' : '前往资源调度') : nextStep.value ? '下一步' : '已到最后一步')
 let submitTimer: ReturnType<typeof setTimeout> | undefined
 onBeforeUnmount(() => clearTimeout(submitTimer))
 
@@ -214,9 +224,8 @@ async function handleOperatorSubmit(): Promise<void> {
     const result = await submitOperators(props.domain, props.scenarioId, ids)
     // 后端已新增一条运行记录：先刷新运行列表，再选中新记录，避免选中值被导航校验回退
     await refreshRuns()
-    selectedRunId.value = result.run_id
     runWorkflow.value = result.workflow
-    operatorSubmitMessage.value = `已提交 ${ids.length} 个算子，新增运行记录 ${result.run_id}，正在进入流程编排…`
+    workflowRunId.value = result.run_id
     navigate('workflow', result.run_id)
   } catch (error) {
     operatorSubmitMessage.value = (error as { data?: { message?: string } })?.data?.message || '算子提交失败，请稍后重试'
@@ -305,17 +314,19 @@ watch(activeKey, key => { if (key === 'resource') void refreshClusters() })
       </p>
       <div class="experience-guide-actions">
         <button :disabled="!previousStep" type="button" class="experience-previous sc-action" @click="previousStep && selectStep(previousStep.key)"><ArrowLeft class="experience-nav-arrow" aria-hidden="true" /> 上一步</button>
-        <button :disabled="!nextStep" type="button" class="experience-next sc-action sc-action--primary" :title="nextStep ? '下一步：' + nextStep.title : '已是最后一步'" @click="goNext">
-          下一步 <ArrowRight class="experience-nav-arrow action-arrow" aria-hidden="true" />
+        <button :disabled="nextDisabled" :aria-busy="nextBusy" type="button" class="experience-next sc-action sc-action--primary" :title="nextStep ? '下一步：' + nextStep.title : '已是最后一步'" @click="goNext">
+          <LoaderCircle v-if="nextBusy" class="is-spinning" aria-hidden="true" />{{ nextLabel }} <ArrowRight v-if="!nextBusy" class="experience-nav-arrow action-arrow" aria-hidden="true" />
         </button>
       </div>
     </div>
     </div>
 
     <div ref="motionRoot" class="experience-body">
+      <div class="experience-step-content">
       <p v-if="liveMessage" role="status" class="experience-live-message">{{ liveMessage }}</p>
       <KeepAlive :key="experienceSession" include="ExperienceMonitorStep,ExperienceResultStep" :max="2">
       <ExperienceDataPrepStep
+        ref="dataStep"
         v-if="activeKey === 'data'"
         :domain="domain"
         :scenario-id="scenarioId"
@@ -324,7 +335,7 @@ watch(activeKey, key => { if (key === 'resource') void refreshClusters() })
         :params="params"
         :cluster-name="clusterName"
         :datasets="datasets ?? []"
-        @refresh="handleDataRefresh"
+        @updated="handleDatasetUpdated"
         @imported="handleImported"
       />
 
@@ -377,6 +388,7 @@ watch(activeKey, key => { if (key === 'resource') void refreshClusters() })
         @back-to-monitor="selectStep('monitor')"
       />
       </KeepAlive>
+      </div>
     </div>
   </section>
   <Teleport to="body">
@@ -387,7 +399,8 @@ watch(activeKey, key => { if (key === 'resource') void refreshClusters() })
 </template>
 
 <style scoped>
-.experience-flow { display: grid; gap: 20px; min-width: 0; }
+.experience-flow { display: grid; gap: 20px; min-width: 0; overflow-anchor: none; }
+.experience-step-content { display: flow-root; min-width: 0; }
 .experience-overview { min-width: 0; overflow: hidden; border: 1px solid #e1e6ed; border-radius: 12px; background: #fff; box-shadow: 0 2px 7px rgb(31 45 61 / 4.5%); }
 .experience-head { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(420px, 1fr); align-items: center; gap: 40px; padding: clamp(26px, 2.2vw, 38px); }
 .experience-head-text { min-width: 0; }
@@ -437,13 +450,7 @@ watch(activeKey, key => { if (key === 'resource') void refreshClusters() })
 .experience-guide-progress { flex-shrink: 0; color: var(--scnet-primary); font-weight: 600; font-variant-numeric: tabular-nums; }
 .experience-guide-summary { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .experience-guide-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.experience-guide-actions button { height: 44px; padding: 0 12px; border: 1px solid #d7e0ed; border-radius: 6px; background: #fff; color: var(--scnet-text-secondary); font-size: 15px; white-space: nowrap; cursor: pointer; }
-.experience-guide-actions .experience-next { border-color: var(--scnet-primary); color: #fff; background: var(--scnet-primary); }
-.experience-guide-actions button { transition: var(--scnet-hover-transition), color 180ms ease, transform 180ms var(--scnet-hover-easing); }
-.experience-guide-actions button:enabled:is(:hover, :focus-visible) { border-color: var(--scnet-primary); box-shadow: 0 5px 12px rgb(11 91 211 / 20%); transform: translateY(-2px); }
-.experience-guide-actions .experience-previous:enabled:is(:hover, :focus-visible) { background: #eaf2ff; color: var(--scnet-primary); }
-.experience-guide-actions .experience-next:enabled:is(:hover, :focus-visible) { background: var(--el-color-primary-dark-2); }
-.experience-guide-actions button:enabled:active { transform: translateY(1px) scale(.97); box-shadow: 0 1px 3px rgb(11 91 211 / 12%); }
+.experience-guide-actions button { height: 44px; padding-inline: 14px; font-size: 14px; }
 .experience-nav-arrow { display: inline-block; transition: transform 180ms var(--scnet-hover-easing); }
 .experience-previous:enabled:is(:hover, :focus-visible) .experience-nav-arrow { transform: translateX(-3px); }
 .experience-next:enabled:is(:hover, :focus-visible) .experience-nav-arrow { transform: translateX(3px); }

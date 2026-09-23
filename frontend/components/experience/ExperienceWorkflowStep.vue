@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { Box } from '@lucide/vue'
 import WorkflowDag from '~/components/WorkflowDag.vue'
 import { getStageLabels } from '~/config/scenario-experience'
 import { formatDuration, formatNumber, statusText } from '~/composables/useFormat'
@@ -38,8 +39,8 @@ function selectRun(value: string): void {
 <template>
   <div class="exp-workflow">
     <section class="exp-chosen-operators" aria-label="本次体验已选算子">
-      <div><strong>本条任务算子 · {{ chosenOperators.length }}</strong><p>下方展示所选运行记录的工作流，进度与执行监控同步。</p></div>
-      <ul v-if="chosenOperators.length"><li v-for="operator in chosenOperators" :key="operator.name">{{ operator.description.includes('：') ? operator.description.split('：')[0] : operator.name }}</li></ul>
+      <header class="exp-chosen-heading"><div><strong>本条任务算子</strong><span class="exp-chosen-count">{{ chosenOperators.length }} 项</span></div><p>与下方工作流、执行监控同步</p></header>
+      <ul v-if="chosenOperators.length"><li v-for="operator in chosenOperators" :key="operator.name"><span class="exp-chosen-icon"><Box :size="17" aria-hidden="true" /></span><span class="exp-chosen-name">{{ operator.description.includes('：') ? operator.description.split('：')[0] : operator.name }}<small>{{ operator.name }}</small></span></li></ul>
       <p v-else>预置运行记录，计算阶段请查看下方工作流。</p>
     </section>
     <div class="exp-toolbar">
@@ -90,10 +91,17 @@ function selectRun(value: string): void {
 
 <style scoped>
 .exp-chosen-operators { padding: 20px 24px; border: 1px solid var(--scnet-divider); border-radius: 10px; background: #fff; }
+.exp-chosen-heading { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px 20px; padding-bottom: 15px; border-bottom: 1px solid var(--scnet-divider); }
+.exp-chosen-heading > div { display: flex; align-items: center; gap: 12px; }
+.exp-chosen-count { font-size: 11px; color: #61758e; padding: 2px 7px; border: 1px solid #dce5ef; border-radius: 5px; }
+.exp-chosen-heading p { margin: 0; font-size: 12px; color: #7b899a; }
 .exp-chosen-operators strong { font-size: 14px; color: var(--scnet-text); }
 .exp-chosen-operators p { margin: 6px 0 0; color: var(--scnet-text-secondary); font-size: 13px; }
-.exp-chosen-operators ul { display: flex; flex-wrap: wrap; gap: 8px; padding: 0; margin: 14px 0 0; list-style: none; }
-.exp-chosen-operators li { max-width: 100%; overflow-wrap: anywhere; padding: 5px 10px; border-radius: 5px; background: #f2f6fc; color: var(--scnet-primary); font-size: 12px; }
+.exp-chosen-operators ul { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); gap: 12px; padding: 0; margin: 16px 0 0; list-style: none; }
+.exp-chosen-operators li { display: flex; align-items: center; gap: 12px; min-width: 0; padding: 13px 15px; border: 1px solid #dee7f2; border-radius: 8px; background: #f8fafd; color: #365676; font-size: 13px; }
+.exp-chosen-icon { display: grid; place-items: center; flex: 0 0 34px; height: 34px; color: #4776b3; background: #edf3fb; border-radius: 7px; }
+.exp-chosen-name { min-width: 0; overflow-wrap: anywhere; font-weight: 500; }
+.exp-chosen-name small { display: block; margin-top: 3px; font: 11px/1.5 var(--scnet-font-mono); color: #7a8b9f; }
 .exp-workflow {
   display: grid;
   gap: 18px;

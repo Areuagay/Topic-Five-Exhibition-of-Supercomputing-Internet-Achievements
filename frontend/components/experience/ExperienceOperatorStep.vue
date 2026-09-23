@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Check, X } from '@lucide/vue'
+import { Check, Plus, X, Info, ArrowUpRight } from '@lucide/vue'
 import { useSelectionFeedback } from '~/composables/useSelectionFeedback'
 import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 import { useSlidingHighlight } from '~/composables/useSlidingHighlight'
@@ -10,9 +10,8 @@ const props = defineProps<{ domain: string; operators: Operator[]; selectedOpera
 const emit = defineEmits<{ 'update:chosenIds': [value: string[]]; submit: [] }>()
 const chosenSet = computed(() => new Set(props.chosenIds))
 const chosenCount = computed(() => props.operators.filter((item) => chosenSet.value.has(item.name)).length)
-const submittedNames = computed(() => props.operators.filter((item) => chosenSet.value.has(item.name)).map((item) => displayName(item)))
 const submitting = computed(() => props.submitting === true)
-const showSubmitPanel = computed(() => submitting.value || !!props.submittedMessage)
+const showSubmitPanel = computed(() => !!props.submittedMessage)
 const actionFeedback = ref<'recommended' | 'cleared' | null>(null)
 let feedbackTimer: ReturnType<typeof setTimeout> | undefined
 function showActionFeedback(action: 'recommended' | 'cleared') {
@@ -126,10 +125,6 @@ function memoryText(memoryMb: number): string {
           <span class="operator-batch-icon" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M4 8a6 6 0 1 1 0 5M4 3v5h5" /></svg></span>
           <span class="operator-batch-label"><span :class="{ 'is-hidden': actionFeedback === 'cleared' }">清空选择</span><span v-if="actionFeedback === 'cleared'" class="operator-batch-feedback">已清空</span></span>
         </button>
-        <button type="button" class="operator-batch-button is-submit sc-action sc-action--primary" :disabled="!chosenCount || submitting" @click="emit('submit')">
-          <span class="operator-batch-icon" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M3 11l4.5 4.5L17 5" /></svg></span>
-          <span class="operator-batch-label">{{ submitting ? '提交中…' : '提交算子' }}</span>
-        </button>
         <span class="operator-action-status" role="status">{{ actionFeedback === 'recommended' ? '已采用场景推荐算子' : actionFeedback === 'cleared' ? '已清空算子选择' : '' }}</span>
       </div>
     </div>
@@ -140,15 +135,7 @@ function memoryText(memoryMb: number): string {
     </TransitionGroup>
     </div>
     </div>
-    <div v-if="showSubmitPanel" class="operator-submit-panel" role="status">
-      <div class="operator-submit-head">
-        <span v-if="submitting" class="operator-submit-spinner" aria-hidden="true" />
-        <strong>{{ submitting ? '正在提交本次体验所选算子…' : props.submittedMessage }}</strong>
-      </div>
-      <ul v-if="submittedNames.length" class="operator-submit-list" aria-label="本次提交的算子">
-        <li v-for="name in submittedNames" :key="name">{{ name }}</li>
-      </ul>
-    </div>
+    <p v-if="showSubmitPanel" class="operator-submit-panel" role="alert">{{ props.submittedMessage }}</p>
     <p v-if="query.trim()" class="operator-search-result" role="status">找到 {{ ordered.length }} 个匹配算子</p>
     <div ref="listFrame" class="operator-list-frame">
     <TransitionGroup tag="div" name="operator-filter" class="operator-list" @before-leave="positionLeavingItem" @after-leave="clearItemPosition" @leave-cancelled="clearItemPosition" @before-enter="clearItemPosition">
@@ -161,7 +148,6 @@ function memoryText(memoryMb: number): string {
             <div class="operator-heading"><h4>{{ displayName(operator) }}</h4><span v-if="isRecommended(operator)" class="operator-recommended">场景推荐</span><span v-else-if="isAvailable(operator)" class="operator-optional" title="未列入场景推荐，仍可自行选择">自主选用</span></div>
             <p class="operator-id">{{ operator.name }} <span>{{ operator.version }}</span></p>
           </div>
-          <span class="operator-card-check" :class="{ 'is-selected': chosenSet.has(operator.name) }" aria-hidden="true"><Check :size="14" /></span>
           <span class="operator-status" :class="{ 'is-ready': isAvailable(operator) }">{{ statusText(operator.status) }}</span>
         </div>
         <p class="operator-description">{{ description(operator) }}</p>
@@ -173,12 +159,12 @@ function memoryText(memoryMb: number): string {
             <div><dt>运行环境</dt><dd class="operator-runtime">{{ operator.runtime_type }}</dd></div>
           </dl>
           <div class="operator-actions">
-          <details class="operator-details">
-            <summary :aria-label="'查看 ' + displayName(operator) + ' 的运行详情'">运行详情</summary>
-            <dl><div><dt>运行镜像</dt><dd>{{ operator.runtime || '未提供' }}</dd></div><div><dt>调用入口</dt><dd>{{ operator.handler || '未提供' }}</dd></div></dl>
-          </details>
+          <el-popover trigger="click" placement="bottom-start" :width="440" :show-arrow="false" :popper-style="{ maxWidth: 'calc(100vw - 32px)', padding: '20px' }" popper-class="operator-runtime-popover" transition="operator-runtime">
+            <template #reference><button type="button" class="operator-detail-trigger sc-action sc-action--ghost" :aria-label="'查看 ' + displayName(operator) + ' 的运行详情'"><Info aria-hidden="true" />运行详情<ArrowUpRight class="detail-arrow" aria-hidden="true" /></button></template>
+            <div class="operator-runtime-content"><strong>{{ displayName(operator) }}</strong><p>运行配置</p><dl><div><dt>运行镜像</dt><dd>{{ operator.runtime || '未提供' }}</dd></div><div><dt>调用入口</dt><dd>{{ operator.handler || '未提供' }}</dd></div></dl></div>
+          </el-popover>
           <button type="button" class="operator-select-button sc-action" :aria-pressed="chosenSet.has(operator.name)" :aria-label="'选择算子：' + displayName(operator)" :disabled="submitting || (!isAvailable(operator) && !chosenSet.has(operator.name))" @click="toggleOperator(operator)">
-            <span class="operator-select-icon" aria-hidden="true"><span>+</span><svg viewBox="0 0 20 20"><path d="m4 10 4 4 8-9"/></svg></span>
+            <span class="operator-select-icon" aria-hidden="true"><Plus class="operator-icon-add" /><Check class="operator-icon-check" /></span>
             {{ chosenSet.has(operator.name) ? '已选择' : isAvailable(operator) ? '选择算子' : '暂不可选' }}
           </button>
           </div>
@@ -198,12 +184,6 @@ function memoryText(memoryMb: number): string {
 .operator-selection-bar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; padding: 12px 30px; font-size: 13px; color: var(--scnet-text-secondary); }
 .operator-selection-bar strong { color: var(--scnet-primary); font-family: var(--scnet-font-mono); }
 .operator-batch-actions { position: relative; display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
-.operator-batch-button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 40px; padding: 0 13px; border: 1px solid #d5dfeb; border-radius: 6px; background: #fff; color: #526176; font: inherit; font-weight: 500; cursor: pointer; transition: background-color 200ms ease, border-color 200ms ease, box-shadow 200ms ease, transform 220ms cubic-bezier(.2,.8,.2,1); }
-.operator-batch-button.is-primary { border-color: #bfd5f3; background: #edf4ff; color: var(--scnet-primary); }
-.operator-batch-button:enabled:hover { transform: translateY(-2px); border-color: #9dbde8; background: #f0f6ff; box-shadow: 0 4px 10px rgb(23 105 210 / 10%); }
-.operator-batch-button.is-primary:enabled:hover { border-color: #86b1ed; background: #deebff; }
-.operator-batch-button:enabled:active { transform: translateY(0) scale(.97); box-shadow: none; transition-duration: 90ms; }
-.operator-batch-button:disabled { border-color: #e1e6ed; background: #f4f6f8; color: #929dab; box-shadow: none; cursor: not-allowed; }
 .operator-batch-icon { display: inline-flex; width: 16px; height: 16px; flex: 0 0 16px; }
 .operator-batch-icon svg { width: 100%; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; transition: transform 260ms ease; }
 .is-clear:enabled:hover .operator-batch-icon svg { transform: rotate(-35deg); }
@@ -214,8 +194,6 @@ function memoryText(memoryMb: number): string {
 .operator-batch-label .is-hidden { visibility: hidden; }
 .operator-batch-feedback { animation: operator-feedback 180ms ease-out; }
 .operator-action-status { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-.operator-batch-button.is-submit { border-color: var(--scnet-primary); background: var(--scnet-primary); color: #fff; }
-.operator-batch-button.is-submit:enabled:hover { border-color: #0b5bd3; background: #0b5bd3; }
 .operator-submit-panel { display: grid; gap: 10px; margin: 0 30px 18px; padding: 14px 18px; border: 1px solid #dce7f7; border-radius: 8px; background: #f5f8fe; }
 .operator-submit-head { display: flex; align-items: center; gap: 10px; color: var(--scnet-primary); font-size: 14px; }
 .operator-submit-spinner { width: 16px; height: 16px; flex: 0 0 16px; border: 2px solid #bfd5f3; border-top-color: var(--scnet-primary); border-radius: 50%; animation: operator-spin 700ms linear infinite; }
@@ -224,17 +202,12 @@ function memoryText(memoryMb: number): string {
 @keyframes operator-spin { to { transform: rotate(360deg); } }
 @keyframes operator-confirm { from { stroke-dashoffset: 22; } to { stroke-dashoffset: 0; } }
 @keyframes operator-feedback { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: translateY(0); } }
-.operator-select-button { display: inline-flex; justify-content: center; align-items: center; gap: 7px; min-width: 118px; min-height: 44px; padding: 0 14px; border: 1px solid #d2dce9; border-radius: 6px; background: #fff; color: var(--scnet-primary); font-size: 14px; cursor: pointer; transition: var(--scnet-hover-transition), color 180ms ease, transform 180ms ease; }
-.operator-select-button[aria-pressed="true"] { background: var(--scnet-primary); border-color: var(--scnet-primary); color: #fff; }
-.operator-select-button:enabled:active { transform: scale(.97); }
-.operator-select-icon { position: relative; width: 18px; height: 18px; line-height: 18px; }
-.operator-select-icon > span { display: block; font-size: 21px; transition: opacity 140ms ease, transform 180ms ease; }
-.operator-select-icon svg { position: absolute; inset: 0; width: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.operator-select-icon path { stroke-dasharray: 20; stroke-dashoffset: 20; transition: stroke-dashoffset 220ms ease; }
-.operator-select-button[aria-pressed="true"] .operator-select-icon > span { opacity: 0; transform: scale(.5); }
-.operator-select-button[aria-pressed="true"] .operator-select-icon path { stroke-dashoffset: 0; transition-delay: 80ms; }
-.operator-select-button:enabled:hover { border-color: var(--scnet-primary); }
-.operator-select-button:disabled { color: #a1a8b3; cursor: not-allowed; }
+.operator-select-icon { display: grid; place-items: center; flex: 0 0 18px; width: 18px; height: 18px; line-height: 0; }
+.operator-select-icon svg { grid-area: 1 / 1; display: block; transition: opacity 160ms ease, transform 220ms var(--scnet-hover-easing); }
+.operator-icon-check { opacity: 0; transform: scale(.6); }
+.operator-select-button { min-width: 114px; }
+.operator-select-button[aria-pressed="true"] .operator-icon-add { opacity: 0; transform: scale(.6); }
+.operator-select-button[aria-pressed="true"] .operator-icon-check { opacity: 1; transform: scale(1); }
 .operator-list .operator-item.is-chosen { border-color: #99bbeb; }
 .operator-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; padding: 26px 30px; }
 .operator-header h3 { margin: 0; font-size: 21px; font-weight: 650; }
@@ -263,7 +236,7 @@ function memoryText(memoryMb: number): string {
 .operator-filter-enter-active { transition: opacity 240ms ease, transform 320ms cubic-bezier(0.22, 1, 0.36, 1); }
 .operator-filter-leave-active { position: absolute; pointer-events: none; transition: opacity 180ms ease, transform 220ms ease; }
 .operator-filter-enter-from, .operator-filter-leave-to { opacity: 0; transform: translateY(8px) scale(.985); }
-.operator-item::before { content: ''; position: absolute; inset: 0; z-index: -1; border-radius: inherit; background: linear-gradient(125deg, #f0f6ff, #fbfdff); opacity: 0; transition: opacity 320ms var(--scnet-hover-easing); pointer-events: none; }
+.operator-item::before { content: ''; position: absolute; inset: 0; z-index: -1; border-radius: inherit; background: var(--scnet-primary-soft); opacity: 0; transition: opacity 320ms var(--scnet-hover-easing); pointer-events: none; }
 .operator-item.is-chosen::before { opacity: 1; }
 .operator-item:hover, .operator-item:focus-within { background: var(--scnet-hover-bg); box-shadow: 0 4px 14px rgb(11 91 211 / 6%); }
 .operator-main { display: flex; align-items: flex-start; gap: 12px; }
@@ -279,32 +252,23 @@ function memoryText(memoryMb: number): string {
 .operator-description { min-height: 3.5em; margin: 18px 0; color: var(--scnet-text-secondary); font-size: 15px; line-height: 1.75; }
 .operator-status { flex: 0 0 auto; color: var(--scnet-text-secondary); font-size: 12px; }
 .operator-status.is-ready { color: #49735d; }
-.operator-bottom { margin-top: 0; }
+.operator-bottom { margin-top: auto; }
 .operator-requirements { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; padding: 16px 0; margin: 0; border-block: 1px solid #e3eaf4; }
 .operator-requirements > div { display: grid; align-content: start; gap: 6px; min-width: 0; }
 .operator-requirements dt { font-size: 12px; color: #687588; }
 .operator-requirements dd { margin: 0; font: 500 14px var(--scnet-font-mono); overflow-wrap: anywhere; }
 .operator-requirements small { font: 12px var(--scnet-font-sans); }
 .operator-runtime { text-transform: capitalize; }
-.operator-actions { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: 0 16px; margin-top: 16px; }
-.operator-details { grid-column: 1 / -1; grid-row: 1; min-width: 0; }
-.operator-details summary { display: list-item; width: fit-content; max-width: calc(100% - 136px); min-height: 44px; padding-block: 11px; color: var(--scnet-primary); cursor: pointer; font-size: 13px; }
-.operator-details dl { display: grid; gap: 12px; margin: 12px 0 0; padding: 16px 20px; background: #f7f9fc; border-radius: 6px; }
-.operator-actions > button { grid-column: 2; grid-row: 1; position: relative; z-index: 1; }
-@supports (interpolate-size: allow-keywords) and (transition-behavior: allow-discrete) {
-  .operator-details { interpolate-size: allow-keywords; }
-  .operator-details::details-content {
-    block-size: 0;
-    opacity: 0;
-    overflow: clip;
-    transition: block-size 280ms var(--scnet-hover-easing), opacity 180ms ease, content-visibility 280ms allow-discrete;
-  }
-  .operator-details[open]::details-content { block-size: auto; opacity: 1; }
-  .operator-details[open] > dl { animation: none; }
-}
-.operator-details dl > div { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 12px; }
-.operator-details dt { color: #687588; font-size: 12px; }
-.operator-details dd { margin: 0; font: 12px/1.7 var(--scnet-font-mono); overflow-wrap: anywhere; }
+.operator-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 16px; }
+.operator-detail-trigger { padding-inline: 8px; }
+.operator-detail-trigger .detail-arrow { width: 13px; opacity: .5; transition: transform 220ms ease, opacity 220ms ease; }
+.operator-detail-trigger:hover .detail-arrow { transform: translate(2px, -2px); opacity: 1; }
+.operator-runtime-content > strong { display: block; color: #263c58; font-size: 15px; }
+.operator-runtime-content > p { margin: 5px 0 16px; color: #8290a2; font-size: 12px; }
+.operator-runtime-content dl { display: grid; gap: 16px; margin: 0; padding-top: 16px; border-top: 1px solid #e3eaf4; }
+.operator-runtime-content dl > div { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 14px; }
+.operator-runtime-content dt { color: #718096; font-size: 12px; }
+.operator-runtime-content dd { margin: 0; color: #344b69; font: 12px/1.7 var(--scnet-font-mono); overflow-wrap: anywhere; }
 .operator-empty { box-sizing: border-box; grid-column: 1 / -1; padding-bottom: 26px; text-align: center; }
 .operator-empty button { min-height: 44px; border: 0; color: var(--scnet-primary); background: transparent; cursor: pointer; }
 button:focus-visible, summary:focus-visible { outline: 2px solid var(--scnet-primary); outline-offset: 3px; }
@@ -332,6 +296,6 @@ button:focus-visible, summary:focus-visible { outline: 2px solid var(--scnet-pri
   .is-primary.is-confirmed .operator-batch-icon path, .operator-batch-feedback, .operator-submit-spinner { animation: none; }
   .operator-filter-move, .operator-filter-enter-active, .operator-filter-leave-active { transition: none; }
   .operator-details::details-content { transition: none; }
-  .operator-item::before, .operator-select-button, .operator-select-icon > span, .operator-select-icon path { transition: none; }
+.operator-item::before, .operator-select-button, .operator-select-icon svg { transition: none; }
 }
 </style>

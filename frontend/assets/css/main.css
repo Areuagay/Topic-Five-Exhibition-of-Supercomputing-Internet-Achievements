@@ -1,26 +1,30 @@
 @import './motion.css';
 @import './experience-polish.css';
+@import './design-system.css';
 
 :root {
-  --el-color-primary: #0b5bd3;
-  --el-color-primary-light-3: #4f86dd;
-  --el-color-primary-light-5: #85abe8;
-  --el-color-primary-light-7: #b9d0f3;
-  --el-color-primary-light-8: #d5e3f8;
-  --el-color-primary-light-9: #edf3fd;
-  --el-color-primary-dark-2: #0849a9;
-  --scnet-primary: #0b5bd3;
-  --scnet-primary-soft: #eaf2ff;
-  --scnet-bg: #f5f7fa;
+  --el-color-primary: #2563eb;
+  --el-color-primary-light-3: #6692f1;
+  --el-color-primary-light-5: #92b1f5;
+  --el-color-primary-light-7: #bed0f9;
+  --el-color-primary-light-8: #d3e0fb;
+  --el-color-primary-light-9: #eaf0fd;
+  --el-color-primary-dark-2: #1d4ed8;
+  --scnet-primary: #2563eb;
+  --scnet-primary-soft: #f0f5fd;
+  --scnet-bg: #f4f6f9;
+  --scnet-subtle: #f8f9fb;
   --scnet-panel: #ffffff;
-  --scnet-text: #303133;
-  --scnet-text-secondary: #606266;
-  --scnet-text-muted: #909399;
-  --scnet-border: #dfe3e8;
-  --scnet-divider: #ebeef2;
-  --scnet-radius: 6px;
-  --scnet-danger: #e64a4a;
-  --scnet-success: #39a96b;
+  --scnet-text: #243247;
+  --scnet-text-secondary: #526176;
+  --scnet-text-muted: #617086;
+  --scnet-border: #dce3ec;
+  --scnet-divider: #e8edf3;
+  --scnet-radius: 8px;
+  --scnet-panel-radius: 12px;
+  --scnet-panel-shadow: 0 1px 3px #24324704;
+  --scnet-danger: #c45555;
+  --scnet-success: #218264;
   --scnet-hover-bg: #f7faff;
   --scnet-hover-warning-bg: #fff9f0;
   --scnet-hover-success-bg: #f2f8f4;
@@ -207,8 +211,8 @@ a:hover { color: var(--el-color-primary-light-3); }
 }
 .el-card__header { padding: 14px 16px; }
 .el-card__body { padding: 16px; }
-.el-button { border-radius: 4px; }
-.el-input__wrapper, .el-select__wrapper { border-radius: 4px; }
+.el-button { border-radius: var(--scnet-radius); }
+.el-input__wrapper, .el-select__wrapper { border-radius: var(--scnet-radius); }
 .el-table {
   --el-table-border-color: var(--scnet-divider);
   --el-table-header-bg-color: #f7f9fc;
