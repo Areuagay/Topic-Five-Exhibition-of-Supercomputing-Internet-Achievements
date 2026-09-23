@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, nextTick, onActivated, onBeforeUnmount, onDeactivated, onMounted, ref, watch } from 'vue'
 import ResourceState from '~/components/run/ResourceState.vue'
 import ScenarioWorkspace from '~/components/run/ScenarioWorkspace.vue'
 import ArtifactActions from '~/components/run/ArtifactActions.vue'
@@ -133,36 +133,46 @@ function stageText(stage?: string): string {
   return stageLabels.value[stage] ?? stage
 }
 
-/** 首个学科域（地球动力学）体验联动：结果页随运行推进动态刷新总进度与指标 */
-const isGeodynamics = computed(() => props.domain === 'geodynamics')
-const runRunning = computed(() => detail.value?.status === 'running')
-const durationLabel = computed(() => (isGeodynamics.value ? '累计耗时' : '运行耗时'))
-const metricsTitle = computed(() => (isGeodynamics.value && !runRunning.value ? '指标展示' : '实时指标'))
-
-let pollTimer: ReturnType<typeof setInterval> | undefined
-function stopPolling(): void {
-  if (pollTimer !== undefined) {
-    clearInterval(pollTimer)
-    pollTimer = undefined
+/** All domains share the server's persisted simulation clock. */
+const runRunning = computed(() => ['running', 'queued', 'pending'].includes(detail.value?.status ?? ''))
+const durationLabel = computed(() => '累计模拟耗时')
+const metricsTitle = computed(() => '指标展示')
+let pollTimer: ReturnType<typeof setTimeout> | undefined
+let polling = false
+let active = true
+const pollFailed = ref(false)
+function stopPolling(): void { clearTimeout(pollTimer); pollTimer = undefined }
+async function pollDetail(): Promise<void> {
+  if (polling || !active) return
+  polling = true
+  try {
+    const results = await Promise.allSettled([
+      getRunDetail(props.domain, props.runId), getRunWorkflow(props.domain, props.runId),
+      getRunMetrics(props.domain, props.runId), getRunLogs(props.domain, props.runId), getRunArtifacts(props.domain, props.runId),
+    ])
+    if (!active) return
+    const [nextSummary, nextWorkflow, nextMetrics, nextLogs, nextArtifacts] = results
+    if (nextSummary.status === 'fulfilled') { summary.value = nextSummary.value; summaryError.value = null }
+    if (nextWorkflow.status === 'fulfilled') { workflow.value = nextWorkflow.value; workflowError.value = null }
+    if (nextMetrics.status === 'fulfilled') { metrics.value = nextMetrics.value; metricsError.value = null }
+    if (nextLogs.status === 'fulfilled') { logs.value = nextLogs.value; logsError.value = null }
+    if (nextArtifacts.status === 'fulfilled') { artifacts.value = nextArtifacts.value; artifactsError.value = null }
+    pollFailed.value = results.some(result => result.status === 'rejected')
+  }
+  finally {
+    polling = false
+    if (active && (runRunning.value || pollFailed.value)) pollTimer = setTimeout(() => { void pollDetail() }, 1300)
   }
 }
 function syncPolling(): void {
-  if (props.embedded && isGeodynamics.value && runRunning.value) {
-    if (pollTimer === undefined) {
-      pollTimer = setInterval(() => {
-        void refreshSummary()
-        void refreshWorkflow()
-        void refreshMetrics()
-      }, 1500)
-    }
-  } else {
-    stopPolling()
-  }
+  stopPolling()
+  if (active && runRunning.value && !polling) pollTimer = setTimeout(() => { void pollDetail() }, 1300)
 }
 watch(runRunning, syncPolling)
-watch(() => props.runId, syncPolling)
 onMounted(syncPolling)
-onBeforeUnmount(stopPolling)
+onActivated(() => { active = true; void pollDetail() })
+onDeactivated(() => { active = false; stopPolling() })
+onBeforeUnmount(() => { active = false; stopPolling() })
 
 function artifactType(type?: string): string {
   return (type && ARTIFACT_TYPES[type]) || '文件'
@@ -351,6 +361,7 @@ function chartOption(section: ExtraSection): Record<string, unknown> | null {
 
 <template>
   <div class="run-detail-workspace">
+    <p v-if="pollFailed" class="run-poll-feedback" role="status">连接暂时中断，保留上次状态并自动重试…</p>
     <ResourceState v-if="summaryPending || summaryError" :pending="summaryPending" :error="summaryError" label="任务摘要" @retry="refreshSummary()">
       <template #actions><button v-if="embedded" type="button" class="summary-back" @click="emit('back-to-monitor')">返回执行监控</button><NuxtLink v-else class="summary-back" :to="`/domains/${domain}/runs`">返回运行列表</NuxtLink></template>
     </ResourceState>
@@ -654,6 +665,7 @@ function chartOption(section: ExtraSection): Record<string, unknown> | null {
 </template>
 
 <style scoped>
+.run-poll-feedback { padding: 12px 18px; color: #92632e; background: #fff5e5; border-radius: 8px; font-size: 14px; }
 .summary-back { display:inline-flex; align-items:center; justify-content:center; min-height:44px; box-sizing:border-box; padding:0 16px; border:1px solid #dce3ec; border-radius:6px; background:#fff; color:var(--scnet-text-secondary); font-size:14px; text-decoration:none; }.summary-back:hover { color:var(--scnet-primary); border-color:#a9c3e8; }.summary-back:focus-visible { outline:2px solid var(--scnet-primary); outline-offset:2px; }
 .scf-metric-controls { display: flex; gap: 10px; margin-bottom: 16px; }
 .scf-metric-controls button { min-height: 44px; padding: 8px 16px; border: 1px solid #dfe3e8; border-radius: 6px; background: #fff; color: var(--scnet-text-secondary); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }

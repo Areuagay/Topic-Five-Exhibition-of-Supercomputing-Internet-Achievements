@@ -73,3 +73,6 @@ htmlcov/
 /.superpowers/
 /docs/superpowers/
 /package-lock.json
+
+# Local simulated experience state
+.runtime-data/

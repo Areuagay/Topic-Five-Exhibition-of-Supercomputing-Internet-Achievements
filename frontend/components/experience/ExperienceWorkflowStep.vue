@@ -38,9 +38,9 @@ function selectRun(value: string): void {
 <template>
   <div class="exp-workflow">
     <section class="exp-chosen-operators" aria-label="本次体验已选算子">
-      <div><strong>本次体验已选算子 · {{ chosenOperators.length }}</strong><p>下方展示所选运行记录的已有工作流。</p></div>
+      <div><strong>本条任务算子 · {{ chosenOperators.length }}</strong><p>下方展示所选运行记录的工作流，进度与执行监控同步。</p></div>
       <ul v-if="chosenOperators.length"><li v-for="operator in chosenOperators" :key="operator.name">{{ operator.description.includes('：') ? operator.description.split('：')[0] : operator.name }}</li></ul>
-      <p v-else>尚未选择，可返回「算子选择」添加。</p>
+      <p v-else>预置运行记录，计算阶段请查看下方工作流。</p>
     </section>
     <div class="exp-toolbar">
       <label class="exp-toolbar-field">

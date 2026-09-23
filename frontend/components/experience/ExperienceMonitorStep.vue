@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { canViewResult } from '~/utils/experience-simulation'
 import { formatDuration, formatNumber, statusText } from '~/composables/useFormat'
 import type { Run } from '~/types'
 
@@ -64,7 +65,7 @@ function inspect(value: string): void {
         size="default"
         @row-click="(row) => selectRun(row.run_id)"
       >
-        <el-table-column prop="run_id" label="Run ID" min-width="180" class-name="mono" />
+        <el-table-column label="Run ID" min-width="230" class-name="mono"><template #default="{ row }">{{ row.run_id }}<span class="run-origin" :class="{ 'is-runtime': row.origin === 'runtime' }">{{ row.origin === 'runtime' ? '本次运行' : '预置' }}</span></template></el-table-column>
         <el-table-column label="状态" width="100">
           <template #default="{ row }">
             <el-tag
@@ -90,18 +91,19 @@ function inspect(value: string): void {
         <el-table-column label="核时" width="110" class-name="mono">
           <template #default="{ row }">{{ formatNumber(row.core_hours, 1) }}</template>
         </el-table-column>
-        <el-table-column label="操作" width="180" fixed="right">
+        <el-table-column label="操作" width="225" fixed="right">
           <template #default="{ row }">
             <div class="exp-row-actions">
-              <button type="button" class="exp-link" @click.stop="inspect(row.run_id)">查看工作流</button>
+              <button type="button" class="exp-link sc-action sc-action--ghost sc-action--small" @click.stop="inspect(row.run_id)">查看工作流</button>
               <button
-                v-if="row.has_detail"
+                v-if="canViewResult(row as Run)"
                 type="button"
                 class="exp-link"
                 @click.stop="emit('result', row.run_id)"
               >
                 查看结果
               </button>
+              <span v-else class="result-unavailable">{{ ['running', 'queued', 'pending'].includes(row.status) ? '完成后可查看' : '无结果文件' }}</span>
             </div>
           </template>
         </el-table-column>
@@ -113,6 +115,9 @@ function inspect(value: string): void {
 </template>
 
 <style scoped>
+.run-origin { display: inline-block; margin-left: 8px; padding: 1px 6px; font: 11px var(--scnet-font-sans); background: #f1f4f8; border-radius: 4px; color: #68788f; }
+.run-origin.is-runtime { background: #eaf3ff; color: #245da9; }
+.result-unavailable { color: #7c899a; font-size: 12px; }
 .queue-status-tag {
   --el-tag-text-color: #92632e;
   --el-tag-bg-color: #fff1dc;

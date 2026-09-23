@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { Check, X } from '@lucide/vue'
+import { useSelectionFeedback } from '~/composables/useSelectionFeedback'
 import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 import { useSlidingHighlight } from '~/composables/useSlidingHighlight'
 import { formatBytes, formatNumber, statusText } from '~/composables/useFormat'
@@ -8,8 +10,6 @@ const props = defineProps<{ domain: string; operators: Operator[]; selectedOpera
 const emit = defineEmits<{ 'update:chosenIds': [value: string[]]; submit: [] }>()
 const chosenSet = computed(() => new Set(props.chosenIds))
 const chosenCount = computed(() => props.operators.filter((item) => chosenSet.value.has(item.name)).length)
-/** 提交按钮仅在首个学科域（地球动力学）体验中启用 */
-const interactive = computed(() => props.domain === 'geodynamics')
 const submittedNames = computed(() => props.operators.filter((item) => chosenSet.value.has(item.name)).map((item) => displayName(item)))
 const submitting = computed(() => props.submitting === true)
 const showSubmitPanel = computed(() => submitting.value || !!props.submittedMessage)
@@ -25,6 +25,7 @@ function isAvailable(operator: Operator): boolean {
   return ['registered', 'available'].includes(operator.status)
 }
 function toggleOperator(operator: Operator): void {
+  if (submitting.value) return
   if (chosenSet.value.has(operator.name)) emit('update:chosenIds', props.chosenIds.filter((id) => id !== operator.name))
   else if (isAvailable(operator)) emit('update:chosenIds', [...props.chosenIds, operator.name])
 }
@@ -59,6 +60,8 @@ const ordered = computed(() => {
   ).sort((a, b) => Number(isRecommended(b)) - Number(isRecommended(a)))
 })
 const listFrame = ref<HTMLElement>()
+useSelectionFeedback(listFrame, computed(() => props.chosenIds))
+const selectedItems = computed(() => props.operators.filter(operator => chosenSet.value.has(operator.name)))
 let resizeAnimation: Animation | undefined
 watch(() => ordered.value.map(operator => operator.name).join('\n'), async () => {
   const frame = listFrame.value
@@ -113,22 +116,29 @@ function memoryText(memoryMb: number): string {
       </label>
     </div>
     <div class="operator-selection-bar">
-      <span role="status">本次已选 <strong>{{ chosenCount }}</strong> 个算子</span>
+      <span role="status">本次已选 <span class="selection-count-slot"><Transition name="selection-count" mode="out-in"><strong :key="chosenCount" class="selection-count">{{ chosenCount }}</strong></Transition></span> 个算子</span>
       <div class="operator-batch-actions">
-        <button type="button" class="operator-batch-button is-primary" :class="{ 'is-confirmed': actionFeedback === 'recommended' }" :disabled="!recommendedCount" @click="useRecommended">
+        <button type="button" class="operator-batch-button is-primary sc-action sc-action--soft" :class="{ 'is-confirmed': actionFeedback === 'recommended' }" :disabled="!recommendedCount" @click="useRecommended">
           <span class="operator-batch-icon" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="m4 10 4 4 8-9" /></svg></span>
           <span class="operator-batch-label"><span :class="{ 'is-hidden': actionFeedback === 'recommended' }">采用场景推荐</span><span v-if="actionFeedback === 'recommended'" class="operator-batch-feedback">已采用推荐</span></span>
         </button>
-        <button type="button" class="operator-batch-button is-clear" :class="{ 'is-confirmed': actionFeedback === 'cleared' }" :disabled="!chosenCount" @click="clearSelection">
+        <button type="button" class="operator-batch-button is-clear sc-action sc-action--ghost" :class="{ 'is-confirmed': actionFeedback === 'cleared' }" :disabled="!chosenCount" @click="clearSelection">
           <span class="operator-batch-icon" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M4 8a6 6 0 1 1 0 5M4 3v5h5" /></svg></span>
           <span class="operator-batch-label"><span :class="{ 'is-hidden': actionFeedback === 'cleared' }">清空选择</span><span v-if="actionFeedback === 'cleared'" class="operator-batch-feedback">已清空</span></span>
         </button>
-        <button v-if="interactive" type="button" class="operator-batch-button is-submit" :disabled="!chosenCount || submitting" @click="emit('submit')">
+        <button type="button" class="operator-batch-button is-submit sc-action sc-action--primary" :disabled="!chosenCount || submitting" @click="emit('submit')">
           <span class="operator-batch-icon" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M3 11l4.5 4.5L17 5" /></svg></span>
           <span class="operator-batch-label">{{ submitting ? '提交中…' : '提交算子' }}</span>
         </button>
         <span class="operator-action-status" role="status">{{ actionFeedback === 'recommended' ? '已采用场景推荐算子' : actionFeedback === 'cleared' ? '已清空算子选择' : '' }}</span>
       </div>
+    </div>
+    <div class="operator-selected-frame" :class="{ 'has-selection': chosenCount > 0 }">
+    <div>
+    <TransitionGroup name="selected-chip" tag="div" class="operator-selected-chips" aria-label="已选算子">
+      <button v-for="operator in selectedItems" :key="operator.name" type="button" class="selected-chip" :disabled="submitting" :aria-label="'取消选择：' + displayName(operator)" @click="toggleOperator(operator)"><Check :size="13" aria-hidden="true" />{{ displayName(operator) }}<X :size="13" class="chip-remove" aria-hidden="true" /></button>
+    </TransitionGroup>
+    </div>
     </div>
     <div v-if="showSubmitPanel" class="operator-submit-panel" role="status">
       <div class="operator-submit-head">
@@ -142,7 +152,7 @@ function memoryText(memoryMb: number): string {
     <p v-if="query.trim()" class="operator-search-result" role="status">找到 {{ ordered.length }} 个匹配算子</p>
     <div ref="listFrame" class="operator-list-frame">
     <TransitionGroup tag="div" name="operator-filter" class="operator-list" @before-leave="positionLeavingItem" @after-leave="clearItemPosition" @leave-cancelled="clearItemPosition" @before-enter="clearItemPosition">
-      <article v-for="operator in ordered" :key="operator.name" class="operator-item" :class="{ 'is-chosen': chosenSet.has(operator.name) }">
+      <article v-for="operator in ordered" :key="operator.name" class="operator-item" :data-selection-id="operator.name" :class="{ 'is-chosen': chosenSet.has(operator.name) }">
         <div class="operator-main">
           <div class="operator-symbol" aria-hidden="true">
             <svg viewBox="0 0 24 24"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Zm0 9L4 7.5m8 4.5 8-4.5M12 12v9M8 5.2l8 4.6"/></svg>
@@ -151,6 +161,7 @@ function memoryText(memoryMb: number): string {
             <div class="operator-heading"><h4>{{ displayName(operator) }}</h4><span v-if="isRecommended(operator)" class="operator-recommended">场景推荐</span><span v-else-if="isAvailable(operator)" class="operator-optional" title="未列入场景推荐，仍可自行选择">自主选用</span></div>
             <p class="operator-id">{{ operator.name }} <span>{{ operator.version }}</span></p>
           </div>
+          <span class="operator-card-check" :class="{ 'is-selected': chosenSet.has(operator.name) }" aria-hidden="true"><Check :size="14" /></span>
           <span class="operator-status" :class="{ 'is-ready': isAvailable(operator) }">{{ statusText(operator.status) }}</span>
         </div>
         <p class="operator-description">{{ description(operator) }}</p>
@@ -166,7 +177,7 @@ function memoryText(memoryMb: number): string {
             <summary :aria-label="'查看 ' + displayName(operator) + ' 的运行详情'">运行详情</summary>
             <dl><div><dt>运行镜像</dt><dd>{{ operator.runtime || '未提供' }}</dd></div><div><dt>调用入口</dt><dd>{{ operator.handler || '未提供' }}</dd></div></dl>
           </details>
-          <button type="button" class="operator-select-button" :aria-pressed="chosenSet.has(operator.name)" :aria-label="'选择算子：' + displayName(operator)" :disabled="!isAvailable(operator) && !chosenSet.has(operator.name)" @click="toggleOperator(operator)">
+          <button type="button" class="operator-select-button sc-action" :aria-pressed="chosenSet.has(operator.name)" :aria-label="'选择算子：' + displayName(operator)" :disabled="submitting || (!isAvailable(operator) && !chosenSet.has(operator.name))" @click="toggleOperator(operator)">
             <span class="operator-select-icon" aria-hidden="true"><span>+</span><svg viewBox="0 0 20 20"><path d="m4 10 4 4 8-9"/></svg></span>
             {{ chosenSet.has(operator.name) ? '已选择' : isAvailable(operator) ? '选择算子' : '暂不可选' }}
           </button>
@@ -252,8 +263,8 @@ function memoryText(memoryMb: number): string {
 .operator-filter-enter-active { transition: opacity 240ms ease, transform 320ms cubic-bezier(0.22, 1, 0.36, 1); }
 .operator-filter-leave-active { position: absolute; pointer-events: none; transition: opacity 180ms ease, transform 220ms ease; }
 .operator-filter-enter-from, .operator-filter-leave-to { opacity: 0; transform: translateY(8px) scale(.985); }
-.operator-item::before { content: ''; position: absolute; inset: 0; z-index: -1; border-radius: inherit; background: #edf4ff; transform: scaleX(0); transform-origin: left center; transition: transform 360ms var(--scnet-hover-easing); pointer-events: none; }
-.operator-item.is-chosen::before { transform: scaleX(1); }
+.operator-item::before { content: ''; position: absolute; inset: 0; z-index: -1; border-radius: inherit; background: linear-gradient(125deg, #f0f6ff, #fbfdff); opacity: 0; transition: opacity 320ms var(--scnet-hover-easing); pointer-events: none; }
+.operator-item.is-chosen::before { opacity: 1; }
 .operator-item:hover, .operator-item:focus-within { background: var(--scnet-hover-bg); box-shadow: 0 4px 14px rgb(11 91 211 / 6%); }
 .operator-main { display: flex; align-items: flex-start; gap: 12px; }
 .operator-symbol { display: grid; place-items: center; width: 44px; height: 44px; flex: 0 0 auto; border: 1px solid #dce7f7; border-radius: 8px; background: #f5f8fe; color: var(--scnet-primary); }

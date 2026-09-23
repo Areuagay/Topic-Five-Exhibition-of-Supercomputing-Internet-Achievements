@@ -4,6 +4,9 @@ import RunDetailContent from '~/components/run/RunDetailContent.vue'
 
 const props = defineProps<{
   domain: string
+  available?: boolean
+  runStatus?: string
+  progress?: number
   runId: string
 }>()
 const emit = defineEmits<{ 'back-to-monitor': [] }>()
@@ -30,7 +33,7 @@ onBeforeUnmount(() => entryAnimation?.cancel())
 <template>
   <section ref="resultRoot" class="exp-result">
     <!-- 「结果展示」按「流程编排」所选运行记录，内联复用运行记录详情页的渲染，不离开当前页面 -->
-    <Suspense v-if="props.runId" :timeout="0" @resolve="revealLoadedResult">
+    <Suspense v-if="props.runId && props.available" :timeout="0" @resolve="revealLoadedResult">
       <RunDetailContent
         :key="props.runId"
         :domain="props.domain"
@@ -47,9 +50,10 @@ onBeforeUnmount(() => entryAnimation?.cancel())
       </template>
     </Suspense>
     <div v-else class="exp-result-empty" role="status">
-      <strong>暂无可展示的运行记录</strong>
-      <p>请在「执行监控」中选择一条运行记录，查看对应的结果详情。</p>
-      <button type="button" @click="emit('back-to-monitor')">返回执行监控</button>
+      <strong>{{ !runId ? '暂无可展示的运行记录' : ['running', 'queued', 'pending'].includes(runStatus ?? '') ? '任务尚未完成' : '该记录暂无结果文件' }}</strong>
+      <el-progress v-if="runId && ['running', 'queued', 'pending'].includes(runStatus ?? '')" :percentage="progress ?? 0" style="width: min(360px, 100%)" />
+      <p>成功完成且具有结果文件的任务可在此查看图表与成果。</p>
+      <button type="button" class="sc-action sc-action--soft" @click="emit('back-to-monitor')">返回执行监控</button>
     </div>
   </section>
 </template>

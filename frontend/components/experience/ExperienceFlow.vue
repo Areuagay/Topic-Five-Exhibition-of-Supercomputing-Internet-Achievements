@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useExperienceNavigation } from '~/composables/useExperienceNavigation'
+import { useExperienceMotion } from '~/composables/useExperienceMotion'
+import { ArrowLeft, ArrowRight } from '@lucide/vue'
 import { useSlidingHighlight } from '~/composables/useSlidingHighlight'
 import ExperienceDataPrepStep from './ExperienceDataPrepStep.vue'
 import ExperienceResourceStep from './ExperienceResourceStep.vue'
@@ -10,6 +12,7 @@ import ExperienceMonitorStep from './ExperienceMonitorStep.vue'
 import ExperienceResultStep from './ExperienceResultStep.vue'
 import { useApi } from '~/composables/useApi'
 import { formatNumber } from '~/composables/useFormat'
+import { canViewResult } from '~/utils/experience-simulation'
 import { unitText } from '~/utils/workspace'
 import { experienceSteps, getScenarioExperience } from '~/config/scenario-experience'
 import type {
@@ -33,6 +36,11 @@ const props = defineProps<{
   clusterName: (id: string) => string
 }>()
 
+// Server-rendered controls are visible before Vue has attached their handlers.
+// Keep that short loading interval non-interactive so the first click is never lost.
+const interactionReady = ref(false)
+onMounted(() => { interactionReady.value = true })
+
 const {
   getDatasets,
   getClusters,
@@ -40,11 +48,8 @@ const {
   getRuns,
   getRunWorkflow,
   submitOperators,
-  advanceRun,
 } = useApi()
 
-/** 交互式体验（上传/导入/提交/动态推进）仅在首个学科域（地球动力学）启用 */
-const interactiveDomain = computed(() => props.domain === 'geodynamics')
 
 const experience = computed(() => getScenarioExperience(props.scenarioId))
 
@@ -64,11 +69,26 @@ const { data: operators } = await useAsyncData<Operator[]>(
   () => getOperators(props.domain),
   { default: () => [] },
 )
-const { data: runs, refresh: refreshRuns } = await useAsyncData<Run[]>(
+const { data: runs } = await useAsyncData<Run[]>(
   `experience-runs-${props.domain}`,
   () => getRuns(props.domain),
   { default: () => [] },
 )
+
+// Commit only successful snapshots so transient network failures cannot erase
+// the selection through the navigation composable's list validation.
+let runRefreshQueue = Promise.resolve()
+function refreshRuns(): Promise<void> {
+  const request = runRefreshQueue.then(async () => {
+    if (disposed) return
+    const snapshot = await getRuns(props.domain)
+    if (!disposed) runs.value = snapshot
+  })
+  // Serialize polling and submission refreshes: an earlier response must never
+  // remove a task that a later submission just selected. A failure releases the queue.
+  runRefreshQueue = request.catch(() => {})
+  return request
+}
 
 const scenarioRuns = computed(() => (runs.value ?? []).filter((run) => run.scenario_id === props.scenarioId))
 const { activeKey, selectedRunId, navigate } = useExperienceNavigation(props.domain, props.scenarioId, scenarioRuns)
@@ -87,7 +107,7 @@ const guideInstructions: Record<string, string> = {
   data: '已恢复场景推荐方案，从输入数据开始体验。',
   resource: '对比算力中心的容量与负载，查看场景支持的资源。',
   operator: '参考场景推荐，选择或取消本次体验需要的算子。',
-  workflow: '核对本次已选算子，并浏览已有记录的工作流。',
+  workflow: '查看已提交任务的工作流，节点与监控进度同步更新。',
   monitor: '选择一条运行记录，查看状态和进度。',
   result: '已到达最后一步，查看所选记录的图表与成果文件。',
 }
@@ -114,6 +134,8 @@ async function startExperience(): Promise<void> {
 const activeStep = computed(
   () => experienceSteps.find((step) => step.key === activeKey.value) ?? experienceSteps[0],
 )
+const motionRoot = ref<HTMLElement>()
+useExperienceMotion(motionRoot, computed(() => activeStep.value.index))
 const nextStep = computed(() => experienceSteps[activeStep.value.index] ?? null)
 const previousStep = computed(() => experienceSteps[activeStep.value.index - 2] ?? null)
 const { track: stepTrack, ready: stepHighlightReady, style: stepHighlightStyle } = useSlidingHighlight(computed(() => activeStep.value.index - 1))
@@ -166,7 +188,7 @@ async function handleDataRefresh(): Promise<void> {
 async function handleImported(result: ImportResult): Promise<void> {
   await refreshDatasets()
   // 一键导入有新数据时：刷新算力利用率并自动进入资源调度
-  if (result.status === 'imported') {
+  if (result.status === 'imported' || result.status === 'already_all') {
     await refreshClusters()
     navigate('resource')
   }
@@ -179,7 +201,7 @@ let submitTimer: ReturnType<typeof setTimeout> | undefined
 onBeforeUnmount(() => clearTimeout(submitTimer))
 
 async function handleOperatorSubmit(): Promise<void> {
-  if (!interactiveDomain.value || operatorSubmitting.value) return
+  if (operatorSubmitting.value) return
   const ids = chosenOperatorIds.value ?? []
   if (!ids.length) {
     operatorSubmitMessage.value = '请先选择本次体验的算子'
@@ -195,86 +217,50 @@ async function handleOperatorSubmit(): Promise<void> {
     selectedRunId.value = result.run_id
     runWorkflow.value = result.workflow
     operatorSubmitMessage.value = `已提交 ${ids.length} 个算子，新增运行记录 ${result.run_id}，正在进入流程编排…`
-    submitTimer = setTimeout(() => { navigate('workflow', result.run_id) }, 1500)
-  } catch {
-    operatorSubmitMessage.value = '算子提交失败，请稍后重试'
+    navigate('workflow', result.run_id)
+  } catch (error) {
+    operatorSubmitMessage.value = (error as { data?: { message?: string } })?.data?.message || '算子提交失败，请稍后重试'
   } finally {
     operatorSubmitting.value = false
   }
 }
 
-/* ---------------- 04/05/06 动态进度推进（流程编排 / 执行监控 / 结果展示） ---------------- */
-let advanceTimer: ReturnType<typeof setInterval> | undefined
-
-function currentRun(): Run | undefined {
-  return scenarioRuns.value.find((run) => run.run_id === selectedRunId.value)
-}
-
-function workflowDone(): boolean {
-  const nodes = runWorkflow.value?.nodes ?? []
-  return nodes.length > 0 && nodes.every((node) => (node.progress ?? 0) >= 100)
-}
-
-function stopAdvance(): void {
-  if (advanceTimer) {
-    clearInterval(advanceTimer)
-    advanceTimer = undefined
-  }
-}
-
-async function advanceTick(): Promise<void> {
-  const runId = selectedRunId.value
-  if (!runId) {
-    stopAdvance()
-    return
-  }
-  const run = currentRun()
-  if (!run || run.status !== 'running' || workflowDone()) {
-    stopAdvance()
-    return
-  }
+/* All visible runs refresh from the same server clock, without POST-driven ticks. */
+const selectedRun = computed(() => scenarioRuns.value.find(run => run.run_id === selectedRunId.value))
+const runOperators = computed(() => (operators.value ?? []).filter(operator => selectedRun.value?.selected_operator_ids?.includes(operator.name)))
+const resultAvailable = computed(() => canViewResult(selectedRun.value))
+const liveMessage = ref('')
+let pollTimer: ReturnType<typeof setTimeout> | undefined
+let disposed = false
+async function pollRuns(): Promise<void> {
   try {
-    const result = await advanceRun(props.domain, runId)
-    if (selectedRunId.value === result.run_id) runWorkflow.value = result.workflow
     await refreshRuns()
-    if (result.status !== 'running' || workflowDone()) stopAdvance()
-  } catch {
-    stopAdvance()
-  }
-}
-
-function syncAdvance(): void {
-  if (import.meta.server) return
-  if (!interactiveDomain.value) {
-    stopAdvance()
-    return
-  }
-  const onLiveStep = ['workflow', 'monitor', 'result'].includes(activeKey.value)
-  const run = currentRun()
-  const canAdvance = onLiveStep && run?.status === 'running' && !workflowDone()
-  if (canAdvance) {
-    if (!advanceTimer) {
-      advanceTimer = setInterval(() => { void advanceTick() }, 1300)
+    if (disposed) return
+    if (activeKey.value === 'workflow' && selectedRunId.value) {
+      const id = selectedRunId.value
+      const workflow = await getRunWorkflow(props.domain, id)
+      if (!disposed && selectedRunId.value === id) runWorkflow.value = workflow
     }
-  } else {
-    stopAdvance()
+    liveMessage.value = ''
+  } catch {
+    if (!disposed) liveMessage.value = '状态刷新暂时失败，正在自动重试…'
+  } finally {
+    if (!disposed) pollTimer = setTimeout(() => { void pollRuns() }, 1300)
   }
 }
-
-watch(activeKey, () => syncAdvance())
-watch(selectedRunId, () => syncAdvance())
-onMounted(() => syncAdvance())
-onBeforeUnmount(stopAdvance)
+onMounted(() => { void pollRuns() })
+onBeforeUnmount(() => { disposed = true; clearTimeout(pollTimer) })
+watch(activeKey, key => { if (key === 'resource') void refreshClusters() })
 </script>
 
 <template>
-  <section class="experience-flow">
+  <section class="experience-flow experience-polished" :inert="!interactionReady" :aria-busy="!interactionReady">
     <div class="experience-overview">
       <header class="experience-head">
         <div class="experience-head-text">
           <div class="experience-title-row">
             <h2>{{ experience?.title ?? detail?.name ?? '场景体验' }}</h2>
-            <button type="button" class="experience-start" :class="{ 'is-confirmed': actionFeedback }" @click="startExperience">
+            <button type="button" class="experience-start sc-action sc-action--primary" :class="{ 'is-confirmed': actionFeedback }" @click="startExperience">
               <svg viewBox="0 0 20 20" aria-hidden="true"><path v-if="actionFeedback" d="m4 10 4 4 8-9"/><path v-else-if="guideActive" d="M4 6a7 7 0 1 1-1 7M4 2v5h5"/><path v-else d="m6 3 10 7-10 7Z"/></svg>
               {{ actionFeedback || (guideActive ? '重新体验' : '一键体验') }}
             </button>
@@ -318,15 +304,16 @@ onBeforeUnmount(stopAdvance)
         <span class="experience-guide-summary" :title="guideSummary">{{ guideSummary }}</span>
       </p>
       <div class="experience-guide-actions">
-        <button :disabled="!previousStep" type="button" class="experience-previous" @click="previousStep && selectStep(previousStep.key)"><span class="experience-nav-arrow">←</span> 上一步</button>
-        <button :disabled="!nextStep" type="button" class="experience-next" :title="nextStep ? '下一步：' + nextStep.title : '已是最后一步'" @click="goNext">
-          下一步 <span class="experience-nav-arrow">→</span>
+        <button :disabled="!previousStep" type="button" class="experience-previous sc-action" @click="previousStep && selectStep(previousStep.key)"><ArrowLeft class="experience-nav-arrow" aria-hidden="true" /> 上一步</button>
+        <button :disabled="!nextStep" type="button" class="experience-next sc-action sc-action--primary" :title="nextStep ? '下一步：' + nextStep.title : '已是最后一步'" @click="goNext">
+          下一步 <ArrowRight class="experience-nav-arrow action-arrow" aria-hidden="true" />
         </button>
       </div>
     </div>
     </div>
 
-    <div class="experience-body">
+    <div ref="motionRoot" class="experience-body">
+      <p v-if="liveMessage" role="status" class="experience-live-message">{{ liveMessage }}</p>
       <KeepAlive :key="experienceSession" include="ExperienceMonitorStep,ExperienceResultStep" :max="2">
       <ExperienceDataPrepStep
         v-if="activeKey === 'data'"
@@ -366,7 +353,7 @@ onBeforeUnmount(stopAdvance)
         :selected-run-id="selectedRunId"
         :workflow="runWorkflow"
         :pending="runResourcesPending"
-        :chosen-operators="chosenOperators"
+        :chosen-operators="runOperators"
         @update:selected-run-id="(value) => (selectedRunId = value)"
       />
 
@@ -384,6 +371,9 @@ onBeforeUnmount(stopAdvance)
         v-else-if="activeKey === 'result'"
         :domain="domain"
         :run-id="selectedRunId"
+        :available="resultAvailable"
+        :run-status="selectedRun?.status"
+        :progress="selectedRun?.progress"
         @back-to-monitor="selectStep('monitor')"
       />
       </KeepAlive>
@@ -458,6 +448,7 @@ onBeforeUnmount(stopAdvance)
 .experience-previous:enabled:is(:hover, :focus-visible) .experience-nav-arrow { transform: translateX(-3px); }
 .experience-next:enabled:is(:hover, :focus-visible) .experience-nav-arrow { transform: translateX(3px); }
 .experience-guide-actions button:disabled { border-color: #e5e9ef; background: #f1f3f6; color: #a1a8b3; cursor: not-allowed; }
+.experience-live-message { margin: 0 0 12px; padding: 12px 16px; background: #fff5e5; color: #906020; border-radius: 8px; }
 .experience-body { min-width: 0; }
 button:focus-visible { outline: 2px solid var(--scnet-primary); outline-offset: -3px; }
 @media (max-width: 1100px) { .experience-head { grid-template-columns: 1fr; gap: 24px; } .experience-metrics { max-width: 620px; } }

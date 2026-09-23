@@ -146,6 +146,7 @@ export interface DatasetItem {
   updated_at?: string
   /** 是否已上传（HDF5 数据集默认为已上传，其余需用户手动上传） */
   uploaded?: boolean
+  builtin?: boolean
   /** 是否已一键导入至资源调度 */
   imported?: boolean
 }
@@ -219,6 +220,10 @@ export interface Run {
   core_hours: number
   source_type: string
   has_detail: boolean
+  has_result?: boolean
+  has_workflow?: boolean
+  origin?: 'seed' | 'runtime'
+  selected_operator_ids?: string[]
   metrics_snapshot: MetricItem[]
 }
 
