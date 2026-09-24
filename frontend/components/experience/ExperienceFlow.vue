@@ -2,7 +2,7 @@
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useExperienceNavigation } from '~/composables/useExperienceNavigation'
 import { useExperienceMotion } from '~/composables/useExperienceMotion'
-import { ArrowLeft, ArrowRight, LoaderCircle, RotateCcw, Check, LockKeyhole } from '@lucide/vue'
+import { ArrowLeft, ArrowRight, LoaderCircle, RotateCcw, Check, LockKeyhole, Copy } from '@lucide/vue'
 import { hasSubmittedSelection, requiresSubmittedPlan } from '~/utils/experience-navigation'
 import { findDuplicatePlan, preparedDataKey } from '~/utils/experience-duplicates'
 import { useSlidingHighlight } from '~/composables/useSlidingHighlight'
@@ -121,14 +121,13 @@ const actionFeedback = ref('')
 let feedbackTimer: ReturnType<typeof setTimeout> | undefined
 onBeforeUnmount(() => clearTimeout(feedbackTimer))
 const guideInstructions: Record<string, string> = {
-  data: '已恢复场景推荐方案，从输入数据开始体验。',
   resource: '对比算力中心的容量与负载，查看场景支持的资源。',
   operator: '参考场景推荐，选择或取消本次体验需要的算子。',
   workflow: '查看已提交任务的工作流，节点与监控进度同步更新。',
   monitor: '选择一条运行记录，查看状态和进度。',
   result: '已到达最后一步，查看所选记录的图表与成果文件。',
 }
-const guideSummary = computed(() => activeKey.value === 'operator' && !workflowAllowed.value ? '提交算子后，查看任务执行进度。' : guideActive.value ? guideInstructions[activeKey.value] : activeStep.value.summary)
+const guideSummary = computed(() => activeKey.value === 'operator' && !workflowAllowed.value ? '提交算子后，查看任务执行进度。' : guideActive.value ? (guideInstructions[activeKey.value] ?? activeStep.value.summary) : activeStep.value.summary)
 
 async function startExperience(): Promise<void> {
   if (operatorSubmitting.value || pendingSubmission.value) return
@@ -227,6 +226,7 @@ async function handleImported(result: ImportResult): Promise<void> {
 const operatorSubmitting = ref(false)
 const operatorSubmitMessage = ref('')
 const duplicateMatch = ref<{ run: Run; dataKnown: boolean } | null>(null)
+const duplicateDialogOpen = ref(false)
 let resolveDuplicate: ((choice: 'create' | 'existing' | 'cancel') => void) | undefined
 const snapshotStorageKey = `experience-input-snapshots-v1:${props.domain}:${props.scenarioId}`
 function readInputSnapshots(): Record<string, string> {
@@ -241,11 +241,16 @@ function saveInputSnapshot(runId: string, key: string): void {
 function chooseDuplicate(choice: 'create' | 'existing' | 'cancel'): void {
   const resolve = resolveDuplicate
   resolveDuplicate = undefined
-  duplicateMatch.value = null
+  duplicateDialogOpen.value = false
   resolve?.(choice)
+}
+function clearClosedDuplicate(): void {
+  // Keep the content and height intact throughout the leave transition.
+  if (!duplicateDialogOpen.value) duplicateMatch.value = null
 }
 function askAboutDuplicate(match: { run: Run; dataKnown: boolean }): Promise<'create' | 'existing' | 'cancel'> {
   duplicateMatch.value = match
+  duplicateDialogOpen.value = true
   return new Promise(resolve => { resolveDuplicate = resolve })
 }
 onBeforeUnmount(() => chooseDuplicate('cancel'))
@@ -385,7 +390,7 @@ watch(activeKey, key => { if (key === 'resource') void refreshClusters() })
           :title="requiresSubmittedPlan(step.key) && !workflowAllowed ? '先选择算子并提交，再进入' + step.title : undefined"
           @click="selectStep(step.key)"
         >
-          <span class="experience-step-index">{{ String(step.index).padStart(2, '0') }}</span>
+          <span class="experience-step-index">{{ step.index }}</span>
           <span class="experience-step-text">
             <strong>{{ step.title }}</strong>
             <LockKeyhole v-if="requiresSubmittedPlan(step.key) && !workflowAllowed" class="experience-step-lock" aria-hidden="true" />
@@ -400,7 +405,7 @@ watch(activeKey, key => { if (key === 'resource') void refreshClusters() })
       <div class="experience-guide-actions">
         <button :disabled="!previousStep" type="button" class="experience-previous sc-action" @click="previousStep && selectStep(previousStep.key)"><ArrowLeft class="experience-nav-arrow" aria-hidden="true" /> 上一步</button>
         <button :disabled="nextDisabled" :aria-busy="nextBusy" type="button" class="experience-next sc-action sc-action--primary" :title="nextStep ? '下一步：' + nextStep.title : '已是最后一步'" @click="goNext">
-          <LoaderCircle v-if="nextBusy" class="is-spinning" aria-hidden="true" />{{ nextLabel }} <ArrowRight v-if="!nextBusy" class="experience-nav-arrow action-arrow" aria-hidden="true" />
+          <span>{{ nextLabel }}</span><span class="experience-next-icon" aria-hidden="true"><LoaderCircle v-if="nextBusy" class="is-spinning" /><ArrowRight v-else class="experience-nav-arrow action-arrow" /></span>
         </button>
       </div>
     </div>
@@ -486,14 +491,19 @@ watch(activeKey, key => { if (key === 'resource') void refreshClusters() })
       <div v-if="actionFeedback" class="experience-feedback" role="status"><span aria-hidden="true">✓</span><div><strong>{{ actionFeedback }}</strong><p>已回到数据准备，恢复 {{ chosenOperators.length }} 个推荐算子和默认运行记录。</p></div></div>
     </Transition>
   </Teleport>
-  <el-dialog :model-value="!!duplicateMatch" :title="duplicateMatch?.dataKnown ? '已有相同配置的任务' : '已有相同算子的任务'" width="min(480px, calc(100vw - 32px))" align-center class="experience-duplicate-dialog" modal-class="experience-duplicate-overlay" :show-close="false" :close-on-click-modal="false" @update:model-value="value => { if (!value) chooseDuplicate('cancel') }">
+  <el-dialog :model-value="duplicateDialogOpen" :title="duplicateMatch?.dataKnown ? '已有相同配置的任务' : '已有相同算子的任务'" width="min(480px, calc(100vw - 32px))" align-center class="experience-duplicate-dialog" modal-class="experience-duplicate-overlay" :show-close="false" :close-on-click-modal="false" @close="chooseDuplicate('cancel')" @closed="clearClosedDuplicate">
     <template v-if="duplicateMatch">
-      <p class="duplicate-summary">{{ duplicateMatch.dataKnown ? '当前准备的数据与算子组合，和以下任务一致。' : '以下任务使用了相同的算子组合。' }}</p>
-      <div class="duplicate-record">
-        <div class="duplicate-record-heading"><span>已有任务</span><span class="duplicate-record-status" :class="`is-${duplicateMatch.run.status}`">{{ statusText(duplicateMatch.run.status) }}</span></div>
-        <p class="duplicate-run-id">{{ duplicateMatch.run.run_id }}</p>
+      <div class="duplicate-context">
+        <span class="duplicate-symbol" aria-hidden="true"><Copy :size="20" /></span>
+        <div class="duplicate-context-text">
+          <p class="duplicate-summary">{{ duplicateMatch.dataKnown ? '当前准备的数据与算子组合，和以下任务一致。' : '以下任务使用了相同的算子组合。' }}</p>
+          <p v-if="!duplicateMatch.dataKnown" class="duplicate-note">旧任务的数据无法比对，仅确认算子相同。</p>
+        </div>
       </div>
-      <p v-if="!duplicateMatch.dataKnown" class="duplicate-note">旧任务的数据无法比对，仅确认算子相同。</p>
+      <div class="duplicate-record">
+        <p class="duplicate-run-id">{{ duplicateMatch.run.run_id }}</p>
+        <span class="duplicate-record-status" :class="`is-${duplicateMatch.run.status}`">{{ statusText(duplicateMatch.run.status) }}</span>
+      </div>
     </template>
     <template #footer>
       <div class="duplicate-actions">
@@ -507,25 +517,31 @@ watch(activeKey, key => { if (key === 'resource') void refreshClusters() })
 </template>
 
 <style scoped>
-:global(.el-dialog.experience-duplicate-dialog) { padding: 26px; border: 1px solid #e2e8f0; border-radius: 16px; box-shadow: 0 20px 64px rgb(24 40 64 / 18%); }
+:global(.el-dialog.experience-duplicate-dialog) { padding: 0; overflow: hidden; border: 1px solid #e2e8f0; border-radius: 14px; box-shadow: 0 20px 64px rgb(24 40 64 / 18%); }
 :global(.experience-duplicate-overlay) { background: rgb(24 36 54 / 34%); }
-:global(.experience-duplicate-dialog .el-dialog__header) { padding: 0 0 16px; }
-:global(.experience-duplicate-dialog .el-dialog__title) { color: #25344a; font-size: 19px; font-weight: 600; line-height: 1.5; }
-:global(.experience-duplicate-dialog .el-dialog__body) { padding: 0; }
-:global(.experience-duplicate-dialog .el-dialog__footer) { padding: 24px 0 0; }
-.duplicate-summary { margin: 0 0 18px; color: #53657b; font-size: 14px; line-height: 1.7; }
-.duplicate-record { padding: 16px 18px; border: 1px solid #e2e8f0; border-radius: 10px; background: #f7f9fc; }
-.duplicate-record-heading { display: flex; justify-content: space-between; align-items: center; color: #718096; font-size: 12px; }
-.duplicate-record-status { color: #62738a; }
-.duplicate-record-status.is-success { color: #278366; }
+:global(.experience-duplicate-dialog .el-dialog__header) { padding: 24px 24px 18px; text-align: left; }
+:global(.experience-duplicate-dialog .el-dialog__title) { color: #25344a; font-size: 18px; font-weight: 550; line-height: 1.5; }
+:global(.experience-duplicate-dialog .el-dialog__body) { padding: 0 24px 22px; }
+:global(.experience-duplicate-dialog .el-dialog__footer) { padding: 16px 24px; border-top: 1px solid #e8edf3; background: #f7f9fc; }
+.duplicate-context { display: grid; grid-template-columns: 40px minmax(0, 1fr); align-items: start; gap: 14px; }
+.duplicate-symbol { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 10px; color: #3865ab; background: #eef3fc; }
+.duplicate-summary { margin: 0; color: #2f4664; font-size: 15px; font-weight: 400; line-height: 1.7; }
+.duplicate-note { margin: 7px 0 0; color: #5b6b7f; font-size: 14px; line-height: 1.7; }
+.duplicate-record { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 18px 0 0 54px; padding: 12px 0 0; border-top: 1px solid #e5ebf2; }
+.duplicate-record-status { flex-shrink: 0; padding: 3px 9px; border-radius: 5px; background: #eaf0f7; color: #62738a; font-size: 13px; }
+.duplicate-record-status.is-success { color: #278366; background: #e7f4ed; }
 .duplicate-record-status.is-running { color: #3269d6; }
 .duplicate-record-status.is-failed { color: #b24e59; }
-.duplicate-run-id { margin: 10px 0 0; color: #2d405b; font: 500 14px/1.5 var(--scnet-font-mono); overflow-wrap: anywhere; }
-.duplicate-note { margin: 12px 0 0; color: #7a8799; font-size: 12px; line-height: 1.6; }
+.duplicate-run-id { min-width: 0; margin: 0; color: #42556e; font: 400 13px/1.5 var(--scnet-font-mono); overflow-wrap: anywhere; }
 .duplicate-actions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
 .duplicate-actions .sc-action { width: 100%; height: 42px; min-width: 0; padding-inline: 8px; box-sizing: border-box; }
 @media (max-width: 480px) {
-  :global(.el-dialog.experience-duplicate-dialog) { padding: 20px; }
+  :global(.experience-duplicate-dialog .el-dialog__header) { padding: 20px 18px 16px; }
+  :global(.experience-duplicate-dialog .el-dialog__body) { padding: 0 18px 18px; }
+  :global(.experience-duplicate-dialog .el-dialog__footer) { padding: 14px 18px; }
+  .duplicate-context { grid-template-columns: 32px minmax(0, 1fr); gap: 10px; }
+  .duplicate-symbol { width: 32px; height: 32px; border-radius: 8px; }
+  .duplicate-record { margin-left: 0; }
   .duplicate-actions { gap: 6px; }
   .duplicate-actions .sc-action { padding-inline: 6px; }
 }
@@ -589,8 +605,10 @@ watch(activeKey, key => { if (key === 'resource') void refreshClusters() })
 .experience-guide-line { display: flex; align-items: center; gap: 14px; min-width: 0; margin: 0; font-size: 16px; color: var(--scnet-text-secondary); }
 .experience-guide-progress { flex-shrink: 0; color: var(--scnet-primary); font-weight: 600; font-variant-numeric: tabular-nums; }
 .experience-guide-summary { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.experience-guide-actions { display: flex; gap: 8px; }
-.experience-guide-actions button { height: 44px; padding-inline: 14px; font-size: 14px; }
+.experience-guide-actions { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); width: 268px; min-width: 0; max-width: 100%; gap: 8px; }
+.experience-guide-actions button { width: 100%; min-width: 0; height: 44px; padding-inline: 10px; font-size: 14px; box-sizing: border-box; }
+.experience-next-icon { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 16px; width: 16px; height: 16px; }
+.experience-next-icon .action-arrow { margin-left: 0; }
 .experience-nav-arrow { display: inline-block; transition: transform 180ms var(--scnet-hover-easing); }
 .experience-previous:enabled:is(:hover, :focus-visible) .experience-nav-arrow { transform: translateX(-3px); }
 .experience-next:enabled:is(:hover, :focus-visible) .experience-nav-arrow { transform: translateX(3px); }
@@ -612,9 +630,9 @@ button:focus-visible { outline: 2px solid var(--scnet-primary); outline-offset: 
   .experience-metrics > div { padding: 6px 10px; }
   .experience-metrics dd { font-size: 21px; }
   .experience-metrics small { font-size: 12px; }
-  .experience-guide { grid-template-columns: 1fr; gap: 10px; padding: 12px 16px; }
+  .experience-guide { grid-template-columns: minmax(0, 1fr); gap: 10px; padding: 12px 16px; }
   .experience-guide-line { height: 28px; font-size: 15px; }
-  .experience-guide-actions { width: auto; max-width: 100%; justify-self: end; }
+  .experience-guide-actions { justify-self: end; }
 }
 @media (prefers-reduced-motion: reduce) {
   .experience-guide-actions button, .experience-nav-arrow { transition: none; }

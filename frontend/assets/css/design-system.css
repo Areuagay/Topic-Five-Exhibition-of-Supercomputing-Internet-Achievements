@@ -1,14 +1,18 @@
 /* Shared materials for native controls, Element Plus and scientific workspaces. */
+:root { --scnet-button-spring: cubic-bezier(.2, 1.45, .35, 1); }
+@supports (transition-timing-function: linear(0, 1)) {
+  :root { --scnet-button-spring: linear(0, .3 9%, .65 20%, .9 32%, 1.045 46%, 1.065 56%, 1.02 73%, .997 88%, 1); }
+}
 .embedded-shell :is(.sc-action.sc-action, .summary-back, .retry-download, .topology-reset-button) {
   position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   min-height: 40px; padding: 0 16px; border: 1px solid #d6dfeb; border-radius: var(--scnet-radius);
   background: #fff; color: #40536d; box-shadow: 0 1px 2px #24324708; text-shadow: none;
   font: 550 13px/1 var(--scnet-font-sans); white-space: nowrap; cursor: pointer; touch-action: manipulation;
-  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease, transform 220ms var(--scnet-motion-ease), box-shadow 220ms ease;
+  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease, transform 420ms var(--scnet-button-spring), box-shadow 220ms ease;
 }
 .embedded-shell .sc-action.sc-action::before { content: none; }
-.embedded-shell .sc-action.sc-action:enabled:hover { background: #f5f8fe; border-color: #a8bedf; color: #2456a3; transform: translateY(-1px); box-shadow: 0 3px 8px #2b5c9c10; }
-.embedded-shell .sc-action.sc-action:enabled:active { background: #eaf0f8; transform: translateY(0) scale(.975); box-shadow: none; transition-duration: 80ms; }
+.embedded-shell .sc-action.sc-action:enabled:hover { background: #f5f8fe; border-color: #a8bedf; color: #2456a3; transform: translateY(-1px) scale(1.012); box-shadow: 0 3px 8px #2b5c9c10; }
+.embedded-shell .sc-action.sc-action:enabled:active { background: #eaf0f8; transform: translateY(0) scale(.965); box-shadow: none; transition-duration: 80ms; transition-timing-function: ease-out; }
 .embedded-shell .sc-action.sc-action--primary,
 .embedded-shell .sc-action.sc-action[aria-pressed='true'] { color: #fff; background: var(--scnet-primary); border-color: #285bd3; box-shadow: 0 2px 3px #1c469f20; }
 .embedded-shell .sc-action.sc-action--primary:enabled:hover,
@@ -29,8 +33,7 @@
 .embedded-shell .scnet-segmented { padding: 4px; border: 1px solid var(--scnet-divider); border-radius: 9px; background: #f1f4f8; box-shadow: none; }
 .embedded-shell .scnet-segmented .scnet-sliding-highlight { background: #fff; border-radius: 6px; box-shadow: 0 0 0 1px #dde4ee, 0 1px 2px #24324708; }
 
-.el-button { --el-button-font-weight: 500; border-radius: var(--scnet-radius); transition: background-color 160ms, border-color 160ms, color 160ms, transform 220ms var(--scnet-motion-ease), box-shadow 220ms; box-shadow: 0 1px 2px #24324706; }
-.el-button:not(.is-disabled):active { transform: scale(.98); }
+.el-button { --el-button-font-weight: 500; border-radius: var(--scnet-radius); transition: background-color 160ms, border-color 160ms, color 160ms, transform 420ms var(--scnet-button-spring), box-shadow 220ms; box-shadow: 0 1px 2px #24324706; }
 .el-button:not(.is-text):not(.is-link):not(.el-button--small) { min-height: 36px; }
 .el-input__wrapper, .el-select__wrapper, .el-textarea__inner { border-radius: var(--scnet-radius); background: #fff; }
 .el-dropdown__popper, .el-select__popper, .el-popper.is-light { border-color: var(--scnet-border); border-radius: 10px; box-shadow: 0 8px 28px #24324712; }
@@ -74,8 +77,8 @@
   .experience-polished.experience-flow .experience-body { grid-area: content; }
   .experience-polished .experience-guide-progress { font-weight: 400; color: #7e8a9b; }
   .experience-polished .experience-guide-line { font-size: 13px; }
-  .experience-polished.experience-flow .experience-step-index { width: 22px; height: 22px; border: 0; background: transparent; font-size: 11px; }
-  .experience-polished.experience-flow .experience-step.is-active .experience-step-index { color: var(--scnet-primary); background: transparent; }
+  .experience-polished.experience-flow .experience-step-index { flex: 0 0 24px; width: 24px; height: 24px; border: 1px solid #dce4ef; background: #f4f7fb; color: #718096; font: 600 12px var(--scnet-font-sans); }
+  .experience-polished.experience-flow .experience-step.is-active .experience-step-index { color: #fff; border-color: var(--scnet-primary); background: var(--scnet-primary); }
 }
 
 .experience-polished.experience-flow .experience-steps .experience-step:not(.is-active):is(:hover, :focus-visible) { background: #e9f0fa; color: #245eae; box-shadow: none; }
@@ -111,13 +114,19 @@
 .embedded-shell :is(.dataset-upload-button, .dataset-remove-button).sc-action:disabled { color: #8492a6; background: #f1f4f8; border-color: #e1e7ef; box-shadow: none; }
 .embedded-shell .sc-action.sc-action--primary:enabled:active { background: #1f50c0; border-color: #1f50c0; }
 .embedded-shell .sc-action.sc-action--ghost:disabled { border-color: transparent; background: transparent; }
-.embedded-shell .sc-action.sc-action svg { transition: transform 220ms var(--scnet-motion-ease), opacity 160ms ease; }
+.embedded-shell .sc-action.sc-action svg { transition: transform 360ms var(--scnet-button-spring), opacity 160ms ease; }
 .embedded-shell .sc-action.sc-action:enabled:hover .action-arrow { transform: translateX(3px); opacity: 1; }
-.el-button:not(.is-disabled):not(.is-text):not(.is-link):hover { transform: translateY(-1px); box-shadow: 0 3px 8px #2b5c9c10; }
-.el-button:not(.is-disabled):active { transform: translateY(0) scale(.975); }
+.el-button:not(.is-disabled):not(.is-loading):not(.is-text):not(.is-link):hover { transform: translateY(-1px) scale(1.012); box-shadow: 0 3px 8px #2b5c9c10; }
+.el-button:not(.is-disabled):not(.is-loading):active { transform: translateY(0) scale(.965); transition-duration: 80ms; transition-timing-function: ease-out; }
+.embedded-shell .sc-action.sc-action:is(:disabled, [aria-busy='true']),
+.embedded-shell .sc-action.sc-action[aria-busy='true']:enabled:is(:hover, :active),
+.el-button:is(.is-disabled, .is-loading) { transform: none; }
 .el-input__wrapper, .el-select__wrapper { transition: box-shadow 180ms ease, background-color 180ms ease; }
 .embedded-shell .scnet-segmented > button { transition: color 180ms ease, background-color 180ms ease; }
 @media (prefers-reduced-motion: reduce) {
+  .embedded-shell .sc-action.sc-action:enabled:is(:hover, :active),
+  .el-button:not(.is-disabled):not(.is-loading):not(.is-text):not(.is-link):hover,
+  .el-button:not(.is-disabled):not(.is-loading):active { transform: none; }
   .embedded-shell .sc-action.sc-action svg, .el-input__wrapper, .el-select__wrapper { transition: none; }
   .embedded-shell .sc-action.sc-action:enabled:hover .action-arrow, .el-button:not(.is-disabled):hover, .el-button:not(.is-disabled):active { transform: none; }
   .embedded-shell .experience-start.sc-action:enabled:hover .experience-start-icon svg,

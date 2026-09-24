@@ -9,13 +9,22 @@ export function useExperienceNavigation(domain: string, scenarioId: string, runs
   const saved = useState<ExperienceLocation>(`experience-location-${domain}-${scenarioId}`, () => ({ step: 'data', runId: '' }))
   const isCurrentScenario = () => route.path === path && (!route.query.scenario || route.query.scenario === scenarioId)
 
-  watch([() => route.fullPath, runs, () => workflowAllowed?.value], () => {
+  // URL changes represent browser navigation. Data/gate changes must not replay
+  // the old URL while an explicit click is still being committed by the router.
+  watch(() => route.fullPath, () => {
     if (!isCurrentScenario()) return
     saved.value = resolveExperienceLocation(route.query, saved.value, runs.value, workflowAllowed?.value ?? true)
     if (import.meta.client && requiresSubmittedPlan(route.query.step) && saved.value.step === 'operator') {
       void router.replace({ query: { ...route.query, step: 'operator', plan: undefined } })
     }
   }, { immediate: true })
+
+  watch([runs, () => workflowAllowed?.value], () => {
+    if (!isCurrentScenario()) return
+    const current = saved.value
+    const next = resolveExperienceLocation({ step: current.step, run: current.runId }, current, runs.value, workflowAllowed?.value ?? true)
+    if (next.step !== current.step || next.runId !== current.runId) navigate(next.step, next.runId, true)
+  })
 
   function navigate(step: string, runId = saved.value.runId, replace = false): void {
     const location = resolveExperienceLocation({ step, run: runId }, saved.value, runs.value, workflowAllowed?.value ?? true)

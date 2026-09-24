@@ -41,6 +41,10 @@
 
 * { box-sizing: border-box; }
 html { scrollbar-gutter: stable; }
+@supports (scrollbar-gutter: stable) {
+  /* The root already reserves the scrollbar; skip Element Plus's extra deduction. */
+  body.el-popup-parent--hidden { width: auto !important; }
+}
 html, body {
   margin: 0;
   padding: 0;
