@@ -46,18 +46,16 @@
 .experience-polished .operator-item::before { transform: none; opacity: 0; transition: opacity 320ms var(--ex-ease); }
 .experience-polished .operator-item.is-chosen::before { opacity: 1; transform: none; }
 .experience-polished .operator-status { display: none; }
-.operator-selected-frame { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 300ms var(--ex-ease); }
-.operator-selected-frame.has-selection { grid-template-rows: 1fr; }
-.operator-selected-frame > div { min-height: 0; overflow: hidden; }
-.operator-selected-chips { display: flex; flex-wrap: wrap; gap: 8px; padding: 3px 26px; margin: 0 0 18px; }
-.operator-selected-chips:empty { margin: 0; }
+.operator-selected-frame { overflow: clip; }
+.operator-selected-chips { position: relative; display: flex; flex-wrap: wrap; gap: 8px; padding: 0 26px; margin: 0; min-height: 0; }
+.operator-selected-frame.has-selection .operator-selected-chips { padding-block: 3px 18px; }
 .selected-chip { display: inline-flex; align-items: center; gap: 7px; padding: 6px 9px; border: 1px solid #d8e5f5; border-radius: 7px; color: #38689f; background: #f2f7ff; font-size: 12px; cursor: pointer; }
 .selected-chip:hover { border-color: #9abce9; background: #e9f2ff; }
 .selected-chip .chip-remove { color: #8aa3c3; }
 .selected-chip:hover .chip-remove { color: #285eac; }
 .selected-chip:focus-visible { outline: 2px solid #74a6ea; outline-offset: 2px; }
-.selected-chip-move, .selected-chip-enter-active { transition: opacity 200ms, transform 300ms var(--ex-ease); }
-.selected-chip-leave-active { transition: opacity 140ms, transform 180ms ease; }
+.selected-chip-move, .selected-chip-enter-active { transition: opacity 200ms, transform 260ms cubic-bezier(.2,.7,.2,1); }
+.selected-chip-leave-active { position: absolute; pointer-events: none; transition: opacity 180ms ease, transform 220ms cubic-bezier(.2,.7,.2,1); }
 .selected-chip-enter-from { opacity: 0; transform: translateY(5px) scale(.96); }
 .selected-chip-leave-to { opacity: 0; transform: scale(.92); }
 .selection-count { display: inline-block; min-width: 1.4ch; text-align: center; font-variant-numeric: tabular-nums; }

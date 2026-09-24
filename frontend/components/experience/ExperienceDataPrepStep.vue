@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, ref } from 'vue'
+import { computed, onBeforeUnmount, onDeactivated, ref } from 'vue'
 import { Check, CheckCheck, CircleDashed, CloudUpload, Database, FileJson, FileSpreadsheet, FileText, LoaderCircle, LockKeyhole, Trash2, X } from '@lucide/vue'
 import ScenarioDetailContent from '~/components/ScenarioDetailContent.vue'
 import { getDatasetTypeLabels } from '~/config/scenario-experience'
@@ -42,6 +42,7 @@ function rowClass({ row }: { row: DatasetItem }) {
   return [rowFeedback.value[row.dataset_id] ? `dataset-row--${rowFeedback.value[row.dataset_id]}` : '', uploadingId.value === row.dataset_id ? 'dataset-row--transferring' : ''].filter(Boolean).join(' ')
 }
 onBeforeUnmount(() => { disposed = true; cancelTransfer?.(); feedbackTimers.forEach(clearTimeout) })
+onDeactivated(() => cancelTransfer?.())
 
 function feedback(text: string, failed = false): void { message.value = text; messageError.value = failed }
 function errorText(error: unknown): string {
@@ -125,11 +126,11 @@ async function handleImport(): Promise<void> {
           <el-table-column prop="format" label="格式" width="80" class-name="mono" />
           <el-table-column prop="grid" label="规模" min-width="120" class-name="mono" />
           <el-table-column label="大小" width="100" class-name="mono"><template #default="{ row }">{{ formatBytes(row.size_bytes) }}</template></el-table-column>
-          <el-table-column label="来源" min-width="145"><template #default="{ row }">{{ row.uploaded ? row.source : '待上传' }}</template></el-table-column>
+          <el-table-column label="来源" min-width="180" show-overflow-tooltip><template #default="{ row }"><span class="dataset-source">{{ row.uploaded ? row.source : '—' }}</span></template></el-table-column>
           <el-table-column label="状态" width="100"><template #default="{ row }">
             <span class="dataset-state" :title="row.uploaded && row.updated_at ? '更新于 ' + formatTimestamp(row.updated_at) : undefined" :class="{ 'is-imported': row.imported, 'is-ready': row.uploaded }"><CheckCheck v-if="row.imported" aria-hidden="true" /><Check v-else-if="row.uploaded" aria-hidden="true" /><CircleDashed v-else aria-hidden="true" />{{ row.imported ? '已导入' : row.uploaded ? '就绪' : '待上传' }}</span>
           </template></el-table-column>
-          <el-table-column label="操作" width="220" fixed="right"><template #default="{ row }">
+          <el-table-column label="操作" width="190" align="right" header-align="right" fixed="right"><template #default="{ row }">
             <div class="dataset-operation-slot">
             <Transition name="upload-state">
             <div v-if="uploadingId === row.dataset_id" key="transferring" class="dataset-transfer" aria-label="上传进度" :title="committing ? '等待服务确认' : `预计剩余 ${remainingSeconds} 秒`">
@@ -139,9 +140,7 @@ async function handleImport(): Promise<void> {
             </div>
             <span v-else-if="row.builtin" key="builtin" class="dataset-builtin"><LockKeyhole :size="14" aria-hidden="true" />内置数据</span>
             <button v-else-if="!row.uploaded" key="upload" type="button" class="sc-action sc-action--soft sc-action--small" :disabled="busy" @click="handleUpload(row as DatasetItem)"><CloudUpload aria-hidden="true" />上传数据</button>
-            <div v-else key="uploaded" class="exp-dataset-actions">
-              <span class="dataset-uploaded"><Check :size="14" aria-hidden="true" />已上传</span><button type="button" class="sc-action sc-action--ghost sc-action--danger sc-action--small" :aria-busy="resettingId === row.dataset_id" :disabled="busy" @click="handleReset(row as DatasetItem)"><LoaderCircle v-if="resettingId === row.dataset_id" class="is-spinning" aria-hidden="true" /><Trash2 v-else aria-hidden="true" />移除</button>
-            </div>
+            <button v-else key="uploaded" type="button" class="sc-action sc-action--ghost sc-action--danger sc-action--small" :aria-busy="resettingId === row.dataset_id" :disabled="busy" @click="handleReset(row as DatasetItem)"><LoaderCircle v-if="resettingId === row.dataset_id" class="is-spinning" aria-hidden="true" /><Trash2 v-else aria-hidden="true" />移除上传</button>
             </Transition>
             </div>
           </template></el-table-column>
@@ -188,10 +187,12 @@ async function handleImport(): Promise<void> {
 .exp-dataset-actions { align-items: center; }
 .exp-dataset-actions :deep(.el-button) { margin-left: 0; min-height: 36px; border-radius: 6px; }
 svg { width: 17px; height: 17px; margin-right: 5px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
-.dataset-operation-slot { display: grid; align-items: center; width: 188px; height: 40px; position: relative; }
-.dataset-operation-slot > * { grid-area: 1 / 1; justify-self: start; }
+.dataset-source { white-space: nowrap; }
+.dataset-operation-slot { display: grid; align-items: center; width: 166px; height: 40px; position: relative; margin-left: auto; }
+.dataset-operation-slot > * { grid-area: 1 / 1; justify-self: end; }
+.dataset-operation-slot > button { min-width: 104px; }
 .dataset-operation-slot > .exp-dataset-actions { width: 100%; justify-content: space-between; align-items: center; }
-.dataset-transfer { position: relative; display: flex; align-items: center; width: 188px; height: 36px; padding: 0; border: 1px solid #b9cce6; border-radius: 7px; overflow: hidden; isolation: isolate; background: #fff; }
+.dataset-transfer { position: relative; display: flex; align-items: center; width: 166px; height: 36px; padding: 0; border: 1px solid #b9cce6; border-radius: 7px; overflow: hidden; isolation: isolate; background: #fff; }
 .dataset-transfer-fill { position: absolute; inset: 0; z-index: -1; background: #e8f0fc; transform-origin: left; transition: transform 180ms linear; }
 .dataset-transfer-label { display: flex; flex: 1; align-items: center; gap: 6px; padding-left: 10px; color: #375e90; font-size: 12px; }
 .dataset-transfer-label svg { margin: 0; }

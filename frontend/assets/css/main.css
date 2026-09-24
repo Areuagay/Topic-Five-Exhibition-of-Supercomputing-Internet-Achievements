@@ -20,7 +20,8 @@
   --scnet-text-muted: #617086;
   --scnet-border: #dce3ec;
   --scnet-divider: #e8edf3;
-  --scnet-radius: 8px;
+  --scnet-radius: 9px;
+  --scnet-motion-ease: cubic-bezier(.2,.7,.2,1);
   --scnet-panel-radius: 12px;
   --scnet-panel-shadow: 0 1px 3px #24324704;
   --scnet-danger: #c45555;
@@ -39,6 +40,7 @@
 }
 
 * { box-sizing: border-box; }
+html { scrollbar-gutter: stable; }
 html, body {
   margin: 0;
   padding: 0;

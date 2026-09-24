@@ -1,57 +1,51 @@
-import { animate, stagger } from 'motion'
 import { nextTick, onBeforeUnmount, onMounted, watch, type Ref } from 'vue'
 
-/** One interruptible motion system for six steps. It never delays navigation. */
+/** Keep layout stable; animate only compositor properties, never table height. */
 export function useExperienceMotion(root: Ref<HTMLElement | undefined>, step: Ref<number>) {
-  const animations: ReturnType<typeof animate>[] = []
+  let animation: Animation | undefined
   let generation = 0
   let disposed = false
-  let contentObserver: ResizeObserver | undefined
-  const stop = () => { contentObserver?.disconnect(); animations.splice(0).forEach(animation => animation.cancel()) }
-  async function reveal(direction = 1, preserveHeight = false) {
+  let releaseTimer: ReturnType<typeof setTimeout> | undefined
+  const frame = () => new Promise<void>(resolve => requestAnimationFrame(() => resolve()))
+
+  async function reveal(direction = 1, changing = false) {
     const current = ++generation
     const surface = root.value
-    const fromHeight = surface?.getBoundingClientRect().height ?? 0
-    // A short empty/result state still fills the visible working area. This
-    // prevents browser scroll clamping from dragging the navigation upward.
-    const viewportFloor = surface ? Math.max(0, window.innerHeight - Math.max(24, surface.getBoundingClientRect().top)) : 0
-    stop()
-    // KeepAlive can briefly remove its old subtree before the next is mounted.
-    // Reserve that space before Vue patches, so the browser cannot clamp scrollY.
-    if (surface && preserveHeight) surface.style.height = `${fromHeight}px`
+    if (!surface) return
+    const rect = surface.getBoundingClientRect()
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    clearTimeout(releaseTimer)
+    animation?.cancel()
+    // Reserve the old layout before KeepAlive swaps children. This also keeps
+    // the scrollbar present, so table column widths do not change mid-entry.
+    surface.style.minHeight = `${Math.max(rect.height, innerHeight - rect.top)}px`
     await nextTick()
-    if (disposed || current !== generation || !surface) return
+    if (disposed || current !== generation) return
     const content = surface.querySelector<HTMLElement>('.experience-step-content')
-    if (!content) { surface.style.height = ''; return }
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { surface.style.height = ''; surface.style.minHeight = `${viewportFloor}px`; surface.style.overflow = ''; return }
-    if (preserveHeight) {
-      const toHeight = Math.max(viewportFloor, content.offsetHeight)
-      // Tables/charts can finish their first layout after nextTick. Never
-      // animate below their actual content height while they are settling.
-      surface.style.minHeight = `${toHeight}px`
-      contentObserver = new ResizeObserver(() => { surface.style.minHeight = `${Math.max(viewportFloor, content.offsetHeight)}px` })
-      contentObserver.observe(content)
-      surface.style.overflow = 'clip'
-      const resize = animate(surface, { height: [`${fromHeight}px`, `${toHeight}px`] }, { duration: .34, ease: [.22, 1, .36, 1] })
-      animations.push(resize)
-      void resize.then(() => {
-        if (disposed || current !== generation) return
-        contentObserver?.disconnect()
-        surface.style.height = ''
-        surface.style.minHeight = `${viewportFloor}px`
-        surface.style.overflow = ''
-      })
+    if (!content) return
+    content.style.opacity = reduced ? '' : '0'
+    // Element Plus measures a newly activated table on the next frame. Let
+    // that single layout settle before revealing it, instead of resizing it.
+    await frame()
+    await frame()
+    if (disposed || current !== generation) return
+    content.style.opacity = ''
+    if (!reduced) {
+      animation = content.animate([
+        { opacity: 0, transform: `translateY(${direction * 6}px)` },
+        { opacity: 1, transform: 'translateY(0)' },
+      ], { duration: 240, easing: 'cubic-bezier(.2,.7,.2,1)' })
     }
-    animations.push(animate(content, { opacity: [0, 1], x: [direction * 10, 0] }, {
-      duration: .28, ease: [.22, 1, .36, 1],
-    }))
-    // Animate card contents so filter transitions retain ownership of the outer card.
-    const cards = Array.from(content.querySelectorAll<HTMLElement>('.resource-card-head, .operator-main')).slice(0, 8)
-    if (cards.length) animations.push(animate(cards, { opacity: [0.4, 1], y: [8, 0] }, {
-      duration: 0.3, delay: stagger(0.035), ease: [0.22, 1, 0.36, 1],
-    }))
+    const deepInPage = changing && rect.top < -80
+    if (deepInPage) window.scrollTo({ top: scrollY + rect.top - 24, behavior: reduced ? 'instant' : 'smooth' })
+    // Only release unused space; retain the visible working area for short
+    // empty states. No repeated height writes or per-frame table reflows.
+    releaseTimer = setTimeout(() => {
+      if (disposed || current !== generation) return
+      surface.style.minHeight = `${Math.max(0, innerHeight - surface.getBoundingClientRect().top)}px`
+    }, deepInPage && !reduced ? 600 : reduced ? 0 : 250)
   }
   watch(step, (next, previous) => { void reveal(next >= previous ? 1 : -1, true) }, { flush: 'pre' })
   onMounted(() => { void reveal() })
-  onBeforeUnmount(() => { disposed = true; generation++; stop() })
+  onBeforeUnmount(() => { disposed = true; generation++; animation?.cancel(); clearTimeout(releaseTimer) })
 }

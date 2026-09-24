@@ -2,7 +2,7 @@
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useExperienceNavigation } from '~/composables/useExperienceNavigation'
 import { useExperienceMotion } from '~/composables/useExperienceMotion'
-import { ArrowLeft, ArrowRight, LoaderCircle } from '@lucide/vue'
+import { ArrowLeft, ArrowRight, LoaderCircle, RotateCcw, Check } from '@lucide/vue'
 import { useSlidingHighlight } from '~/composables/useSlidingHighlight'
 import ExperienceDataPrepStep from './ExperienceDataPrepStep.vue'
 import ExperienceResourceStep from './ExperienceResourceStep.vue'
@@ -98,7 +98,6 @@ const selectedOperators = computed(() => props.detail?.operators ?? [])
 const chosenOperatorIds = useState<string[] | null>(`experience-operators-selection-${props.domain}-${props.scenarioId}`, () => null)
 const chosenOperators = computed(() => (operators.value ?? []).filter((item) => chosenOperatorIds.value?.includes(item.name)))
 const guideActive = useState<boolean>(`experience-guide-${props.domain}-${props.scenarioId}`, () => false)
-const experienceSession = ref(0)
 const guideBar = ref<HTMLElement>()
 const actionFeedback = ref('')
 let feedbackTimer: ReturnType<typeof setTimeout> | undefined
@@ -115,13 +114,12 @@ const guideSummary = computed(() => guideActive.value ? guideInstructions[active
 
 async function startExperience(): Promise<void> {
   clearTimeout(feedbackTimer)
-  actionFeedback.value = guideActive.value ? '已重新开始' : '体验已开始'
+  actionFeedback.value = '已恢复推荐'
   const recommended = new Set(selectedOperators.value.flatMap((item) => [item.id, item.name]))
   chosenOperatorIds.value = (operators.value ?? [])
     .filter((item) => recommended.has(item.name) && ['registered', 'available'].includes(item.status))
     .map((item) => item.name)
   const defaultRunId = (scenarioRuns.value.find((run) => run.has_detail) ?? scenarioRuns.value[0])?.run_id ?? ''
-  experienceSession.value++
   guideActive.value = true
   navigate('data', defaultRunId)
   feedbackTimer = setTimeout(() => { actionFeedback.value = '' }, 2800)
@@ -146,7 +144,11 @@ function selectStep(key: string): void {
 }
 
 function goNext(): void {
-  if (activeKey.value === 'data') { void dataStep.value?.handleImport(); return }
+  if (activeKey.value === 'data') {
+    if (dataStep.value?.pendingImport) void dataStep.value.handleImport()
+    else navigate('resource')
+    return
+  }
   if (activeKey.value === 'operator') { void handleOperatorSubmit(); return }
   const target = nextStep.value
   if (!target) return
@@ -193,11 +195,11 @@ function handleDatasetUpdated(updated: DatasetItem): void {
 }
 
 async function handleImported(result: ImportResult): Promise<void> {
-  await refreshDatasets()
-  // 一键导入有新数据时：刷新算力利用率并自动进入资源调度
   if (result.status === 'imported' || result.status === 'already_all') {
-    await refreshClusters()
+    // The import is already committed. Navigate immediately; refresh data in
+    // parallel without holding the user's transition behind two GET requests.
     navigate('resource')
+    await Promise.allSettled([refreshDatasets(), refreshClusters()])
   }
 }
 
@@ -269,9 +271,9 @@ watch(activeKey, key => { if (key === 'resource') void refreshClusters() })
         <div class="experience-head-text">
           <div class="experience-title-row">
             <h2>{{ experience?.title ?? detail?.name ?? '场景体验' }}</h2>
-            <button type="button" class="experience-start sc-action sc-action--primary" :class="{ 'is-confirmed': actionFeedback }" @click="startExperience">
-              <svg viewBox="0 0 20 20" aria-hidden="true"><path v-if="actionFeedback" d="m4 10 4 4 8-9"/><path v-else-if="guideActive" d="M4 6a7 7 0 1 1-1 7M4 2v5h5"/><path v-else d="m6 3 10 7-10 7Z"/></svg>
-              {{ actionFeedback || (guideActive ? '重新体验' : '一键体验') }}
+            <button type="button" class="experience-start sc-action sc-action--ghost" title="恢复推荐算子和默认记录，返回数据准备；保留已上传数据" :class="{ 'is-confirmed': actionFeedback }" @click="startExperience">
+              <Check v-if="actionFeedback" aria-hidden="true" /><RotateCcw v-else aria-hidden="true" />
+              {{ actionFeedback || '恢复推荐方案' }}
             </button>
           </div>
           <p class="experience-desc">
@@ -324,7 +326,7 @@ watch(activeKey, key => { if (key === 'resource') void refreshClusters() })
     <div ref="motionRoot" class="experience-body">
       <div class="experience-step-content">
       <p v-if="liveMessage" role="status" class="experience-live-message">{{ liveMessage }}</p>
-      <KeepAlive :key="experienceSession" include="ExperienceMonitorStep,ExperienceResultStep" :max="2">
+      <KeepAlive :max="6">
       <ExperienceDataPrepStep
         ref="dataStep"
         v-if="activeKey === 'data'"
@@ -405,11 +407,9 @@ watch(activeKey, key => { if (key === 'resource') void refreshClusters() })
 .experience-head { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(420px, 1fr); align-items: center; gap: 40px; padding: clamp(26px, 2.2vw, 38px); }
 .experience-head-text { min-width: 0; }
 .experience-title-row { display: flex; align-items: center; flex-wrap: wrap; gap: 14px 20px; }
-.experience-start { display: inline-flex; justify-content: center; align-items: center; gap: 8px; min-width: 144px; min-height: 44px; padding: 0 16px; border: 1px solid var(--scnet-primary); border-radius: 6px; background: var(--scnet-primary); color: #fff; font-size: 15px; cursor: pointer; transition: var(--scnet-hover-transition), transform 180ms ease; }
-.experience-start svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
-.experience-start:hover { background: var(--el-color-primary-dark-2); box-shadow: 0 5px 12px rgb(11 91 211 / 22%); transform: translateY(-1px); }
-.experience-start:active { transform: translateY(1px) scale(.97); box-shadow: none; }
-.experience-start.is-confirmed { background: #26734d; border-color: #26734d; }
+.experience-start { min-width: 128px; min-height: 36px; font-size: 12px; }
+.experience-start svg { width: 15px; height: 15px; }
+.experience-start.is-confirmed { color: var(--scnet-success); }
 .experience-feedback { position: fixed; top: 24px; left: 50%; transform: translateX(-50%); z-index: 3000; display: flex; gap: 12px; align-items: center; width: max-content; max-width: calc(100vw - 32px); padding: 16px 22px; border: 1px solid #cde3d6; border-radius: 10px; background: #fff; box-shadow: 0 8px 30px rgb(31 45 61 / 14%); pointer-events: none; }
 .experience-feedback > span { display: grid; place-items: center; flex: 0 0 30px; height: 30px; border-radius: 50%; background: #edf7f0; color: #26734d; }
 .experience-feedback strong { font-size: 15px; color: var(--scnet-text); }

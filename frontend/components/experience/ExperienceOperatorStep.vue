@@ -61,6 +61,22 @@ const ordered = computed(() => {
 const listFrame = ref<HTMLElement>()
 useSelectionFeedback(listFrame, computed(() => props.chosenIds))
 const selectedItems = computed(() => props.operators.filter(operator => chosenSet.value.has(operator.name)))
+const selectedFrame = ref<HTMLElement>()
+let chipResize: Animation | undefined
+watch(() => props.chosenIds.join('\n'), async () => {
+  const frame = selectedFrame.value
+  if (!frame) return
+  const from = frame.getBoundingClientRect().height
+  await nextTick()
+  if (selectedFrame.value !== frame) return
+  chipResize?.cancel()
+  const to = frame.firstElementChild?.getBoundingClientRect().height ?? 0
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+  chipResize = frame.animate([{ height: `${from}px` }, { height: `${to}px` }], {
+    duration: 260, easing: 'cubic-bezier(.2,.7,.2,1)',
+  })
+})
+onBeforeUnmount(() => chipResize?.cancel())
 let resizeAnimation: Animation | undefined
 watch(() => ordered.value.map(operator => operator.name).join('\n'), async () => {
   const frame = listFrame.value
@@ -128,12 +144,10 @@ function memoryText(memoryMb: number): string {
         <span class="operator-action-status" role="status">{{ actionFeedback === 'recommended' ? '已采用场景推荐算子' : actionFeedback === 'cleared' ? '已清空算子选择' : '' }}</span>
       </div>
     </div>
-    <div class="operator-selected-frame" :class="{ 'has-selection': chosenCount > 0 }">
-    <div>
-    <TransitionGroup name="selected-chip" tag="div" class="operator-selected-chips" aria-label="已选算子">
+    <div ref="selectedFrame" class="operator-selected-frame" :class="{ 'has-selection': chosenCount > 0 }">
+    <TransitionGroup name="selected-chip" tag="div" class="operator-selected-chips" aria-label="已选算子" @before-leave="positionLeavingItem" @after-leave="clearItemPosition" @leave-cancelled="clearItemPosition" @before-enter="clearItemPosition">
       <button v-for="operator in selectedItems" :key="operator.name" type="button" class="selected-chip" :disabled="submitting" :aria-label="'取消选择：' + displayName(operator)" @click="toggleOperator(operator)"><Check :size="13" aria-hidden="true" />{{ displayName(operator) }}<X :size="13" class="chip-remove" aria-hidden="true" /></button>
     </TransitionGroup>
-    </div>
     </div>
     <p v-if="showSubmitPanel" class="operator-submit-panel" role="alert">{{ props.submittedMessage }}</p>
     <p v-if="query.trim()" class="operator-search-result" role="status">找到 {{ ordered.length }} 个匹配算子</p>
