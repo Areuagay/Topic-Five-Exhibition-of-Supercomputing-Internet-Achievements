@@ -79,7 +79,7 @@ const scenarioPending = ref(false)
 
 function selectScenario(id: string): void {
   if (id === selectedScenarioId.value) return
-  const { step, run, ...query } = route.query
+  const { step, run, plan, ...query } = route.query
   router.push({ query: { ...query, scenario: id } })
 }
 

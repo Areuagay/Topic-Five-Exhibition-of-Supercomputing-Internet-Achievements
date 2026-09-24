@@ -2,7 +2,8 @@
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useExperienceNavigation } from '~/composables/useExperienceNavigation'
 import { useExperienceMotion } from '~/composables/useExperienceMotion'
-import { ArrowLeft, ArrowRight, LoaderCircle, RotateCcw, Check } from '@lucide/vue'
+import { ArrowLeft, ArrowRight, LoaderCircle, RotateCcw, Check, LockKeyhole } from '@lucide/vue'
+import { hasSubmittedSelection } from '~/utils/experience-navigation'
 import { useSlidingHighlight } from '~/composables/useSlidingHighlight'
 import ExperienceDataPrepStep from './ExperienceDataPrepStep.vue'
 import ExperienceResourceStep from './ExperienceResourceStep.vue'
@@ -92,11 +93,21 @@ function refreshRuns(): Promise<void> {
 }
 
 const scenarioRuns = computed(() => (runs.value ?? []).filter((run) => run.scenario_id === props.scenarioId))
-const { activeKey, selectedRunId, navigate } = useExperienceNavigation(props.domain, props.scenarioId, scenarioRuns)
+const submittedPlan = useRoute().query.plan
+const restoredRun = scenarioRuns.value.find(run => run.run_id === submittedPlan && run.origin === 'runtime')
+const submittedRunId = useState<string>(`experience-submitted-${props.domain}-${props.scenarioId}`, () => restoredRun?.run_id ?? '')
+const chosenOperatorIds = useState<string[] | null>(`experience-operators-selection-${props.domain}-${props.scenarioId}`, () => restoredRun?.selected_operator_ids ?? null)
+const workflowAllowed = computed(() => hasSubmittedSelection(chosenOperatorIds.value ?? [], scenarioRuns.value.find(run => run.run_id === submittedRunId.value)))
+const { activeKey, selectedRunId, navigate } = useExperienceNavigation(props.domain, props.scenarioId, scenarioRuns, workflowAllowed, submittedRunId)
+watch(workflowAllowed, allowed => {
+  if (!allowed && submittedRunId.value) {
+    submittedRunId.value = ''
+    navigate(activeKey.value, selectedRunId.value, true)
+  }
+})
 
 const supportedClusters = computed(() => props.detail?.supported_clusters ?? [])
 const selectedOperators = computed(() => props.detail?.operators ?? [])
-const chosenOperatorIds = useState<string[] | null>(`experience-operators-selection-${props.domain}-${props.scenarioId}`, () => null)
 const chosenOperators = computed(() => (operators.value ?? []).filter((item) => chosenOperatorIds.value?.includes(item.name)))
 const guideActive = useState<boolean>(`experience-guide-${props.domain}-${props.scenarioId}`, () => false)
 const guideBar = ref<HTMLElement>()
@@ -111,11 +122,12 @@ const guideInstructions: Record<string, string> = {
   monitor: '选择一条运行记录，查看状态和进度。',
   result: '已到达最后一步，查看所选记录的图表与成果文件。',
 }
-const guideSummary = computed(() => guideActive.value ? guideInstructions[activeKey.value] : activeStep.value.summary)
+const guideSummary = computed(() => activeKey.value === 'operator' && !workflowAllowed.value ? '选择算子并提交后，即可进入流程编排。' : guideActive.value ? guideInstructions[activeKey.value] : activeStep.value.summary)
 
 async function startExperience(): Promise<void> {
   clearTimeout(feedbackTimer)
   actionFeedback.value = '已恢复推荐'
+  submittedRunId.value = ''
   const recommended = new Set(selectedOperators.value.flatMap((item) => [item.id, item.name]))
   chosenOperatorIds.value = (operators.value ?? [])
     .filter((item) => recommended.has(item.name) && ['registered', 'available'].includes(item.status))
@@ -137,7 +149,10 @@ const motionRoot = ref<HTMLElement>()
 const dataStep = ref<InstanceType<typeof ExperienceDataPrepStep>>()
 useExperienceMotion(motionRoot, computed(() => activeStep.value.index), props.animateOnMount !== false)
 const nextStep = computed(() => experienceSteps[activeStep.value.index] ?? null)
-const previousStep = computed(() => experienceSteps[activeStep.value.index - 2] ?? null)
+const previousStep = computed(() => {
+  const previous = experienceSteps[activeStep.value.index - 2]
+  return previous?.key === 'workflow' && !workflowAllowed.value ? experienceSteps[2] : previous ?? null
+})
 const { track: stepTrack, ready: stepHighlightReady, style: stepHighlightStyle } = useSlidingHighlight(computed(() => activeStep.value.index - 1))
 
 function selectStep(key: string): void {
@@ -184,7 +199,7 @@ async function loadRunResources(runId: string): Promise<void> {
 watch(selectedRunId, (runId) => { void loadRunResources(runId) }, { immediate: true })
 
 function handleInspect(runId: string): void {
-  navigate('workflow', runId)
+  void navigateTo(`/domains/${props.domain}/runs/${runId}`)
 }
 function handleResult(runId: string): void {
   navigate('result', runId)
@@ -229,6 +244,7 @@ async function handleOperatorSubmit(): Promise<void> {
     await refreshRuns()
     runWorkflow.value = result.workflow
     workflowRunId.value = result.run_id
+    submittedRunId.value = result.run_id
     navigate('workflow', result.run_id)
   } catch (error) {
     operatorSubmitMessage.value = (error as { data?: { message?: string } })?.data?.message || '算子提交失败，请稍后重试'
@@ -302,11 +318,14 @@ watch(activeKey, key => { if (key === 'resource') void refreshClusters() })
           data-highlight-item
           :class="{ 'is-active': step.key === activeKey }"
           :aria-current="step.key === activeKey ? 'step' : undefined"
+          :disabled="step.key === 'workflow' && !workflowAllowed"
+          :title="step.key === 'workflow' && !workflowAllowed ? '先选择算子并提交，再进入流程编排' : undefined"
           @click="selectStep(step.key)"
         >
           <span class="experience-step-index">{{ String(step.index).padStart(2, '0') }}</span>
           <span class="experience-step-text">
             <strong>{{ step.title }}</strong>
+            <LockKeyhole v-if="step.key === 'workflow' && !workflowAllowed" class="experience-step-lock" aria-hidden="true" />
           </span>
         </button>
       </nav>
@@ -460,6 +479,9 @@ watch(activeKey, key => { if (key === 'resource') void refreshClusters() })
 .experience-step-index { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: #f1f3f6; color: #687588; font: 500 12px var(--scnet-font-mono); }
 .experience-step.is-active .experience-step-index { color: #fff; background: var(--scnet-primary); }
 .experience-step-text strong { font-size: 16px; font-weight: 600; white-space: nowrap; }
+.experience-step-text { display: inline-flex; align-items: center; gap: 6px; }
+.experience-step-lock { width: 12px; height: 12px; flex-shrink: 0; }
+.experience-step:disabled { opacity: .55; cursor: not-allowed; }
 .experience-guide { display: grid; grid-template-columns: minmax(0, 1fr) 224px; align-items: center; gap: 20px; min-height: 72px; padding: 12px 24px; border-top: 1px solid var(--scnet-divider); background: #fbfcfe; }
 .experience-guide-line { display: flex; align-items: center; gap: 14px; min-width: 0; margin: 0; font-size: 16px; color: var(--scnet-text-secondary); }
 .experience-guide-progress { flex-shrink: 0; color: var(--scnet-primary); font-weight: 600; font-variant-numeric: tabular-nums; }

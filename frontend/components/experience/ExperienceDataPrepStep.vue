@@ -136,16 +136,17 @@ async function handleImport(): Promise<void> {
       </div>
       <div v-if="scenarioDatasets.length" class="exp-table-wrap dataset-table">
         <el-table :data="scenarioDatasets" size="default" :row-key="(row: DatasetItem) => row.dataset_id" :row-class-name="rowClass" :row-style="rowStyle">
-          <el-table-column label="数据集" min-width="240">
+          <el-table-column label="数据集" min-width="220">
             <template #default="{ row }"><div class="dataset-identity"><span class="dataset-file-icon" :class="`is-${String(row.format).toLowerCase()}`"><Database v-if="row.builtin" :size="18" aria-hidden="true" /><FileSpreadsheet v-else-if="row.format === 'CSV'" :size="18" aria-hidden="true" /><FileJson v-else-if="row.format === 'JSON'" :size="18" aria-hidden="true" /><FileText v-else :size="18" aria-hidden="true" /></span><div><div class="dataset-name">{{ row.name }}</div><span class="dataset-id">{{ row.dataset_id }} · {{ typeLabels[row.type] ?? row.type }}</span></div></div></template>
           </el-table-column>
-          <el-table-column label="格式" width="80"><template #default="{ row }"><span class="dataset-format">{{ row.format }}</span></template></el-table-column>
-          <el-table-column prop="grid" label="规模" min-width="120" class-name="mono" />
-          <el-table-column label="大小" width="100" class-name="mono"><template #default="{ row }">{{ formatBytes(row.size_bytes) }}</template></el-table-column>
-          <el-table-column label="来源" min-width="180" show-overflow-tooltip><template #default="{ row }"><span class="dataset-source">{{ row.uploaded ? row.source : '—' }}</span></template></el-table-column>
+          <el-table-column label="格式" width="70"><template #default="{ row }"><span class="dataset-format">{{ row.format }}</span></template></el-table-column>
+          <el-table-column prop="grid" label="规模" min-width="100" class-name="mono" />
+          <el-table-column label="大小" width="90" class-name="mono"><template #default="{ row }">{{ row.uploaded ? formatBytes(row.size_bytes) : '—' }}</template></el-table-column>
+          <el-table-column label="来源" min-width="150" show-overflow-tooltip><template #default="{ row }"><span class="dataset-source">{{ row.uploaded ? row.source : '—' }}</span></template></el-table-column>
           <el-table-column label="状态" width="100"><template #default="{ row }">
             <span class="dataset-state" :title="row.uploaded && row.updated_at ? '更新于 ' + formatTimestamp(row.updated_at) : undefined" :class="{ 'is-imported': row.imported, 'is-ready': row.uploaded, 'is-working': (uploadingId === row.dataset_id && uploadProgress < 100) || resettingId === row.dataset_id }"><LoaderCircle v-if="resettingId === row.dataset_id" class="is-spinning" aria-hidden="true" /><i v-else-if="uploadingId === row.dataset_id && uploadProgress < 100" class="dataset-state-dot is-transferring" aria-hidden="true" /><CheckCheck v-else-if="row.imported" aria-hidden="true" /><Check v-else-if="row.uploaded" aria-hidden="true" /><i v-else class="dataset-state-dot" aria-hidden="true" />{{ uploadingId === row.dataset_id && cancelling ? '已取消' : uploadingId === row.dataset_id && uploadProgress < 100 ? '上传中' : resettingId === row.dataset_id ? '移除中' : row.imported ? '已导入' : row.uploaded ? '就绪' : '待上传' }}</span>
           </template></el-table-column>
+          <el-table-column label="更新时间" width="150"><template #default="{ row }"><time class="dataset-updated" :datetime="row.uploaded ? row.updated_at : undefined">{{ row.uploaded && row.updated_at ? formatTimestamp(row.updated_at) : '—' }}</time></template></el-table-column>
           <el-table-column label="操作" width="190" align="right" header-align="right" fixed="right"><template #default="{ row }">
             <div class="dataset-operation-slot">
             <Transition name="upload-state">
@@ -207,6 +208,7 @@ async function handleImport(): Promise<void> {
 .exp-dataset-actions :deep(.el-button) { margin-left: 0; min-height: 36px; border-radius: 6px; }
 svg { width: 17px; height: 17px; margin-right: 5px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .dataset-source { white-space: nowrap; }
+.dataset-updated { font-size: 12px; color: #617289; white-space: nowrap; font-variant-numeric: tabular-nums; }
 .dataset-operation-slot { display: grid; align-items: center; width: 166px; height: 40px; position: relative; margin-left: auto; }
 .dataset-operation-slot > * { grid-area: 1 / 1; justify-self: end; }
 .dataset-operation-slot > button { min-width: 104px; }
