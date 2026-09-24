@@ -1,5 +1,5 @@
 import { computed, onMounted, watch, type Ref } from 'vue'
-import { resolveExperienceLocation, type ExperienceLocation } from '~/utils/experience-navigation'
+import { resolveExperienceLocation, requiresSubmittedPlan, type ExperienceLocation } from '~/utils/experience-navigation'
 import type { Run } from '~/types'
 
 export function useExperienceNavigation(domain: string, scenarioId: string, runs: Ref<Run[]>, workflowAllowed?: Ref<boolean>, submittedRunId?: Ref<string>) {
@@ -12,8 +12,8 @@ export function useExperienceNavigation(domain: string, scenarioId: string, runs
   watch([() => route.fullPath, runs, () => workflowAllowed?.value], () => {
     if (!isCurrentScenario()) return
     saved.value = resolveExperienceLocation(route.query, saved.value, runs.value, workflowAllowed?.value ?? true)
-    if (import.meta.client && route.query.step === 'workflow' && saved.value.step === 'operator') {
-      void router.replace({ query: { ...route.query, step: 'operator' } })
+    if (import.meta.client && requiresSubmittedPlan(route.query.step) && saved.value.step === 'operator') {
+      void router.replace({ query: { ...route.query, step: 'operator', plan: undefined } })
     }
   }, { immediate: true })
 

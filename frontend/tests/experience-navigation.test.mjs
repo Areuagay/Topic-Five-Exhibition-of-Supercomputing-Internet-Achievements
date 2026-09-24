@@ -17,11 +17,15 @@ test('a fresh or empty scenario has a deterministic safe initial record', () => 
   assert.deepEqual(resolveExperienceLocation({ step: 'result', run: 'missing' }, { step: 'data', runId: '' }, []), { step: 'result', runId: '' })
 })
 
-test('workflow entry requires a submitted selection, including URL and saved navigation', () => {
-  assert.equal(resolveExperienceLocation({ step: 'workflow' }, { step: 'data', runId: 'b' }, runs, false).step, 'operator')
-  assert.equal(resolveExperienceLocation({}, { step: 'workflow', runId: 'b' }, runs, false).step, 'operator')
-  assert.equal(resolveExperienceLocation({ step: 'workflow' }, { step: 'data', runId: 'b' }, runs, true).step, 'workflow')
-  assert.equal(resolveExperienceLocation({ step: 'monitor' }, { step: 'data', runId: 'b' }, runs, false).step, 'monitor')
+test('all execution steps require submission, including URL and saved/history navigation', () => {
+  for (const step of ['workflow', 'monitor', 'result']) {
+    assert.equal(resolveExperienceLocation({ step }, { step: 'data', runId: 'b' }, runs, false).step, 'operator')
+    assert.equal(resolveExperienceLocation({}, { step, runId: 'b' }, runs, false).step, 'operator')
+    assert.equal(resolveExperienceLocation({ step }, { step: 'data', runId: 'b' }, runs, true).step, step)
+  }
+  for (const step of ['data', 'resource', 'operator']) {
+    assert.equal(resolveExperienceLocation({ step }, { step: 'data', runId: 'b' }, runs, false).step, step)
+  }
 })
 
 test('changing selected operators invalidates the submitted plan; ordering does not', () => {

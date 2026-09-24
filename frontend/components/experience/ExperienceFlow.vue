@@ -3,7 +3,7 @@ import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useExperienceNavigation } from '~/composables/useExperienceNavigation'
 import { useExperienceMotion } from '~/composables/useExperienceMotion'
 import { ArrowLeft, ArrowRight, LoaderCircle, RotateCcw, Check, LockKeyhole } from '@lucide/vue'
-import { hasSubmittedSelection } from '~/utils/experience-navigation'
+import { hasSubmittedSelection, requiresSubmittedPlan } from '~/utils/experience-navigation'
 import { useSlidingHighlight } from '~/composables/useSlidingHighlight'
 import ExperienceDataPrepStep from './ExperienceDataPrepStep.vue'
 import ExperienceResourceStep from './ExperienceResourceStep.vue'
@@ -122,7 +122,7 @@ const guideInstructions: Record<string, string> = {
   monitor: '选择一条运行记录，查看状态和进度。',
   result: '已到达最后一步，查看所选记录的图表与成果文件。',
 }
-const guideSummary = computed(() => activeKey.value === 'operator' && !workflowAllowed.value ? '选择算子并提交后，即可进入流程编排。' : guideActive.value ? guideInstructions[activeKey.value] : activeStep.value.summary)
+const guideSummary = computed(() => activeKey.value === 'operator' && !workflowAllowed.value ? '提交算子后，查看任务执行进度。' : guideActive.value ? guideInstructions[activeKey.value] : activeStep.value.summary)
 
 async function startExperience(): Promise<void> {
   clearTimeout(feedbackTimer)
@@ -149,10 +149,7 @@ const motionRoot = ref<HTMLElement>()
 const dataStep = ref<InstanceType<typeof ExperienceDataPrepStep>>()
 useExperienceMotion(motionRoot, computed(() => activeStep.value.index), props.animateOnMount !== false)
 const nextStep = computed(() => experienceSteps[activeStep.value.index] ?? null)
-const previousStep = computed(() => {
-  const previous = experienceSteps[activeStep.value.index - 2]
-  return previous?.key === 'workflow' && !workflowAllowed.value ? experienceSteps[2] : previous ?? null
-})
+const previousStep = computed(() => experienceSteps[activeStep.value.index - 2] ?? null)
 const { track: stepTrack, ready: stepHighlightReady, style: stepHighlightStyle } = useSlidingHighlight(computed(() => activeStep.value.index - 1))
 
 function selectStep(key: string): void {
@@ -318,14 +315,14 @@ watch(activeKey, key => { if (key === 'resource') void refreshClusters() })
           data-highlight-item
           :class="{ 'is-active': step.key === activeKey }"
           :aria-current="step.key === activeKey ? 'step' : undefined"
-          :disabled="step.key === 'workflow' && !workflowAllowed"
-          :title="step.key === 'workflow' && !workflowAllowed ? '先选择算子并提交，再进入流程编排' : undefined"
+          :disabled="requiresSubmittedPlan(step.key) && !workflowAllowed"
+          :title="requiresSubmittedPlan(step.key) && !workflowAllowed ? '先选择算子并提交，再进入' + step.title : undefined"
           @click="selectStep(step.key)"
         >
           <span class="experience-step-index">{{ String(step.index).padStart(2, '0') }}</span>
           <span class="experience-step-text">
             <strong>{{ step.title }}</strong>
-            <LockKeyhole v-if="step.key === 'workflow' && !workflowAllowed" class="experience-step-lock" aria-hidden="true" />
+            <LockKeyhole v-if="requiresSubmittedPlan(step.key) && !workflowAllowed" class="experience-step-lock" aria-hidden="true" />
           </span>
         </button>
       </nav>

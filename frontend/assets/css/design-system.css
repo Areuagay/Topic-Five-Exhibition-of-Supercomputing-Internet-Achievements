@@ -93,7 +93,10 @@
 .experience-start-icon { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 7px; background: #eaf1fd; color: #3565b6; transition: background-color 180ms ease; }
 .embedded-shell .experience-start.sc-action:enabled:hover { background: #f9fbff; border-color: #7fa5de; color: #214f97; box-shadow: 0 4px 10px #254f8718; }
 .embedded-shell .experience-start.sc-action:enabled:hover .experience-start-icon svg { transform: rotate(-35deg); }
-.embedded-shell .experience-start.sc-action.is-confirmed { border-color: #b7dcca; color: #20765c; background: #f4fbf7; }
+.embedded-shell .experience-start.sc-action.is-confirmed { border-color: #b7dcca; color: #20765c; background: #f4fbf7; box-shadow: 0 2px 4px #24785810; }
+.embedded-shell .experience-start.sc-action.is-confirmed:enabled:hover { border-color: #87bda3; color: #1b684e; background: #eaf6ef; box-shadow: 0 4px 10px #24785818; }
+.embedded-shell .experience-start.sc-action.is-confirmed:enabled:active { border-color: #78af94; color: #1b684e; background: #dceee3; box-shadow: none; }
+.embedded-shell .experience-start.sc-action.is-confirmed:focus-visible { outline-color: #278361; }
 .experience-start.is-confirmed .experience-start-icon { background: #e0f2e8; color: #20765c; }
 .embedded-shell .experience-start.sc-action.is-confirmed:enabled:hover .experience-start-icon svg { transform: none; }
 .embedded-shell .dataset-upload-button.sc-action {
