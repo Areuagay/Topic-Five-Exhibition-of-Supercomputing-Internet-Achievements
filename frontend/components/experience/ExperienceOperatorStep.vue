@@ -29,10 +29,12 @@ function toggleOperator(operator: Operator): void {
   else if (isAvailable(operator)) emit('update:chosenIds', [...props.chosenIds, operator.name])
 }
 function useRecommended(): void {
+  if (submitting.value) return
   emit('update:chosenIds', props.operators.filter((item) => isRecommended(item) && isAvailable(item)).map((item) => item.name))
   showActionFeedback('recommended')
 }
 function clearSelection(): void {
+  if (submitting.value) return
   emit('update:chosenIds', [])
   showActionFeedback('cleared')
 }
@@ -148,11 +150,11 @@ function memoryText(memoryMb: number): string {
     <div class="operator-selection-bar">
       <span role="status">本次已选 <span class="selection-count-slot"><Transition name="selection-count"><strong :key="chosenCount" class="selection-count">{{ chosenCount }}</strong></Transition></span> 个算子</span>
       <div class="operator-batch-actions">
-        <button type="button" class="operator-batch-button is-primary sc-action sc-action--soft" :class="{ 'is-confirmed': actionFeedback === 'recommended' }" :disabled="!recommendedCount" @click="useRecommended">
+        <button type="button" class="operator-batch-button is-primary sc-action sc-action--soft" :class="{ 'is-confirmed': actionFeedback === 'recommended' }" :disabled="submitting || !recommendedCount" @click="useRecommended">
           <span class="operator-batch-icon" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="m4 10 4 4 8-9" /></svg></span>
           <span class="operator-batch-label"><span :class="{ 'is-hidden': actionFeedback === 'recommended' }">采用场景推荐</span><span v-if="actionFeedback === 'recommended'" class="operator-batch-feedback">已采用推荐</span></span>
         </button>
-        <button type="button" class="operator-batch-button is-clear sc-action sc-action--ghost" :class="{ 'is-confirmed': actionFeedback === 'cleared' }" :disabled="!chosenCount" @click="clearSelection">
+        <button type="button" class="operator-batch-button is-clear sc-action sc-action--ghost" :class="{ 'is-confirmed': actionFeedback === 'cleared' }" :disabled="submitting || !chosenCount" @click="clearSelection">
           <span class="operator-batch-icon" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M4 8a6 6 0 1 1 0 5M4 3v5h5" /></svg></span>
           <span class="operator-batch-label"><span :class="{ 'is-hidden': actionFeedback === 'cleared' }">清空选择</span><span v-if="actionFeedback === 'cleared'" class="operator-batch-feedback">已清空</span></span>
         </button>
@@ -210,7 +212,7 @@ function memoryText(memoryMb: number): string {
 
 <style scoped>
 .operator-panel { min-width: 0; overflow: hidden; border: 1px solid #e1e6ed; border-radius: 12px; background: #fff; box-shadow: 0 2px 7px rgb(31 45 61 / 4.5%); }
-.operator-selection-bar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; padding: 12px 30px; font-size: 13px; color: var(--scnet-text-secondary); }
+.operator-selection-bar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; padding: 12px 24px; font-size: 13px; color: var(--scnet-text-secondary); }
 .operator-selection-bar strong { color: var(--scnet-primary); font-family: var(--scnet-font-mono); }
 .operator-batch-actions { position: relative; display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
 .operator-batch-icon { display: inline-flex; width: 16px; height: 16px; flex: 0 0 16px; }
@@ -238,13 +240,13 @@ function memoryText(memoryMb: number): string {
 .operator-select-button[aria-pressed="true"] .operator-icon-add { opacity: 0; transform: scale(.6); }
 .operator-select-button[aria-pressed="true"] .operator-icon-check { opacity: 1; transform: scale(1); }
 .operator-list .operator-item.is-chosen { border-color: #99bbeb; }
-.operator-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; padding: 26px 30px; }
+.operator-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; padding: 20px 24px; }
 .operator-header h3 { margin: 0; font-size: 21px; font-weight: 650; }
 .operator-header p { margin: 6px 0 0; color: var(--scnet-text-secondary); font-size: 14px; }
 .operator-header .operator-count { margin: 0; font-size: 13px; }
 .operator-count strong { margin-left: 10px; color: var(--scnet-primary); font: 600 26px var(--scnet-font-mono); }
 .operator-count span { color: #687588; }
-.operator-toolbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin: 0 30px; padding: 18px 0; border-block: 1px solid var(--scnet-divider); }
+.operator-toolbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin: 0 24px; padding: 12px 0; border-block: 1px solid var(--scnet-divider); }
 .operator-filters { display: flex; flex-wrap: wrap; gap: 6px; }
 .operator-filters button { min-height: 44px; padding: 0 14px; border: 0; border-radius: 6px; background: transparent; color: var(--scnet-text-secondary); cursor: pointer; }
 .operator-filters button[aria-pressed="true"] { background: var(--scnet-primary-soft); color: var(--scnet-primary); font-weight: 600; }
@@ -259,8 +261,8 @@ function memoryText(memoryMb: number): string {
 .operator-search:focus-within { outline: 2px solid var(--scnet-primary); outline-offset: 2px; }
 .operator-search-result { margin: 18px 30px 0; color: var(--scnet-text-secondary); font-size: 13px; }
 .operator-list-frame { overflow: hidden; overflow-anchor: none; }
-.operator-list { position: relative; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; gap: 20px; padding: 4px 30px 30px; }
-.operator-item { box-sizing: border-box; position: relative; isolation: isolate; display: flex; flex-direction: column; min-width: 0; padding: 24px; border: 1px solid var(--scnet-border); border-radius: 9px; background: #fff; transition: var(--scnet-hover-transition); }
+.operator-list { position: relative; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; gap: 16px; padding: 4px 24px 24px; }
+.operator-item { box-sizing: border-box; position: relative; isolation: isolate; display: flex; flex-direction: column; min-width: 0; padding: 20px; border: 1px solid var(--scnet-border); border-radius: 9px; background: #fff; transition: var(--scnet-hover-transition); }
 .operator-filter-move { transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1); }
 .operator-filter-enter-active { transition: opacity 240ms ease, transform 320ms cubic-bezier(0.22, 1, 0.36, 1); }
 .operator-filter-leave-active { position: absolute; pointer-events: none; transition: opacity 180ms ease, transform 220ms ease; }
@@ -278,17 +280,17 @@ function memoryText(memoryMb: number): string {
 .operator-optional { padding: 1px 7px; border: 1px solid #e1e6ed; border-radius: 4px; color: #687588; background: #f6f8fb; font-size: 11px; white-space: nowrap; }
 .operator-id { margin: 3px 0 0; color: #687588; font: 12px/1.7 var(--scnet-font-mono); overflow-wrap: anywhere; }
 .operator-id span { margin-left: 10px; }
-.operator-description { min-height: 3.5em; margin: 18px 0; color: var(--scnet-text-secondary); font-size: 15px; line-height: 1.75; }
+.operator-description { min-height: 1.75em; margin: 12px 0; color: var(--scnet-text-secondary); font-size: 15px; line-height: 1.75; }
 .operator-status { flex: 0 0 auto; color: var(--scnet-text-secondary); font-size: 12px; }
 .operator-status.is-ready { color: #49735d; }
 .operator-bottom { margin-top: auto; }
-.operator-requirements { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; padding: 16px 0; margin: 0; border-block: 1px solid #e3eaf4; }
+.operator-requirements { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; padding: 12px 0; margin: 0; border-block: 1px solid #e3eaf4; }
 .operator-requirements > div { display: grid; align-content: start; gap: 6px; min-width: 0; }
 .operator-requirements dt { font-size: 12px; color: #687588; }
 .operator-requirements dd { margin: 0; font: 500 14px var(--scnet-font-mono); overflow-wrap: anywhere; }
 .operator-requirements small { font: 12px var(--scnet-font-sans); }
 .operator-runtime { text-transform: capitalize; }
-.operator-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 16px; }
+.operator-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px; }
 .operator-detail-trigger { padding-inline: 8px; }
 .operator-detail-trigger .detail-arrow { width: 13px; opacity: .5; transition: transform 220ms ease, opacity 220ms ease; }
 .operator-detail-trigger:hover .detail-arrow { transform: translate(2px, -2px); opacity: 1; }

@@ -25,10 +25,10 @@ defineProps<{
 
 <style scoped>
 .domain-surface-header {
-  min-height: 92px;
+  min-height: 76px;
   display: flex;
   align-items: center;
-  padding: 18px clamp(22px, 2.1vw, 36px);
+  padding: 14px clamp(22px, 2.1vw, 36px);
   border-bottom: 1px solid var(--scnet-divider);
   background: #fff;
 }

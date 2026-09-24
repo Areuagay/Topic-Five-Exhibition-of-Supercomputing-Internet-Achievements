@@ -172,7 +172,7 @@ function clusterName(id: string): string {
 .scenario-detail-region {
   display: grid;
   align-items: start;
-  padding: clamp(22px, 2.5vw, 40px);
+  padding: clamp(20px, 1.7vw, 28px);
 }
 
 .scenario-detail-region > :deep(*) { grid-area: 1 / 1; min-width: 0; }

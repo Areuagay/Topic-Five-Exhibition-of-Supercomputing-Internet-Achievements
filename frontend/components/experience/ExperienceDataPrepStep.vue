@@ -136,18 +136,18 @@ async function handleImport(): Promise<void> {
       </div>
       <div v-if="scenarioDatasets.length" class="exp-table-wrap dataset-table">
         <el-table :data="scenarioDatasets" size="default" :row-key="(row: DatasetItem) => row.dataset_id" :row-class-name="rowClass" :row-style="rowStyle">
-          <el-table-column label="数据集" min-width="220">
+          <el-table-column label="数据集" min-width="210" class-name="dataset-identity-cell">
             <template #default="{ row }"><div class="dataset-identity"><span class="dataset-file-icon" :class="`is-${String(row.format).toLowerCase()}`"><Database v-if="row.builtin" :size="18" aria-hidden="true" /><FileSpreadsheet v-else-if="row.format === 'CSV'" :size="18" aria-hidden="true" /><FileJson v-else-if="row.format === 'JSON'" :size="18" aria-hidden="true" /><FileText v-else :size="18" aria-hidden="true" /></span><div><div class="dataset-name">{{ row.name }}</div><span class="dataset-id">{{ row.dataset_id }} · {{ typeLabels[row.type] ?? row.type }}</span></div></div></template>
           </el-table-column>
-          <el-table-column label="格式" width="70"><template #default="{ row }"><span class="dataset-format">{{ row.format }}</span></template></el-table-column>
-          <el-table-column prop="grid" label="规模" min-width="100" class-name="mono" />
-          <el-table-column label="大小" width="90" class-name="mono"><template #default="{ row }">{{ row.uploaded ? formatBytes(row.size_bytes) : '—' }}</template></el-table-column>
-          <el-table-column label="来源" min-width="150" show-overflow-tooltip><template #default="{ row }"><span class="dataset-source">{{ row.uploaded ? row.source : '—' }}</span></template></el-table-column>
-          <el-table-column label="状态" width="100"><template #default="{ row }">
+          <el-table-column label="格式" width="62" class-name="dataset-format-cell"><template #default="{ row }"><span class="dataset-format">{{ row.format }}</span></template></el-table-column>
+          <el-table-column prop="grid" label="规模" min-width="150" class-name="mono dataset-grid-cell" />
+          <el-table-column label="大小" width="80" class-name="mono dataset-size-cell"><template #default="{ row }">{{ row.uploaded ? formatBytes(row.size_bytes) : '—' }}</template></el-table-column>
+          <el-table-column label="来源" min-width="140" class-name="dataset-source-cell" show-overflow-tooltip><template #default="{ row }"><span class="dataset-source">{{ row.uploaded ? row.source : '—' }}</span></template></el-table-column>
+          <el-table-column label="状态" width="96" class-name="dataset-state-cell"><template #default="{ row }">
             <span class="dataset-state" :title="row.uploaded && row.updated_at ? '更新于 ' + formatTimestamp(row.updated_at) : undefined" :class="{ 'is-imported': row.imported, 'is-ready': row.uploaded, 'is-working': (uploadingId === row.dataset_id && uploadProgress < 100) || resettingId === row.dataset_id }"><LoaderCircle v-if="resettingId === row.dataset_id" class="is-spinning" aria-hidden="true" /><i v-else-if="uploadingId === row.dataset_id && uploadProgress < 100" class="dataset-state-dot is-transferring" aria-hidden="true" /><CheckCheck v-else-if="row.imported" aria-hidden="true" /><Check v-else-if="row.uploaded" aria-hidden="true" /><i v-else class="dataset-state-dot" aria-hidden="true" />{{ uploadingId === row.dataset_id && cancelling ? '已取消' : uploadingId === row.dataset_id && uploadProgress < 100 ? '上传中' : resettingId === row.dataset_id ? '移除中' : row.imported ? '已导入' : row.uploaded ? '就绪' : '待上传' }}</span>
           </template></el-table-column>
-          <el-table-column label="更新时间" width="150"><template #default="{ row }"><time class="dataset-updated" :datetime="row.uploaded ? row.updated_at : undefined">{{ row.uploaded && row.updated_at ? formatTimestamp(row.updated_at) : '—' }}</time></template></el-table-column>
-          <el-table-column label="操作" width="190" align="right" header-align="right" fixed="right"><template #default="{ row }">
+          <el-table-column label="更新时间" width="144" class-name="dataset-time-cell"><template #default="{ row }"><time class="dataset-updated" :datetime="row.uploaded ? row.updated_at : undefined">{{ row.uploaded && row.updated_at ? formatTimestamp(row.updated_at) : '—' }}</time></template></el-table-column>
+          <el-table-column label="操作" width="152" class-name="dataset-actions-cell" align="right" header-align="right" fixed="right"><template #default="{ row }">
             <div class="dataset-operation-slot">
             <Transition name="upload-state">
             <div v-if="uploadingId === row.dataset_id" key="transferring" class="dataset-transfer" :class="{ 'is-complete': uploadProgress === 100, 'is-cancelled': cancelling }" aria-label="上传进度">
@@ -184,7 +184,7 @@ async function handleImport(): Promise<void> {
 </template>
 
 <style scoped>
-.dataset-summary { display: flex; align-items: center; gap: 14px; min-height: 52px; padding: 10px 28px; background: #fafbfd; color: #617289; font-size: 12px; border-bottom: 1px solid var(--scnet-divider); }
+.dataset-summary { display: flex; align-items: center; gap: 14px; min-height: 44px; padding: 8px 24px; background: #fafbfd; color: #617289; font-size: 12px; border-bottom: 1px solid var(--scnet-divider); }
 .dataset-notice-slot { display: grid; flex: 1; min-width: 0; overflow: hidden; }
 .dataset-notice { grid-area: 1 / 1; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .dataset-notice.has-message { color: var(--scnet-text-secondary); }
@@ -208,12 +208,15 @@ async function handleImport(): Promise<void> {
 .exp-dataset-actions :deep(.el-button) { margin-left: 0; min-height: 36px; border-radius: 6px; }
 svg { width: 17px; height: 17px; margin-right: 5px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .dataset-source { white-space: nowrap; }
+.dataset-table :deep(.dataset-grid-cell .cell) { white-space: nowrap; font-size: 12px; }
+.dataset-table :deep(.el-table__cell .cell) { padding-inline: 8px; }
+.dataset-table :deep(.dataset-size-cell .cell) { white-space: nowrap; }
 .dataset-updated { font-size: 12px; color: #617289; white-space: nowrap; font-variant-numeric: tabular-nums; }
-.dataset-operation-slot { display: grid; align-items: center; width: 166px; height: 40px; position: relative; margin-left: auto; }
+.dataset-operation-slot { display: grid; align-items: center; width: 128px; height: 40px; position: relative; margin-left: auto; }
 .dataset-operation-slot > * { grid-area: 1 / 1; justify-self: end; }
 .dataset-operation-slot > button { min-width: 104px; }
 .dataset-operation-slot > .exp-dataset-actions { width: 100%; justify-content: space-between; align-items: center; }
-.dataset-transfer { display: flex; align-items: center; justify-content: flex-end; gap: 12px; width: 166px; height: 36px; }
+.dataset-transfer { display: flex; align-items: center; justify-content: flex-end; gap: 6px; width: 128px; height: 36px; }
 .dataset-transfer-meter { display: flex; align-items: baseline; justify-content: flex-end; gap: 5px; min-width: 0; }
 .dataset-transfer-meter strong { color: #247858; font: 600 14px/1 var(--scnet-font-mono); font-variant-numeric: tabular-nums; }
 .dataset-transfer-meter small { margin-left: 2px; font-size: 11px; font-weight: 500; }
@@ -283,7 +286,7 @@ button:focus-visible { outline: 2px solid var(--scnet-primary); outline-offset: 
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 10px;
-  padding: 24px 30px;
+  padding: 20px 24px;
   border-bottom: 1px solid var(--scnet-divider);
 }
 
@@ -321,7 +324,7 @@ button:focus-visible { outline: 2px solid var(--scnet-primary); outline-offset: 
 }
 
 .exp-table-wrap {
-  padding: 14px 30px 26px;
+  padding: 12px 16px 18px;
 }
 
 .exp-table-wrap :deep(.el-table) {
@@ -387,13 +390,45 @@ button:focus-visible { outline: 2px solid var(--scnet-primary); outline-offset: 
 }
 
 @media (max-width: 760px) {
-  .dataset-summary { display: grid; grid-template-columns: 1fr auto; padding: 10px 20px; gap: 4px 12px; min-height: 72px; }
+  .dataset-summary { display: grid; grid-template-columns: 1fr; padding: 10px 16px; gap: 8px; }
   .dataset-notice-slot { grid-column: 1; }
-  .dataset-imported { grid-column: 2; grid-row: 1; }
+  .dataset-notice { white-space: normal; line-height: 1.6; }
+  .dataset-imported { grid-column: 1; margin-left: 0; }
   .exp-table-wrap {
     padding: 12px;
   }
   .exp-block-head { padding: 20px; }
   .exp-scenario-details > summary span { display: block; margin: 4px 0 0; }
+  /* Keep one set of upload controls and progress state at every viewport size. */
+  .dataset-table :deep(.el-table__header-wrapper),
+  .dataset-table :deep(colgroup),
+  .dataset-table :deep(.el-scrollbar__bar) { display: none; }
+  .dataset-table :deep(.el-table__body),
+  .dataset-table :deep(.el-table__body tbody),
+  .dataset-table :deep(.el-scrollbar__view) { display: block; width: 100% !important; min-width: 0 !important; }
+  .dataset-table :deep(.el-table__row) { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); padding: 16px 4px; gap: 10px 12px; border-bottom: 1px solid var(--scnet-divider); }
+  .dataset-table :deep(.el-table__row:last-child) { border-bottom: 0; }
+  .dataset-table :deep(.el-table__body tr > td.el-table__cell) { position: static !important; display: block; padding: 0; width: auto; min-width: 0; height: auto; border: 0; background: transparent !important; }
+  .dataset-table :deep(.el-table__cell .cell) { width: auto !important; padding: 0; overflow: visible; line-height: 1.6; }
+  .dataset-table :deep(.el-table__cell::before), .dataset-table :deep(.el-table__cell::after) { display: none; }
+  .dataset-table :deep(.dataset-identity-cell), .dataset-table :deep(.dataset-source-cell),
+  .dataset-table :deep(.dataset-time-cell), .dataset-table :deep(.dataset-actions-cell) { grid-column: 1 / -1; }
+  .dataset-table :deep(.dataset-identity-cell) { padding-bottom: 6px !important; }
+  .dataset-table :deep(.dataset-identity-cell .cell) { white-space: normal; }
+  .dataset-table :deep(.dataset-grid-cell) { grid-column: 1 / -1; }
+  .dataset-table :deep(.dataset-format-cell .cell)::before { content: '格式'; }
+  .dataset-table :deep(.dataset-grid-cell .cell)::before { content: '规模'; }
+  .dataset-table :deep(.dataset-size-cell .cell)::before { content: '大小'; }
+  .dataset-table :deep(.dataset-source-cell .cell)::before { content: '来源'; }
+  .dataset-table :deep(.dataset-time-cell .cell)::before { content: '更新时间'; }
+  .dataset-table :deep(.el-table__cell .cell)::before { display: inline-block; flex: 0 0 4em; min-width: 4em; margin-right: 8px; color: #6a7b91; font: 12px/1.6 var(--scnet-font-sans); }
+  .dataset-table :deep(.dataset-size-cell) { grid-column: 1; grid-row: 4; }
+  .dataset-table :deep(.dataset-state-cell) { grid-column: 2; grid-row: 4; text-align: right; }
+  .dataset-table :deep(.dataset-actions-cell) { padding-top: 4px !important; }
+  .dataset-table :deep(.dataset-source-cell .cell) { display: flex; align-items: baseline; }
+  .dataset-source { min-width: 0; white-space: normal; overflow-wrap: anywhere; }
+  .dataset-operation-slot, .dataset-transfer { width: 100%; }
+  .dataset-name { font-size: 14px; }
+  .dataset-id { font-size: 11px; overflow-wrap: anywhere; }
 }
 </style>

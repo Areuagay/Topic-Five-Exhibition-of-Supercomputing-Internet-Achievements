@@ -63,14 +63,14 @@
 
 /* A single working area with a quiet process rail, instead of stacked navigation cards. */
 @media (min-width: 1200px) {
-  .experience-flow.experience-polished { display: grid; grid-template-columns: 164px minmax(0, 1fr); grid-template-areas: 'context context' 'steps guide' 'steps content'; align-items: start; gap: 18px 24px; }
+  .experience-flow.experience-polished { display: grid; grid-template-columns: 148px minmax(0, 1fr); grid-template-areas: 'context context' 'steps guide' 'steps content'; align-items: start; gap: 14px 20px; }
   .experience-polished.experience-flow .experience-overview { display: contents; }
-  .experience-polished.experience-flow .experience-head { grid-area: context; padding: 4px 0 30px; border-bottom: 1px solid #cbd6e5; box-shadow: 0 1px 0 #fff; margin-bottom: 12px; }
+  .experience-polished.experience-flow .experience-head { grid-area: context; padding: 0 0 20px; border-bottom: 1px solid #cbd6e5; box-shadow: 0 1px 0 #fff; margin-bottom: 0; }
   .experience-polished.experience-flow .experience-steps { grid-area: steps; display: flex; flex-direction: column; align-items: stretch; gap: 6px; padding: 0 12px 0 0; border: 0; border-right: 1px solid #d8e1ed; background: transparent; position: sticky; top: 24px; }
   .experience-polished .experience-steps .experience-step { justify-content: flex-start; min-height: 48px; padding: 0 12px; gap: 10px; }
   .experience-polished .experience-steps .experience-step-text strong { font-size: 13px; }
   .experience-polished .experience-steps .scnet-sliding-highlight { background: #eaf0f8; border: 1px solid #dce6f3; border-radius: 8px; }
-  .experience-polished.experience-flow .experience-guide { grid-area: guide; padding: 0 0 16px; border: 0; border-radius: 0; background: transparent; min-height: 52px; }
+  .experience-polished.experience-flow .experience-guide { grid-area: guide; padding: 0; border: 0; border-radius: 0; background: transparent; min-height: 44px; }
   .experience-polished.experience-flow .experience-body { grid-area: content; }
   .experience-polished .experience-guide-progress { font-weight: 400; color: #7e8a9b; }
   .experience-polished .experience-guide-line { font-size: 13px; }

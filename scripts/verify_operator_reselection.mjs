@@ -1,0 +1,51 @@
+import {createRequire} from 'node:module'
+import assert from 'node:assert/strict'
+const require=createRequire(import.meta.url)
+const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright')
+const browser=await chromium.launch({channel:'msedge',headless:true})
+const base=process.env.UI_BASE_URL||'http://127.0.0.1:3000'
+try {
+ const page=await browser.newPage({viewport:{width:1440,height:1000}})
+ const errors=[];page.on('pageerror',e=>errors.push(e.message))
+ const runs=(await(await page.request.get(base+'/api/v1/geodynamics/runs')).json()).data
+ const run=runs.find(r=>r.origin==='runtime'&&r.scenario_id==='wave-propagation'&&r.selected_operator_ids?.length>1)
+ assert.ok(run,'existing task with multiple operators')
+ const workflow=(await(await page.request.get(base+'/api/v1/geodynamics/runs/'+run.run_id+'/workflow')).json()).data
+ let posts=0,created=false,readFails=false
+ const synthetic={...run,run_id:'REVIEW-DUPLICATE-ONLY'}
+ const body=data=>JSON.stringify({code:200,data})
+ await page.route('**/operators/submit',route=>{posts++;created=true;return route.fulfill({status:200,contentType:'application/json',body:body({run_id:synthetic.run_id,selected_operator_ids:run.selected_operator_ids,workflow,progress:0})})})
+ await page.route('**/geodynamics/runs',route=>readFails?route.fulfill({status:503,body:'unavailable'}):created?route.fulfill({status:200,contentType:'application/json',body:body([synthetic,...runs])}):route.continue())
+ await page.route('**/runs/REVIEW-DUPLICATE-ONLY/workflow',route=>route.fulfill({status:200,contentType:'application/json',body:body(workflow)}))
+ await page.goto(`${base}/domains/geodynamics/scenarios?scenario=wave-propagation&step=workflow&plan=${run.run_id}&run=${run.run_id}`)
+ await page.locator('.vue-flow__node').first().waitFor()
+ await page.locator('.experience-previous').click();await page.locator('.operator-panel').waitFor()
+ const operator=page.locator(`[data-selection-id="${run.selected_operator_ids[0]}"] .operator-select-button`)
+ await operator.click();await operator.click()
+ await page.locator('.experience-next').click()
+ const dialog=page.getByRole('dialog');await dialog.waitFor()
+ assert.match(await dialog.innerText(),/已有相同算子的任务/)
+ assert.equal(posts,0,'preflight must not create a task')
+ await page.waitForTimeout(350)
+ await page.screenshot({path:'.runtime-logs/duplicate-confirmation.png'})
+ await dialog.getByRole('button',{name:'取消',exact:true}).click();await dialog.waitFor({state:'hidden'})
+ assert.equal(posts,0)
+ await page.getByRole('button',{name:'清空选择',exact:true}).click()
+ for(const id of [...run.selected_operator_ids].reverse())await page.locator(`[data-selection-id="${id}"] .operator-select-button`).click()
+ await page.locator('.experience-next').click();await dialog.waitFor();await page.keyboard.press('Escape');await dialog.waitFor({state:'hidden'});assert.equal(posts,0)
+ await page.locator('.experience-next').click();await dialog.waitFor()
+ const existingId=await dialog.locator('.duplicate-run-id').innerText()
+ await dialog.getByRole('button',{name:'查看已有任务',exact:true}).click();await page.locator('.vue-flow__node').first().waitFor()
+ assert.equal(new URL(page.url()).searchParams.get('run'),existingId);assert.equal(posts,0)
+ await page.locator('.experience-previous').click();await page.locator('.operator-panel').waitFor()
+ await page.locator('.experience-next').click();await dialog.waitFor()
+ await dialog.getByRole('button',{name:'仍然创建',exact:true}).click();await page.locator('.vue-flow__node').first().waitFor()
+ assert.equal(posts,1);assert.equal(new URL(page.url()).searchParams.get('run'),synthetic.run_id)
+ await page.locator('.experience-previous').click();await page.locator('.operator-panel').waitFor();await page.locator('.experience-next').click();await dialog.waitFor()
+ assert.match(await dialog.innerText(),/已有相同配置的任务/)
+ assert.match(await dialog.innerText(),/当前准备的数据与算子组合/)
+ await dialog.getByRole('button',{name:'取消',exact:true}).click();await dialog.waitFor({state:'hidden'})
+ readFails=true;await page.locator('.experience-next').click();await page.getByText('暂时无法核对已有任务，请稍后重试',{exact:true}).waitFor();assert.equal(posts,1)
+ assert.deepEqual(errors,[])
+ console.log('PASS backend record comparison after reselect/reorder; cancel/Escape/view-existing send zero POST; explicit create sends one POST; local data snapshot and failed-read guard. All writes intercepted.')
+}finally{await browser.close()}

@@ -4,6 +4,7 @@ import { useExperienceNavigation } from '~/composables/useExperienceNavigation'
 import { useExperienceMotion } from '~/composables/useExperienceMotion'
 import { ArrowLeft, ArrowRight, LoaderCircle, RotateCcw, Check, LockKeyhole } from '@lucide/vue'
 import { hasSubmittedSelection, requiresSubmittedPlan } from '~/utils/experience-navigation'
+import { findDuplicatePlan, preparedDataKey } from '~/utils/experience-duplicates'
 import { useSlidingHighlight } from '~/composables/useSlidingHighlight'
 import ExperienceDataPrepStep from './ExperienceDataPrepStep.vue'
 import ExperienceResourceStep from './ExperienceResourceStep.vue'
@@ -12,7 +13,7 @@ import ExperienceWorkflowStep from './ExperienceWorkflowStep.vue'
 import ExperienceMonitorStep from './ExperienceMonitorStep.vue'
 import ExperienceResultStep from './ExperienceResultStep.vue'
 import { useApi } from '~/composables/useApi'
-import { formatNumber } from '~/composables/useFormat'
+import { formatNumber, statusText } from '~/composables/useFormat'
 import { canViewResult } from '~/utils/experience-simulation'
 import { unitText } from '~/utils/workspace'
 import { experienceSteps, getScenarioExperience } from '~/config/scenario-experience'
@@ -24,6 +25,7 @@ import type {
   Operator,
   ParamField,
   Run,
+  OperatorSubmitResult,
   RunDetail,
   ScenarioDetail,
 } from '~/types'
@@ -79,12 +81,16 @@ const { data: runs } = await useAsyncData<Run[]>(
 
 // Commit only successful snapshots so transient network failures cannot erase
 // the selection through the navigation composable's list validation.
+const pendingSubmission = useState<OperatorSubmitResult | null>(`experience-pending-${props.domain}-${props.scenarioId}`, () => null)
 let runRefreshQueue = Promise.resolve()
 function refreshRuns(): Promise<void> {
   const request = runRefreshQueue.then(async () => {
     if (disposed) return
     const snapshot = await getRuns(props.domain)
-    if (!disposed) runs.value = snapshot
+    if (!disposed) {
+      runs.value = snapshot
+      finishPendingSubmission()
+    }
   })
   // Serialize polling and submission refreshes: an earlier response must never
   // remove a task that a later submission just selected. A failure releases the queue.
@@ -125,6 +131,7 @@ const guideInstructions: Record<string, string> = {
 const guideSummary = computed(() => activeKey.value === 'operator' && !workflowAllowed.value ? '提交算子后，查看任务执行进度。' : guideActive.value ? guideInstructions[activeKey.value] : activeStep.value.summary)
 
 async function startExperience(): Promise<void> {
+  if (operatorSubmitting.value || pendingSubmission.value) return
   clearTimeout(feedbackTimer)
   actionFeedback.value = '已恢复推荐'
   submittedRunId.value = ''
@@ -219,15 +226,51 @@ async function handleImported(result: ImportResult): Promise<void> {
 /* ---------------- 03 算子选择：提交后新增运行记录并跳转流程编排 ---------------- */
 const operatorSubmitting = ref(false)
 const operatorSubmitMessage = ref('')
-const nextBusy = computed(() => activeKey.value === 'operator' ? operatorSubmitting.value : activeKey.value === 'data' && !!dataStep.value?.importing)
-const nextDisabled = computed(() => !nextStep.value || (activeKey.value === 'operator' && (!chosenOperators.value.length || operatorSubmitting.value)) || (activeKey.value === 'data' && (!dataStep.value?.uploadedCount || dataStep.value?.busy)))
-const nextLabel = computed(() => activeKey.value === 'operator' ? (operatorSubmitting.value ? '提交中…' : '提交并编排') : activeKey.value === 'data' ? (dataStep.value?.importing ? '导入中…' : dataStep.value?.pendingImport ? '导入并继续' : '前往资源调度') : nextStep.value ? '下一步' : '已到最后一步')
+const duplicateMatch = ref<{ run: Run; dataKnown: boolean } | null>(null)
+let resolveDuplicate: ((choice: 'create' | 'existing' | 'cancel') => void) | undefined
+const snapshotStorageKey = `experience-input-snapshots-v1:${props.domain}:${props.scenarioId}`
+function readInputSnapshots(): Record<string, string> {
+  try {
+    const value = JSON.parse(localStorage.getItem(snapshotStorageKey) ?? '{}')
+    return value && typeof value === 'object' && !Array.isArray(value) ? value : {}
+  } catch { return {} }
+}
+function saveInputSnapshot(runId: string, key: string): void {
+  try { localStorage.setItem(snapshotStorageKey, JSON.stringify({ ...readInputSnapshots(), [runId]: key })) } catch { /* Missing storage falls back to an operator-only warning. */ }
+}
+function chooseDuplicate(choice: 'create' | 'existing' | 'cancel'): void {
+  const resolve = resolveDuplicate
+  resolveDuplicate = undefined
+  duplicateMatch.value = null
+  resolve?.(choice)
+}
+function askAboutDuplicate(match: { run: Run; dataKnown: boolean }): Promise<'create' | 'existing' | 'cancel'> {
+  duplicateMatch.value = match
+  return new Promise(resolve => { resolveDuplicate = resolve })
+}
+onBeforeUnmount(() => chooseDuplicate('cancel'))
+const submissionBusy = computed(() => operatorSubmitting.value || !!pendingSubmission.value)
+const nextBusy = computed(() => activeKey.value === 'operator' ? submissionBusy.value : activeKey.value === 'data' && !!dataStep.value?.importing)
+const nextDisabled = computed(() => !nextStep.value || (activeKey.value === 'operator' && (!chosenOperators.value.length || submissionBusy.value)) || (activeKey.value === 'data' && (!dataStep.value?.uploadedCount || dataStep.value?.busy)))
+const nextLabel = computed(() => activeKey.value === 'operator' ? (pendingSubmission.value ? '同步任务中…' : operatorSubmitting.value ? '处理中…' : '提交并编排') : activeKey.value === 'data' ? (dataStep.value?.importing ? '导入中…' : dataStep.value?.pendingImport ? '导入并继续' : '前往资源调度') : nextStep.value ? '下一步' : '已到最后一步')
 let submitTimer: ReturnType<typeof setTimeout> | undefined
 onBeforeUnmount(() => clearTimeout(submitTimer))
 
+function finishPendingSubmission(): void {
+  const result = pendingSubmission.value
+  if (!result || !scenarioRuns.value.some(run => run.run_id === result.run_id)) return
+  runWorkflow.value = result.workflow
+  workflowRunId.value = result.run_id
+  submittedRunId.value = result.run_id
+  pendingSubmission.value = null
+  operatorSubmitMessage.value = ''
+  // A delayed refresh must not pull someone out of a different step.
+  navigate(activeKey.value === 'operator' ? 'workflow' : activeKey.value, result.run_id)
+}
+
 async function handleOperatorSubmit(): Promise<void> {
-  if (operatorSubmitting.value) return
-  const ids = chosenOperatorIds.value ?? []
+  if (submissionBusy.value) return
+  const ids = [...(chosenOperatorIds.value ?? [])]
   if (!ids.length) {
     operatorSubmitMessage.value = '请先选择本次体验的算子'
     submitTimer = setTimeout(() => { operatorSubmitMessage.value = '' }, 2400)
@@ -235,19 +278,42 @@ async function handleOperatorSubmit(): Promise<void> {
   }
   operatorSubmitting.value = true
   operatorSubmitMessage.value = ''
+  let dataKey: string
   try {
-    const result = await submitOperators(props.domain, props.scenarioId, ids)
-    // 后端已新增一条运行记录：先刷新运行列表，再选中新记录，避免选中值被导航校验回退
-    await refreshRuns()
-    runWorkflow.value = result.workflow
-    workflowRunId.value = result.run_id
-    submittedRunId.value = result.run_id
-    navigate('workflow', result.run_id)
+    // Read the backend's latest records; do not infer duplicates from navigation state.
+    const [, currentDatasets] = await Promise.all([refreshRuns(), getDatasets(props.domain)])
+    if (disposed) return
+    datasets.value = currentDatasets
+    dataKey = preparedDataKey(currentDatasets.filter(item => item.scenario_id === props.scenarioId))
+    const duplicate = findDuplicatePlan(scenarioRuns.value, ids, dataKey, readInputSnapshots())
+    if (duplicate) {
+      const choice = await askAboutDuplicate(duplicate)
+      if (choice === 'existing') {
+        submittedRunId.value = duplicate.run.run_id
+        navigate('workflow', duplicate.run.run_id)
+      }
+      if (choice !== 'create' || disposed) {
+        operatorSubmitting.value = false
+        return
+      }
+    }
+  } catch {
+    operatorSubmitMessage.value = '暂时无法核对已有任务，请稍后重试'
+    operatorSubmitting.value = false
+    return
+  }
+  try {
+    pendingSubmission.value = await submitOperators(props.domain, props.scenarioId, ids)
+    saveInputSnapshot(pendingSubmission.value.run_id, dataKey)
   } catch (error) {
     operatorSubmitMessage.value = (error as { data?: { message?: string } })?.data?.message || '算子提交失败，请稍后重试'
-  } finally {
     operatorSubmitting.value = false
+    return
   }
+  // POST is committed. A failed GET only retries synchronization, never submission.
+  operatorSubmitMessage.value = '任务已创建，正在同步运行状态…'
+  try { await refreshRuns() } catch { /* pollRuns retries the read */ }
+  finally { operatorSubmitting.value = false }
 }
 
 /* All visible runs refresh from the same server clock, without POST-driven ticks. */
@@ -285,7 +351,7 @@ watch(activeKey, key => { if (key === 'resource') void refreshClusters() })
         <div class="experience-head-text">
           <div class="experience-title-row">
             <h2>{{ experience?.title ?? detail?.name ?? '场景体验' }}</h2>
-            <button type="button" class="experience-start sc-action" title="恢复推荐算子和默认记录，返回数据准备；保留已上传数据" :class="{ 'is-confirmed': actionFeedback }" @click="startExperience">
+            <button type="button" class="experience-start sc-action" :disabled="submissionBusy" title="恢复推荐算子和默认记录，返回数据准备；保留已上传数据" :class="{ 'is-confirmed': actionFeedback }" @click="startExperience">
               <span class="experience-start-icon"><Check v-if="actionFeedback" aria-hidden="true" /><RotateCcw v-else aria-hidden="true" /></span>
               <span>{{ actionFeedback || '恢复推荐方案' }}</span>
             </button>
@@ -343,7 +409,7 @@ watch(activeKey, key => { if (key === 'resource') void refreshClusters() })
     <div ref="motionRoot" class="experience-body">
       <p v-if="liveMessage" role="status" class="experience-live-message">{{ liveMessage }}</p>
       <div class="experience-step-content">
-      <Transition name="experience-panel"
+      <Transition name="experience-panel" mode="out-in"
         @before-leave="el => el.setAttribute('inert', '')"
         @before-enter="el => el.removeAttribute('inert')"
         @leave-cancelled="el => el.removeAttribute('inert')">
@@ -374,7 +440,7 @@ watch(activeKey, key => { if (key === 'resource') void refreshClusters() })
         :operators="operators ?? []"
         :selected-operators="selectedOperators"
         :chosen-ids="chosenOperatorIds ?? []"
-        :submitting="operatorSubmitting"
+        :submitting="submissionBusy"
         :submitted-message="operatorSubmitMessage"
         @update:chosen-ids="chosenOperatorIds = $event"
         @submit="handleOperatorSubmit"
@@ -396,6 +462,7 @@ watch(activeKey, key => { if (key === 'resource') void refreshClusters() })
         :runs="scenarioRuns"
         :domain="domain"
         :selected-run-id="selectedRunId"
+        :submitted-run-id="submittedRunId"
         @update:selected-run-id="(value) => (selectedRunId = value)"
         @inspect="handleInspect"
         @result="handleResult"
@@ -419,15 +486,54 @@ watch(activeKey, key => { if (key === 'resource') void refreshClusters() })
       <div v-if="actionFeedback" class="experience-feedback" role="status"><span aria-hidden="true">✓</span><div><strong>{{ actionFeedback }}</strong><p>已回到数据准备，恢复 {{ chosenOperators.length }} 个推荐算子和默认运行记录。</p></div></div>
     </Transition>
   </Teleport>
+  <el-dialog :model-value="!!duplicateMatch" :title="duplicateMatch?.dataKnown ? '已有相同配置的任务' : '已有相同算子的任务'" width="min(480px, calc(100vw - 32px))" align-center class="experience-duplicate-dialog" modal-class="experience-duplicate-overlay" :show-close="false" :close-on-click-modal="false" @update:model-value="value => { if (!value) chooseDuplicate('cancel') }">
+    <template v-if="duplicateMatch">
+      <p class="duplicate-summary">{{ duplicateMatch.dataKnown ? '当前准备的数据与算子组合，和以下任务一致。' : '以下任务使用了相同的算子组合。' }}</p>
+      <div class="duplicate-record">
+        <div class="duplicate-record-heading"><span>已有任务</span><span class="duplicate-record-status" :class="`is-${duplicateMatch.run.status}`">{{ statusText(duplicateMatch.run.status) }}</span></div>
+        <p class="duplicate-run-id">{{ duplicateMatch.run.run_id }}</p>
+      </div>
+      <p v-if="!duplicateMatch.dataKnown" class="duplicate-note">旧任务的数据无法比对，仅确认算子相同。</p>
+    </template>
+    <template #footer>
+      <div class="duplicate-actions">
+        <button type="button" class="sc-action" @click="chooseDuplicate('cancel')">取消</button>
+        <button type="button" class="sc-action" @click="chooseDuplicate('create')">仍然创建</button>
+        <button type="button" class="sc-action sc-action--primary" @click="chooseDuplicate('existing')">查看已有任务</button>
+      </div>
+    </template>
+  </el-dialog>
   </section>
 </template>
 
 <style scoped>
+:global(.el-dialog.experience-duplicate-dialog) { padding: 26px; border: 1px solid #e2e8f0; border-radius: 16px; box-shadow: 0 20px 64px rgb(24 40 64 / 18%); }
+:global(.experience-duplicate-overlay) { background: rgb(24 36 54 / 34%); }
+:global(.experience-duplicate-dialog .el-dialog__header) { padding: 0 0 16px; }
+:global(.experience-duplicate-dialog .el-dialog__title) { color: #25344a; font-size: 19px; font-weight: 600; line-height: 1.5; }
+:global(.experience-duplicate-dialog .el-dialog__body) { padding: 0; }
+:global(.experience-duplicate-dialog .el-dialog__footer) { padding: 24px 0 0; }
+.duplicate-summary { margin: 0 0 18px; color: #53657b; font-size: 14px; line-height: 1.7; }
+.duplicate-record { padding: 16px 18px; border: 1px solid #e2e8f0; border-radius: 10px; background: #f7f9fc; }
+.duplicate-record-heading { display: flex; justify-content: space-between; align-items: center; color: #718096; font-size: 12px; }
+.duplicate-record-status { color: #62738a; }
+.duplicate-record-status.is-success { color: #278366; }
+.duplicate-record-status.is-running { color: #3269d6; }
+.duplicate-record-status.is-failed { color: #b24e59; }
+.duplicate-run-id { margin: 10px 0 0; color: #2d405b; font: 500 14px/1.5 var(--scnet-font-mono); overflow-wrap: anywhere; }
+.duplicate-note { margin: 12px 0 0; color: #7a8799; font-size: 12px; line-height: 1.6; }
+.duplicate-actions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.duplicate-actions .sc-action { width: 100%; height: 42px; min-width: 0; padding-inline: 8px; box-sizing: border-box; }
+@media (max-width: 480px) {
+  :global(.el-dialog.experience-duplicate-dialog) { padding: 20px; }
+  .duplicate-actions { gap: 6px; }
+  .duplicate-actions .sc-action { padding-inline: 6px; }
+}
 .experience-flow { display: grid; gap: 20px; min-width: 0; overflow-anchor: none; }
 .experience-step-content { display: grid; align-items: start; min-width: 0; }
 .experience-step-content > :deep(*) { grid-area: 1 / 1; min-width: 0; }
-.experience-panel-enter-active { transition: opacity 220ms cubic-bezier(.2,.7,.2,1), translate 220ms cubic-bezier(.2,.7,.2,1); }
-.experience-panel-leave-active { transition: opacity 140ms ease-out; pointer-events: none; }
+.experience-panel-enter-active { transition: opacity 160ms cubic-bezier(.2,.7,.2,1), translate 160ms cubic-bezier(.2,.7,.2,1); }
+.experience-panel-leave-active { transition: opacity 70ms ease-out; pointer-events: none; }
 .experience-panel-enter-from { opacity: 0; translate: 0 var(--step-entry-offset, 6px); }
 .experience-panel-leave-to { opacity: 0; }
 @media (prefers-reduced-motion: reduce) {
@@ -435,7 +541,7 @@ watch(activeKey, key => { if (key === 'resource') void refreshClusters() })
   .experience-panel-enter-from { translate: none; }
 }
 .experience-overview { min-width: 0; overflow: hidden; border: 1px solid #e1e6ed; border-radius: 12px; background: #fff; box-shadow: 0 2px 7px rgb(31 45 61 / 4.5%); }
-.experience-head { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(420px, 1fr); align-items: center; gap: 40px; padding: clamp(26px, 2.2vw, 38px); }
+.experience-head { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(380px, 1fr); align-items: center; gap: 24px; padding: 22px; }
 .experience-head-text { min-width: 0; }
 .experience-title-row { display: flex; align-items: center; flex-wrap: wrap; gap: 14px 20px; }
 .experience-start { min-width: 128px; min-height: 36px; font-size: 12px; }
@@ -448,8 +554,8 @@ watch(activeKey, key => { if (key === 'resource') void refreshClusters() })
 .experience-feedback-enter-active, .experience-feedback-leave-active { transition: opacity 180ms ease, translate 180ms ease; }
 .experience-feedback-enter-from, .experience-feedback-leave-to { opacity: 0; translate: 0 -8px; }
 .experience-head-text h2 { margin: 0; font-size: clamp(24px, 1.65vw, 30px); font-weight: 650; line-height: 1.35; text-wrap: balance; }
-.experience-desc { margin: 10px 0 0; color: var(--scnet-text-secondary); font-size: 16px; line-height: 1.75; text-wrap: pretty; }
-.experience-tech-stack { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; margin-top: 16px; color: #45678f; font-size: 14px; }
+.experience-desc { margin: 8px 0 0; color: var(--scnet-text-secondary); font-size: 14px; line-height: 1.65; text-wrap: pretty; }
+.experience-tech-stack { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; margin-top: 10px; color: #63758c; font-size: 12px; }
 .experience-tech-stack > span:first-child { display: inline-flex; align-items: center; gap: 8px; color: var(--scnet-text); font-size: 15px; font-weight: 600; }
 .experience-tech-stack > span:first-child::before { content: ''; width: 2px; height: 14px; border-radius: 1px; background: var(--scnet-primary); }
 .experience-tech-stack > span:not(:first-child):not(:nth-child(2))::before { content: '·'; margin-right: 14px; color: #8993a1; }
@@ -479,11 +585,11 @@ watch(activeKey, key => { if (key === 'resource') void refreshClusters() })
 .experience-step-text { display: inline-flex; align-items: center; gap: 6px; }
 .experience-step-lock { width: 12px; height: 12px; flex-shrink: 0; }
 .experience-step:disabled { opacity: .55; cursor: not-allowed; }
-.experience-guide { display: grid; grid-template-columns: minmax(0, 1fr) 224px; align-items: center; gap: 20px; min-height: 72px; padding: 12px 24px; border-top: 1px solid var(--scnet-divider); background: #fbfcfe; }
+.experience-guide { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 16px; min-height: 60px; padding: 10px 20px; border-top: 1px solid var(--scnet-divider); background: #fbfcfe; }
 .experience-guide-line { display: flex; align-items: center; gap: 14px; min-width: 0; margin: 0; font-size: 16px; color: var(--scnet-text-secondary); }
 .experience-guide-progress { flex-shrink: 0; color: var(--scnet-primary); font-weight: 600; font-variant-numeric: tabular-nums; }
 .experience-guide-summary { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.experience-guide-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.experience-guide-actions { display: flex; gap: 8px; }
 .experience-guide-actions button { height: 44px; padding-inline: 14px; font-size: 14px; }
 .experience-nav-arrow { display: inline-block; transition: transform 180ms var(--scnet-hover-easing); }
 .experience-previous:enabled:is(:hover, :focus-visible) .experience-nav-arrow { transform: translateX(-3px); }
@@ -496,11 +602,11 @@ button:focus-visible { outline: 2px solid var(--scnet-primary); outline-offset: 
 @media (max-width: 420px) { .experience-metrics.has-many { grid-template-columns: 1fr; } }
 @media (max-width: 900px) { .experience-step { flex-direction: column; gap: 6px; } .experience-steps { padding-inline: 8px; } }
 @media (max-width: 560px) {
-  .experience-head { padding: 22px; }
+  .experience-head { padding: 16px; gap: 16px; }
   .experience-desc { font-size: 14px; }
   .experience-steps { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .experience-step { flex-direction: row; min-height: 56px; gap: 6px; }
-  .experience-step-text strong { font-size: 14px; }
+  .experience-step { flex-direction: row; min-height: 44px; gap: 4px; }
+  .experience-step-text strong { font-size: 12px; }
   .experience-step-index { width: 24px; height: 24px; font-size: 11px; }
   .experience-metrics { gap: 16px 0; }
   .experience-metrics > div { padding: 6px 10px; }
@@ -508,7 +614,7 @@ button:focus-visible { outline: 2px solid var(--scnet-primary); outline-offset: 
   .experience-metrics small { font-size: 12px; }
   .experience-guide { grid-template-columns: 1fr; gap: 10px; padding: 12px 16px; }
   .experience-guide-line { height: 28px; font-size: 15px; }
-  .experience-guide-actions { width: 224px; justify-self: end; }
+  .experience-guide-actions { width: auto; max-width: 100%; justify-self: end; }
 }
 @media (prefers-reduced-motion: reduce) {
   .experience-guide-actions button, .experience-nav-arrow { transition: none; }
