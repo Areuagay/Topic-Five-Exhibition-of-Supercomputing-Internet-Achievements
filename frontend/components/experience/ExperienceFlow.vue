@@ -272,9 +272,9 @@ watch(activeKey, key => { if (key === 'resource') void refreshClusters() })
         <div class="experience-head-text">
           <div class="experience-title-row">
             <h2>{{ experience?.title ?? detail?.name ?? '场景体验' }}</h2>
-            <button type="button" class="experience-start sc-action sc-action--ghost" title="恢复推荐算子和默认记录，返回数据准备；保留已上传数据" :class="{ 'is-confirmed': actionFeedback }" @click="startExperience">
-              <Check v-if="actionFeedback" aria-hidden="true" /><RotateCcw v-else aria-hidden="true" />
-              {{ actionFeedback || '恢复推荐方案' }}
+            <button type="button" class="experience-start sc-action" title="恢复推荐算子和默认记录，返回数据准备；保留已上传数据" :class="{ 'is-confirmed': actionFeedback }" @click="startExperience">
+              <span class="experience-start-icon"><Check v-if="actionFeedback" aria-hidden="true" /><RotateCcw v-else aria-hidden="true" /></span>
+              <span>{{ actionFeedback || '恢复推荐方案' }}</span>
             </button>
           </div>
           <p class="experience-desc">
@@ -325,8 +325,12 @@ watch(activeKey, key => { if (key === 'resource') void refreshClusters() })
     </div>
 
     <div ref="motionRoot" class="experience-body">
-      <div class="experience-step-content">
       <p v-if="liveMessage" role="status" class="experience-live-message">{{ liveMessage }}</p>
+      <div class="experience-step-content">
+      <Transition name="experience-panel"
+        @before-leave="el => el.setAttribute('inert', '')"
+        @before-enter="el => el.removeAttribute('inert')"
+        @leave-cancelled="el => el.removeAttribute('inert')">
       <KeepAlive :max="6">
       <ExperienceDataPrepStep
         ref="dataStep"
@@ -391,6 +395,7 @@ watch(activeKey, key => { if (key === 'resource') void refreshClusters() })
         @back-to-monitor="selectStep('monitor')"
       />
       </KeepAlive>
+      </Transition>
       </div>
     </div>
   <Teleport to="body">
@@ -403,7 +408,16 @@ watch(activeKey, key => { if (key === 'resource') void refreshClusters() })
 
 <style scoped>
 .experience-flow { display: grid; gap: 20px; min-width: 0; overflow-anchor: none; }
-.experience-step-content { display: flow-root; min-width: 0; }
+.experience-step-content { display: grid; align-items: start; min-width: 0; }
+.experience-step-content > :deep(*) { grid-area: 1 / 1; min-width: 0; }
+.experience-panel-enter-active { transition: opacity 220ms cubic-bezier(.2,.7,.2,1), translate 220ms cubic-bezier(.2,.7,.2,1); }
+.experience-panel-leave-active { transition: opacity 140ms ease-out; pointer-events: none; }
+.experience-panel-enter-from { opacity: 0; translate: 0 var(--step-entry-offset, 6px); }
+.experience-panel-leave-to { opacity: 0; }
+@media (prefers-reduced-motion: reduce) {
+  .experience-panel-enter-active, .experience-panel-leave-active { transition: none; }
+  .experience-panel-enter-from { translate: none; }
+}
 .experience-overview { min-width: 0; overflow: hidden; border: 1px solid #e1e6ed; border-radius: 12px; background: #fff; box-shadow: 0 2px 7px rgb(31 45 61 / 4.5%); }
 .experience-head { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(420px, 1fr); align-items: center; gap: 40px; padding: clamp(26px, 2.2vw, 38px); }
 .experience-head-text { min-width: 0; }

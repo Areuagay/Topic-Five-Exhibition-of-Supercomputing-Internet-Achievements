@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Check, Plus, X, Info, ArrowUpRight } from '@lucide/vue'
 import { useSelectionFeedback } from '~/composables/useSelectionFeedback'
-import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onDeactivated, ref, watch } from 'vue'
 import { useSlidingHighlight } from '~/composables/useSlidingHighlight'
 import { formatBytes, formatNumber, statusText } from '~/composables/useFormat'
 import type { Operator, OperatorRef } from '~/types'
@@ -59,6 +59,21 @@ const ordered = computed(() => {
   ).sort((a, b) => Number(isRecommended(b)) - Number(isRecommended(a)))
 })
 const listFrame = ref<HTMLElement>()
+const runtimeOperatorId = ref('')
+function setRuntimeVisible(id: string, visible: boolean) {
+  if (visible) runtimeOperatorId.value = id
+  else if (runtimeOperatorId.value === id) runtimeOperatorId.value = ''
+}
+function closeRuntime(id: string) {
+  runtimeOperatorId.value = ''
+  const trigger = Array.from(listFrame.value?.querySelectorAll<HTMLButtonElement>('[data-runtime-trigger]') ?? [])
+    .find(button => button.dataset.runtimeTrigger === id)
+  trigger?.focus({ preventScroll: true })
+}
+onDeactivated(() => { runtimeOperatorId.value = '' })
+watch(ordered, () => {
+  if (!ordered.value.some(operator => operator.name === runtimeOperatorId.value)) runtimeOperatorId.value = ''
+})
 useSelectionFeedback(listFrame, computed(() => props.chosenIds))
 const selectedItems = computed(() => props.operators.filter(operator => chosenSet.value.has(operator.name)))
 const selectedFrame = ref<HTMLElement>()
@@ -131,7 +146,7 @@ function memoryText(memoryMb: number): string {
       </label>
     </div>
     <div class="operator-selection-bar">
-      <span role="status">本次已选 <span class="selection-count-slot"><Transition name="selection-count" mode="out-in"><strong :key="chosenCount" class="selection-count">{{ chosenCount }}</strong></Transition></span> 个算子</span>
+      <span role="status">本次已选 <span class="selection-count-slot"><Transition name="selection-count"><strong :key="chosenCount" class="selection-count">{{ chosenCount }}</strong></Transition></span> 个算子</span>
       <div class="operator-batch-actions">
         <button type="button" class="operator-batch-button is-primary sc-action sc-action--soft" :class="{ 'is-confirmed': actionFeedback === 'recommended' }" :disabled="!recommendedCount" @click="useRecommended">
           <span class="operator-batch-icon" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="m4 10 4 4 8-9" /></svg></span>
@@ -173,13 +188,13 @@ function memoryText(memoryMb: number): string {
             <div><dt>运行环境</dt><dd class="operator-runtime">{{ operator.runtime_type }}</dd></div>
           </dl>
           <div class="operator-actions">
-          <el-popover trigger="click" placement="bottom-start" :width="440" :show-arrow="false" :popper-style="{ maxWidth: 'calc(100vw - 32px)', padding: '20px' }" popper-class="operator-runtime-popover" transition="operator-runtime">
-            <template #reference><button type="button" class="operator-detail-trigger sc-action sc-action--ghost" :aria-label="'查看 ' + displayName(operator) + ' 的运行详情'"><Info aria-hidden="true" />运行详情<ArrowUpRight class="detail-arrow" aria-hidden="true" /></button></template>
-            <div class="operator-runtime-content"><strong>{{ displayName(operator) }}</strong><p>运行配置</p><dl><div><dt>运行镜像</dt><dd>{{ operator.runtime || '未提供' }}</dd></div><div><dt>调用入口</dt><dd>{{ operator.handler || '未提供' }}</dd></div></dl></div>
+          <el-popover trigger="click" placement="bottom-start" :width="440" :show-arrow="false" :visible="runtimeOperatorId === operator.name" @update:visible="value => setRuntimeVisible(operator.name, value)" :popper-style="{ maxWidth: 'calc(100vw - 32px)', padding: '20px' }" popper-class="operator-runtime-popover" transition="operator-runtime">
+            <template #reference><button type="button" class="operator-detail-trigger sc-action sc-action--ghost" :data-runtime-trigger="operator.name" :aria-expanded="runtimeOperatorId === operator.name" :aria-label="'查看 ' + displayName(operator) + ' 的运行详情'" @keydown.esc.stop="closeRuntime(operator.name)"><Info aria-hidden="true" />运行详情<ArrowUpRight class="detail-arrow" aria-hidden="true" /></button></template>
+            <div class="operator-runtime-content" @keydown.esc.stop="closeRuntime(operator.name)"><button type="button" class="operator-runtime-close" aria-label="关闭运行详情" @click="closeRuntime(operator.name)"><X :size="16" aria-hidden="true" /></button><strong>{{ displayName(operator) }}</strong><p>运行配置</p><dl><div><dt>运行镜像</dt><dd>{{ operator.runtime || '未提供' }}</dd></div><div><dt>调用入口</dt><dd>{{ operator.handler || '未提供' }}</dd></div></dl></div>
           </el-popover>
           <button type="button" class="operator-select-button sc-action" :aria-pressed="chosenSet.has(operator.name)" :aria-label="'选择算子：' + displayName(operator)" :disabled="submitting || (!isAvailable(operator) && !chosenSet.has(operator.name))" @click="toggleOperator(operator)">
             <span class="operator-select-icon" aria-hidden="true"><Plus class="operator-icon-add" /><Check class="operator-icon-check" /></span>
-            {{ chosenSet.has(operator.name) ? '已选择' : isAvailable(operator) ? '选择算子' : '暂不可选' }}
+            <span class="operator-select-label"><span class="operator-select-current">{{ chosenSet.has(operator.name) ? '已选择' : isAvailable(operator) ? '选择算子' : '暂不可选' }}</span><span v-if="chosenSet.has(operator.name)" class="operator-select-undo" aria-hidden="true">取消选择</span></span>
           </button>
           </div>
         </div>
@@ -277,7 +292,11 @@ function memoryText(memoryMb: number): string {
 .operator-detail-trigger { padding-inline: 8px; }
 .operator-detail-trigger .detail-arrow { width: 13px; opacity: .5; transition: transform 220ms ease, opacity 220ms ease; }
 .operator-detail-trigger:hover .detail-arrow { transform: translate(2px, -2px); opacity: 1; }
-.operator-runtime-content > strong { display: block; color: #263c58; font-size: 15px; }
+.operator-runtime-content { position: relative; }
+.operator-runtime-content > strong { display: block; padding-right: 28px; color: #263c58; font-size: 15px; }
+.operator-runtime-close { position: absolute; right: -6px; top: -6px; display: grid; place-items: center; width: 30px; height: 30px; border: 0; border-radius: 6px; color: #64748b; background: transparent; cursor: pointer; transition: background-color 140ms, color 140ms; }
+.operator-runtime-close:hover { background: #edf2f8; color: #263c58; }
+.operator-runtime-close:focus-visible { outline: 2px solid var(--scnet-primary); outline-offset: 2px; }
 .operator-runtime-content > p { margin: 5px 0 16px; color: #8290a2; font-size: 12px; }
 .operator-runtime-content dl { display: grid; gap: 16px; margin: 0; padding-top: 16px; border-top: 1px solid #e3eaf4; }
 .operator-runtime-content dl > div { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 14px; }

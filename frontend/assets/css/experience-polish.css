@@ -59,7 +59,8 @@
 .selected-chip-enter-from { opacity: 0; transform: translateY(5px) scale(.96); }
 .selected-chip-leave-to { opacity: 0; transform: scale(.92); }
 .selection-count { display: inline-block; min-width: 1.4ch; text-align: center; font-variant-numeric: tabular-nums; }
-.selection-count-slot { display: inline-block; min-width: 1.4ch; vertical-align: baseline; }
+.selection-count-slot { display: inline-grid; min-width: 1.4ch; vertical-align: baseline; }
+.selection-count-slot > * { grid-area: 1 / 1; }
 .selection-count-enter-active, .selection-count-leave-active { transition: opacity 120ms, transform 140ms var(--ex-ease); }
 .selection-count-enter-from { opacity: 0; transform: translateY(5px); }
 .selection-count-leave-to { opacity: 0; transform: translateY(-5px); }
@@ -82,18 +83,20 @@
 .dataset-readiness-track i { flex: 1; border-radius: 2px; background: #e7edf5; transition: background-color 300ms; }
 .dataset-readiness-track i.is-ready { background: #63a092; }
 .dataset-identity { display: flex; align-items: center; gap: 12px; min-width: 0; }
-.dataset-file-icon { display: grid; place-items: center; flex: 0 0 36px; height: 40px; border: 1px solid #dfe7f1; border-radius: 9px; color: #5d7fa8; background: var(--scnet-subtle); box-shadow: none; }
-.dataset-file-icon.is-json { color: #5484b2; }
-.dataset-file-icon.is-csv { color: #548c7e; background: var(--scnet-subtle); border-color: #dce9e2; }
+.dataset-file-icon { display: grid; place-items: center; flex: 0 0 36px; height: 40px; border: 1px solid #dce6f5; border-radius: 10px; color: #426db0; background: #f0f5fd; box-shadow: none; }
+.dataset-file-icon.is-json { color: #426db0; }
+.dataset-file-icon.is-csv { color: #327966; background: #edf7f3; border-color: #d9ece3; }
 .experience-polished .dataset-file-icon svg { margin: 0; }
-.experience-polished .dataset-name { font-size: 13px; font-weight: 550; color: #31455e; }
+.experience-polished .dataset-name { font-size: 13px; font-weight: 600; color: #293c55; }
 .experience-polished .dataset-id { color: #617289; font-size: 11px; }
-.dataset-state { display: inline-flex; justify-content: center; align-items: center; gap: 5px; min-width: 70px; height: 26px; padding: 0 7px; border: 1px solid #dce3ec; border-radius: 6px; color: #68788b; background: #ffffffa6; font-size: 11px; font-weight: 500; line-height: 1; transition: color 220ms, border-color 220ms; }
+.dataset-state { display: inline-flex; justify-content: center; align-items: center; gap: 6px; min-width: 76px; height: 28px; padding: 0 8px; border: 1px solid transparent; border-radius: 20px; color: #59697e; background: #eef1f5; font-size: 12px; font-weight: 500; line-height: 1; white-space: nowrap; transition: color 180ms, background-color 180ms, border-color 180ms; }
+.dataset-state-dot { width: 6px; height: 6px; border-radius: 50%; background: #8797ac; flex-shrink: 0; }
 .experience-polished .dataset-state svg { width: 13px; height: 13px; margin: 0; flex-shrink: 0; stroke-width: 1.7; }
-.dataset-state.is-ready { color: #376b9d; border-color: #cbdcf0; }
-.dataset-state.is-imported { color: #357c67; border-color: #c9e1d9; }
+.dataset-state.is-ready { color: #265fbc; background: #eaf2ff; border-color: #d8e6fc; }
+.dataset-state.is-imported { color: #20765c; background: #e6f5ed; border-color: #cfe9dc; }
+.dataset-state.is-working { color: #265fbc; background: #eaf2ff; border-color: #d8e6fc; }
 .experience-polished .exp-table-wrap .el-table td.el-table__cell { height: 76px; border-bottom-color: #edf1f6; }
-.experience-polished .exp-table-wrap .el-table th.el-table__cell { background: #f7f9fc; color: #617289; font-size: 11px; font-weight: 500; }
+.experience-polished .exp-table-wrap .el-table th.el-table__cell { background: #f6f8fc; color: #53657d; font-size: 12px; font-weight: 550; }
 .upload-state-enter-active { transition: opacity 180ms, transform 230ms var(--ex-ease); }
 .upload-state-leave-active { transition: opacity 100ms, transform 100ms; }
 .upload-state-enter-from { opacity: 0; transform: translateY(4px); }
@@ -127,7 +130,13 @@
 /* The runtime inspector opens above the grid; it never resizes a card. */
 .operator-runtime-popover { border: 1px solid #d4e0ee !important; border-radius: 12px !important; box-shadow: 0 12px 36px #233d601c !important; }
 @media (prefers-reduced-motion: no-preference) {
-  .operator-runtime-enter-active { transition: opacity 180ms ease, transform 240ms cubic-bezier(.22,1,.36,1); }
-  .operator-runtime-leave-active { transition: opacity 140ms ease, transform 140ms ease; }
-  .operator-runtime-enter-from, .operator-runtime-leave-to { opacity: 0; transform: translateY(-6px) scale(.98); }
+  .operator-runtime-enter-active { transition: opacity 180ms ease, translate 220ms cubic-bezier(.2,.7,.2,1); }
+  .operator-runtime-leave-active { transition: opacity 120ms ease, translate 120ms ease; }
+  .operator-runtime-enter-from, .operator-runtime-leave-to { opacity: 0; translate: 0 -4px; }
 }
+.operator-select-label { display: inline-grid; min-width: 4em; }
+.operator-select-label > span { grid-area: 1 / 1; transition: opacity 140ms ease; }
+.operator-select-undo { opacity: 0; }
+.operator-select-button[aria-pressed='true']:is(:hover, :focus-visible) .operator-select-current { opacity: 0; }
+.operator-select-button[aria-pressed='true']:is(:hover, :focus-visible) .operator-select-undo { opacity: 1; }
+@media (prefers-reduced-motion: reduce) { .operator-select-label > span { transition: none; } }

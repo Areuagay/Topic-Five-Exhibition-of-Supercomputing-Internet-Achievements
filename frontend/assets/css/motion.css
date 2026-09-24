@@ -34,7 +34,6 @@
   .scnet-page-leave-to { opacity: 0; }
 
   .application-overview,
-  .experience-overview,
   .experience-body > :not(.exp-result) {
     animation: scnet-reveal 360ms var(--scnet-hover-easing) backwards;
   }
