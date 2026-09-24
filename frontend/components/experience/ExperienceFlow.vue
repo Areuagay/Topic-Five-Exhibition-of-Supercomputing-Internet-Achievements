@@ -34,6 +34,7 @@ const props = defineProps<{
   benchmark?: Benchmark[string]
   params: ParamField[]
   clusterName: (id: string) => string
+  animateOnMount?: boolean
 }>()
 
 // Server-rendered controls are visible before Vue has attached their handlers.
@@ -134,7 +135,7 @@ const activeStep = computed(
 )
 const motionRoot = ref<HTMLElement>()
 const dataStep = ref<InstanceType<typeof ExperienceDataPrepStep>>()
-useExperienceMotion(motionRoot, computed(() => activeStep.value.index))
+useExperienceMotion(motionRoot, computed(() => activeStep.value.index), props.animateOnMount !== false)
 const nextStep = computed(() => experienceSteps[activeStep.value.index] ?? null)
 const previousStep = computed(() => experienceSteps[activeStep.value.index - 2] ?? null)
 const { track: stepTrack, ready: stepHighlightReady, style: stepHighlightStyle } = useSlidingHighlight(computed(() => activeStep.value.index - 1))
@@ -392,12 +393,12 @@ watch(activeKey, key => { if (key === 'resource') void refreshClusters() })
       </KeepAlive>
       </div>
     </div>
-  </section>
   <Teleport to="body">
     <Transition name="experience-feedback">
       <div v-if="actionFeedback" class="experience-feedback" role="status"><span aria-hidden="true">✓</span><div><strong>{{ actionFeedback }}</strong><p>已回到数据准备，恢复 {{ chosenOperators.length }} 个推荐算子和默认运行记录。</p></div></div>
     </Transition>
   </Teleport>
+  </section>
 </template>
 
 <style scoped>

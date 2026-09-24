@@ -199,7 +199,7 @@ onBeforeUnmount(() => {
   color: #657287;
   cursor: pointer;
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 1.4;
   white-space: nowrap;
   touch-action: manipulation;
@@ -234,8 +234,8 @@ onBeforeUnmount(() => {
 
 .scenario-selector-indicator.is-ready {
   transition:
-    transform 300ms cubic-bezier(0.645, 0.045, 0.355, 1),
-    width 300ms cubic-bezier(0.645, 0.045, 0.355, 1),
+    transform 260ms cubic-bezier(.2,.7,.2,1),
+    width 260ms cubic-bezier(.2,.7,.2,1),
     opacity 160ms ease;
 }
 

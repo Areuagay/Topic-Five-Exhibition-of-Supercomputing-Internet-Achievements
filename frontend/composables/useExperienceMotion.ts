@@ -1,7 +1,7 @@
 import { nextTick, onBeforeUnmount, onMounted, watch, type Ref } from 'vue'
 
 /** Keep layout stable; animate only compositor properties, never table height. */
-export function useExperienceMotion(root: Ref<HTMLElement | undefined>, step: Ref<number>) {
+export function useExperienceMotion(root: Ref<HTMLElement | undefined>, step: Ref<number>, animateOnMount = true) {
   let animation: Animation | undefined
   let generation = 0
   let disposed = false
@@ -46,6 +46,6 @@ export function useExperienceMotion(root: Ref<HTMLElement | undefined>, step: Re
     }, deepInPage && !reduced ? 600 : reduced ? 0 : 250)
   }
   watch(step, (next, previous) => { void reveal(next >= previous ? 1 : -1, true) }, { flush: 'pre' })
-  onMounted(() => { void reveal() })
+  onMounted(() => { if (animateOnMount) void reveal() })
   onBeforeUnmount(() => { disposed = true; generation++; animation?.cancel(); clearTimeout(releaseTimer) })
 }

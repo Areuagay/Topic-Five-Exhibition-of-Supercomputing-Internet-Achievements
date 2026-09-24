@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import ExperienceFlow from '~/components/experience/ExperienceFlow.vue'
 import { useApi } from '~/composables/useApi'
 import { useAppStore } from '~/stores/app'
@@ -75,6 +75,7 @@ const params = computed(() => (
 ))
 // 仅对已预置一键体验样式的场景启用体验容器，其余场景保持原有详情展示
 const experienceEnabled = computed(() => !!getScenarioExperience(selectedScenarioId.value))
+const scenarioPending = ref(false)
 
 function selectScenario(id: string): void {
   if (id === selectedScenarioId.value) return
@@ -111,25 +112,32 @@ function clusterName(id: string): string {
           @update:model-value="selectScenario"
         />
 
-        <main class="scenario-detail-region">
-          <ExperienceFlow
-            v-if="experienceEnabled"
-            :key="selectedScenarioId"
-            :domain="domain"
-            :scenario-id="selectedScenarioId"
-            :detail="selectedDetail"
-            :benchmark="selectedBenchmark"
-            :params="params"
-            :cluster-name="clusterName"
-          />
-          <ScenarioDetailContent
-            v-else
-            :key="selectedScenarioId"
-            :detail="selectedDetail"
-            :benchmark="selectedBenchmark"
-            :params="params"
-            :cluster-name="clusterName"
-          />
+        <main class="scenario-detail-region" :aria-busy="scenarioPending" :inert="scenarioPending || undefined">
+          <!-- Retain the current scene while async setup resolves; overlap only
+               the short visual handoff so the region never collapses to zero. -->
+          <Transition name="scenario-panel">
+            <Suspense @pending="scenarioPending = true" @resolve="scenarioPending = false">
+              <ExperienceFlow
+                v-if="experienceEnabled"
+                :key="selectedScenarioId"
+                :domain="domain"
+                :scenario-id="selectedScenarioId"
+                :detail="selectedDetail"
+                :benchmark="selectedBenchmark"
+                :params="params"
+                :cluster-name="clusterName"
+                :animate-on-mount="false"
+              />
+              <ScenarioDetailContent
+                v-else
+                :key="selectedScenarioId"
+                :detail="selectedDetail"
+                :benchmark="selectedBenchmark"
+                :params="params"
+                :cluster-name="clusterName"
+              />
+            </Suspense>
+          </Transition>
         </main>
       </template>
 
@@ -162,7 +170,19 @@ function clusterName(id: string): string {
 }
 
 .scenario-detail-region {
+  display: grid;
+  align-items: start;
   padding: clamp(22px, 2.5vw, 40px);
+}
+
+.scenario-detail-region > :deep(*) { grid-area: 1 / 1; min-width: 0; }
+.scenario-panel-enter-active { transition: opacity 240ms cubic-bezier(.2,.7,.2,1), transform 240ms cubic-bezier(.2,.7,.2,1); }
+.scenario-panel-leave-active { transition: opacity 160ms ease-out; pointer-events: none; }
+.scenario-panel-enter-from { opacity: 0; transform: translateY(6px); }
+.scenario-panel-leave-to { opacity: 0; }
+@media (prefers-reduced-motion: reduce) {
+  .scenario-panel-enter-active, .scenario-panel-leave-active { transition: none; }
+  .scenario-panel-enter-from { transform: none; }
 }
 
 .scenario-empty {
