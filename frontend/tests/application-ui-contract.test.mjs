@@ -104,7 +104,9 @@ test('application hub separates domain entries from platform capability and clus
   assert.match(page, /class="cluster-status-grid"/)
   assert.match(page, /v-for="cluster in clusters"/)
   assert.match(page, /CPU 利用率/)
-  assert.match(page, /内存利用率/)
+  assert.match(page, /GPU 利用率/)
+  assert.match(page, /运行任务/)
+  assert.match(page, /排队等待/)
   assert.doesNotMatch(page, /跨中心大规模解算云原生应用成果/)
   assert.doesNotMatch(page, /选择一个领域查看场景与运行成果/)
 })
@@ -136,6 +138,7 @@ test('multicenter capability and cluster health share one integrated control sur
   assert.match(page, /class="cluster-board-head"/)
   assert.match(page, /onlineClusterCount/)
   assert.match(page, /degradedClusterCount/)
+  assert.match(page, /offlineClusterCount/)
   assert.match(page, /排队/)
   assert.match(page, /status-offline/)
   assert.match(

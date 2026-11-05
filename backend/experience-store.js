@@ -189,22 +189,13 @@ export function createExperienceStore({ dataDir, runtimeDir, now = Date.now }) {
     return result
   }
 
+  /**
+   * 算力中心资源状态以超算平台「全局资源视图」同步下来的数据为准，这里只刷新更新时间；
+   * 不再用前端导入的数据集数量改写 CPU / GPU 占用，避免覆盖平台下发的运行任务与排队等待。
+   */
   function clusters() {
     const items = copy(readSeed('multicenter/clusters.json') ?? [])
-    for (const cluster of items) {
-      let count = 0
-      for (const domain of EXPERIENCE_DOMAINS) {
-        const state = stateFor(domain)
-        const scenarioData = readSeed(`${domain}/scenario-details.json`) ?? []
-        for (const dataset of state.datasets.filter(d => d.imported)) {
-          const scenario = Object.values(scenarioData).find(s => s.id === dataset.scenario_id) ?? scenarioData[dataset.scenario_id]
-          if (scenario?.supported_clusters?.includes(cluster.id)) count++
-        }
-      }
-      cluster.cpu_utilization = Math.min(99, (cluster.base_cpu_utilization ?? cluster.cpu_utilization) + count * 2)
-      cluster.memory_utilization = Math.min(99, (cluster.base_memory_utilization ?? cluster.memory_utilization) + count)
-      cluster.updated_at = new Date(now()).toISOString()
-    }
+    for (const cluster of items) cluster.updated_at = new Date(now()).toISOString()
     return items
   }
 

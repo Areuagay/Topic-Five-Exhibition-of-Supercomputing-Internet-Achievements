@@ -1,0 +1,47 @@
+{
+  "source": "http://192.168.95.138:8890/home",
+  "bundle": "http://192.168.95.138:8890/assets/Index-DaUj5y13.js",
+  "fetched_at": "2026-11-05T16:37:33+08:00",
+  "items": [
+    {
+      "order": 1,
+      "name": "天河新一代",
+      "architecture": "TH-1A Architecture",
+      "status": "normal",
+      "cpu": 73.2,
+      "gpu": 22.2,
+      "running": 12,
+      "queued": 45
+    },
+    {
+      "order": 2,
+      "name": "神威·太湖之光",
+      "architecture": "Sunway Architecture",
+      "status": "highLoad",
+      "cpu": 73.2,
+      "gpu": 22.2,
+      "running": 18,
+      "queued": 82
+    },
+    {
+      "order": 3,
+      "name": "曙光星云",
+      "architecture": "Dawning Architecture",
+      "status": "normal",
+      "cpu": 73.2,
+      "gpu": 62.2,
+      "running": 6,
+      "queued": 12
+    },
+    {
+      "order": 4,
+      "name": "银河 III",
+      "architecture": "MilkyWay-3 Arch",
+      "status": "maintenance",
+      "cpu": 0,
+      "gpu": 0,
+      "running": 0,
+      "queued": 0
+    }
+  ]
+}

@@ -90,6 +90,7 @@ const STATUS_TEXT: Record<string, string> = {
   registered: '已注册',
   pending: '排队中',
   queued: '排队中',
+  waiting: '等待中',
   running: '运行中',
   success: '成功',
   failed: '失败',

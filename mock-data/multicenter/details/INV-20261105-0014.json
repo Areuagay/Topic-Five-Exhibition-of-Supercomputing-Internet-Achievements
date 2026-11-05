@@ -1,0 +1,49 @@
+{
+  "code": 200,
+  "message": "success",
+  "data": {
+    "invocation_id": "INV-20261105-0014",
+    "trace_id": "TRACE-20261105-0014",
+    "total_latency_ms": 45,
+    "source_type": "backend",
+    "spans": [
+      {
+        "seq": 1,
+        "component": "scnet-gateway",
+        "name": "跨域网关接入",
+        "cluster_id": "guangzhou",
+        "status": "success",
+        "latency_ms": 5.4,
+        "start_time": "2026-11-05T16:14:33+08:00"
+      },
+      {
+        "seq": 2,
+        "component": "fn-scheduler",
+        "name": "跨中心调度编排",
+        "cluster_id": "guangzhou",
+        "status": "success",
+        "latency_ms": 9,
+        "start_time": "2026-11-05T16:14:33+08:00"
+      },
+      {
+        "seq": 3,
+        "component": "k8s-runtime",
+        "name": "函数实例执行",
+        "cluster_id": "guangzhou",
+        "status": "running",
+        "latency_ms": 25.2,
+        "start_time": "2026-11-05T16:14:33+08:00"
+      },
+      {
+        "seq": 4,
+        "component": "result-collector",
+        "name": "结果汇聚回传",
+        "cluster_id": "guangzhou",
+        "status": "waiting",
+        "latency_ms": 5.4,
+        "start_time": "2026-11-05T16:14:33+08:00"
+      }
+    ]
+  },
+  "timestamp": "2026-11-05T16:37:33+08:00"
+}

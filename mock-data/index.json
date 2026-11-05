@@ -99,17 +99,17 @@
         "icon": "multi",
         "description": "四中心资源状态、函数部署矩阵、跨中心调用链路、工作负载扩缩容与迁移。",
         "scenario_count": 0,
-        "run_count": 16,
+        "run_count": 42,
         "status": "available",
         "scenarios": [],
         "cluster_hint": ["changsha", "guangzhou", "kunshan", "jinan"]
       }
     ],
     "clusters": [
-      { "id": "changsha", "name": "长沙天河新一代", "location": "长沙", "architecture": "飞腾CPU + 迈创DSP" },
-      { "id": "guangzhou", "name": "广州天河二号", "location": "广州", "architecture": "Intel CPU" },
-      { "id": "kunshan", "name": "昆山昆仑", "location": "昆山", "architecture": "曙光CPU + 曙光DCU" },
-      { "id": "jinan", "name": "济南神威蓝光", "location": "济南", "architecture": "申威CPU" }
+      { "id": "changsha", "name": "天河新一代", "location": "长沙", "architecture": "飞腾CPU + 迈创DSP" },
+      { "id": "guangzhou", "name": "神威·太湖之光", "location": "广州", "architecture": "Intel CPU" },
+      { "id": "kunshan", "name": "曙光星云", "location": "昆山", "architecture": "曙光CPU + 曙光DCU" },
+      { "id": "jinan", "name": "银河 III", "location": "济南", "architecture": "申威CPU" }
     ]
   }
 }

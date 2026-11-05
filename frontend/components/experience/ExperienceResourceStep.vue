@@ -94,8 +94,8 @@ function usage(value: number): number {
             <meter :value="usage(cluster.cpu_utilization)" min="0" max="100" :aria-label="cluster.name + ' CPU 利用率'">{{ cluster.cpu_utilization }}%</meter>
           </div>
           <div class="resource-load-item">
-            <div><span>内存利用率</span><strong>{{ formatNumber(cluster.memory_utilization, 0) }}<small>%</small></strong></div>
-            <meter :value="usage(cluster.memory_utilization)" min="0" max="100" :aria-label="cluster.name + ' 内存利用率'">{{ cluster.memory_utilization }}%</meter>
+            <div><span>GPU 利用率</span><strong>{{ formatNumber(cluster.gpu_utilization, 0) }}<small>%</small></strong></div>
+            <meter :value="usage(cluster.gpu_utilization)" min="0" max="100" :aria-label="cluster.name + ' GPU 利用率'">{{ cluster.gpu_utilization }}%</meter>
           </div>
         </div>
         <footer class="resource-card-foot">

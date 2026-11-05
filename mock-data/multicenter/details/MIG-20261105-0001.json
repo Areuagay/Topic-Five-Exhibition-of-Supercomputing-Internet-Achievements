@@ -1,0 +1,43 @@
+{
+  "code": 200,
+  "message": "success",
+  "data": {
+    "migration_id": "MIG-20261105-0001",
+    "workload_id": "WL-FN-MATRIX",
+    "function_id": "fn-matrix-multiply",
+    "status": "migrating",
+    "progress": 65,
+    "from_cluster": "guangzhou",
+    "to_cluster": "kunshan",
+    "source_type": "backend",
+    "start_time": "2026-11-05T16:25:33+08:00",
+    "end_time": "",
+    "events": [
+      {
+        "seq": 1,
+        "event": "high_load_detected",
+        "name": "源中心高负载",
+        "status": "success",
+        "timestamp": "2026-11-05T16:25:33+08:00"
+      },
+      {
+        "seq": 2,
+        "event": "migration_started",
+        "name": "迁移启动",
+        "status": "success",
+        "timestamp": "2026-11-05T16:26:33+08:00"
+      },
+      {
+        "seq": 3,
+        "event": "state_transfer",
+        "name": "状态数据迁移",
+        "status": "running",
+        "timestamp": "2026-11-05T16:29:33+08:00"
+      }
+    ],
+    "reason": "广州中心排队等待 82 项，向昆山中心转移矩阵乘法实例",
+    "transferred_replicas": 1,
+    "total_size_mb": 1024
+  },
+  "timestamp": "2026-11-05T16:37:33+08:00"
+}

@@ -1,0 +1,29 @@
+{
+  "code": 200,
+  "message": "success",
+  "data": {
+    "migration_id": "MIG-20261105-0002",
+    "workload_id": "WL-FN-FFT",
+    "function_id": "fn-fft",
+    "status": "pending",
+    "progress": 0,
+    "from_cluster": "guangzhou",
+    "to_cluster": "changsha",
+    "source_type": "backend",
+    "start_time": "",
+    "end_time": "",
+    "events": [
+      {
+        "seq": 1,
+        "event": "migration_planned",
+        "name": "迁移计划生成",
+        "status": "success",
+        "timestamp": "2026-11-05T16:31:33+08:00"
+      }
+    ],
+    "reason": "广州中心排队等待 82 项，FFT 实例等待调度至长沙中心",
+    "transferred_replicas": 1,
+    "total_size_mb": 512
+  },
+  "timestamp": "2026-11-05T16:37:33+08:00"
+}

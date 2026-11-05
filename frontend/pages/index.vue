@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import { useApi } from '~/composables/useApi'
 import { useAppStore } from '~/stores/app'
 import { formatNumber } from '~/composables/useFormat'
+import type { MultiCluster } from '~/types'
 
 const { getIndex, getClusters } = useApi()
 const appStore = useAppStore()
@@ -56,8 +57,11 @@ function clusterName(id: string): string {
   return indexData.value?.clusters.find((cluster) => cluster.id === id)?.name ?? id
 }
 
-function statusLabel(status: string): string {
-  return status === 'degraded' ? '降级' : status === 'offline' ? '离线' : '在线'
+function statusLabel(cluster: MultiCluster): string {
+  if (cluster.resource_status === 'highLoad') return '高负载'
+  if (cluster.resource_status === 'maintenance') return '维护中'
+  if (cluster.resource_status === 'normal') return '正常运行'
+  return cluster.status === 'degraded' ? '高负载' : cluster.status === 'offline' ? '维护中' : '正常运行'
 }
 
 function statusClass(status: string): string {
@@ -192,12 +196,12 @@ function utilization(value: number): string {
                 <h3>算力中心资源状态</h3>
               </div>
               <div class="cluster-status-summary" aria-label="算力中心状态汇总">
-                <span><i class="status-dot status-dot-online" />{{ onlineClusterCount }} 在线</span>
+                <span><i class="status-dot status-dot-online" />{{ onlineClusterCount }} 正常运行</span>
                 <span v-if="degradedClusterCount">
-                  <i class="status-dot status-dot-degraded" />{{ degradedClusterCount }} 降级
+                  <i class="status-dot status-dot-degraded" />{{ degradedClusterCount }} 高负载
                 </span>
                 <span v-if="offlineClusterCount">
-                  <i class="status-dot status-dot-offline" />{{ offlineClusterCount }} 离线
+                  <i class="status-dot status-dot-offline" />{{ offlineClusterCount }} 维护中
                 </span>
               </div>
             </header>
@@ -218,7 +222,7 @@ function utilization(value: number): string {
                     class="status-badge"
                     :class="statusClass(cluster.status)"
                   >
-                    {{ statusLabel(cluster.status) }}
+                    {{ statusLabel(cluster) }}
                   </span>
                 </header>
 
@@ -231,21 +235,21 @@ function utilization(value: number): string {
                     <span :style="{ width: utilization(cluster.cpu_utilization) }" />
                   </div>
                 </div>
-                <div class="utilization-row">
+                <div class="utilization-row is-gpu">
                   <div class="utilization-label">
-                    <span>内存利用率</span>
-                    <strong>{{ utilization(cluster.memory_utilization) }}</strong>
+                    <span>GPU 利用率</span>
+                    <strong>{{ utilization(cluster.gpu_utilization) }}</strong>
                   </div>
                   <div class="utilization-track">
-                    <span :style="{ width: utilization(cluster.memory_utilization) }" />
+                    <span :style="{ width: utilization(cluster.gpu_utilization) }" />
                   </div>
                 </div>
 
                 <footer class="cluster-numbers">
-                  <span>节点 <strong>{{ formatNumber(cluster.total_nodes) }}</strong></span>
-                  <span>核数 <strong>{{ formatNumber(cluster.total_cores) }}</strong></span>
-                  <span>任务 <strong>{{ formatNumber(cluster.active_jobs) }}</strong></span>
-                  <span>排队 <strong>{{ formatNumber(cluster.queue_length) }}</strong></span>
+                  <span>运行任务 <strong>{{ formatNumber(cluster.active_jobs) }}</strong></span>
+                  <span>排队等待 <strong>{{ formatNumber(cluster.queue_length) }}</strong></span>
+                  <span>计算节点 <strong>{{ formatNumber(cluster.total_nodes) }}</strong></span>
+                  <span>处理器核 <strong>{{ formatNumber(cluster.total_cores) }}</strong></span>
                 </footer>
               </article>
             </div>
@@ -703,6 +707,8 @@ function utilization(value: number): string {
   border-radius: inherit;
   background: var(--scnet-primary);
 }
+.utilization-row.is-gpu .utilization-track span { background: #4f9a7a; }
+.utilization-row.is-gpu .utilization-label strong { color: #3f7f63; }
 .cluster-numbers {
   display: flex;
   flex-wrap: wrap;

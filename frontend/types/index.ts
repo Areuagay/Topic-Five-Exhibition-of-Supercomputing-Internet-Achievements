@@ -305,11 +305,13 @@ export interface MultiCluster {
   architecture: string
   scheduler: string
   status: string
+  /** 平台全局资源视图的资源状态：normal / highLoad / maintenance */
+  resource_status?: 'normal' | 'highLoad' | 'maintenance'
   source_type: string
   total_nodes: number
   total_cores: number
   cpu_utilization: number
-  memory_utilization: number
+  gpu_utilization: number
   gpu_count: number
   active_jobs: number
   queue_length: number
@@ -372,7 +374,7 @@ export interface WorkloadInstance {
   desired_replicas: number
   ready_replicas: number
   cpu_utilization: number
-  memory_utilization: number
+  gpu_utilization: number
 }
 
 export interface Workload {

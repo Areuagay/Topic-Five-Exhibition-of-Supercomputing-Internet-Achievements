@@ -123,13 +123,12 @@ const topologyChart = ref<{ dispatchAction: (payload: Payload) => void } | null>
 
 const clusterList = computed<MultiCluster[]>(() => clusters.value ?? [])
 const topologyLinks = computed<TopoLink[]>(() => topology.value?.links ?? [])
-const onlineClusterCount = computed(() => clusterList.value.filter((c) => c.status === 'online').length)
+const normalClusterCount = computed(() => clusterList.value.filter((c) => c.status === 'online').length)
+const highLoadClusterCount = computed(() => clusterList.value.filter((c) => c.status === 'degraded').length)
+const maintenanceClusterCount = computed(() => clusterList.value.filter((c) => c.status === 'offline').length)
 const healthyLinkCount = computed(() => topologyLinks.value.filter((l) => l.status === 'online').length)
 const activeJobCount = computed(() => clusterList.value.reduce((sum, c) => sum + Number(c.active_jobs || 0), 0))
-const averageLatency = computed(() => {
-  if (!topologyLinks.value.length) return 0
-  return topologyLinks.value.reduce((sum, link) => sum + Number(link.latency_ms || 0), 0) / topologyLinks.value.length
-})
+const queuedJobCount = computed(() => clusterList.value.reduce((sum, c) => sum + Number(c.queue_length || 0), 0))
 
 const selectedCluster = computed<MultiCluster | null>(() => {
   const id = selectedClusterId.value
@@ -169,6 +168,15 @@ function statusText(status: string): string {
     offline: '离线',
   }
   return labels[status] ?? status
+}
+
+/** 中心资源状态沿用超算平台全局资源视图的文案。 */
+function clusterStatusLabel(cluster: MultiCluster | null | undefined): string {
+  if (!cluster) return '-'
+  if (cluster.resource_status === 'highLoad') return '高负载'
+  if (cluster.resource_status === 'maintenance') return '维护中'
+  if (cluster.resource_status === 'normal') return '正常运行'
+  return cluster.status === 'degraded' ? '高负载' : cluster.status === 'offline' ? '维护中' : '正常运行'
 }
 
 function formatBandwidth(value: number): string {
@@ -264,9 +272,14 @@ const topoOption = computed<EChartsCoreOption | null>(() => {
         if (params.dataType === 'edge') {
           const source = String(data.source ?? '')
           const target = String(data.target ?? '')
+          if (data.status === 'offline') {
+            return `${nameOf(source)} ↔ ${nameOf(target)}<br/>链路不可达 · 中心维护中`
+          }
           return `${nameOf(source)} ↔ ${nameOf(target)}<br/>时延 ${data.latency_ms ?? '-'} ms · 带宽 ${formatBandwidth(Number(data.bandwidth_mbps || 0))}`
         }
-        return `${String(data.name ?? '')}<br/>${String(data.architecture ?? '')} · ${statusText(String(data.status ?? ''))}`
+        return `${String(data.name ?? '')}<br/>${String(data.architecture ?? '')} · ${String(data.resourceLabel ?? '')}`
+          + `<br/>CPU ${data.cpu ?? '-'}% · GPU ${data.gpu ?? '-'}%`
+          + `<br/>运行任务 ${data.running ?? 0} · 排队等待 ${data.queued ?? 0}`
       },
     },
     series: [
@@ -283,7 +296,7 @@ const topoOption = computed<EChartsCoreOption | null>(() => {
           distance: 10,
           formatter: (params: { data?: Record<string, unknown> }) => {
             const data = params.data ?? {}
-            return `{name|${String(data.name ?? '')}}\n{meta|${String(data.location ?? '')} · ${statusText(String(data.status ?? ''))}}`
+            return `{name|${String(data.name ?? '')}}\n{meta|${String(data.location ?? '')} · ${String(data.resourceLabel ?? '')}}`
           },
           rich: {
             name: { color: '#2f3b50', fontSize: 13, fontWeight: 600, lineHeight: 22 },
@@ -292,15 +305,15 @@ const topoOption = computed<EChartsCoreOption | null>(() => {
         },
         edgeLabel: {
           show: true,
-          formatter: (params: { data?: Record<string, unknown> }) => `${params.data?.latency_ms ?? '-'} ms`,
+          formatter: (params: { data?: Record<string, unknown> }) => (params.data?.status === 'offline'
+            ? ''
+            : `${params.data?.latency_ms ?? '-'} ms`),
           color: '#657286',
           fontSize: 11.5,
           fontFamily: 'Cascadia Mono, Consolas, monospace',
-          backgroundColor: 'rgba(255, 255, 255, 0.9)',
-          borderColor: '#e3e8ee',
-          borderWidth: 1,
-          borderRadius: 3,
-          padding: [2, 4],
+          backgroundColor: 'transparent',
+          borderWidth: 0,
+          padding: 0,
         },
         lineStyle: { color: '#aebaca', width: 1.5, opacity: 0.8 },
         emphasis: {
@@ -317,6 +330,11 @@ const topoOption = computed<EChartsCoreOption | null>(() => {
             status: n.status,
             location: cluster?.location ?? '',
             architecture: cluster?.architecture ?? '',
+            resourceLabel: clusterStatusLabel(cluster),
+            cpu: cluster?.cpu_utilization ?? 0,
+            gpu: cluster?.gpu_utilization ?? 0,
+            running: cluster?.active_jobs ?? 0,
+            queued: cluster?.queue_length ?? 0,
             symbol: 'circle',
             symbolSize: 68,
             itemStyle: {
@@ -345,10 +363,10 @@ const topoOption = computed<EChartsCoreOption | null>(() => {
           packet_loss_percent: l.packet_loss_percent,
           select: { disabled: true },
           lineStyle: {
-            color: l.status === 'degraded' ? '#c18a41' : '#a9b6c6',
-            width: l.status === 'degraded' ? 2.2 : 1.5,
-            type: l.status === 'degraded' ? 'dashed' : 'solid',
-            opacity: l.status === 'degraded' ? 0.95 : 0.76,
+            color: l.status === 'offline' ? '#c3cad4' : l.status === 'degraded' ? '#c18a41' : '#a9b6c6',
+            width: l.status === 'offline' ? 1.4 : l.status === 'degraded' ? 2.2 : 1.5,
+            type: l.status === 'online' ? 'solid' : 'dashed',
+            opacity: l.status === 'offline' ? 0.7 : l.status === 'degraded' ? 0.95 : 0.76,
             curveness: 0.06,
           },
         })),
@@ -445,6 +463,14 @@ function deploymentStatusClass(status: string): string {
 }
 
 /* ============ 调用追踪 ============ */
+const invocationList = computed<Invocation[]>(() => invocations.value ?? [])
+const runningInvocationCount = computed(() => invocationList.value.filter((item) => item.status === 'running').length)
+const invocationPage = ref(1)
+const INVOCATION_PAGE_SIZE = 10
+const pagedInvocations = computed(() => {
+  const start = (invocationPage.value - 1) * INVOCATION_PAGE_SIZE
+  return invocationList.value.slice(start, start + INVOCATION_PAGE_SIZE)
+})
 const traceVisible = ref(false)
 const traceLoading = ref(false)
 const trace = ref<TraceDetail | null>(null)
@@ -618,20 +644,21 @@ async function openMig(id: string): Promise<void> {
         <div class="multicenter-overview">
           <dl class="multicenter-summary" aria-label="多中心运行摘要">
             <div>
-              <dt>在线中心</dt>
-              <dd>{{ onlineClusterCount }}<span>/ {{ clusterList.length }}</span></dd>
+              <dt>算力中心</dt>
+              <dd>{{ clusterList.length }}<span>个</span></dd>
+              <p class="multicenter-summary-note">正常 {{ normalClusterCount }} · 高负载 {{ highLoadClusterCount }} · 维护 {{ maintenanceClusterCount }}</p>
             </div>
             <div>
               <dt>健康链路</dt>
               <dd>{{ healthyLinkCount }}<span>/ {{ topologyLinks.length }}</span></dd>
             </div>
             <div>
-              <dt>平均时延</dt>
-              <dd>{{ averageLatency.toFixed(1) }}<span>ms</span></dd>
+              <dt>运行任务</dt>
+              <dd>{{ formatNumber(activeJobCount) }}<span>项</span></dd>
             </div>
             <div>
-              <dt>活跃任务</dt>
-              <dd>{{ formatNumber(activeJobCount) }}<span>项</span></dd>
+              <dt>排队等待</dt>
+              <dd>{{ formatNumber(queuedJobCount) }}<span>项</span></dd>
             </div>
           </dl>
 
@@ -645,6 +672,7 @@ async function openMig(id: string): Promise<void> {
               <div class="topology-actions">
                 <span class="topology-legend is-online"><i aria-hidden="true" />在线链路</span>
                 <span class="topology-legend is-degraded"><i aria-hidden="true" />降级链路</span>
+                <span class="topology-legend is-offline"><i aria-hidden="true" />离线链路</span>
                 <button type="button" class="topology-reset-button" aria-label="重置拓扑布局" @click="resetTopology">
                   <svg viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M20 11a8 8 0 1 0-2.34 5.66M20 5v6h-6" />
@@ -677,9 +705,12 @@ async function openMig(id: string): Promise<void> {
                   <span class="cluster-status-dot" aria-hidden="true" />
                   <span class="cluster-rail-copy">
                     <strong>{{ c.name }}</strong>
-                    <small>{{ c.location }} · CPU {{ c.cpu_utilization }}%</small>
+                    <small>{{ c.location }} · CPU {{ Math.round(c.cpu_utilization) }}% · GPU {{ Math.round(c.gpu_utilization) }}%</small>
                   </span>
-                  <span class="cluster-rail-queue">{{ c.active_jobs }}</span>
+                  <span class="cluster-rail-queue" :title="`${c.name} 排队等待 ${c.queue_length} 项`" :aria-label="`排队等待 ${c.queue_length} 项`">
+                    <strong>{{ c.queue_length }}</strong>
+                    <small>排队</small>
+                  </span>
                 </button>
               </aside>
 
@@ -698,7 +729,8 @@ async function openMig(id: string): Promise<void> {
                 </div>
                 <div v-if="selectedLink" class="topology-link-selection" role="status">
                   <strong>{{ nameOf(selectedLink.source) }} ↔ {{ nameOf(selectedLink.target) }}</strong>
-                  <span>时延 {{ selectedLink.latency_ms }} ms · 带宽 {{ formatBandwidth(selectedLink.bandwidth_mbps) }}</span>
+                  <span v-if="selectedLink.status === 'offline'">链路不可达 · 中心维护中</span>
+                  <span v-else>时延 {{ selectedLink.latency_ms }} ms · 带宽 {{ formatBandwidth(selectedLink.bandwidth_mbps) }}</span>
                 </div>
               </div>
 
@@ -717,35 +749,35 @@ async function openMig(id: string): Promise<void> {
                   </div>
                   <h3>{{ nameOf(selectedLink.target) }}</h3>
                   <dl class="inspector-metrics">
-                    <div><dt>网络时延</dt><dd>{{ selectedLink.latency_ms }}<span>ms</span></dd></div>
-                    <div><dt>可用带宽</dt><dd>{{ formatBandwidth(selectedLink.bandwidth_mbps) }}</dd></div>
-                    <div><dt>丢包率</dt><dd>{{ selectedLink.packet_loss_percent ?? 0 }}<span>%</span></dd></div>
+                    <div><dt>网络时延</dt><dd>{{ selectedLink.status === 'offline' ? '—' : selectedLink.latency_ms }}<span v-if="selectedLink.status !== 'offline'">ms</span></dd></div>
+                    <div><dt>可用带宽</dt><dd>{{ selectedLink.status === 'offline' ? '—' : formatBandwidth(selectedLink.bandwidth_mbps) }}</dd></div>
+                    <div><dt>丢包率</dt><dd>{{ selectedLink.status === 'offline' ? '—' : (selectedLink.packet_loss_percent ?? 0) }}<span v-if="selectedLink.status !== 'offline'">%</span></dd></div>
                   </dl>
                 </template>
                 <template v-else-if="selectedCluster">
                   <div class="inspector-heading">
                     <p>中心详情</p>
-                    <span :class="`is-${selectedCluster.status}`">{{ statusText(selectedCluster.status) }}</span>
+                    <span :class="`is-${selectedCluster.status}`">{{ clusterStatusLabel(selectedCluster) }}</span>
                   </div>
                   <h3>{{ selectedCluster.name }}</h3>
                   <p class="inspector-description">
-                    {{ selectedCluster.architecture }} · {{ selectedCluster.scheduler }}
+                    {{ selectedCluster.location }} · {{ selectedCluster.architecture }} · {{ selectedCluster.scheduler }}
                   </p>
                   <div class="inspector-utilization">
                     <div>
                       <span>CPU 利用率</span><strong>{{ selectedCluster.cpu_utilization }}%</strong>
                       <i><b :style="{ width: `${selectedCluster.cpu_utilization}%` }" /></i>
                     </div>
-                    <div>
-                      <span>内存利用率</span><strong>{{ selectedCluster.memory_utilization }}%</strong>
-                      <i><b :style="{ width: `${selectedCluster.memory_utilization}%` }" /></i>
+                    <div class="is-gpu">
+                      <span>GPU 利用率</span><strong>{{ selectedCluster.gpu_utilization }}%</strong>
+                      <i><b :style="{ width: `${selectedCluster.gpu_utilization}%` }" /></i>
                     </div>
                   </div>
                   <dl class="inspector-facts">
+                    <div><dt>运行任务</dt><dd>{{ formatNumber(selectedCluster.active_jobs) }}</dd></div>
+                    <div><dt>排队等待</dt><dd>{{ formatNumber(selectedCluster.queue_length) }}</dd></div>
                     <div><dt>计算节点</dt><dd>{{ formatNumber(selectedCluster.total_nodes) }}</dd></div>
                     <div><dt>处理器核</dt><dd>{{ formatNumber(selectedCluster.total_cores) }}</dd></div>
-                    <div><dt>加速卡</dt><dd>{{ formatNumber(selectedCluster.gpu_count) }}</dd></div>
-                    <div><dt>排队任务</dt><dd>{{ formatNumber(selectedCluster.queue_length) }}</dd></div>
                   </dl>
                   <div class="inspector-links">
                     <p>相连链路</p>
@@ -756,7 +788,7 @@ async function openMig(id: string): Promise<void> {
                       @click="selectLink(link)"
                     >
                       <span>{{ nameOf(link.source === selectedCluster.id ? link.target : link.source) }}</span>
-                      <strong>{{ link.latency_ms }} ms</strong>
+                      <strong>{{ link.status === 'offline' ? '离线' : `${link.latency_ms} ms` }}</strong>
                     </button>
                   </div>
                 </template>
@@ -855,8 +887,13 @@ async function openMig(id: string): Promise<void> {
       <!-- ================= 调用追踪 ================= -->
       <el-tab-pane label="调用追踪" name="invocations">
         <section class="invocation-table-region" aria-label="调用追踪列表">
+          <p class="invocation-summary">
+            <span>运行中 <strong>{{ runningInvocationCount }}</strong></span>
+            <span>排队等待 <strong>{{ formatNumber(queuedJobCount) }}</strong></span>
+            <span>最近调用 <strong>{{ formatNumber(invocationList.length) }}</strong> 条</span>
+          </p>
           <el-table
-            :data="invocations ?? []"
+            :data="pagedInvocations"
             :row-class-name="invocationRowClassName"
             stripe
             size="default"
@@ -882,6 +919,16 @@ async function openMig(id: string): Promise<void> {
               </template>
             </el-table-column>
           </el-table>
+          <el-pagination
+            v-if="invocationList.length > INVOCATION_PAGE_SIZE"
+            v-model:current-page="invocationPage"
+            class="invocation-pagination"
+            :page-size="INVOCATION_PAGE_SIZE"
+            :total="invocationList.length"
+            layout="prev, pager, next, total"
+            background
+            size="small"
+          />
         </section>
       </el-tab-pane>
 
@@ -928,7 +975,7 @@ async function openMig(id: string): Promise<void> {
                     </p>
                     <div v-if="instance.desired_replicas > 0" class="workload-resource-pair">
                       <span>CPU {{ instance.cpu_utilization }}%</span>
-                      <span>内存 {{ instance.memory_utilization }}%</span>
+                      <span>GPU {{ instance.gpu_utilization }}%</span>
                     </div>
                     <p v-else class="workload-idle-label">未部署</p>
                   </div>
@@ -1310,6 +1357,27 @@ async function openMig(id: string): Promise<void> {
   overscroll-behavior-inline: contain;
 }
 
+.invocation-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 18px;
+  margin: 0;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--scnet-divider);
+  background: #f9fbfd;
+  color: #7b8798;
+  font-size: 12px;
+}
+
+.invocation-summary strong {
+  margin-left: 5px;
+  color: #334157;
+  font-family: var(--scnet-font-mono);
+  font-size: 15px;
+  font-weight: 650;
+}
+
 .invocation-table-region :deep(.el-table) {
   min-width: 980px;
   color: var(--scnet-text-secondary);
@@ -1355,6 +1423,7 @@ async function openMig(id: string): Promise<void> {
 }
 
 .invocation-trace-button { min-height: 36px; font-weight: 600; }
+.invocation-pagination { display: flex; justify-content: flex-end; padding: 12px 16px; }
 
 :global(.trace-detail-dialog) {
   height: min(680px, calc(100vh - 40px));
@@ -1951,6 +2020,7 @@ async function openMig(id: string): Promise<void> {
   font-variant-numeric: tabular-nums;
 }
 .multicenter-summary dd span { margin-left: 5px; color: #8a96a7; font-size: 12px; font-weight: 450; }
+.multicenter-summary-note { margin: 5px 0 0; color: #8a96a7; font-size: 11px; line-height: 1.5; }
 
 .topology-panel {
   overflow: hidden;
@@ -1976,6 +2046,7 @@ async function openMig(id: string): Promise<void> {
 .topology-legend { gap: 6px; color: #687589; font-size: 11px; }
 .topology-legend i { width: 6px; height: 6px; }
 .topology-legend.is-degraded i { background: #bd8435; }
+.topology-legend.is-offline i { background: #9aa6b5; }
 
 .topology-reset-button {
   gap: 6px;
@@ -2002,7 +2073,7 @@ async function openMig(id: string): Promise<void> {
 
 .topology-workspace {
   display: grid;
-  grid-template-columns: 230px minmax(0, 1fr) 282px;
+  grid-template-columns: 254px minmax(0, 1fr) 282px;
   min-height: 520px;
   background: #fbfcfe;
 }
@@ -2060,15 +2131,24 @@ async function openMig(id: string): Promise<void> {
 .cluster-rail-copy strong { color: #334057; font-size: 12.5px; font-weight: 600; }
 .cluster-rail-copy small { margin-top: 2px; color: #8994a4; font-size: 10.5px; }
 .cluster-rail-queue {
-  min-width: 28px;
-  padding: 2px 5px;
+  min-width: 34px;
+  display: grid;
+  justify-items: center;
+  gap: 1px;
+  padding: 3px 5px;
   border-radius: 4px;
   background: #eef2f6;
   color: #6f7c8e;
-  font-family: var(--scnet-font-mono);
-  font-size: 10px;
-  text-align: center;
+  line-height: 1.15;
+  white-space: nowrap;
 }
+.cluster-rail-queue strong {
+  color: #4f5d70;
+  font-family: var(--scnet-font-mono);
+  font-size: 11px;
+  font-weight: 650;
+}
+.cluster-rail-queue small { color: #8b96a6; font-size: 9px; }
 
 .topology-stage { position: relative; min-width: 0; overflow: hidden; }
 .topology-link-selection {
@@ -2128,6 +2208,8 @@ async function openMig(id: string): Promise<void> {
 .inspector-utilization strong { color: #46546a; font-family: var(--scnet-font-mono); font-size: 11px; font-weight: 600; }
 .inspector-utilization i { grid-column: 1 / -1; display: block; height: 4px; overflow: hidden; border-radius: 2px; background: #edf1f5; }
 .inspector-utilization b { display: block; height: 100%; border-radius: inherit; background: #5a88c5; }
+.inspector-utilization .is-gpu b { background: #4f9a7a; }
+.inspector-utilization .is-gpu strong { color: #3f7f63; }
 
 .inspector-facts,
 .inspector-metrics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 0; border: 1px solid #e5e9ee; border-radius: 6px; }
