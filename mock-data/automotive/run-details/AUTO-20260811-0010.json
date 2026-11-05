@@ -9,7 +9,7 @@
     "progress": 100,
     "execution_mode": "simulated",
     "cluster_id": "changsha",
-    "cluster_name": "长沙天河新一代",
+    "cluster_name": "天河新一代",
     "job_id": "209910",
     "current_stage": "completed",
     "start_time": "2026-08-10T13:00:00+08:00",
@@ -19,7 +19,7 @@
     "cpu_cores": 512,
     "gpu_count": 0,
     "memory_gb": 2048,
-    "core_hours": 384.0,
+    "core_hours": 384,
     "source_type": "simulated",
     "workflow": {
       "nodes": [
@@ -160,11 +160,11 @@
         "damage_series": [
           {
             "cycle": 0,
-            "damage_ratio": 0.0
+            "damage_ratio": 0
           },
           {
             "cycle": 14492,
-            "damage_ratio": 0.0
+            "damage_ratio": 0
           },
           {
             "cycle": 28985,
@@ -441,7 +441,7 @@
         ],
         "sn_curve": [
           {
-            "stress_amplitude": 120.0,
+            "stress_amplitude": 120,
             "cycles_to_failure": 52828.2
           },
           {
@@ -485,7 +485,7 @@
             "cycles_to_failure": 1939.9
           },
           {
-            "stress_amplitude": 339.0,
+            "stress_amplitude": 339,
             "cycles_to_failure": 1394.1
           },
           {
@@ -497,7 +497,7 @@
             "cycles_to_failure": 719.9
           },
           {
-            "stress_amplitude": 450.0,
+            "stress_amplitude": 450,
             "cycles_to_failure": 517.3
           }
         ],
@@ -506,49 +506,49 @@
             "location": "knuckle_fillet",
             "max_stress": 416.1,
             "damage": 0.8786,
-            "predicted_life": 24315.0
+            "predicted_life": 24315
           },
           {
             "location": "weld_toe_A",
             "max_stress": 428.4,
             "damage": 0.8469,
-            "predicted_life": 37193.0
+            "predicted_life": 37193
           },
           {
             "location": "weld_toe_B",
             "max_stress": 394.2,
             "damage": 0.7763,
-            "predicted_life": 78396.0
+            "predicted_life": 78396
           },
           {
             "location": "bolt_hole_rim",
             "max_stress": 386.1,
             "damage": 0.7407,
-            "predicted_life": 106445.0
+            "predicted_life": 106445
           },
           {
             "location": "bracket_root",
             "max_stress": 388.3,
             "damage": 0.7383,
-            "predicted_life": 108448.0
+            "predicted_life": 108448
           },
           {
             "location": "crossmember_notch",
             "max_stress": 346.7,
             "damage": 0.5716,
-            "predicted_life": 316670.0
+            "predicted_life": 316670
           },
           {
             "location": "suspension_bushing",
             "max_stress": 298.6,
             "damage": 0.4389,
-            "predicted_life": 583906.0
+            "predicted_life": 583906
           },
           {
             "location": "frame_rail_bend",
             "max_stress": 247.3,
             "damage": 0.2167,
-            "predicted_life": 1267700.0
+            "predicted_life": 1267700
           }
         ]
       }
@@ -674,11 +674,11 @@
       "damage_series": [
         {
           "cycle": 0,
-          "damage_ratio": 0.0
+          "damage_ratio": 0
         },
         {
           "cycle": 14492,
-          "damage_ratio": 0.0
+          "damage_ratio": 0
         },
         {
           "cycle": 28985,
@@ -955,7 +955,7 @@
       ],
       "sn_curve": [
         {
-          "stress_amplitude": 120.0,
+          "stress_amplitude": 120,
           "cycles_to_failure": 52828.2
         },
         {
@@ -999,7 +999,7 @@
           "cycles_to_failure": 1939.9
         },
         {
-          "stress_amplitude": 339.0,
+          "stress_amplitude": 339,
           "cycles_to_failure": 1394.1
         },
         {
@@ -1011,7 +1011,7 @@
           "cycles_to_failure": 719.9
         },
         {
-          "stress_amplitude": 450.0,
+          "stress_amplitude": 450,
           "cycles_to_failure": 517.3
         }
       ],
@@ -1020,49 +1020,49 @@
           "location": "knuckle_fillet",
           "max_stress": 416.1,
           "damage": 0.8786,
-          "predicted_life": 24315.0
+          "predicted_life": 24315
         },
         {
           "location": "weld_toe_A",
           "max_stress": 428.4,
           "damage": 0.8469,
-          "predicted_life": 37193.0
+          "predicted_life": 37193
         },
         {
           "location": "weld_toe_B",
           "max_stress": 394.2,
           "damage": 0.7763,
-          "predicted_life": 78396.0
+          "predicted_life": 78396
         },
         {
           "location": "bolt_hole_rim",
           "max_stress": 386.1,
           "damage": 0.7407,
-          "predicted_life": 106445.0
+          "predicted_life": 106445
         },
         {
           "location": "bracket_root",
           "max_stress": 388.3,
           "damage": 0.7383,
-          "predicted_life": 108448.0
+          "predicted_life": 108448
         },
         {
           "location": "crossmember_notch",
           "max_stress": 346.7,
           "damage": 0.5716,
-          "predicted_life": 316670.0
+          "predicted_life": 316670
         },
         {
           "location": "suspension_bushing",
           "max_stress": 298.6,
           "damage": 0.4389,
-          "predicted_life": 583906.0
+          "predicted_life": 583906
         },
         {
           "location": "frame_rail_bend",
           "max_stress": 247.3,
           "damage": 0.2167,
-          "predicted_life": 1267700.0
+          "predicted_life": 1267700
         }
       ]
     }

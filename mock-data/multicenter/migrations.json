@@ -11,7 +11,7 @@
       "from_cluster": "guangzhou",
       "to_cluster": "kunshan",
       "source_type": "backend",
-      "start_time": "2026-11-05T16:25:33+08:00",
+      "start_time": "2026-11-05T17:58:01+08:00",
       "end_time": "",
       "events": [
         {
@@ -19,21 +19,21 @@
           "event": "high_load_detected",
           "name": "源中心高负载",
           "status": "success",
-          "timestamp": "2026-11-05T16:25:33+08:00"
+          "timestamp": "2026-11-05T17:58:01+08:00"
         },
         {
           "seq": 2,
           "event": "migration_started",
           "name": "迁移启动",
           "status": "success",
-          "timestamp": "2026-11-05T16:26:33+08:00"
+          "timestamp": "2026-11-05T17:59:01+08:00"
         },
         {
           "seq": 3,
           "event": "state_transfer",
           "name": "状态数据迁移",
           "status": "running",
-          "timestamp": "2026-11-05T16:29:33+08:00"
+          "timestamp": "2026-11-05T18:02:01+08:00"
         }
       ]
     },
@@ -54,7 +54,7 @@
           "event": "migration_planned",
           "name": "迁移计划生成",
           "status": "success",
-          "timestamp": "2026-11-05T16:31:33+08:00"
+          "timestamp": "2026-11-05T18:04:01+08:00"
         }
       ]
     },
@@ -67,36 +67,36 @@
       "from_cluster": "changsha",
       "to_cluster": "kunshan",
       "source_type": "backend",
-      "start_time": "2026-11-05T15:02:33+08:00",
-      "end_time": "2026-11-05T15:04:33+08:00",
+      "start_time": "2026-11-05T16:35:01+08:00",
+      "end_time": "2026-11-05T16:37:01+08:00",
       "events": [
         {
           "seq": 1,
           "event": "load_balancing",
           "name": "负载均衡调度",
           "status": "success",
-          "timestamp": "2026-11-05T15:02:33+08:00"
+          "timestamp": "2026-11-05T16:35:01+08:00"
         },
         {
           "seq": 2,
           "event": "migration_started",
           "name": "迁移启动",
           "status": "success",
-          "timestamp": "2026-11-05T15:03:33+08:00"
+          "timestamp": "2026-11-05T16:36:01+08:00"
         },
         {
           "seq": 3,
           "event": "state_transfer",
           "name": "状态数据迁移",
           "status": "success",
-          "timestamp": "2026-11-05T15:04:03+08:00"
+          "timestamp": "2026-11-05T16:36:31+08:00"
         },
         {
           "seq": 4,
           "event": "migration_completed",
           "name": "迁移完成",
           "status": "success",
-          "timestamp": "2026-11-05T15:04:33+08:00"
+          "timestamp": "2026-11-05T16:37:01+08:00"
         }
       ]
     },
@@ -109,32 +109,32 @@
       "from_cluster": "kunshan",
       "to_cluster": "changsha",
       "source_type": "backend",
-      "start_time": "2026-11-05T13:37:33+08:00",
-      "end_time": "2026-11-05T13:37:51+08:00",
+      "start_time": "2026-11-05T15:10:01+08:00",
+      "end_time": "2026-11-05T15:10:19+08:00",
       "events": [
         {
           "seq": 1,
           "event": "migration_started",
           "name": "迁移启动",
           "status": "success",
-          "timestamp": "2026-11-05T13:37:33+08:00"
+          "timestamp": "2026-11-05T15:10:01+08:00"
         },
         {
           "seq": 2,
           "event": "state_transfer",
           "name": "状态数据迁移",
           "status": "running",
-          "timestamp": "2026-11-05T13:37:39+08:00"
+          "timestamp": "2026-11-05T15:10:07+08:00"
         },
         {
           "seq": 3,
           "event": "resource_check_failed",
           "name": "目标中心资源校验失败",
           "status": "failed",
-          "timestamp": "2026-11-05T13:37:51+08:00"
+          "timestamp": "2026-11-05T15:10:19+08:00"
         }
       ]
     }
   ],
-  "timestamp": "2026-11-05T16:37:33+08:00"
+  "timestamp": "2026-11-05T18:10:01+08:00"
 }

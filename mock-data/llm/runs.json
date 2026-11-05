@@ -11,7 +11,7 @@
       "progress": 42,
       "execution_mode": "simulated",
       "cluster_id": "kunshan",
-      "cluster_name": "昆山昆仑",
+      "cluster_name": "曙光星云",
       "job_id": "45201",
       "current_stage": "train",
       "start_time": "2026-08-11T09:30:00+08:00",
@@ -21,17 +21,59 @@
       "cpu_cores": 1536,
       "gpu_count": 128,
       "memory_gb": 32768,
-      "core_hours": 2304.0,
+      "core_hours": 2304,
       "source_type": "simulated",
       "has_detail": true,
       "metrics_snapshot": [
-        { "name": "step", "label": "训练步数", "value": 4200, "total": 10000, "unit": "step" },
-        { "name": "loss", "label": "Loss", "value": 2.314, "total": 0, "unit": "" },
-        { "name": "learning_rate", "label": "学习率", "value": 8e-05, "total": 0, "unit": "" },
-        { "name": "tokens_per_second", "label": "训练吞吐量", "value": 18420, "total": 0, "unit": "tokens/s" },
-        { "name": "gpu_utilization", "label": "GPU利用率", "value": 92, "total": 100, "unit": "%" },
-        { "name": "gpu_memory", "label": "GPU显存使用率", "value": 87, "total": 100, "unit": "%" },
-        { "name": "communication_overhead", "label": "通信开销", "value": 14.2, "total": 100, "unit": "%" }
+        {
+          "name": "step",
+          "label": "训练步数",
+          "value": 4200,
+          "total": 10000,
+          "unit": "step"
+        },
+        {
+          "name": "loss",
+          "label": "Loss",
+          "value": 2.314,
+          "total": 0,
+          "unit": ""
+        },
+        {
+          "name": "learning_rate",
+          "label": "学习率",
+          "value": 0.00008,
+          "total": 0,
+          "unit": ""
+        },
+        {
+          "name": "tokens_per_second",
+          "label": "训练吞吐量",
+          "value": 18420,
+          "total": 0,
+          "unit": "tokens/s"
+        },
+        {
+          "name": "gpu_utilization",
+          "label": "GPU利用率",
+          "value": 92,
+          "total": 100,
+          "unit": "%"
+        },
+        {
+          "name": "gpu_memory",
+          "label": "GPU显存使用率",
+          "value": 87,
+          "total": 100,
+          "unit": "%"
+        },
+        {
+          "name": "communication_overhead",
+          "label": "通信开销",
+          "value": 14.2,
+          "total": 100,
+          "unit": "%"
+        }
       ]
     },
     {
@@ -43,7 +85,7 @@
       "progress": 100,
       "execution_mode": "simulated",
       "cluster_id": "kunshan",
-      "cluster_name": "昆山昆仑",
+      "cluster_name": "曙光星云",
       "job_id": "45187",
       "current_stage": "completed",
       "start_time": "2026-08-10T20:30:00+08:00",
@@ -57,13 +99,55 @@
       "source_type": "simulated",
       "has_detail": false,
       "metrics_snapshot": [
-        { "name": "step", "label": "训练步数", "value": 10000, "total": 10000, "unit": "step" },
-        { "name": "loss", "label": "Loss", "value": 1.873, "total": 0, "unit": "" },
-        { "name": "learning_rate", "label": "学习率", "value": 3e-05, "total": 0, "unit": "" },
-        { "name": "tokens_per_second", "label": "训练吞吐量", "value": 17980, "total": 0, "unit": "tokens/s" },
-        { "name": "gpu_utilization", "label": "GPU利用率", "value": 93, "total": 100, "unit": "%" },
-        { "name": "gpu_memory", "label": "GPU显存使用率", "value": 88, "total": 100, "unit": "%" },
-        { "name": "communication_overhead", "label": "通信开销", "value": 13.8, "total": 100, "unit": "%" }
+        {
+          "name": "step",
+          "label": "训练步数",
+          "value": 10000,
+          "total": 10000,
+          "unit": "step"
+        },
+        {
+          "name": "loss",
+          "label": "Loss",
+          "value": 1.873,
+          "total": 0,
+          "unit": ""
+        },
+        {
+          "name": "learning_rate",
+          "label": "学习率",
+          "value": 0.00003,
+          "total": 0,
+          "unit": ""
+        },
+        {
+          "name": "tokens_per_second",
+          "label": "训练吞吐量",
+          "value": 17980,
+          "total": 0,
+          "unit": "tokens/s"
+        },
+        {
+          "name": "gpu_utilization",
+          "label": "GPU利用率",
+          "value": 93,
+          "total": 100,
+          "unit": "%"
+        },
+        {
+          "name": "gpu_memory",
+          "label": "GPU显存使用率",
+          "value": 88,
+          "total": 100,
+          "unit": "%"
+        },
+        {
+          "name": "communication_overhead",
+          "label": "通信开销",
+          "value": 13.8,
+          "total": 100,
+          "unit": "%"
+        }
       ]
     },
     {
@@ -75,7 +159,7 @@
       "progress": 100,
       "execution_mode": "replay",
       "cluster_id": "changsha",
-      "cluster_name": "长沙天河新一代",
+      "cluster_name": "天河新一代",
       "job_id": "209890",
       "current_stage": "completed",
       "start_time": "2026-08-10T14:00:00+08:00",
@@ -89,13 +173,55 @@
       "source_type": "simulated",
       "has_detail": false,
       "metrics_snapshot": [
-        { "name": "step", "label": "训练步数", "value": 10000, "total": 10000, "unit": "step" },
-        { "name": "loss", "label": "Loss", "value": 1.912, "total": 0, "unit": "" },
-        { "name": "learning_rate", "label": "学习率", "value": 3e-05, "total": 0, "unit": "" },
-        { "name": "tokens_per_second", "label": "训练吞吐量", "value": 16640, "total": 0, "unit": "tokens/s" },
-        { "name": "gpu_utilization", "label": "GPU利用率", "value": 90, "total": 100, "unit": "%" },
-        { "name": "gpu_memory", "label": "GPU显存使用率", "value": 86, "total": 100, "unit": "%" },
-        { "name": "communication_overhead", "label": "通信开销", "value": 15.6, "total": 100, "unit": "%" }
+        {
+          "name": "step",
+          "label": "训练步数",
+          "value": 10000,
+          "total": 10000,
+          "unit": "step"
+        },
+        {
+          "name": "loss",
+          "label": "Loss",
+          "value": 1.912,
+          "total": 0,
+          "unit": ""
+        },
+        {
+          "name": "learning_rate",
+          "label": "学习率",
+          "value": 0.00003,
+          "total": 0,
+          "unit": ""
+        },
+        {
+          "name": "tokens_per_second",
+          "label": "训练吞吐量",
+          "value": 16640,
+          "total": 0,
+          "unit": "tokens/s"
+        },
+        {
+          "name": "gpu_utilization",
+          "label": "GPU利用率",
+          "value": 90,
+          "total": 100,
+          "unit": "%"
+        },
+        {
+          "name": "gpu_memory",
+          "label": "GPU显存使用率",
+          "value": 86,
+          "total": 100,
+          "unit": "%"
+        },
+        {
+          "name": "communication_overhead",
+          "label": "通信开销",
+          "value": 15.6,
+          "total": 100,
+          "unit": "%"
+        }
       ]
     },
     {
@@ -107,7 +233,7 @@
       "progress": 18,
       "execution_mode": "simulated",
       "cluster_id": "jinan",
-      "cluster_name": "济南神威蓝光",
+      "cluster_name": "银河 III",
       "job_id": "60123",
       "current_stage": "train",
       "start_time": "2026-08-11T10:00:00+08:00",
@@ -117,17 +243,59 @@
       "cpu_cores": 1024,
       "gpu_count": 32,
       "memory_gb": 8192,
-      "core_hours": 700.0,
+      "core_hours": 700,
       "source_type": "simulated",
       "has_detail": false,
       "metrics_snapshot": [
-        { "name": "step", "label": "训练步数", "value": 1800, "total": 10000, "unit": "step" },
-        { "name": "loss", "label": "Loss", "value": 8.532, "total": 0, "unit": "" },
-        { "name": "learning_rate", "label": "学习率", "value": 1.2e-04, "total": 0, "unit": "" },
-        { "name": "tokens_per_second", "label": "训练吞吐量", "value": 7820, "total": 0, "unit": "tokens/s" },
-        { "name": "gpu_utilization", "label": "GPU利用率", "value": 45, "total": 100, "unit": "%" },
-        { "name": "gpu_memory", "label": "GPU显存使用率", "value": 62, "total": 100, "unit": "%" },
-        { "name": "communication_overhead", "label": "通信开销", "value": 38.7, "total": 100, "unit": "%" }
+        {
+          "name": "step",
+          "label": "训练步数",
+          "value": 1800,
+          "total": 10000,
+          "unit": "step"
+        },
+        {
+          "name": "loss",
+          "label": "Loss",
+          "value": 8.532,
+          "total": 0,
+          "unit": ""
+        },
+        {
+          "name": "learning_rate",
+          "label": "学习率",
+          "value": 0.00012,
+          "total": 0,
+          "unit": ""
+        },
+        {
+          "name": "tokens_per_second",
+          "label": "训练吞吐量",
+          "value": 7820,
+          "total": 0,
+          "unit": "tokens/s"
+        },
+        {
+          "name": "gpu_utilization",
+          "label": "GPU利用率",
+          "value": 45,
+          "total": 100,
+          "unit": "%"
+        },
+        {
+          "name": "gpu_memory",
+          "label": "GPU显存使用率",
+          "value": 62,
+          "total": 100,
+          "unit": "%"
+        },
+        {
+          "name": "communication_overhead",
+          "label": "通信开销",
+          "value": 38.7,
+          "total": 100,
+          "unit": "%"
+        }
       ]
     },
     {
@@ -139,7 +307,7 @@
       "progress": 65,
       "execution_mode": "simulated",
       "cluster_id": "kunshan",
-      "cluster_name": "昆山昆仑",
+      "cluster_name": "曙光星云",
       "job_id": "45277",
       "current_stage": "train",
       "start_time": "2026-08-11T08:00:00+08:00",
@@ -149,17 +317,59 @@
       "cpu_cores": 1536,
       "gpu_count": 128,
       "memory_gb": 32768,
-      "core_hours": 4608.0,
+      "core_hours": 4608,
       "source_type": "simulated",
       "has_detail": false,
       "metrics_snapshot": [
-        { "name": "step", "label": "训练步数", "value": 6500, "total": 10000, "unit": "step" },
-        { "name": "loss", "label": "Loss", "value": 1.985, "total": 0, "unit": "" },
-        { "name": "learning_rate", "label": "学习率", "value": 5.5e-05, "total": 0, "unit": "" },
-        { "name": "tokens_per_second", "label": "训练吞吐量", "value": 18560, "total": 0, "unit": "tokens/s" },
-        { "name": "gpu_utilization", "label": "GPU利用率", "value": 94, "total": 100, "unit": "%" },
-        { "name": "gpu_memory", "label": "GPU显存使用率", "value": 89, "total": 100, "unit": "%" },
-        { "name": "communication_overhead", "label": "通信开销", "value": 13.5, "total": 100, "unit": "%" }
+        {
+          "name": "step",
+          "label": "训练步数",
+          "value": 6500,
+          "total": 10000,
+          "unit": "step"
+        },
+        {
+          "name": "loss",
+          "label": "Loss",
+          "value": 1.985,
+          "total": 0,
+          "unit": ""
+        },
+        {
+          "name": "learning_rate",
+          "label": "学习率",
+          "value": 0.000055,
+          "total": 0,
+          "unit": ""
+        },
+        {
+          "name": "tokens_per_second",
+          "label": "训练吞吐量",
+          "value": 18560,
+          "total": 0,
+          "unit": "tokens/s"
+        },
+        {
+          "name": "gpu_utilization",
+          "label": "GPU利用率",
+          "value": 94,
+          "total": 100,
+          "unit": "%"
+        },
+        {
+          "name": "gpu_memory",
+          "label": "GPU显存使用率",
+          "value": 89,
+          "total": 100,
+          "unit": "%"
+        },
+        {
+          "name": "communication_overhead",
+          "label": "通信开销",
+          "value": 13.5,
+          "total": 100,
+          "unit": "%"
+        }
       ]
     },
     {
@@ -171,7 +381,7 @@
       "progress": 100,
       "execution_mode": "simulated",
       "cluster_id": "changsha",
-      "cluster_name": "长沙天河新一代",
+      "cluster_name": "天河新一代",
       "job_id": "210023",
       "current_stage": "completed",
       "start_time": "2026-08-09T22:00:00+08:00",
@@ -181,17 +391,59 @@
       "cpu_cores": 768,
       "gpu_count": 64,
       "memory_gb": 16384,
-      "core_hours": 7296.0,
+      "core_hours": 7296,
       "source_type": "simulated",
       "has_detail": false,
       "metrics_snapshot": [
-        { "name": "step", "label": "训练步数", "value": 10000, "total": 10000, "unit": "step" },
-        { "name": "loss", "label": "Loss", "value": 1.856, "total": 0, "unit": "" },
-        { "name": "learning_rate", "label": "学习率", "value": 2.8e-05, "total": 0, "unit": "" },
-        { "name": "tokens_per_second", "label": "训练吞吐量", "value": 17120, "total": 0, "unit": "tokens/s" },
-        { "name": "gpu_utilization", "label": "GPU利用率", "value": 91, "total": 100, "unit": "%" },
-        { "name": "gpu_memory", "label": "GPU显存使用率", "value": 87, "total": 100, "unit": "%" },
-        { "name": "communication_overhead", "label": "通信开销", "value": 14.9, "total": 100, "unit": "%" }
+        {
+          "name": "step",
+          "label": "训练步数",
+          "value": 10000,
+          "total": 10000,
+          "unit": "step"
+        },
+        {
+          "name": "loss",
+          "label": "Loss",
+          "value": 1.856,
+          "total": 0,
+          "unit": ""
+        },
+        {
+          "name": "learning_rate",
+          "label": "学习率",
+          "value": 0.000028,
+          "total": 0,
+          "unit": ""
+        },
+        {
+          "name": "tokens_per_second",
+          "label": "训练吞吐量",
+          "value": 17120,
+          "total": 0,
+          "unit": "tokens/s"
+        },
+        {
+          "name": "gpu_utilization",
+          "label": "GPU利用率",
+          "value": 91,
+          "total": 100,
+          "unit": "%"
+        },
+        {
+          "name": "gpu_memory",
+          "label": "GPU显存使用率",
+          "value": 87,
+          "total": 100,
+          "unit": "%"
+        },
+        {
+          "name": "communication_overhead",
+          "label": "通信开销",
+          "value": 14.9,
+          "total": 100,
+          "unit": "%"
+        }
       ]
     },
     {
@@ -203,7 +455,7 @@
       "progress": 0,
       "execution_mode": "simulated",
       "cluster_id": "kunshan",
-      "cluster_name": "昆山昆仑",
+      "cluster_name": "曙光星云",
       "job_id": "45301",
       "current_stage": "pending",
       "start_time": "",
@@ -213,7 +465,7 @@
       "cpu_cores": 1536,
       "gpu_count": 128,
       "memory_gb": 32768,
-      "core_hours": 0.0,
+      "core_hours": 0,
       "source_type": "simulated",
       "has_detail": false,
       "metrics_snapshot": []
@@ -227,7 +479,7 @@
       "progress": 71,
       "execution_mode": "simulated",
       "cluster_id": "kunshan",
-      "cluster_name": "昆山昆仑",
+      "cluster_name": "曙光星云",
       "job_id": "45255",
       "current_stage": "train",
       "start_time": "2026-08-11T07:00:00+08:00",
@@ -241,13 +493,55 @@
       "source_type": "simulated",
       "has_detail": false,
       "metrics_snapshot": [
-        { "name": "step", "label": "训练步数", "value": 7100, "total": 10000, "unit": "step" },
-        { "name": "loss", "label": "Loss", "value": 2.024, "total": 0, "unit": "" },
-        { "name": "learning_rate", "label": "学习率", "value": 5e-05, "total": 0, "unit": "" },
-        { "name": "tokens_per_second", "label": "训练吞吐量", "value": 18340, "total": 0, "unit": "tokens/s" },
-        { "name": "gpu_utilization", "label": "GPU利用率", "value": 92, "total": 100, "unit": "%" },
-        { "name": "gpu_memory", "label": "GPU显存使用率", "value": 88, "total": 100, "unit": "%" },
-        { "name": "communication_overhead", "label": "通信开销", "value": 14.0, "total": 100, "unit": "%" }
+        {
+          "name": "step",
+          "label": "训练步数",
+          "value": 7100,
+          "total": 10000,
+          "unit": "step"
+        },
+        {
+          "name": "loss",
+          "label": "Loss",
+          "value": 2.024,
+          "total": 0,
+          "unit": ""
+        },
+        {
+          "name": "learning_rate",
+          "label": "学习率",
+          "value": 0.00005,
+          "total": 0,
+          "unit": ""
+        },
+        {
+          "name": "tokens_per_second",
+          "label": "训练吞吐量",
+          "value": 18340,
+          "total": 0,
+          "unit": "tokens/s"
+        },
+        {
+          "name": "gpu_utilization",
+          "label": "GPU利用率",
+          "value": 92,
+          "total": 100,
+          "unit": "%"
+        },
+        {
+          "name": "gpu_memory",
+          "label": "GPU显存使用率",
+          "value": 88,
+          "total": 100,
+          "unit": "%"
+        },
+        {
+          "name": "communication_overhead",
+          "label": "通信开销",
+          "value": 14,
+          "total": 100,
+          "unit": "%"
+        }
       ]
     },
     {
@@ -259,7 +553,7 @@
       "progress": 55,
       "execution_mode": "simulated",
       "cluster_id": "kunshan",
-      "cluster_name": "昆山昆仑",
+      "cluster_name": "曙光星云",
       "job_id": "45290",
       "current_stage": "train",
       "start_time": "2026-08-11T10:00:00+08:00",
@@ -269,17 +563,59 @@
       "cpu_cores": 384,
       "gpu_count": 32,
       "memory_gb": 8192,
-      "core_hours": 384.0,
+      "core_hours": 384,
       "source_type": "simulated",
       "has_detail": false,
       "metrics_snapshot": [
-        { "name": "step", "label": "训练步数", "value": 11000, "total": 20000, "unit": "step" },
-        { "name": "loss", "label": "Loss", "value": 1.2e-05, "total": 0, "unit": "" },
-        { "name": "learning_rate", "label": "学习率", "value": 3.5e-04, "total": 0, "unit": "" },
-        { "name": "tokens_per_second", "label": "训练吞吐量", "value": 24500, "total": 0, "unit": "sample/s" },
-        { "name": "gpu_utilization", "label": "GPU利用率", "value": 88, "total": 100, "unit": "%" },
-        { "name": "gpu_memory", "label": "GPU显存使用率", "value": 82, "total": 100, "unit": "%" },
-        { "name": "communication_overhead", "label": "通信开销", "value": 9.6, "total": 100, "unit": "%" }
+        {
+          "name": "step",
+          "label": "训练步数",
+          "value": 11000,
+          "total": 20000,
+          "unit": "step"
+        },
+        {
+          "name": "loss",
+          "label": "Loss",
+          "value": 0.000012,
+          "total": 0,
+          "unit": ""
+        },
+        {
+          "name": "learning_rate",
+          "label": "学习率",
+          "value": 0.00035,
+          "total": 0,
+          "unit": ""
+        },
+        {
+          "name": "tokens_per_second",
+          "label": "训练吞吐量",
+          "value": 24500,
+          "total": 0,
+          "unit": "sample/s"
+        },
+        {
+          "name": "gpu_utilization",
+          "label": "GPU利用率",
+          "value": 88,
+          "total": 100,
+          "unit": "%"
+        },
+        {
+          "name": "gpu_memory",
+          "label": "GPU显存使用率",
+          "value": 82,
+          "total": 100,
+          "unit": "%"
+        },
+        {
+          "name": "communication_overhead",
+          "label": "通信开销",
+          "value": 9.6,
+          "total": 100,
+          "unit": "%"
+        }
       ]
     },
     {
@@ -291,7 +627,7 @@
       "progress": 100,
       "execution_mode": "simulated",
       "cluster_id": "kunshan",
-      "cluster_name": "昆山昆仑",
+      "cluster_name": "曙光星云",
       "job_id": "45210",
       "current_stage": "completed",
       "start_time": "2026-08-10T15:00:00+08:00",
@@ -305,13 +641,55 @@
       "source_type": "simulated",
       "has_detail": true,
       "metrics_snapshot": [
-        { "name": "step", "label": "训练步数", "value": 20000, "total": 20000, "unit": "step" },
-        { "name": "loss", "label": "Loss", "value": 8.6e-06, "total": 0, "unit": "" },
-        { "name": "learning_rate", "label": "学习率", "value": 1e-04, "total": 0, "unit": "" },
-        { "name": "tokens_per_second", "label": "训练吞吐量", "value": 25100, "total": 0, "unit": "sample/s" },
-        { "name": "gpu_utilization", "label": "GPU利用率", "value": 90, "total": 100, "unit": "%" },
-        { "name": "gpu_memory", "label": "GPU显存使用率", "value": 84, "total": 100, "unit": "%" },
-        { "name": "communication_overhead", "label": "通信开销", "value": 8.9, "total": 100, "unit": "%" }
+        {
+          "name": "step",
+          "label": "训练步数",
+          "value": 20000,
+          "total": 20000,
+          "unit": "step"
+        },
+        {
+          "name": "loss",
+          "label": "Loss",
+          "value": 0.0000086,
+          "total": 0,
+          "unit": ""
+        },
+        {
+          "name": "learning_rate",
+          "label": "学习率",
+          "value": 0.0001,
+          "total": 0,
+          "unit": ""
+        },
+        {
+          "name": "tokens_per_second",
+          "label": "训练吞吐量",
+          "value": 25100,
+          "total": 0,
+          "unit": "sample/s"
+        },
+        {
+          "name": "gpu_utilization",
+          "label": "GPU利用率",
+          "value": 90,
+          "total": 100,
+          "unit": "%"
+        },
+        {
+          "name": "gpu_memory",
+          "label": "GPU显存使用率",
+          "value": 84,
+          "total": 100,
+          "unit": "%"
+        },
+        {
+          "name": "communication_overhead",
+          "label": "通信开销",
+          "value": 8.9,
+          "total": 100,
+          "unit": "%"
+        }
       ]
     },
     {
@@ -323,7 +701,7 @@
       "progress": 100,
       "execution_mode": "replay",
       "cluster_id": "changsha",
-      "cluster_name": "长沙天河新一代",
+      "cluster_name": "天河新一代",
       "job_id": "209950",
       "current_stage": "completed",
       "start_time": "2026-08-10T09:00:00+08:00",
@@ -337,13 +715,55 @@
       "source_type": "simulated",
       "has_detail": false,
       "metrics_snapshot": [
-        { "name": "step", "label": "训练步数", "value": 20000, "total": 20000, "unit": "step" },
-        { "name": "loss", "label": "Loss", "value": 1.1e-05, "total": 0, "unit": "" },
-        { "name": "learning_rate", "label": "学习率", "value": 1e-04, "total": 0, "unit": "" },
-        { "name": "tokens_per_second", "label": "训练吞吐量", "value": 23300, "total": 0, "unit": "sample/s" },
-        { "name": "gpu_utilization", "label": "GPU利用率", "value": 87, "total": 100, "unit": "%" },
-        { "name": "gpu_memory", "label": "GPU显存使用率", "value": 81, "total": 100, "unit": "%" },
-        { "name": "communication_overhead", "label": "通信开销", "value": 10.2, "total": 100, "unit": "%" }
+        {
+          "name": "step",
+          "label": "训练步数",
+          "value": 20000,
+          "total": 20000,
+          "unit": "step"
+        },
+        {
+          "name": "loss",
+          "label": "Loss",
+          "value": 0.000011,
+          "total": 0,
+          "unit": ""
+        },
+        {
+          "name": "learning_rate",
+          "label": "学习率",
+          "value": 0.0001,
+          "total": 0,
+          "unit": ""
+        },
+        {
+          "name": "tokens_per_second",
+          "label": "训练吞吐量",
+          "value": 23300,
+          "total": 0,
+          "unit": "sample/s"
+        },
+        {
+          "name": "gpu_utilization",
+          "label": "GPU利用率",
+          "value": 87,
+          "total": 100,
+          "unit": "%"
+        },
+        {
+          "name": "gpu_memory",
+          "label": "GPU显存使用率",
+          "value": 81,
+          "total": 100,
+          "unit": "%"
+        },
+        {
+          "name": "communication_overhead",
+          "label": "通信开销",
+          "value": 10.2,
+          "total": 100,
+          "unit": "%"
+        }
       ]
     },
     {
@@ -355,7 +775,7 @@
       "progress": 23,
       "execution_mode": "simulated",
       "cluster_id": "kunshan",
-      "cluster_name": "昆山昆仑",
+      "cluster_name": "曙光星云",
       "job_id": "45312",
       "current_stage": "train",
       "start_time": "2026-08-11T11:00:00+08:00",
@@ -369,13 +789,55 @@
       "source_type": "simulated",
       "has_detail": false,
       "metrics_snapshot": [
-        { "name": "step", "label": "训练步数", "value": 4600, "total": 20000, "unit": "step" },
-        { "name": "loss", "label": "Loss", "value": 3.7e-02, "total": 0, "unit": "" },
-        { "name": "learning_rate", "label": "学习率", "value": 1.1e-03, "total": 0, "unit": "" },
-        { "name": "tokens_per_second", "label": "训练吞吐量", "value": 19800, "total": 0, "unit": "sample/s" },
-        { "name": "gpu_utilization", "label": "GPU利用率", "value": 52, "total": 100, "unit": "%" },
-        { "name": "gpu_memory", "label": "GPU显存使用率", "value": 60, "total": 100, "unit": "%" },
-        { "name": "communication_overhead", "label": "通信开销", "value": 21.4, "total": 100, "unit": "%" }
+        {
+          "name": "step",
+          "label": "训练步数",
+          "value": 4600,
+          "total": 20000,
+          "unit": "step"
+        },
+        {
+          "name": "loss",
+          "label": "Loss",
+          "value": 0.037,
+          "total": 0,
+          "unit": ""
+        },
+        {
+          "name": "learning_rate",
+          "label": "学习率",
+          "value": 0.0011,
+          "total": 0,
+          "unit": ""
+        },
+        {
+          "name": "tokens_per_second",
+          "label": "训练吞吐量",
+          "value": 19800,
+          "total": 0,
+          "unit": "sample/s"
+        },
+        {
+          "name": "gpu_utilization",
+          "label": "GPU利用率",
+          "value": 52,
+          "total": 100,
+          "unit": "%"
+        },
+        {
+          "name": "gpu_memory",
+          "label": "GPU显存使用率",
+          "value": 60,
+          "total": 100,
+          "unit": "%"
+        },
+        {
+          "name": "communication_overhead",
+          "label": "通信开销",
+          "value": 21.4,
+          "total": 100,
+          "unit": "%"
+        }
       ]
     },
     {
@@ -387,7 +849,7 @@
       "progress": 0,
       "execution_mode": "simulated",
       "cluster_id": "kunshan",
-      "cluster_name": "昆山昆仑",
+      "cluster_name": "曙光星云",
       "job_id": "45320",
       "current_stage": "pending",
       "start_time": "",
@@ -397,7 +859,7 @@
       "cpu_cores": 384,
       "gpu_count": 32,
       "memory_gb": 8192,
-      "core_hours": 0.0,
+      "core_hours": 0,
       "source_type": "simulated",
       "has_detail": false,
       "metrics_snapshot": []
@@ -411,7 +873,7 @@
       "progress": 31,
       "execution_mode": "simulated",
       "cluster_id": "changsha",
-      "cluster_name": "长沙天河新一代",
+      "cluster_name": "天河新一代",
       "job_id": "210088",
       "current_stage": "train",
       "start_time": "2026-08-11T10:45:00+08:00",
@@ -421,17 +883,59 @@
       "cpu_cores": 192,
       "gpu_count": 16,
       "memory_gb": 4096,
-      "core_hours": 240.0,
+      "core_hours": 240,
       "source_type": "simulated",
       "has_detail": false,
       "metrics_snapshot": [
-        { "name": "step", "label": "训练步数", "value": 6200, "total": 20000, "unit": "step" },
-        { "name": "loss", "label": "Loss", "value": 6.4e-05, "total": 0, "unit": "" },
-        { "name": "learning_rate", "label": "学习率", "value": 5e-04, "total": 0, "unit": "" },
-        { "name": "tokens_per_second", "label": "训练吞吐量", "value": 22800, "total": 0, "unit": "sample/s" },
-        { "name": "gpu_utilization", "label": "GPU利用率", "value": 85, "total": 100, "unit": "%" },
-        { "name": "gpu_memory", "label": "GPU显存使用率", "value": 80, "total": 100, "unit": "%" },
-        { "name": "communication_overhead", "label": "通信开销", "value": 10.8, "total": 100, "unit": "%" }
+        {
+          "name": "step",
+          "label": "训练步数",
+          "value": 6200,
+          "total": 20000,
+          "unit": "step"
+        },
+        {
+          "name": "loss",
+          "label": "Loss",
+          "value": 0.000064,
+          "total": 0,
+          "unit": ""
+        },
+        {
+          "name": "learning_rate",
+          "label": "学习率",
+          "value": 0.0005,
+          "total": 0,
+          "unit": ""
+        },
+        {
+          "name": "tokens_per_second",
+          "label": "训练吞吐量",
+          "value": 22800,
+          "total": 0,
+          "unit": "sample/s"
+        },
+        {
+          "name": "gpu_utilization",
+          "label": "GPU利用率",
+          "value": 85,
+          "total": 100,
+          "unit": "%"
+        },
+        {
+          "name": "gpu_memory",
+          "label": "GPU显存使用率",
+          "value": 80,
+          "total": 100,
+          "unit": "%"
+        },
+        {
+          "name": "communication_overhead",
+          "label": "通信开销",
+          "value": 10.8,
+          "total": 100,
+          "unit": "%"
+        }
       ]
     }
   ],

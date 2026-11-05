@@ -18,12 +18,12 @@
         "event": "migration_planned",
         "name": "迁移计划生成",
         "status": "success",
-        "timestamp": "2026-11-05T16:31:33+08:00"
+        "timestamp": "2026-11-05T18:04:01+08:00"
       }
     ],
     "reason": "广州中心排队等待 82 项，FFT 实例等待调度至长沙中心",
     "transferred_replicas": 1,
     "total_size_mb": 512
   },
-  "timestamp": "2026-11-05T16:37:33+08:00"
+  "timestamp": "2026-11-05T18:10:01+08:00"
 }

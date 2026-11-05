@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 import { useSlidingHighlight } from '~/composables/useSlidingHighlight'
-import { formatNumber, formatTimestamp, statusText } from '~/composables/useFormat'
+import { formatNumber, formatTimestamp } from '~/composables/useFormat'
+import { applyDatasetLoad } from '~/utils/resource-load'
 import type { MultiCluster } from '~/types'
 
-const props = defineProps<{ clusters: MultiCluster[]; supportedClusters: string[] }>()
+const props = defineProps<{ clusters: MultiCluster[]; supportedClusters: string[]; clusterLoad?: Record<string, number> }>()
 const onlySupported = ref(false)
 const gridFrame = ref<HTMLElement>()
 let resizeAnimation: Animation | undefined
@@ -44,6 +45,31 @@ const ordered = computed(() => [...props.clusters]
 const totalCores = computed(() => supported.value.reduce((total, item) => total + item.total_cores, 0))
 const totalNodes = computed(() => supported.value.reduce((total, item) => total + item.total_nodes, 0))
 const latestUpdate = computed(() => props.clusters.map((item) => item.updated_at).filter(Boolean).sort().at(-1))
+
+/**
+ * 负载计数来自跨领域共享的 store：任一领域上传数据后，所有领域对同一中心
+ * 展示相同的负载值；计数按中心累计，每份数据增幅 ≤0.5 个百分点。
+ */
+function loadCountFor(cluster: MultiCluster): number {
+  return Math.max(0, Math.floor(props.clusterLoad?.[cluster.id] ?? 0))
+}
+
+function cpuValue(cluster: MultiCluster): number {
+  return applyDatasetLoad(cluster.cpu_utilization, loadCountFor(cluster))
+}
+
+function gpuValue(cluster: MultiCluster): number {
+  return applyDatasetLoad(cluster.gpu_utilization, loadCountFor(cluster))
+}
+
+/** 中心资源状态沿用超算平台全局资源视图的文案。 */
+function clusterStatusLabel(cluster: MultiCluster): string {
+  if (cluster.resource_status === 'highLoad') return '高负载'
+  if (cluster.resource_status === 'maintenance') return '维护中'
+  if (cluster.resource_status === 'normal') return '正常运行'
+  return cluster.status === 'degraded' ? '高负载' : cluster.status === 'offline' ? '维护中' : '正常运行'
+}
+
 function usage(value: number): number {
   return Number.isFinite(value) ? Math.min(100, Math.max(0, value)) : 0
 }
@@ -79,7 +105,7 @@ function usage(value: number): number {
             <div><h4>{{ cluster.name }}</h4><p>{{ cluster.location }} · {{ cluster.scheduler }}</p><span v-if="!supportedSet.has(cluster.id)" class="resource-unavailable-label">未适配本场景</span></div>
           </div>
           <span class="resource-status" :class="{ 'is-online': cluster.status === 'online', 'is-warning': cluster.status === 'degraded' }">
-            <i aria-hidden="true" />{{ statusText(cluster.status) }}
+            <i aria-hidden="true" />{{ clusterStatusLabel(cluster) }}
           </span>
         </header>
         <p class="resource-architecture">{{ cluster.architecture }}</p>
@@ -90,12 +116,12 @@ function usage(value: number): number {
         </dl>
         <div class="resource-load">
           <div class="resource-load-item">
-            <div><span>CPU 利用率</span><strong>{{ formatNumber(cluster.cpu_utilization, 0) }}<small>%</small></strong></div>
-            <meter :value="usage(cluster.cpu_utilization)" min="0" max="100" :aria-label="cluster.name + ' CPU 利用率'">{{ cluster.cpu_utilization }}%</meter>
+            <div><span>CPU 利用率</span><strong>{{ cpuValue(cluster).toFixed(2) }}<small>%</small></strong></div>
+            <meter :value="usage(cpuValue(cluster))" min="0" max="100" :aria-label="cluster.name + ' CPU 利用率'">{{ cpuValue(cluster).toFixed(2) }}%</meter>
           </div>
           <div class="resource-load-item">
-            <div><span>GPU 利用率</span><strong>{{ formatNumber(cluster.gpu_utilization, 0) }}<small>%</small></strong></div>
-            <meter :value="usage(cluster.gpu_utilization)" min="0" max="100" :aria-label="cluster.name + ' GPU 利用率'">{{ cluster.gpu_utilization }}%</meter>
+            <div><span>GPU 利用率</span><strong>{{ gpuValue(cluster).toFixed(2) }}<small>%</small></strong></div>
+            <meter :value="usage(gpuValue(cluster))" min="0" max="100" :aria-label="cluster.name + ' GPU 利用率'">{{ gpuValue(cluster).toFixed(2) }}%</meter>
           </div>
         </div>
         <footer class="resource-card-foot">

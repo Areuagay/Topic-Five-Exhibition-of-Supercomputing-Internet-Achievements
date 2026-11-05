@@ -10,41 +10,41 @@
     "from_cluster": "changsha",
     "to_cluster": "kunshan",
     "source_type": "backend",
-    "start_time": "2026-11-05T15:02:33+08:00",
-    "end_time": "2026-11-05T15:04:33+08:00",
+    "start_time": "2026-11-05T16:35:01+08:00",
+    "end_time": "2026-11-05T16:37:01+08:00",
     "events": [
       {
         "seq": 1,
         "event": "load_balancing",
         "name": "负载均衡调度",
         "status": "success",
-        "timestamp": "2026-11-05T15:02:33+08:00"
+        "timestamp": "2026-11-05T16:35:01+08:00"
       },
       {
         "seq": 2,
         "event": "migration_started",
         "name": "迁移启动",
         "status": "success",
-        "timestamp": "2026-11-05T15:03:33+08:00"
+        "timestamp": "2026-11-05T16:36:01+08:00"
       },
       {
         "seq": 3,
         "event": "state_transfer",
         "name": "状态数据迁移",
         "status": "success",
-        "timestamp": "2026-11-05T15:04:03+08:00"
+        "timestamp": "2026-11-05T16:36:31+08:00"
       },
       {
         "seq": 4,
         "event": "migration_completed",
         "name": "迁移完成",
         "status": "success",
-        "timestamp": "2026-11-05T15:04:33+08:00"
+        "timestamp": "2026-11-05T16:37:01+08:00"
       }
     ],
     "reason": "昆山中心空闲资源充足（排队 12 项），承接转换函数实例",
     "transferred_replicas": 1,
     "total_size_mb": 256
   },
-  "timestamp": "2026-11-05T16:37:33+08:00"
+  "timestamp": "2026-11-05T18:10:01+08:00"
 }

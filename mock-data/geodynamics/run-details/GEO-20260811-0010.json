@@ -9,7 +9,7 @@
     "progress": 100,
     "execution_mode": "simulated",
     "cluster_id": "changsha",
-    "cluster_name": "长沙天河新一代",
+    "cluster_name": "天河新一代",
     "job_id": "209916",
     "current_stage": "completed",
     "start_time": "2026-08-09T22:00:00+08:00",
@@ -106,7 +106,7 @@
         "scenario_alias": "plate-tectonics",
         "temperature_series": [
           {
-            "time": 0.0,
+            "time": 0,
             "max_temperature": 1249.67,
             "avg_temperature": 899.67
           },
@@ -172,7 +172,7 @@
           },
           {
             "time": 27.66,
-            "max_temperature": 1399.0,
+            "max_temperature": 1399,
             "avg_temperature": 1019.31
           },
           {
@@ -223,7 +223,7 @@
           {
             "time": 48.936,
             "max_temperature": 1256.78,
-            "avg_temperature": 939.0
+            "avg_temperature": 939
           },
           {
             "time": 51.064,
@@ -341,251 +341,251 @@
             "avg_temperature": 812.97
           },
           {
-            "time": 100.0,
+            "time": 100,
             "max_temperature": 1194.54,
             "avg_temperature": 809.05
           }
         ],
         "velocity_series": [
           {
-            "time": 0.0,
-            "max_velocity": 4.362e-09,
-            "avg_velocity": 1.654e-09
+            "time": 0,
+            "max_velocity": 4.362e-9,
+            "avg_velocity": 1.654e-9
           },
           {
             "time": 2.128,
-            "max_velocity": 4.419e-09,
-            "avg_velocity": 1.608e-09
+            "max_velocity": 4.419e-9,
+            "avg_velocity": 1.608e-9
           },
           {
             "time": 4.255,
-            "max_velocity": 4.698e-09,
-            "avg_velocity": 1.776e-09
+            "max_velocity": 4.698e-9,
+            "avg_velocity": 1.776e-9
           },
           {
             "time": 6.383,
-            "max_velocity": 4.815e-09,
-            "avg_velocity": 1.86e-09
+            "max_velocity": 4.815e-9,
+            "avg_velocity": 1.86e-9
           },
           {
             "time": 8.511,
-            "max_velocity": 5.071e-09,
-            "avg_velocity": 1.918e-09
+            "max_velocity": 5.071e-9,
+            "avg_velocity": 1.918e-9
           },
           {
             "time": 10.638,
-            "max_velocity": 5.1e-09,
-            "avg_velocity": 1.945e-09
+            "max_velocity": 5.1e-9,
+            "avg_velocity": 1.945e-9
           },
           {
             "time": 12.766,
-            "max_velocity": 5.113e-09,
-            "avg_velocity": 1.877e-09
+            "max_velocity": 5.113e-9,
+            "avg_velocity": 1.877e-9
           },
           {
             "time": 14.894,
-            "max_velocity": 5.311e-09,
-            "avg_velocity": 1.904e-09
+            "max_velocity": 5.311e-9,
+            "avg_velocity": 1.904e-9
           },
           {
             "time": 17.021,
-            "max_velocity": 5.476e-09,
-            "avg_velocity": 1.943e-09
+            "max_velocity": 5.476e-9,
+            "avg_velocity": 1.943e-9
           },
           {
             "time": 19.149,
-            "max_velocity": 5.349e-09,
-            "avg_velocity": 2.05e-09
+            "max_velocity": 5.349e-9,
+            "avg_velocity": 2.05e-9
           },
           {
             "time": 21.277,
-            "max_velocity": 5.491e-09,
-            "avg_velocity": 1.95e-09
+            "max_velocity": 5.491e-9,
+            "avg_velocity": 1.95e-9
           },
           {
             "time": 23.404,
-            "max_velocity": 5.446e-09,
-            "avg_velocity": 2.176e-09
+            "max_velocity": 5.446e-9,
+            "avg_velocity": 2.176e-9
           },
           {
             "time": 25.532,
-            "max_velocity": 5.29e-09,
-            "avg_velocity": 1.951e-09
+            "max_velocity": 5.29e-9,
+            "avg_velocity": 1.951e-9
           },
           {
             "time": 27.66,
-            "max_velocity": 5.271e-09,
-            "avg_velocity": 2.002e-09
+            "max_velocity": 5.271e-9,
+            "avg_velocity": 2.002e-9
           },
           {
             "time": 29.787,
-            "max_velocity": 5.388e-09,
-            "avg_velocity": 2.037e-09
+            "max_velocity": 5.388e-9,
+            "avg_velocity": 2.037e-9
           },
           {
             "time": 31.915,
-            "max_velocity": 5.311e-09,
-            "avg_velocity": 1.925e-09
+            "max_velocity": 5.311e-9,
+            "avg_velocity": 1.925e-9
           },
           {
             "time": 34.043,
-            "max_velocity": 5.247e-09,
-            "avg_velocity": 1.905e-09
+            "max_velocity": 5.247e-9,
+            "avg_velocity": 1.905e-9
           },
           {
             "time": 36.17,
-            "max_velocity": 5.14e-09,
-            "avg_velocity": 2.05e-09
+            "max_velocity": 5.14e-9,
+            "avg_velocity": 2.05e-9
           },
           {
             "time": 38.298,
-            "max_velocity": 4.787e-09,
-            "avg_velocity": 1.768e-09
+            "max_velocity": 4.787e-9,
+            "avg_velocity": 1.768e-9
           },
           {
             "time": 40.426,
-            "max_velocity": 4.872e-09,
-            "avg_velocity": 1.861e-09
+            "max_velocity": 4.872e-9,
+            "avg_velocity": 1.861e-9
           },
           {
             "time": 42.553,
-            "max_velocity": 4.762e-09,
-            "avg_velocity": 1.766e-09
+            "max_velocity": 4.762e-9,
+            "avg_velocity": 1.766e-9
           },
           {
             "time": 44.681,
-            "max_velocity": 4.67e-09,
-            "avg_velocity": 1.706e-09
+            "max_velocity": 4.67e-9,
+            "avg_velocity": 1.706e-9
           },
           {
             "time": 46.809,
-            "max_velocity": 4.49e-09,
-            "avg_velocity": 1.786e-09
+            "max_velocity": 4.49e-9,
+            "avg_velocity": 1.786e-9
           },
           {
             "time": 48.936,
-            "max_velocity": 4.178e-09,
-            "avg_velocity": 1.563e-09
+            "max_velocity": 4.178e-9,
+            "avg_velocity": 1.563e-9
           },
           {
             "time": 51.064,
-            "max_velocity": 4.181e-09,
-            "avg_velocity": 1.534e-09
+            "max_velocity": 4.181e-9,
+            "avg_velocity": 1.534e-9
           },
           {
             "time": 53.191,
-            "max_velocity": 3.92e-09,
-            "avg_velocity": 1.38e-09
+            "max_velocity": 3.92e-9,
+            "avg_velocity": 1.38e-9
           },
           {
             "time": 55.319,
-            "max_velocity": 4.112e-09,
-            "avg_velocity": 1.55e-09
+            "max_velocity": 4.112e-9,
+            "avg_velocity": 1.55e-9
           },
           {
             "time": 57.447,
-            "max_velocity": 4.019e-09,
-            "avg_velocity": 1.478e-09
+            "max_velocity": 4.019e-9,
+            "avg_velocity": 1.478e-9
           },
           {
             "time": 59.574,
-            "max_velocity": 4.047e-09,
-            "avg_velocity": 1.541e-09
+            "max_velocity": 4.047e-9,
+            "avg_velocity": 1.541e-9
           },
           {
             "time": 61.702,
-            "max_velocity": 3.699e-09,
-            "avg_velocity": 1.446e-09
+            "max_velocity": 3.699e-9,
+            "avg_velocity": 1.446e-9
           },
           {
             "time": 63.83,
-            "max_velocity": 3.644e-09,
-            "avg_velocity": 1.367e-09
+            "max_velocity": 3.644e-9,
+            "avg_velocity": 1.367e-9
           },
           {
             "time": 65.957,
-            "max_velocity": 3.655e-09,
-            "avg_velocity": 1.364e-09
+            "max_velocity": 3.655e-9,
+            "avg_velocity": 1.364e-9
           },
           {
             "time": 68.085,
-            "max_velocity": 3.607e-09,
-            "avg_velocity": 1.309e-09
+            "max_velocity": 3.607e-9,
+            "avg_velocity": 1.309e-9
           },
           {
             "time": 70.213,
-            "max_velocity": 3.671e-09,
-            "avg_velocity": 1.312e-09
+            "max_velocity": 3.671e-9,
+            "avg_velocity": 1.312e-9
           },
           {
             "time": 72.34,
-            "max_velocity": 3.437e-09,
-            "avg_velocity": 1.283e-09
+            "max_velocity": 3.437e-9,
+            "avg_velocity": 1.283e-9
           },
           {
             "time": 74.468,
-            "max_velocity": 3.613e-09,
-            "avg_velocity": 1.27e-09
+            "max_velocity": 3.613e-9,
+            "avg_velocity": 1.27e-9
           },
           {
             "time": 76.596,
-            "max_velocity": 3.8e-09,
-            "avg_velocity": 1.418e-09
+            "max_velocity": 3.8e-9,
+            "avg_velocity": 1.418e-9
           },
           {
             "time": 78.723,
-            "max_velocity": 3.67e-09,
-            "avg_velocity": 1.461e-09
+            "max_velocity": 3.67e-9,
+            "avg_velocity": 1.461e-9
           },
           {
             "time": 80.851,
-            "max_velocity": 3.887e-09,
-            "avg_velocity": 1.376e-09
+            "max_velocity": 3.887e-9,
+            "avg_velocity": 1.376e-9
           },
           {
             "time": 82.979,
-            "max_velocity": 3.827e-09,
-            "avg_velocity": 1.411e-09
+            "max_velocity": 3.827e-9,
+            "avg_velocity": 1.411e-9
           },
           {
             "time": 85.106,
-            "max_velocity": 4.011e-09,
-            "avg_velocity": 1.508e-09
+            "max_velocity": 4.011e-9,
+            "avg_velocity": 1.508e-9
           },
           {
             "time": 87.234,
-            "max_velocity": 4.126e-09,
-            "avg_velocity": 1.571e-09
+            "max_velocity": 4.126e-9,
+            "avg_velocity": 1.571e-9
           },
           {
             "time": 89.362,
-            "max_velocity": 4.201e-09,
-            "avg_velocity": 1.505e-09
+            "max_velocity": 4.201e-9,
+            "avg_velocity": 1.505e-9
           },
           {
             "time": 91.489,
-            "max_velocity": 4.338e-09,
-            "avg_velocity": 1.722e-09
+            "max_velocity": 4.338e-9,
+            "avg_velocity": 1.722e-9
           },
           {
             "time": 93.617,
-            "max_velocity": 4.413e-09,
-            "avg_velocity": 1.625e-09
+            "max_velocity": 4.413e-9,
+            "avg_velocity": 1.625e-9
           },
           {
             "time": 95.745,
-            "max_velocity": 4.71e-09,
-            "avg_velocity": 1.667e-09
+            "max_velocity": 4.71e-9,
+            "avg_velocity": 1.667e-9
           },
           {
             "time": 97.872,
-            "max_velocity": 4.845e-09,
-            "avg_velocity": 1.74e-09
+            "max_velocity": 4.845e-9,
+            "avg_velocity": 1.74e-9
           },
           {
-            "time": 100.0,
-            "max_velocity": 4.771e-09,
-            "avg_velocity": 1.825e-09
+            "time": 100,
+            "max_velocity": 4.771e-9,
+            "avg_velocity": 1.825e-9
           }
         ],
         "nonlinear_series": [
@@ -732,7 +732,7 @@
         ],
         "field_frames": [
           {
-            "time": 0.0,
+            "time": 0,
             "temperature_preview": "/api/v1/files/ART-GEO-TT01/preview",
             "velocity_preview": "/api/v1/files/ART-GEO-TV01/preview"
           },
@@ -1093,7 +1093,7 @@
       "scenario_alias": "plate-tectonics",
       "temperature_series": [
         {
-          "time": 0.0,
+          "time": 0,
           "max_temperature": 1249.67,
           "avg_temperature": 899.67
         },
@@ -1159,7 +1159,7 @@
         },
         {
           "time": 27.66,
-          "max_temperature": 1399.0,
+          "max_temperature": 1399,
           "avg_temperature": 1019.31
         },
         {
@@ -1210,7 +1210,7 @@
         {
           "time": 48.936,
           "max_temperature": 1256.78,
-          "avg_temperature": 939.0
+          "avg_temperature": 939
         },
         {
           "time": 51.064,
@@ -1328,251 +1328,251 @@
           "avg_temperature": 812.97
         },
         {
-          "time": 100.0,
+          "time": 100,
           "max_temperature": 1194.54,
           "avg_temperature": 809.05
         }
       ],
       "velocity_series": [
         {
-          "time": 0.0,
-          "max_velocity": 4.362e-09,
-          "avg_velocity": 1.654e-09
+          "time": 0,
+          "max_velocity": 4.362e-9,
+          "avg_velocity": 1.654e-9
         },
         {
           "time": 2.128,
-          "max_velocity": 4.419e-09,
-          "avg_velocity": 1.608e-09
+          "max_velocity": 4.419e-9,
+          "avg_velocity": 1.608e-9
         },
         {
           "time": 4.255,
-          "max_velocity": 4.698e-09,
-          "avg_velocity": 1.776e-09
+          "max_velocity": 4.698e-9,
+          "avg_velocity": 1.776e-9
         },
         {
           "time": 6.383,
-          "max_velocity": 4.815e-09,
-          "avg_velocity": 1.86e-09
+          "max_velocity": 4.815e-9,
+          "avg_velocity": 1.86e-9
         },
         {
           "time": 8.511,
-          "max_velocity": 5.071e-09,
-          "avg_velocity": 1.918e-09
+          "max_velocity": 5.071e-9,
+          "avg_velocity": 1.918e-9
         },
         {
           "time": 10.638,
-          "max_velocity": 5.1e-09,
-          "avg_velocity": 1.945e-09
+          "max_velocity": 5.1e-9,
+          "avg_velocity": 1.945e-9
         },
         {
           "time": 12.766,
-          "max_velocity": 5.113e-09,
-          "avg_velocity": 1.877e-09
+          "max_velocity": 5.113e-9,
+          "avg_velocity": 1.877e-9
         },
         {
           "time": 14.894,
-          "max_velocity": 5.311e-09,
-          "avg_velocity": 1.904e-09
+          "max_velocity": 5.311e-9,
+          "avg_velocity": 1.904e-9
         },
         {
           "time": 17.021,
-          "max_velocity": 5.476e-09,
-          "avg_velocity": 1.943e-09
+          "max_velocity": 5.476e-9,
+          "avg_velocity": 1.943e-9
         },
         {
           "time": 19.149,
-          "max_velocity": 5.349e-09,
-          "avg_velocity": 2.05e-09
+          "max_velocity": 5.349e-9,
+          "avg_velocity": 2.05e-9
         },
         {
           "time": 21.277,
-          "max_velocity": 5.491e-09,
-          "avg_velocity": 1.95e-09
+          "max_velocity": 5.491e-9,
+          "avg_velocity": 1.95e-9
         },
         {
           "time": 23.404,
-          "max_velocity": 5.446e-09,
-          "avg_velocity": 2.176e-09
+          "max_velocity": 5.446e-9,
+          "avg_velocity": 2.176e-9
         },
         {
           "time": 25.532,
-          "max_velocity": 5.29e-09,
-          "avg_velocity": 1.951e-09
+          "max_velocity": 5.29e-9,
+          "avg_velocity": 1.951e-9
         },
         {
           "time": 27.66,
-          "max_velocity": 5.271e-09,
-          "avg_velocity": 2.002e-09
+          "max_velocity": 5.271e-9,
+          "avg_velocity": 2.002e-9
         },
         {
           "time": 29.787,
-          "max_velocity": 5.388e-09,
-          "avg_velocity": 2.037e-09
+          "max_velocity": 5.388e-9,
+          "avg_velocity": 2.037e-9
         },
         {
           "time": 31.915,
-          "max_velocity": 5.311e-09,
-          "avg_velocity": 1.925e-09
+          "max_velocity": 5.311e-9,
+          "avg_velocity": 1.925e-9
         },
         {
           "time": 34.043,
-          "max_velocity": 5.247e-09,
-          "avg_velocity": 1.905e-09
+          "max_velocity": 5.247e-9,
+          "avg_velocity": 1.905e-9
         },
         {
           "time": 36.17,
-          "max_velocity": 5.14e-09,
-          "avg_velocity": 2.05e-09
+          "max_velocity": 5.14e-9,
+          "avg_velocity": 2.05e-9
         },
         {
           "time": 38.298,
-          "max_velocity": 4.787e-09,
-          "avg_velocity": 1.768e-09
+          "max_velocity": 4.787e-9,
+          "avg_velocity": 1.768e-9
         },
         {
           "time": 40.426,
-          "max_velocity": 4.872e-09,
-          "avg_velocity": 1.861e-09
+          "max_velocity": 4.872e-9,
+          "avg_velocity": 1.861e-9
         },
         {
           "time": 42.553,
-          "max_velocity": 4.762e-09,
-          "avg_velocity": 1.766e-09
+          "max_velocity": 4.762e-9,
+          "avg_velocity": 1.766e-9
         },
         {
           "time": 44.681,
-          "max_velocity": 4.67e-09,
-          "avg_velocity": 1.706e-09
+          "max_velocity": 4.67e-9,
+          "avg_velocity": 1.706e-9
         },
         {
           "time": 46.809,
-          "max_velocity": 4.49e-09,
-          "avg_velocity": 1.786e-09
+          "max_velocity": 4.49e-9,
+          "avg_velocity": 1.786e-9
         },
         {
           "time": 48.936,
-          "max_velocity": 4.178e-09,
-          "avg_velocity": 1.563e-09
+          "max_velocity": 4.178e-9,
+          "avg_velocity": 1.563e-9
         },
         {
           "time": 51.064,
-          "max_velocity": 4.181e-09,
-          "avg_velocity": 1.534e-09
+          "max_velocity": 4.181e-9,
+          "avg_velocity": 1.534e-9
         },
         {
           "time": 53.191,
-          "max_velocity": 3.92e-09,
-          "avg_velocity": 1.38e-09
+          "max_velocity": 3.92e-9,
+          "avg_velocity": 1.38e-9
         },
         {
           "time": 55.319,
-          "max_velocity": 4.112e-09,
-          "avg_velocity": 1.55e-09
+          "max_velocity": 4.112e-9,
+          "avg_velocity": 1.55e-9
         },
         {
           "time": 57.447,
-          "max_velocity": 4.019e-09,
-          "avg_velocity": 1.478e-09
+          "max_velocity": 4.019e-9,
+          "avg_velocity": 1.478e-9
         },
         {
           "time": 59.574,
-          "max_velocity": 4.047e-09,
-          "avg_velocity": 1.541e-09
+          "max_velocity": 4.047e-9,
+          "avg_velocity": 1.541e-9
         },
         {
           "time": 61.702,
-          "max_velocity": 3.699e-09,
-          "avg_velocity": 1.446e-09
+          "max_velocity": 3.699e-9,
+          "avg_velocity": 1.446e-9
         },
         {
           "time": 63.83,
-          "max_velocity": 3.644e-09,
-          "avg_velocity": 1.367e-09
+          "max_velocity": 3.644e-9,
+          "avg_velocity": 1.367e-9
         },
         {
           "time": 65.957,
-          "max_velocity": 3.655e-09,
-          "avg_velocity": 1.364e-09
+          "max_velocity": 3.655e-9,
+          "avg_velocity": 1.364e-9
         },
         {
           "time": 68.085,
-          "max_velocity": 3.607e-09,
-          "avg_velocity": 1.309e-09
+          "max_velocity": 3.607e-9,
+          "avg_velocity": 1.309e-9
         },
         {
           "time": 70.213,
-          "max_velocity": 3.671e-09,
-          "avg_velocity": 1.312e-09
+          "max_velocity": 3.671e-9,
+          "avg_velocity": 1.312e-9
         },
         {
           "time": 72.34,
-          "max_velocity": 3.437e-09,
-          "avg_velocity": 1.283e-09
+          "max_velocity": 3.437e-9,
+          "avg_velocity": 1.283e-9
         },
         {
           "time": 74.468,
-          "max_velocity": 3.613e-09,
-          "avg_velocity": 1.27e-09
+          "max_velocity": 3.613e-9,
+          "avg_velocity": 1.27e-9
         },
         {
           "time": 76.596,
-          "max_velocity": 3.8e-09,
-          "avg_velocity": 1.418e-09
+          "max_velocity": 3.8e-9,
+          "avg_velocity": 1.418e-9
         },
         {
           "time": 78.723,
-          "max_velocity": 3.67e-09,
-          "avg_velocity": 1.461e-09
+          "max_velocity": 3.67e-9,
+          "avg_velocity": 1.461e-9
         },
         {
           "time": 80.851,
-          "max_velocity": 3.887e-09,
-          "avg_velocity": 1.376e-09
+          "max_velocity": 3.887e-9,
+          "avg_velocity": 1.376e-9
         },
         {
           "time": 82.979,
-          "max_velocity": 3.827e-09,
-          "avg_velocity": 1.411e-09
+          "max_velocity": 3.827e-9,
+          "avg_velocity": 1.411e-9
         },
         {
           "time": 85.106,
-          "max_velocity": 4.011e-09,
-          "avg_velocity": 1.508e-09
+          "max_velocity": 4.011e-9,
+          "avg_velocity": 1.508e-9
         },
         {
           "time": 87.234,
-          "max_velocity": 4.126e-09,
-          "avg_velocity": 1.571e-09
+          "max_velocity": 4.126e-9,
+          "avg_velocity": 1.571e-9
         },
         {
           "time": 89.362,
-          "max_velocity": 4.201e-09,
-          "avg_velocity": 1.505e-09
+          "max_velocity": 4.201e-9,
+          "avg_velocity": 1.505e-9
         },
         {
           "time": 91.489,
-          "max_velocity": 4.338e-09,
-          "avg_velocity": 1.722e-09
+          "max_velocity": 4.338e-9,
+          "avg_velocity": 1.722e-9
         },
         {
           "time": 93.617,
-          "max_velocity": 4.413e-09,
-          "avg_velocity": 1.625e-09
+          "max_velocity": 4.413e-9,
+          "avg_velocity": 1.625e-9
         },
         {
           "time": 95.745,
-          "max_velocity": 4.71e-09,
-          "avg_velocity": 1.667e-09
+          "max_velocity": 4.71e-9,
+          "avg_velocity": 1.667e-9
         },
         {
           "time": 97.872,
-          "max_velocity": 4.845e-09,
-          "avg_velocity": 1.74e-09
+          "max_velocity": 4.845e-9,
+          "avg_velocity": 1.74e-9
         },
         {
-          "time": 100.0,
-          "max_velocity": 4.771e-09,
-          "avg_velocity": 1.825e-09
+          "time": 100,
+          "max_velocity": 4.771e-9,
+          "avg_velocity": 1.825e-9
         }
       ],
       "nonlinear_series": [
@@ -1719,7 +1719,7 @@
       ],
       "field_frames": [
         {
-          "time": 0.0,
+          "time": 0,
           "temperature_preview": "/api/v1/files/ART-GEO-TT01/preview",
           "velocity_preview": "/api/v1/files/ART-GEO-TV01/preview"
         },

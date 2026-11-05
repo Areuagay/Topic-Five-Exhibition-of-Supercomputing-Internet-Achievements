@@ -9,7 +9,7 @@
     "progress": 76,
     "execution_mode": "simulated",
     "cluster_id": "changsha",
-    "cluster_name": "长沙天河新一代",
+    "cluster_name": "天河新一代",
     "job_id": "DRUG-JOB-58210",
     "current_stage": "multi-center-docking",
     "start_time": "2026-08-11T09:20:00+08:00",
@@ -288,7 +288,7 @@
           },
           {
             "min": -3.475,
-            "max": -3.0,
+            "max": -3,
             "count": 1
           }
         ],
@@ -816,7 +816,7 @@
         },
         {
           "min": -3.475,
-          "max": -3.0,
+          "max": -3,
           "count": 1
         }
       ],

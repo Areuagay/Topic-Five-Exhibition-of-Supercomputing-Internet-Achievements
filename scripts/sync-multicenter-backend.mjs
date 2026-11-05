@@ -21,6 +21,10 @@ const MC_DIR = resolve(MOCK_DIR, 'multicenter')
 const DETAIL_DIR = resolve(MC_DIR, 'details')
 const INDEX_FILE = resolve(MOCK_DIR, 'index.json')
 const SNAPSHOT_FILE = resolve(MC_DIR, 'backend-snapshot.json')
+const RUNTIME_STATE_DIR = resolve(ROOT, '.runtime-data')
+
+/** 六大应用领域的运行记录也引用中心名称，需要一起同步。 */
+const RUN_DOMAINS = ['geodynamics', 'llm', 'automotive', 'uav', 'drug', 'dft']
 
 const BACKEND_URL = process.env.MULTICENTER_BACKEND_URL || 'http://192.168.95.138:8890/'
 const TIME_ZONE = 'Asia/Shanghai'
@@ -503,6 +507,49 @@ function buildMigrations(clusters, timestamp) {
   }))
 }
 
+/**
+ * 各领域的运行记录、运行详情与本地运行态里保存了中心名称，
+ * 同步时统一改成平台最新名称，避免运行列表与资源调度显示不一致。
+ */
+function syncRunClusterNames(clusters) {
+  const names = new Map(clusters.map((cluster) => [cluster.id, cluster.name]))
+  const apply = (record) => {
+    if (!record?.cluster_id) return false
+    const name = names.get(record.cluster_id)
+    if (!name || record.cluster_name === name) return false
+    record.cluster_name = name
+    return true
+  }
+
+  for (const domain of RUN_DOMAINS) {
+    const runsFile = resolve(MOCK_DIR, domain, 'runs.json')
+    const runs = readJSON(runsFile, null)
+    if (runs?.data) {
+      let dirty = false
+      for (const run of runs.data) dirty = apply(run) || dirty
+      if (dirty) writeJSON(runsFile, runs)
+    }
+
+    const detailDir = resolve(MOCK_DIR, domain, 'run-details')
+    for (const file of readdirSync(detailDir)) {
+      if (!file.endsWith('.json')) continue
+      const filePath = resolve(detailDir, file)
+      const detail = readJSON(filePath, null)
+      if (detail?.data && apply(detail.data)) writeJSON(filePath, detail)
+    }
+
+    const stateFile = resolve(RUNTIME_STATE_DIR, `${domain}.json`)
+    const state = readJSON(stateFile, null)
+    if (state) {
+      let dirty = false
+      for (const run of state.runs ?? []) dirty = apply(run) || dirty
+      for (const detail of Object.values(state.details ?? {})) dirty = apply(detail) || dirty
+      for (const template of Object.values(state.templates ?? {})) dirty = apply(template) || dirty
+      if (dirty) writeJSON(stateFile, state)
+    }
+  }
+}
+
 async function main() {
   const clustersFile = resolve(MC_DIR, 'clusters.json')
   const previous = readJSON(clustersFile, { data: [] }).data ?? []
@@ -521,6 +568,7 @@ async function main() {
 
   const timestamp = snapshot.fetched_at
   const clusters = buildClusters(snapshot.items, previous, snapshot)
+  syncRunClusterNames(clusters)
   const topology = buildTopology(clusters)
   const matrix = buildDeploymentMatrix(clusters)
   const workloads = buildWorkloads(clusters, matrix)

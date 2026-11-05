@@ -13,6 +13,7 @@ import ExperienceWorkflowStep from './ExperienceWorkflowStep.vue'
 import ExperienceMonitorStep from './ExperienceMonitorStep.vue'
 import ExperienceResultStep from './ExperienceResultStep.vue'
 import { useApi } from '~/composables/useApi'
+import { useResourceLoadStore } from '~/stores/resource-load'
 import { formatNumber, statusText } from '~/composables/useFormat'
 import { canViewResult } from '~/utils/experience-simulation'
 import { unitText } from '~/utils/workspace'
@@ -113,6 +114,11 @@ watch(workflowAllowed, allowed => {
 })
 
 const supportedClusters = computed(() => props.detail?.supported_clusters ?? [])
+/**
+ * 上传负载按中心记录在所有领域共享的 store 中：
+ * 任一领域上传数据后，其他领域的资源调度读取到同一份计数，避免各领域数据不一致。
+ */
+const resourceLoadStore = useResourceLoadStore()
 const selectedOperators = computed(() => props.detail?.operators ?? [])
 const chosenOperators = computed(() => (operators.value ?? []).filter((item) => chosenOperatorIds.value?.includes(item.name)))
 const guideActive = useState<boolean>(`experience-guide-${props.domain}-${props.scenarioId}`, () => false)
@@ -210,7 +216,14 @@ function handleResult(runId: string): void {
 
 /* ---------------- 01 数据准备：上传/删除后刷新、一键导入 ---------------- */
 function handleDatasetUpdated(updated: DatasetItem): void {
+  const previous = datasets.value.find(item => item.dataset_id === updated.dataset_id)
   datasets.value = datasets.value.map(item => item.dataset_id === updated.dataset_id ? updated : item)
+  // 上传负载写入全局 store，并在移除上传时按上传时记录的中心精确回退
+  if (previous && !previous.uploaded && updated.uploaded) {
+    resourceLoadStore.registerUpload(updated.dataset_id, supportedClusters.value)
+  } else if (previous?.uploaded && !updated.uploaded) {
+    resourceLoadStore.unregisterUpload(updated.dataset_id)
+  }
 }
 
 async function handleImported(result: ImportResult): Promise<void> {
@@ -437,6 +450,7 @@ watch(activeKey, key => { if (key === 'resource') void refreshClusters() })
         v-else-if="activeKey === 'resource'"
         :clusters="clusters ?? []"
         :supported-clusters="supportedClusters"
+        :cluster-load="resourceLoadStore.counts"
       />
 
       <ExperienceOperatorStep

@@ -9,7 +9,7 @@
     "progress": 54,
     "execution_mode": "simulated",
     "cluster_id": "changsha",
-    "cluster_name": "长沙天河新一代",
+    "cluster_name": "天河新一代",
     "job_id": "DFT-SLURM-71429",
     "current_stage": "scf",
     "start_time": "2026-08-11T09:00:00+08:00",
@@ -371,7 +371,7 @@
             "Γ"
           ],
           "k_positions": [
-            0.0,
+            0,
             0.0506,
             0.1013,
             0.1519,
@@ -450,9 +450,9 @@
             3.8481,
             3.8987,
             3.9494,
-            4.0
+            4
           ],
-          "fermi_energy": 0.0,
+          "fermi_energy": 0,
           "bands": [
             {
               "band_index": 0,
@@ -1478,8 +1478,8 @@
         },
         "dos_series": [
           {
-            "energy": -6.0,
-            "total_dos": 0.0
+            "energy": -6,
+            "total_dos": 0
           },
           {
             "energy": -5.9245,
@@ -1495,11 +1495,11 @@
           },
           {
             "energy": -5.6981,
-            "total_dos": 0.0
+            "total_dos": 0
           },
           {
             "energy": -5.6226,
-            "total_dos": 0.0
+            "total_dos": 0
           },
           {
             "energy": -5.5472,
@@ -1511,11 +1511,11 @@
           },
           {
             "energy": -5.3962,
-            "total_dos": 0.0
+            "total_dos": 0
           },
           {
             "energy": -5.3208,
-            "total_dos": 0.0
+            "total_dos": 0
           },
           {
             "energy": -5.2453,
@@ -1527,7 +1527,7 @@
           },
           {
             "energy": -5.0943,
-            "total_dos": 0.0
+            "total_dos": 0
           },
           {
             "energy": -5.0189,
@@ -1535,19 +1535,19 @@
           },
           {
             "energy": -4.9434,
-            "total_dos": 0.0
+            "total_dos": 0
           },
           {
             "energy": -4.8679,
-            "total_dos": 0.0
+            "total_dos": 0
           },
           {
             "energy": -4.7925,
-            "total_dos": 0.0
+            "total_dos": 0
           },
           {
             "energy": -4.717,
-            "total_dos": 0.0
+            "total_dos": 0
           },
           {
             "energy": -4.6415,
@@ -1555,7 +1555,7 @@
           },
           {
             "energy": -4.566,
-            "total_dos": 0.0
+            "total_dos": 0
           },
           {
             "energy": -4.4906,
@@ -1563,11 +1563,11 @@
           },
           {
             "energy": -4.4151,
-            "total_dos": 0.0
+            "total_dos": 0
           },
           {
             "energy": -4.3396,
-            "total_dos": 0.0
+            "total_dos": 0
           },
           {
             "energy": -4.2642,
@@ -1575,7 +1575,7 @@
           },
           {
             "energy": -4.1887,
-            "total_dos": 0.0
+            "total_dos": 0
           },
           {
             "energy": -4.1132,
@@ -1690,7 +1690,7 @@
             "total_dos": 0.64592
           },
           {
-            "energy": -2.0,
+            "energy": -2,
             "total_dos": 0.82111
           },
           {
@@ -1779,7 +1779,7 @@
           },
           {
             "energy": -0.3396,
-            "total_dos": 0.0
+            "total_dos": 0
           },
           {
             "energy": -0.2642,
@@ -1787,7 +1787,7 @@
           },
           {
             "energy": -0.1887,
-            "total_dos": 0.0
+            "total_dos": 0
           },
           {
             "energy": -0.1132,
@@ -1799,7 +1799,7 @@
           },
           {
             "energy": 0.0377,
-            "total_dos": 0.0
+            "total_dos": 0
           },
           {
             "energy": 0.1132,
@@ -1807,7 +1807,7 @@
           },
           {
             "energy": 0.1887,
-            "total_dos": 0.0
+            "total_dos": 0
           },
           {
             "energy": 0.2642,
@@ -1815,7 +1815,7 @@
           },
           {
             "energy": 0.3396,
-            "total_dos": 0.0
+            "total_dos": 0
           },
           {
             "energy": 0.4151,
@@ -1823,11 +1823,11 @@
           },
           {
             "energy": 0.4906,
-            "total_dos": 0.0
+            "total_dos": 0
           },
           {
             "energy": 0.566,
-            "total_dos": 0.0
+            "total_dos": 0
           },
           {
             "energy": 0.6415,
@@ -1902,7 +1902,7 @@
             "total_dos": 0.29239
           },
           {
-            "energy": 2.0,
+            "energy": 2,
             "total_dos": 0.24594
           },
           {
@@ -2023,7 +2023,7 @@
           },
           {
             "energy": 4.2642,
-            "total_dos": 0.0
+            "total_dos": 0
           },
           {
             "energy": 4.3396,
@@ -2047,7 +2047,7 @@
           },
           {
             "energy": 4.717,
-            "total_dos": 0.0
+            "total_dos": 0
           },
           {
             "energy": 4.7925,
@@ -2055,11 +2055,11 @@
           },
           {
             "energy": 4.8679,
-            "total_dos": 0.0
+            "total_dos": 0
           },
           {
             "energy": 4.9434,
-            "total_dos": 0.0
+            "total_dos": 0
           },
           {
             "energy": 5.0189,
@@ -2067,7 +2067,7 @@
           },
           {
             "energy": 5.0943,
-            "total_dos": 0.0
+            "total_dos": 0
           },
           {
             "energy": 5.1698,
@@ -2083,7 +2083,7 @@
           },
           {
             "energy": 5.3962,
-            "total_dos": 0.0
+            "total_dos": 0
           },
           {
             "energy": 5.4717,
@@ -2095,15 +2095,15 @@
           },
           {
             "energy": 5.6226,
-            "total_dos": 0.0
+            "total_dos": 0
           },
           {
             "energy": 5.6981,
-            "total_dos": 0.0
+            "total_dos": 0
           },
           {
             "energy": 5.7736,
-            "total_dos": 0.0
+            "total_dos": 0
           },
           {
             "energy": 5.8491,
@@ -2114,7 +2114,7 @@
             "total_dos": 0.01885
           },
           {
-            "energy": 6.0,
+            "energy": 6,
             "total_dos": 0.01934
           }
         ],
@@ -2139,9 +2139,9 @@
           "atoms": [
             {
               "element": "Si",
-              "x": 0.0,
-              "y": 0.0,
-              "z": 0.0
+              "x": 0,
+              "y": 0,
+              "z": 0
             },
             {
               "element": "Si",
@@ -2153,7 +2153,7 @@
               "element": "Si",
               "x": 0.5,
               "y": 0.5,
-              "z": 0.0
+              "z": 0
             },
             {
               "element": "Si",
@@ -2164,7 +2164,7 @@
             {
               "element": "Si",
               "x": 0.5,
-              "y": 0.0,
+              "y": 0,
               "z": 0.5
             },
             {
@@ -2175,7 +2175,7 @@
             },
             {
               "element": "Si",
-              "x": 0.0,
+              "x": 0,
               "y": 0.5,
               "z": 0.5
             },
@@ -2413,7 +2413,7 @@
           "Γ"
         ],
         "k_positions": [
-          0.0,
+          0,
           0.0506,
           0.1013,
           0.1519,
@@ -2492,9 +2492,9 @@
           3.8481,
           3.8987,
           3.9494,
-          4.0
+          4
         ],
-        "fermi_energy": 0.0,
+        "fermi_energy": 0,
         "bands": [
           {
             "band_index": 0,
@@ -3520,8 +3520,8 @@
       },
       "dos_series": [
         {
-          "energy": -6.0,
-          "total_dos": 0.0
+          "energy": -6,
+          "total_dos": 0
         },
         {
           "energy": -5.9245,
@@ -3537,11 +3537,11 @@
         },
         {
           "energy": -5.6981,
-          "total_dos": 0.0
+          "total_dos": 0
         },
         {
           "energy": -5.6226,
-          "total_dos": 0.0
+          "total_dos": 0
         },
         {
           "energy": -5.5472,
@@ -3553,11 +3553,11 @@
         },
         {
           "energy": -5.3962,
-          "total_dos": 0.0
+          "total_dos": 0
         },
         {
           "energy": -5.3208,
-          "total_dos": 0.0
+          "total_dos": 0
         },
         {
           "energy": -5.2453,
@@ -3569,7 +3569,7 @@
         },
         {
           "energy": -5.0943,
-          "total_dos": 0.0
+          "total_dos": 0
         },
         {
           "energy": -5.0189,
@@ -3577,19 +3577,19 @@
         },
         {
           "energy": -4.9434,
-          "total_dos": 0.0
+          "total_dos": 0
         },
         {
           "energy": -4.8679,
-          "total_dos": 0.0
+          "total_dos": 0
         },
         {
           "energy": -4.7925,
-          "total_dos": 0.0
+          "total_dos": 0
         },
         {
           "energy": -4.717,
-          "total_dos": 0.0
+          "total_dos": 0
         },
         {
           "energy": -4.6415,
@@ -3597,7 +3597,7 @@
         },
         {
           "energy": -4.566,
-          "total_dos": 0.0
+          "total_dos": 0
         },
         {
           "energy": -4.4906,
@@ -3605,11 +3605,11 @@
         },
         {
           "energy": -4.4151,
-          "total_dos": 0.0
+          "total_dos": 0
         },
         {
           "energy": -4.3396,
-          "total_dos": 0.0
+          "total_dos": 0
         },
         {
           "energy": -4.2642,
@@ -3617,7 +3617,7 @@
         },
         {
           "energy": -4.1887,
-          "total_dos": 0.0
+          "total_dos": 0
         },
         {
           "energy": -4.1132,
@@ -3732,7 +3732,7 @@
           "total_dos": 0.64592
         },
         {
-          "energy": -2.0,
+          "energy": -2,
           "total_dos": 0.82111
         },
         {
@@ -3821,7 +3821,7 @@
         },
         {
           "energy": -0.3396,
-          "total_dos": 0.0
+          "total_dos": 0
         },
         {
           "energy": -0.2642,
@@ -3829,7 +3829,7 @@
         },
         {
           "energy": -0.1887,
-          "total_dos": 0.0
+          "total_dos": 0
         },
         {
           "energy": -0.1132,
@@ -3841,7 +3841,7 @@
         },
         {
           "energy": 0.0377,
-          "total_dos": 0.0
+          "total_dos": 0
         },
         {
           "energy": 0.1132,
@@ -3849,7 +3849,7 @@
         },
         {
           "energy": 0.1887,
-          "total_dos": 0.0
+          "total_dos": 0
         },
         {
           "energy": 0.2642,
@@ -3857,7 +3857,7 @@
         },
         {
           "energy": 0.3396,
-          "total_dos": 0.0
+          "total_dos": 0
         },
         {
           "energy": 0.4151,
@@ -3865,11 +3865,11 @@
         },
         {
           "energy": 0.4906,
-          "total_dos": 0.0
+          "total_dos": 0
         },
         {
           "energy": 0.566,
-          "total_dos": 0.0
+          "total_dos": 0
         },
         {
           "energy": 0.6415,
@@ -3944,7 +3944,7 @@
           "total_dos": 0.29239
         },
         {
-          "energy": 2.0,
+          "energy": 2,
           "total_dos": 0.24594
         },
         {
@@ -4065,7 +4065,7 @@
         },
         {
           "energy": 4.2642,
-          "total_dos": 0.0
+          "total_dos": 0
         },
         {
           "energy": 4.3396,
@@ -4089,7 +4089,7 @@
         },
         {
           "energy": 4.717,
-          "total_dos": 0.0
+          "total_dos": 0
         },
         {
           "energy": 4.7925,
@@ -4097,11 +4097,11 @@
         },
         {
           "energy": 4.8679,
-          "total_dos": 0.0
+          "total_dos": 0
         },
         {
           "energy": 4.9434,
-          "total_dos": 0.0
+          "total_dos": 0
         },
         {
           "energy": 5.0189,
@@ -4109,7 +4109,7 @@
         },
         {
           "energy": 5.0943,
-          "total_dos": 0.0
+          "total_dos": 0
         },
         {
           "energy": 5.1698,
@@ -4125,7 +4125,7 @@
         },
         {
           "energy": 5.3962,
-          "total_dos": 0.0
+          "total_dos": 0
         },
         {
           "energy": 5.4717,
@@ -4137,15 +4137,15 @@
         },
         {
           "energy": 5.6226,
-          "total_dos": 0.0
+          "total_dos": 0
         },
         {
           "energy": 5.6981,
-          "total_dos": 0.0
+          "total_dos": 0
         },
         {
           "energy": 5.7736,
-          "total_dos": 0.0
+          "total_dos": 0
         },
         {
           "energy": 5.8491,
@@ -4156,7 +4156,7 @@
           "total_dos": 0.01885
         },
         {
-          "energy": 6.0,
+          "energy": 6,
           "total_dos": 0.01934
         }
       ],
@@ -4181,9 +4181,9 @@
         "atoms": [
           {
             "element": "Si",
-            "x": 0.0,
-            "y": 0.0,
-            "z": 0.0
+            "x": 0,
+            "y": 0,
+            "z": 0
           },
           {
             "element": "Si",
@@ -4195,7 +4195,7 @@
             "element": "Si",
             "x": 0.5,
             "y": 0.5,
-            "z": 0.0
+            "z": 0
           },
           {
             "element": "Si",
@@ -4206,7 +4206,7 @@
           {
             "element": "Si",
             "x": 0.5,
-            "y": 0.0,
+            "y": 0,
             "z": 0.5
           },
           {
@@ -4217,7 +4217,7 @@
           },
           {
             "element": "Si",
-            "x": 0.0,
+            "x": 0,
             "y": 0.5,
             "z": 0.5
           },
