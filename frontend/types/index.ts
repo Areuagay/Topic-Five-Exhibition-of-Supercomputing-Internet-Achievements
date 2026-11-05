@@ -120,15 +120,31 @@ export interface Benchmark {
 
 export interface Operator {
   name: string
+  /** 平台算子标题；应用示范的算子卡片与场景推荐均按该标题一一对应展示 */
+  title?: string
   version: string
   runtime_type: string
   runtime: string
   handler: string
+  /** 平台登记的镜像地址（与运行环境 runtime 分开保留） */
+  image?: string
   cpu_cores: number
   gpu_count: number
   memory_mb: number
+  /** 平台 compute_resource_requirement 的中文资源要求（可能以文字描述代替核数） */
+  resource_requirement?: string
   status: string
+  /** 卡片摘要（平台描述首句，控制在一行到三行内） */
   description: string
+  /** 平台完整描述，用于运行详情 */
+  description_full?: string
+  /** 平台输入 / 输出说明，用于运行详情 */
+  in_out_explain?: string
+  backend_id?: string
+  backend_tags?: string
+  backend_categories?: string
+  backend_registry_name?: string
+  updated_at?: string
 }
 
 /* ==================== 一键体验 · 数据准备 ==================== */

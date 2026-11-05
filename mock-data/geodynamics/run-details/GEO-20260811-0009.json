@@ -1740,9 +1740,9 @@
       ]
     },
     "selected_operator_ids": [
-      "fem-pde-solver",
-      "fft-operator",
-      "sparse-matrix"
+      "uzawa",
+      "citcoms-global",
+      "citcoms-regional"
     ]
   },
   "timestamp": "2026-09-22T20:33:23+08:00"

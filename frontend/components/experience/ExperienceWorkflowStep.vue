@@ -40,7 +40,7 @@ function selectRun(value: string): void {
   <div class="exp-workflow">
     <section class="exp-chosen-operators" aria-label="本次体验已选算子">
       <header class="exp-chosen-heading"><div><strong>本条任务算子</strong><span class="exp-chosen-count">{{ chosenOperators.length }} 项</span></div><p>与下方工作流、执行监控同步</p></header>
-      <ul v-if="chosenOperators.length"><li v-for="operator in chosenOperators" :key="operator.name"><span class="exp-chosen-icon"><Box :size="17" aria-hidden="true" /></span><span class="exp-chosen-name">{{ operator.description.includes('：') ? operator.description.split('：')[0] : operator.name }}<small>{{ operator.name }}</small></span></li></ul>
+      <ul v-if="chosenOperators.length"><li v-for="operator in chosenOperators" :key="operator.name"><span class="exp-chosen-icon"><Box :size="17" aria-hidden="true" /></span><span class="exp-chosen-name">{{ operator.title || (operator.description.includes('：') ? operator.description.split('：')[0] : operator.name) }}<small>{{ operator.name }}</small></span></li></ul>
       <p v-else>预置运行记录，计算阶段请查看下方工作流。</p>
     </section>
     <div class="exp-toolbar">

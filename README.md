@@ -42,9 +42,37 @@ $env:MULTICENTER_BACKEND_URL = 'http://192.168.95.138:8890/'
 - 平台暂未开放函数部署、调用与迁移接口，这三块按四中心运行任务 / 排队等待推导：
   每中心每 4 个运行任务折算 1 个就绪实例，调用条数等于运行任务数，迁移只发生在非维护中心之间
 
+## 算子库同步
+
+六大领域「算子选择」中的卡片与「场景推荐」同步自超算平台「算子库」
+（<http://192.168.95.138:8890/operator>），接口为 `/api/v1/operator-libraries` 与
+`/api/v1/operator-libraries/{id}`。平台接口需要登录态，首次同步时传入浏览器中的 sessionId：
+
+```powershell
+$env:SCNET_SESSION_ID = '<登录平台后的 sessionId>'
+node scripts/sync-operator-library.mjs
+# 或在 frontend 目录
+npm run sync:operators
+
+# 不传登录态时直接使用仓库快照，按分配表重新生成各领域数据
+node scripts/sync-operator-library.mjs --offline
+```
+
+- 快照：`mock-data/operator-library/backend-operators.json`（含平台来源、抓取时间与 87 个算子详情）
+- 平台上的「生物信息场景」11 个和「通用计算场景」13 个不属于应用示范的六个领域，
+  同步时排除，不进入任何领域的算子列表；领域内实际使用 63 个算子：
+  地球动力学 4、AI模型训练 9、汽车设计 14、材料计算 14、仿真计算 13、药物设计 9
+- 分配表：`scripts/operator-library-assignments.json`，按算子标题一一对应到领域 / 方向，
+  其余字段（摘要、镜像、调用入口、CPU/GPU/内存、资源要求、类型与所属场景）全部取自平台详情
+- 63 个领域算子分别落入 6 个领域的 12 个方向：算子既出现在领域「全部算子」列表中，
+  又在该方向的 `scenario-details.json` 里作为「场景推荐」
+- 卡片样式保持不变，只替换标题、摘要、资源与「运行详情」；运行详情展示平台镜像、调用入口、
+  运行环境、资源要求、算子类型与所属场景
+- 同步脚本会把运行详情里已失效的 `selected_operator_ids` 迁移到新算子，避免运行记录引用旧 ID
+
 ## Applications
 
-1. 地球物理
+1. 地球动力学
 2. AI模型训练
 3. 汽车设计
 4. 仿真计算

@@ -2216,9 +2216,7 @@
       ]
     },
     "selected_operator_ids": [
-      "fd-wave-solver",
-      "fft-operator",
-      "sparse-matrix"
+      "supg"
     ]
   },
   "timestamp": "2026-09-22T21:04:53+08:00"

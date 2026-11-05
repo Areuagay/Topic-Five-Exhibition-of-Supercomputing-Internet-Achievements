@@ -8,13 +8,39 @@
       "category": "汽车仿真",
       "description": "基于 LS-DYNA 的整车碰撞仿真示范，覆盖模型导入、网格检查、接触/材料/边界条件设置、区域分解、并行显式求解与安全指标验证全流程。",
       "summary_metrics": [
-        { "label": "单元规模", "value": "1200万", "unit": "单元" },
-        { "label": "仿真耗时", "value": "102", "unit": "min" },
-        { "label": "加速度峰值", "value": "32.1", "unit": "g" },
-        { "label": "总能量误差", "value": "2.8", "unit": "%" }
+        {
+          "label": "单元规模",
+          "value": "1200万",
+          "unit": "单元"
+        },
+        {
+          "label": "仿真耗时",
+          "value": "102",
+          "unit": "min"
+        },
+        {
+          "label": "加速度峰值",
+          "value": "32.1",
+          "unit": "g"
+        },
+        {
+          "label": "总能量误差",
+          "value": "2.8",
+          "unit": "%"
+        }
       ],
-      "supported_clusters": ["changsha", "guangzhou", "kunshan"],
-      "tech_stack": ["LS-DYNA", "MPI", "OpenMP", "Slurm", "HyperMesh"],
+      "supported_clusters": [
+        "changsha",
+        "guangzhou",
+        "kunshan"
+      ],
+      "tech_stack": [
+        "LS-DYNA",
+        "MPI",
+        "OpenMP",
+        "Slurm",
+        "HyperMesh"
+      ],
       "background": "整车碰撞仿真涉及千万级单元与复杂接触，需大规模并行显式求解；平台通过区域分解与负载均衡实现整车级仿真高效运行。",
       "method": "采用 LS-DYNA 显式动力学求解，MPI 区域分解并行，配合接触算法与质量缩放控制，输出能量守恒、加速度与变形等安全指标。",
       "architecture": [
@@ -25,14 +51,67 @@
         "后处理：能量曲线与安全指标验证"
       ],
       "operators": [
-        { "id": "crash-solver", "name": "碰撞与冲击仿真算子" },
-        { "id": "structural-mechanics", "name": "结构力学求解器" },
-        { "id": "sparse-matrix", "name": "稀疏矩阵运算" }
+        {
+          "id": "isothermal-film",
+          "name": "汽车等温液膜附着评估函数接口"
+        },
+        {
+          "id": "film-evolution",
+          "name": "汽车液膜附着演化函数接口"
+        },
+        {
+          "id": "particle-spray",
+          "name": "汽车颗粒喷雾评估函数接口"
+        },
+        {
+          "id": "oil-multiphase-transport",
+          "name": "汽车油液多相输运函数接口"
+        },
+        {
+          "id": "oil-multiphase-interface",
+          "name": "汽车油液多相界面评估函数接口"
+        },
+        {
+          "id": "wading-impact",
+          "name": "汽车涉水冲击评估函数接口"
+        },
+        {
+          "id": "wading-free-surface",
+          "name": "汽车涉水液面演化函数接口"
+        },
+        {
+          "id": "auto-combustion",
+          "name": "汽车燃烧评估函数接口"
+        },
+        {
+          "id": "auto-species-transport",
+          "name": "汽车热流与组分输运函数接口"
+        },
+        {
+          "id": "auto-thermal-flow",
+          "name": "汽车热流评估函数接口"
+        },
+        {
+          "id": "auto-external-flow",
+          "name": "汽车外流评估函数接口"
+        }
       ],
       "highlights": [
-        { "label": "并行加速比", "value": "96", "unit": "x" },
-        { "label": "CPU利用率", "value": "88", "unit": "%" },
-        { "label": "总能量误差", "value": "2.8", "unit": "%" }
+        {
+          "label": "并行加速比",
+          "value": "96",
+          "unit": "x"
+        },
+        {
+          "label": "CPU利用率",
+          "value": "88",
+          "unit": "%"
+        },
+        {
+          "label": "总能量误差",
+          "value": "2.8",
+          "unit": "%"
+        }
       ]
     },
     {
@@ -41,13 +120,37 @@
       "category": "汽车仿真",
       "description": "基于有限元疲劳分析的汽车结构疲劳寿命预测示范，结合载荷谱输入与材料 S-N 曲线，评估车身与底盘关键结构件的疲劳损伤与寿命分布。",
       "summary_metrics": [
-        { "label": "最小寿命", "value": "2.4e5", "unit": "次" },
-        { "label": "损伤因子峰值", "value": "4.2", "unit": "" },
-        { "label": "分析耗时", "value": "45", "unit": "min" },
-        { "label": "CPU利用率", "value": "86", "unit": "%" }
+        {
+          "label": "最小寿命",
+          "value": "2.4e5",
+          "unit": "次"
+        },
+        {
+          "label": "损伤因子峰值",
+          "value": "4.2",
+          "unit": ""
+        },
+        {
+          "label": "分析耗时",
+          "value": "45",
+          "unit": "min"
+        },
+        {
+          "label": "CPU利用率",
+          "value": "86",
+          "unit": "%"
+        }
       ],
-      "supported_clusters": ["changsha", "jinan"],
-      "tech_stack": ["nCode DesignLife", "ABAQUS", "MPI", "Slurm"],
+      "supported_clusters": [
+        "changsha",
+        "jinan"
+      ],
+      "tech_stack": [
+        "nCode DesignLife",
+        "ABAQUS",
+        "MPI",
+        "Slurm"
+      ],
       "background": "汽车结构件在复杂载荷谱下易发生疲劳失效，需结合有限元应力结果与疲劳损伤模型进行寿命预测，指导结构优化设计。",
       "method": "提取有限元应力/应变历程，结合材料 S-N 曲线与 Miner 线性累积损伤准则，计算各节点损伤因子与疲劳寿命分布。",
       "architecture": [
@@ -58,13 +161,35 @@
         "寿命输出：寿命云图与报告"
       ],
       "operators": [
-        { "id": "structural-mechanics", "name": "结构力学求解器" },
-        { "id": "fatigue-analysis", "name": "疲劳分析算子" }
+        {
+          "id": "ipfno",
+          "name": "IPFNO隐式傅里叶神经算子快速评估函数接口"
+        },
+        {
+          "id": "transolver",
+          "name": "Transolver几何PDE代理模型快速评估函数接口"
+        },
+        {
+          "id": "structural-thermal-load",
+          "name": "汽车结构热负荷评估函数接口"
+        }
       ],
       "highlights": [
-        { "label": "分析效率", "value": "5.8", "unit": "x" },
-        { "label": "寿命预测精度", "value": "92", "unit": "%" },
-        { "label": "CPU利用率", "value": "86", "unit": "%" }
+        {
+          "label": "分析效率",
+          "value": "5.8",
+          "unit": "x"
+        },
+        {
+          "label": "寿命预测精度",
+          "value": "92",
+          "unit": "%"
+        },
+        {
+          "label": "CPU利用率",
+          "value": "86",
+          "unit": "%"
+        }
       ]
     }
   ],

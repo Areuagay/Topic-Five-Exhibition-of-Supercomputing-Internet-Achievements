@@ -8,13 +8,39 @@
       "category": "无人机协同",
       "description": "千架无人机集群协同控制示范，覆盖场景初始化、通信拓扑构建、任务分配、分布式一致性协同控制、多智能体动力学仿真与碰撞检测全流程。",
       "summary_metrics": [
-        { "label": "无人机数量", "value": "1000", "unit": "架" },
-        { "label": "任务完成率", "value": "93.2", "unit": "%" },
-        { "label": "仿真速度", "value": "480", "unit": "step/s" },
-        { "label": "碰撞次数", "value": "2", "unit": "次" }
+        {
+          "label": "无人机数量",
+          "value": "1000",
+          "unit": "架"
+        },
+        {
+          "label": "任务完成率",
+          "value": "93.2",
+          "unit": "%"
+        },
+        {
+          "label": "仿真速度",
+          "value": "480",
+          "unit": "step/s"
+        },
+        {
+          "label": "碰撞次数",
+          "value": "2",
+          "unit": "次"
+        }
       ],
-      "supported_clusters": ["changsha", "jinan", "kunshan"],
-      "tech_stack": ["ROS2", "Gazebo", "MPI", "Slurm", "一致性控制算法"],
+      "supported_clusters": [
+        "changsha",
+        "jinan",
+        "kunshan"
+      ],
+      "tech_stack": [
+        "ROS2",
+        "Gazebo",
+        "MPI",
+        "Slurm",
+        "一致性控制算法"
+      ],
       "background": "千架级无人机集群协同需要高效的任务分配与分布式控制算法，平台通过多机并行仿真与通信拓扑构建，支撑大规模集群协同控制验证。",
       "method": "采用分布式一致性控制算法（Consensus）实现编队保持，结合多智能体动力学仿真与碰撞检测，统计任务完成率与编队误差等指标。",
       "architecture": [
@@ -25,14 +51,43 @@
         "碰撞检测：空间索引并行检测"
       ],
       "operators": [
-        { "id": "consensus-control", "name": "分布式一致性控制算子" },
-        { "id": "path-planning", "name": "航迹规划算子" },
-        { "id": "collision-detection", "name": "碰撞检测算子" }
+        {
+          "id": "decompose-par",
+          "name": "基于decomposePar的并行划分函数接口"
+        },
+        {
+          "id": "incompressible-driftflux",
+          "name": "基于incompressibleDriftFlux的滑移流评估函数接口"
+        },
+        {
+          "id": "compressible-multiphase-vof",
+          "name": "基于compressibleMultiphaseVoF的界面流评估函数接口"
+        },
+        {
+          "id": "shockfluid",
+          "name": "基于shockFluid的高速流评估函数接口"
+        },
+        {
+          "id": "block-mesh",
+          "name": "基于blockMesh的规则对象网格接入函数接口"
+        }
       ],
       "highlights": [
-        { "label": "仿真速度", "value": "480", "unit": "step/s" },
-        { "label": "任务完成率", "value": "93.2", "unit": "%" },
-        { "label": "并行效率", "value": "92", "unit": "%" }
+        {
+          "label": "仿真速度",
+          "value": "480",
+          "unit": "step/s"
+        },
+        {
+          "label": "任务完成率",
+          "value": "93.2",
+          "unit": "%"
+        },
+        {
+          "label": "并行效率",
+          "value": "92",
+          "unit": "%"
+        }
       ]
     },
     {
@@ -41,13 +96,38 @@
       "category": "无人机协同",
       "description": "无人机航迹规划与避障示范，结合三维环境建模与分布式规划算法，为集群中每架无人机规划安全高效的飞行航迹。",
       "summary_metrics": [
-        { "label": "规划耗时", "value": "2.8", "unit": "s" },
-        { "label": "避障成功率", "value": "98.6", "unit": "%" },
-        { "label": "平均航迹长度", "value": "12.4", "unit": "km" },
-        { "label": "并行规划效率", "value": "89", "unit": "%" }
+        {
+          "label": "规划耗时",
+          "value": "2.8",
+          "unit": "s"
+        },
+        {
+          "label": "避障成功率",
+          "value": "98.6",
+          "unit": "%"
+        },
+        {
+          "label": "平均航迹长度",
+          "value": "12.4",
+          "unit": "km"
+        },
+        {
+          "label": "并行规划效率",
+          "value": "89",
+          "unit": "%"
+        }
       ],
-      "supported_clusters": ["jinan", "changsha"],
-      "tech_stack": ["A*算法", "RRT*", "MPI", "Slurm", "OctoMap"],
+      "supported_clusters": [
+        "jinan",
+        "changsha"
+      ],
+      "tech_stack": [
+        "A*算法",
+        "RRT*",
+        "MPI",
+        "Slurm",
+        "OctoMap"
+      ],
       "background": "复杂环境下无人机集群航迹规划计算量大，需并行化规划算法与动态避障策略，保证飞行安全与任务效率。",
       "method": "采用 RRT* 与 A* 混合规划算法，基于 OctoMap 环境建模，并行化多无人机航迹搜索与冲突消解。",
       "architecture": [
@@ -58,13 +138,55 @@
         "航迹输出：三维航迹文件导出"
       ],
       "operators": [
-        { "id": "path-planning", "name": "航迹规划算子" },
-        { "id": "collision-detection", "name": "碰撞检测算子" }
+        {
+          "id": "foam-to-vtk",
+          "name": "基于foamToVTK的结果导出函数接口"
+        },
+        {
+          "id": "postprocess-metrics",
+          "name": "基于postProcess的指标提取函数接口"
+        },
+        {
+          "id": "reconstruct-par",
+          "name": "基于reconstructPar的结果重构函数接口"
+        },
+        {
+          "id": "solid-displacement",
+          "name": "基于solidDisplacement的结构响应函数接口"
+        },
+        {
+          "id": "potential-foam",
+          "name": "基于potentialFoam的初场优化函数接口"
+        },
+        {
+          "id": "set-fields",
+          "name": "基于setFields的初场构造函数接口"
+        },
+        {
+          "id": "check-mesh",
+          "name": "基于checkMesh的质量检查函数接口"
+        },
+        {
+          "id": "fluent-mesh-to-foam",
+          "name": "基于fluentMeshToFoam的外部网格接入函数接口"
+        }
       ],
       "highlights": [
-        { "label": "避障成功率", "value": "98.6", "unit": "%" },
-        { "label": "规划加速比", "value": "68", "unit": "x" },
-        { "label": "平均规划耗时", "value": "2.8", "unit": "s" }
+        {
+          "label": "避障成功率",
+          "value": "98.6",
+          "unit": "%"
+        },
+        {
+          "label": "规划加速比",
+          "value": "68",
+          "unit": "x"
+        },
+        {
+          "label": "平均规划耗时",
+          "value": "2.8",
+          "unit": "s"
+        }
       ]
     }
   ],

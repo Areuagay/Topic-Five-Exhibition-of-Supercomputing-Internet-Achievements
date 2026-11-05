@@ -46,18 +46,19 @@ function isRecommended(operator: Operator): boolean {
   return selectedNames.value.has(operator.name)
 }
 function displayName(operator: Operator): string {
+  if (operator.title) return operator.title
   const reference = props.selectedOperators.find((item) => item.id === operator.name || item.name === operator.name)
   return reference?.name ?? (operator.description.includes('：') ? operator.description.split('：')[0] : operator.name)
 }
 function description(operator: Operator): string {
-  return operator.description.includes('：') ? operator.description.slice(operator.description.indexOf('：') + 1) : operator.description
+  return operator.description
 }
 const recommendedCount = computed(() => props.operators.filter(isRecommended).length)
 const ordered = computed(() => {
   const keyword = query.value.trim().toLocaleLowerCase()
   return [...props.operators].filter((operator) =>
     (!recommendedOnly.value || isRecommended(operator))
-    && (!keyword || [operator.name, displayName(operator), operator.description, operator.runtime_type].join(' ').toLocaleLowerCase().includes(keyword)),
+    && (!keyword || [operator.name, operator.title, displayName(operator), operator.description, operator.runtime_type, operator.backend_tags, operator.backend_categories, operator.resource_requirement].join(' ').toLocaleLowerCase().includes(keyword)),
   ).sort((a, b) => Number(isRecommended(b)) - Number(isRecommended(a)))
 })
 const listFrame = ref<HTMLElement>()
@@ -125,8 +126,32 @@ function resetFilters(): void {
   query.value = ''
   recommendedOnly.value = false
 }
-function memoryText(memoryMb: number): string {
-  return formatBytes(memoryMb * 1024 * 1024)
+function requirement(operator: Operator): string {
+  return operator.resource_requirement ?? ''
+}
+function memoryText(operator: Operator): string {
+  if (operator.memory_mb > 0) return formatBytes(operator.memory_mb * 1024 * 1024)
+  return /高内存|大内存/.test(requirement(operator)) ? '高内存' : '按需'
+}
+function cpuText(operator: Operator): string {
+  if (operator.cpu_cores > 0) return `${formatNumber(operator.cpu_cores)} 核`
+  if (/mpi/i.test(requirement(operator))) return 'MPI 多核'
+  return /多核|cpu节点/i.test(requirement(operator)) ? '多核' : '按需'
+}
+function gpuText(operator: Operator): string {
+  if (operator.gpu_count > 0) return `${formatNumber(operator.gpu_count)} 卡`
+  if (/dcu/i.test(requirement(operator))) return 'DCU'
+  return /gpu|加速卡/i.test(requirement(operator)) ? '需加速卡' : '无需'
+}
+const RUNTIME_LABELS: Record<string, string> = {
+  instance: '平台实例',
+  singularity: 'Singularity',
+  docker: 'Docker',
+  'docker-run': 'Docker',
+  container: '容器',
+}
+function runtimeTypeText(operator: Operator): string {
+  return RUNTIME_LABELS[operator.runtime_type] || operator.runtime_type || '容器'
 }
 </script>
 
@@ -184,15 +209,15 @@ function memoryText(memoryMb: number): string {
         <p class="operator-description">{{ description(operator) }}</p>
         <div class="operator-bottom">
           <dl class="operator-requirements">
-            <div><dt>CPU</dt><dd>{{ formatNumber(operator.cpu_cores) }} <small>核</small></dd></div>
-            <div><dt>GPU</dt><dd>{{ operator.gpu_count ? formatNumber(operator.gpu_count) + ' 卡' : '无需' }}</dd></div>
-            <div><dt>内存</dt><dd>{{ memoryText(operator.memory_mb) }}</dd></div>
-            <div><dt>运行环境</dt><dd class="operator-runtime">{{ operator.runtime_type }}</dd></div>
+            <div><dt>CPU</dt><dd>{{ cpuText(operator) }}</dd></div>
+            <div><dt>GPU</dt><dd>{{ gpuText(operator) }}</dd></div>
+            <div><dt>内存</dt><dd>{{ memoryText(operator) }}</dd></div>
+            <div><dt>运行环境</dt><dd class="operator-runtime">{{ runtimeTypeText(operator) }}</dd></div>
           </dl>
           <div class="operator-actions">
           <el-popover trigger="click" placement="bottom-start" :width="440" :show-arrow="false" :visible="runtimeOperatorId === operator.name" @update:visible="value => setRuntimeVisible(operator.name, value)" :popper-style="{ maxWidth: 'calc(100vw - 32px)', padding: '20px' }" popper-class="operator-runtime-popover" transition="operator-runtime">
             <template #reference><button type="button" class="operator-detail-trigger sc-action sc-action--ghost" :data-runtime-trigger="operator.name" :aria-expanded="runtimeOperatorId === operator.name" :aria-label="'查看 ' + displayName(operator) + ' 的运行详情'" @keydown.esc.stop="closeRuntime(operator.name)"><Info aria-hidden="true" />运行详情<ArrowUpRight class="detail-arrow" aria-hidden="true" /></button></template>
-            <div class="operator-runtime-content" @keydown.esc.stop="closeRuntime(operator.name)"><button type="button" class="operator-runtime-close" aria-label="关闭运行详情" @click="closeRuntime(operator.name)"><X :size="16" aria-hidden="true" /></button><strong>{{ displayName(operator) }}</strong><p>运行配置</p><dl><div><dt>运行镜像</dt><dd>{{ operator.runtime || '未提供' }}</dd></div><div><dt>调用入口</dt><dd>{{ operator.handler || '未提供' }}</dd></div></dl></div>
+            <div class="operator-runtime-content" @keydown.esc.stop="closeRuntime(operator.name)"><button type="button" class="operator-runtime-close" aria-label="关闭运行详情" @click="closeRuntime(operator.name)"><X :size="16" aria-hidden="true" /></button><strong>{{ displayName(operator) }}</strong><p>运行配置</p><dl><div><dt>运行镜像</dt><dd>{{ operator.image || operator.runtime || '未提供' }}</dd></div><div><dt>调用入口</dt><dd>{{ operator.handler || '未提供' }}</dd></div><div><dt>运行环境</dt><dd>{{ runtimeTypeText(operator) }}</dd></div><div><dt>资源要求</dt><dd>{{ operator.resource_requirement || '未限定' }}</dd></div><div><dt>算子类型</dt><dd>{{ operator.backend_categories || '未提供' }}</dd></div><div><dt>所属场景</dt><dd>{{ operator.backend_tags || '未提供' }}</dd></div></dl></div>
           </el-popover>
           <button type="button" class="operator-select-button sc-action" :aria-pressed="chosenSet.has(operator.name)" :aria-label="'选择算子：' + displayName(operator)" :disabled="submitting || (!isAvailable(operator) && !chosenSet.has(operator.name))" @click="toggleOperator(operator)">
             <span class="operator-select-icon" aria-hidden="true"><Plus class="operator-icon-add" /><Check class="operator-icon-check" /></span>
@@ -300,7 +325,7 @@ function memoryText(memoryMb: number): string {
 .operator-runtime-close:hover { background: #edf2f8; color: #263c58; }
 .operator-runtime-close:focus-visible { outline: 2px solid var(--scnet-primary); outline-offset: 2px; }
 .operator-runtime-content > p { margin: 5px 0 16px; color: #8290a2; font-size: 12px; }
-.operator-runtime-content dl { display: grid; gap: 16px; margin: 0; padding-top: 16px; border-top: 1px solid #e3eaf4; }
+.operator-runtime-content dl { display: grid; gap: 16px; max-height: min(58vh, 440px); margin: 0; padding-top: 16px; padding-right: 4px; overflow: auto; overscroll-behavior: contain; border-top: 1px solid #e3eaf4; }
 .operator-runtime-content dl > div { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 14px; }
 .operator-runtime-content dt { color: #718096; font-size: 12px; }
 .operator-runtime-content dd { margin: 0; color: #344b69; font: 12px/1.7 var(--scnet-font-mono); overflow-wrap: anywhere; }

@@ -9,8 +9,8 @@
       {
         "domain": "geodynamics",
         "prefix": "geodynamics",
-        "name": "地球物理",
-        "short_name": "地球物理",
+        "name": "地球动力学",
+        "short_name": "地球动力学",
         "category": "地球科学",
         "icon": "geo",
         "description": "地震波传播模拟与板块构造数值模拟，展示有限差分/有限元方法在超算上的并行能力。",

@@ -9,7 +9,7 @@ test('六个领域使用统一的名称与短标题', async () => {
   const titles = new Map(data.domains.map((domain) => [domain.domain, domain]))
 
   const expected = {
-    geodynamics: '地球物理',
+    geodynamics: '地球动力学',
     llm: 'AI模型训练',
     automotive: '汽车设计',
     uav: '仿真计算',

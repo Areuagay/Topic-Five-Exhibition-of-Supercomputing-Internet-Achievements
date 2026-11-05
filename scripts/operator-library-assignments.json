@@ -1,0 +1,509 @@
+{
+  "source": "http://192.168.95.138:8890/operator",
+  "assignments": [
+    {
+      "order": 1,
+      "backend_id": "f2fa6052-63e0-4001-9d2e-222deb627a30",
+      "title": "合理性评估函数接口",
+      "slug": "reasonability-assessment",
+      "domain": "drug",
+      "scenario": "admet-prediction"
+    },
+    {
+      "order": 2,
+      "backend_id": "6f6ec09d-cd48-46b7-9497-d7143544e32f",
+      "title": "能量构象提取函数接口",
+      "slug": "pose-energy-extraction",
+      "domain": "drug",
+      "scenario": "admet-prediction"
+    },
+    {
+      "order": 3,
+      "backend_id": "afbd1913-5036-4da5-884f-c50037ce46a9",
+      "title": "分子对接函数接口（GPU版本）",
+      "slug": "molecular-docking-gpu",
+      "domain": "drug",
+      "scenario": "virtual-screening"
+    },
+    {
+      "order": 4,
+      "backend_id": "a65a8780-2fce-4e65-ab81-8d249ae905c9",
+      "title": "分子对接函数接口（CPU版本）",
+      "slug": "molecular-docking-cpu",
+      "domain": "drug",
+      "scenario": "virtual-screening"
+    },
+    {
+      "order": 5,
+      "backend_id": "e734573d-724d-4d7a-9501-d37e9c03ff79",
+      "title": "配体制备函数接口",
+      "slug": "ligand-preparation",
+      "domain": "drug",
+      "scenario": "virtual-screening"
+    },
+    {
+      "order": 6,
+      "backend_id": "8e027d81-9cb3-4162-840d-11c21aec13cd",
+      "title": "分子格式转换接口",
+      "slug": "molecule-format-conversion",
+      "domain": "drug",
+      "scenario": "admet-prediction"
+    },
+    {
+      "order": 7,
+      "backend_id": "e259068d-b89d-4b16-a5b9-3be9476925db",
+      "title": "受体网格参数文件生成函数接口",
+      "slug": "receptor-grid-generation",
+      "domain": "drug",
+      "scenario": "virtual-screening"
+    },
+    {
+      "order": 8,
+      "backend_id": "6afafa7e-c25d-4c9e-ae48-e50c238f1c02",
+      "title": "转换准备受体函数接口",
+      "slug": "receptor-preparation",
+      "domain": "drug",
+      "scenario": "virtual-screening"
+    },
+    {
+      "order": 9,
+      "backend_id": "46fad6fc-30f8-4e41-818b-4ed1c286ac60",
+      "title": "分子生成（扩散模型）函数接口",
+      "slug": "molecule-generation-diffusion",
+      "domain": "drug",
+      "scenario": "virtual-screening"
+    },
+    {
+      "order": 34,
+      "backend_id": "20162fd6-3378-419a-b8ec-5f94fcde899f",
+      "title": "IPFNO隐式傅里叶神经算子快速评估函数接口",
+      "slug": "ipfno",
+      "domain": "automotive",
+      "scenario": "fatigue-life"
+    },
+    {
+      "order": 35,
+      "backend_id": "b5e9c388-2518-4cba-b3c9-ce8713d1055d",
+      "title": "Transolver几何PDE代理模型快速评估函数接口",
+      "slug": "transolver",
+      "domain": "automotive",
+      "scenario": "fatigue-life"
+    },
+    {
+      "order": 36,
+      "backend_id": "8ee4c05d-ed89-43d6-af6e-2c0f9baf62f7",
+      "title": "汽车等温液膜附着评估函数接口",
+      "slug": "isothermal-film",
+      "domain": "automotive",
+      "scenario": "vehicle-crash"
+    },
+    {
+      "order": 37,
+      "backend_id": "0f47c7cb-0aca-4c4d-8b25-6a797d8392b0",
+      "title": "汽车液膜附着演化函数接口",
+      "slug": "film-evolution",
+      "domain": "automotive",
+      "scenario": "vehicle-crash"
+    },
+    {
+      "order": 38,
+      "backend_id": "ac94a615-6c23-40e7-ab6b-e9090f2b4110",
+      "title": "汽车颗粒喷雾评估函数接口",
+      "slug": "particle-spray",
+      "domain": "automotive",
+      "scenario": "vehicle-crash"
+    },
+    {
+      "order": 39,
+      "backend_id": "2ae38a87-5ebc-464a-af52-9d5872e8ef0e",
+      "title": "汽车油液多相输运函数接口",
+      "slug": "oil-multiphase-transport",
+      "domain": "automotive",
+      "scenario": "vehicle-crash"
+    },
+    {
+      "order": 40,
+      "backend_id": "32dfe671-3b4c-4b18-9bd5-9b1c02097dd1",
+      "title": "汽车油液多相界面评估函数接口",
+      "slug": "oil-multiphase-interface",
+      "domain": "automotive",
+      "scenario": "vehicle-crash"
+    },
+    {
+      "order": 41,
+      "backend_id": "7a3f5e25-9b44-4186-9f08-4febf80e78a2",
+      "title": "汽车涉水冲击评估函数接口",
+      "slug": "wading-impact",
+      "domain": "automotive",
+      "scenario": "vehicle-crash"
+    },
+    {
+      "order": 42,
+      "backend_id": "f5d77140-0269-4600-91d0-eee887f6f2c4",
+      "title": "汽车涉水液面演化函数接口",
+      "slug": "wading-free-surface",
+      "domain": "automotive",
+      "scenario": "vehicle-crash"
+    },
+    {
+      "order": 43,
+      "backend_id": "161e351a-ff47-4452-937a-9d130588024d",
+      "title": "汽车结构热负荷评估函数接口",
+      "slug": "structural-thermal-load",
+      "domain": "automotive",
+      "scenario": "fatigue-life"
+    },
+    {
+      "order": 44,
+      "backend_id": "008daf43-dc86-42ae-9b14-cfa707de2f8c",
+      "title": "汽车燃烧评估函数接口",
+      "slug": "auto-combustion",
+      "domain": "automotive",
+      "scenario": "vehicle-crash"
+    },
+    {
+      "order": 45,
+      "backend_id": "4e3fc73c-6459-46d6-9ac5-d0fcffa6b2d9",
+      "title": "汽车热流与组分输运函数接口",
+      "slug": "auto-species-transport",
+      "domain": "automotive",
+      "scenario": "vehicle-crash"
+    },
+    {
+      "order": 46,
+      "backend_id": "0e6fd3e6-a5a2-4ecb-b87c-70c9fc44e139",
+      "title": "汽车热流评估函数接口",
+      "slug": "auto-thermal-flow",
+      "domain": "automotive",
+      "scenario": "vehicle-crash"
+    },
+    {
+      "order": 47,
+      "backend_id": "29fd7f96-afdd-4b4f-9012-d31cb215e9a3",
+      "title": "汽车外流评估函数接口",
+      "slug": "auto-external-flow",
+      "domain": "automotive",
+      "scenario": "vehicle-crash"
+    },
+    {
+      "order": 48,
+      "backend_id": "747490f5-90f5-4cd9-8f36-2fb11cacf3e9",
+      "title": "基于foamToVTK的结果导出函数接口",
+      "slug": "foam-to-vtk",
+      "domain": "uav",
+      "scenario": "path-planning"
+    },
+    {
+      "order": 49,
+      "backend_id": "c38b1053-3f23-4fd8-a33d-42aacc78e26c",
+      "title": "基于postProcess的指标提取函数接口",
+      "slug": "postprocess-metrics",
+      "domain": "uav",
+      "scenario": "path-planning"
+    },
+    {
+      "order": 50,
+      "backend_id": "b652aecf-4a22-410d-8799-be1a27d30331",
+      "title": "基于reconstructPar的结果重构函数接口",
+      "slug": "reconstruct-par",
+      "domain": "uav",
+      "scenario": "path-planning"
+    },
+    {
+      "order": 51,
+      "backend_id": "7e363024-da40-4d3e-b5e4-a2110f899b9e",
+      "title": "基于decomposePar的并行划分函数接口",
+      "slug": "decompose-par",
+      "domain": "uav",
+      "scenario": "swarm-coordination"
+    },
+    {
+      "order": 52,
+      "backend_id": "a2b3fa3a-7f66-400e-b56e-a9d8e248a699",
+      "title": "基于solidDisplacement的结构响应函数接口",
+      "slug": "solid-displacement",
+      "domain": "uav",
+      "scenario": "path-planning"
+    },
+    {
+      "order": 53,
+      "backend_id": "2c895b17-7269-497a-8c2e-c48f1100f479",
+      "title": "基于incompressibleDriftFlux的滑移流评估函数接口",
+      "slug": "incompressible-driftflux",
+      "domain": "uav",
+      "scenario": "swarm-coordination"
+    },
+    {
+      "order": 54,
+      "backend_id": "e6f7a056-2ea8-45a7-ade0-5ddbf3ef6b14",
+      "title": "基于compressibleMultiphaseVoF的界面流评估函数接口",
+      "slug": "compressible-multiphase-vof",
+      "domain": "uav",
+      "scenario": "swarm-coordination"
+    },
+    {
+      "order": 55,
+      "backend_id": "1618d64a-0de3-4955-8efc-09e953b39446",
+      "title": "基于shockFluid的高速流评估函数接口",
+      "slug": "shockfluid",
+      "domain": "uav",
+      "scenario": "swarm-coordination"
+    },
+    {
+      "order": 56,
+      "backend_id": "d4615e61-bcec-4e55-9513-761896056a0b",
+      "title": "基于potentialFoam的初场优化函数接口",
+      "slug": "potential-foam",
+      "domain": "uav",
+      "scenario": "path-planning"
+    },
+    {
+      "order": 57,
+      "backend_id": "66db77ad-993e-49f0-8ffd-3e75eac9528b",
+      "title": "基于setFields的初场构造函数接口",
+      "slug": "set-fields",
+      "domain": "uav",
+      "scenario": "path-planning"
+    },
+    {
+      "order": 58,
+      "backend_id": "8eb48d14-ffe6-4aa0-8d18-4b0cca66be22",
+      "title": "基于checkMesh的质量检查函数接口",
+      "slug": "check-mesh",
+      "domain": "uav",
+      "scenario": "path-planning"
+    },
+    {
+      "order": 59,
+      "backend_id": "34034eba-fc85-452d-b291-3d08e646e877",
+      "title": "基于fluentMeshToFoam的外部网格接入函数接口",
+      "slug": "fluent-mesh-to-foam",
+      "domain": "uav",
+      "scenario": "path-planning"
+    },
+    {
+      "order": 60,
+      "backend_id": "1a2e61a2-1bed-49b4-8107-cfd31c247b68",
+      "title": "基于blockMesh的规则对象网格接入函数接口",
+      "slug": "block-mesh",
+      "domain": "uav",
+      "scenario": "swarm-coordination"
+    },
+    {
+      "order": 61,
+      "backend_id": "66b4d8d2-eb60-4f23-8a43-70c40a8db023",
+      "title": "SUPG稳定化有限元求解算子函数接口",
+      "slug": "supg",
+      "domain": "geodynamics",
+      "scenario": "wave-propagation"
+    },
+    {
+      "order": 62,
+      "backend_id": "05fe4d10-f184-4d6a-9971-36a3614a7d34",
+      "title": "Uzawa鞍点问题求解算子函数接口",
+      "slug": "uzawa",
+      "domain": "geodynamics",
+      "scenario": "tectonic-evolution"
+    },
+    {
+      "order": 63,
+      "backend_id": "78715cf0-e145-4d82-a3cf-50ade1e5cb19",
+      "title": "全球尺度地球动力学模拟",
+      "slug": "citcoms-global",
+      "domain": "geodynamics",
+      "scenario": "tectonic-evolution"
+    },
+    {
+      "order": 64,
+      "backend_id": "91838d6d-6fce-42c0-ae43-55f6011b5b4c",
+      "title": "区域尺度地球动力学模拟",
+      "slug": "citcoms-regional",
+      "domain": "geodynamics",
+      "scenario": "tectonic-evolution"
+    },
+    {
+      "order": 65,
+      "backend_id": "67bf94d5-649b-4ee9-8540-03ca23202125",
+      "title": "基于CrystalFormer的晶体结构采样函数接口",
+      "slug": "crystalformer-sample",
+      "domain": "dft",
+      "scenario": "high-throughput-screening"
+    },
+    {
+      "order": 66,
+      "backend_id": "d5a4b34c-bd31-488d-a28e-b0d44f5046bc",
+      "title": "基于SymTopo的高对称点与能带分析函数接口",
+      "slug": "symtopo-band",
+      "domain": "dft",
+      "scenario": "band-dos"
+    },
+    {
+      "order": 67,
+      "backend_id": "fead1cbd-13a1-4c34-93e1-8f7868307e75",
+      "title": "基于SymTopo的拓扑分类函数接口",
+      "slug": "symtopo-topology",
+      "domain": "dft",
+      "scenario": "band-dos"
+    },
+    {
+      "order": 68,
+      "backend_id": "e6afb8e2-6f84-4ca1-a1bb-e52f3354e804",
+      "title": "基于SymTopo的ABINIT输入生成函数接口",
+      "slug": "symtopo-abinit-input",
+      "domain": "dft",
+      "scenario": "band-dos"
+    },
+    {
+      "order": 69,
+      "backend_id": "feedb6df-5c13-4389-a8b9-3c29d9264e99",
+      "title": "基于SymTopo的VASP输入生成函数接口",
+      "slug": "symtopo-vasp-input",
+      "domain": "dft",
+      "scenario": "band-dos"
+    },
+    {
+      "order": 70,
+      "backend_id": "ec1183f0-4ee3-4b29-b9a1-72d2fb86e5ec",
+      "title": "基于CrystalFormer的结构格式转换函数接口",
+      "slug": "crystalformer-structure-convert",
+      "domain": "dft",
+      "scenario": "high-throughput-screening"
+    },
+    {
+      "order": 71,
+      "backend_id": "67b3db9f-2b82-4fde-a29c-9e2fbca20f39",
+      "title": "基于VASP的第一性原理计算函数接口",
+      "slug": "vasp-dft",
+      "domain": "dft",
+      "scenario": "band-dos"
+    },
+    {
+      "order": 72,
+      "backend_id": "9db77c7d-a9bd-4705-b041-4f68c431dc16",
+      "title": "基于LAMMPS的材料动力学计算函数接口",
+      "slug": "lammps-md",
+      "domain": "dft",
+      "scenario": "high-throughput-screening"
+    },
+    {
+      "order": 73,
+      "backend_id": "0122a959-9afb-4a65-9c2e-84a42f02c53a",
+      "title": "基于GROMACS的分子动力学运行函数接口",
+      "slug": "gromacs-mdrun",
+      "domain": "dft",
+      "scenario": "high-throughput-screening"
+    },
+    {
+      "order": 74,
+      "backend_id": "15b9ceda-40ff-4124-a435-3ec87a221a68",
+      "title": "基于GROMACS的预处理函数接口",
+      "slug": "gromacs-grompp",
+      "domain": "dft",
+      "scenario": "high-throughput-screening"
+    },
+    {
+      "order": 75,
+      "backend_id": "4ae3b01b-8024-4375-81fe-e20dbcb5547a",
+      "title": "基于GROMACS的体系溶剂化函数接口",
+      "slug": "gromacs-solvate",
+      "domain": "dft",
+      "scenario": "high-throughput-screening"
+    },
+    {
+      "order": 76,
+      "backend_id": "9e4e8415-986c-458e-b6b2-c4b9d6b5f533",
+      "title": "基于GROMACS的模拟盒调整函数接口",
+      "slug": "gromacs-editconf",
+      "domain": "dft",
+      "scenario": "high-throughput-screening"
+    },
+    {
+      "order": 77,
+      "backend_id": "5b29cc32-a86c-415e-82e6-db5b332c10ad",
+      "title": "基于GROMACS的分子插入与建盒函数接口",
+      "slug": "gromacs-insert-molecules",
+      "domain": "dft",
+      "scenario": "high-throughput-screening"
+    },
+    {
+      "order": 78,
+      "backend_id": "92986abe-cf43-41b6-9db2-4776a0136636",
+      "title": "基于GROMACS的力场拓扑构建函数接口",
+      "slug": "gromacs-pdb2gmx",
+      "domain": "dft",
+      "scenario": "high-throughput-screening"
+    },
+    {
+      "order": 79,
+      "backend_id": "c90411f5-a57b-4c62-a417-51681fa3aaca",
+      "title": "基于LightGBM的梯度提升机训练算子接口",
+      "slug": "lightgbm",
+      "domain": "llm",
+      "scenario": "pinn-acceleration"
+    },
+    {
+      "order": 80,
+      "backend_id": "500d013b-8a4a-406e-b9a3-998b8864cf32",
+      "title": "基于XGBoost的梯度提升树训练算子接口",
+      "slug": "xgboost",
+      "domain": "llm",
+      "scenario": "pinn-acceleration"
+    },
+    {
+      "order": 81,
+      "backend_id": "1fbae956-5bcb-4f05-b685-7b60ff76ebc3",
+      "title": "基于PEFT LoRA的参数高效微调算子接口",
+      "slug": "peft-lora",
+      "domain": "llm",
+      "scenario": "pinn-acceleration"
+    },
+    {
+      "order": 82,
+      "backend_id": "3bd5c0ed-77a5-4420-a819-ec597a047570",
+      "title": "基于Transformers Trainer的监督微调算子接口",
+      "slug": "transformers-trainer",
+      "domain": "llm",
+      "scenario": "pinn-acceleration"
+    },
+    {
+      "order": 83,
+      "backend_id": "082f0af5-d255-4593-8215-d70a612cfc9f",
+      "title": "基于Megatron Core的张量并行预训练算子接口",
+      "slug": "megatron-core",
+      "domain": "llm",
+      "scenario": "llm-pretraining"
+    },
+    {
+      "order": 84,
+      "backend_id": "10310bd3-510a-4073-978b-7af52d7b7969",
+      "title": "基于DeepSpeed ZeRO的大模型训练算子接口",
+      "slug": "deepspeed-zero",
+      "domain": "llm",
+      "scenario": "llm-pretraining"
+    },
+    {
+      "order": 85,
+      "backend_id": "15d57310-b9cc-4706-af0e-dfe78c40df3b",
+      "title": "基于PyTorch FSDP的全分片参数训练算子接口",
+      "slug": "pytorch-fsdp",
+      "domain": "llm",
+      "scenario": "llm-pretraining"
+    },
+    {
+      "order": 86,
+      "backend_id": "f340daeb-f7c3-4ad3-97e0-ad105f9209ac",
+      "title": "基于PyTorch的数据并行训练算子接口",
+      "slug": "pytorch-ddp",
+      "domain": "llm",
+      "scenario": "llm-pretraining"
+    },
+    {
+      "order": 87,
+      "backend_id": "2c918753-09cf-41f7-985d-2fa351429a17",
+      "title": "训练数据准备与切分算子接口",
+      "slug": "ai-data-prep",
+      "domain": "llm",
+      "scenario": "llm-pretraining"
+    }
+  ]
+}
