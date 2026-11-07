@@ -26,7 +26,7 @@ export function useExperienceMotion(root: Ref<HTMLElement | undefined>, step: Re
     releaseTimer = setTimeout(() => {
       if (disposed || current !== generation) return
       surface.style.minHeight = `${Math.max(0, innerHeight - surface.getBoundingClientRect().top)}px`
-    }, deepInPage && !reduced ? 500 : reduced ? 0 : 280)
+    }, deepInPage && !reduced ? 500 : reduced ? 0 : 380)
   }
   watch(step, (next, previous) => { void reveal(next >= previous ? 1 : -1, true) }, { flush: 'pre' })
   onMounted(() => { if (animateOnMount) void reveal() })

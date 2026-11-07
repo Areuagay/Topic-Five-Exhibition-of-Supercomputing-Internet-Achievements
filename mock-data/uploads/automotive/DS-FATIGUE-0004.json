@@ -1,0 +1,10 @@
+{
+  "dataset_id": "DS-FATIGUE-0004",
+  "scenario_id": "fatigue-life",
+  "source_type": "simulated",
+  "material_id": "steel",
+  "young_modulus_mpa": 210000,
+  "ultimate_strength_mpa": 600,
+  "fatigue_limit_mpa": 200,
+  "mean_stress_correction": "Goodman"
+}

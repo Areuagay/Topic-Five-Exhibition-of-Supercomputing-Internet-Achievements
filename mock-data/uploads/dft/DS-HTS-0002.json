@@ -1,0 +1,19 @@
+{
+  "dataset_id": "DS-HTS-0002",
+  "scenario_id": "high-throughput-screening",
+  "source_type": "simulated",
+  "materials": [
+    {
+      "id": "MAT-SI",
+      "formula": "Si",
+      "band_gap_ev": 1.12,
+      "formation_energy_ev_atom": 0
+    },
+    {
+      "id": "MAT-GAAS",
+      "formula": "GaAs",
+      "band_gap_ev": 1.42,
+      "formation_energy_ev_atom": -0.4
+    }
+  ]
+}

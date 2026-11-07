@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onDeactivated, ref } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onDeactivated, ref, watch } from 'vue'
 import { Check, CheckCheck, CloudUpload, Database, FileJson, FileSpreadsheet, FileText, LoaderCircle, LockKeyhole, Trash2, X } from '@lucide/vue'
 import ScenarioDetailContent from '~/components/ScenarioDetailContent.vue'
 import { getDatasetTypeLabels } from '~/config/scenario-experience'
 import { formatBytes, formatTimestamp } from '~/composables/useFormat'
 import { useApi } from '~/composables/useApi'
-import { uploadDurationMs, uploadPercentage } from '~/utils/experience-simulation'
+import DatasetFilePreview from './DatasetFilePreview.vue'
 import type { Benchmark, DatasetItem, ImportResult, ParamField, ScenarioDetail } from '~/types'
 
 const props = defineProps<{
@@ -14,13 +14,16 @@ const props = defineProps<{
 }>()
 const emit = defineEmits<{ updated: [dataset: DatasetItem]; imported: [result: ImportResult] }>()
 const { uploadDataset, resetDataset, importDatasets } = useApi()
+const fileInput = ref<HTMLInputElement>()
+const selectedDataset = ref<DatasetItem>()
+const previewDataset = ref<DatasetItem>()
+const previewOpen = ref(false)
 const uploadingId = ref('')
 const resettingId = ref('')
 const importing = ref(false)
 const committing = ref(false)
 const cancelling = ref(false)
 const uploadProgress = ref(0)
-const remainingSeconds = ref(0)
 const message = ref('')
 const messageError = ref(false)
 const busy = computed(() => !!uploadingId.value || !!resettingId.value || importing.value)
@@ -55,46 +58,48 @@ onDeactivated(() => cancelTransfer?.())
 
 function feedback(text: string, failed = false): void { message.value = text; messageError.value = failed }
 function errorText(error: unknown): string {
-  return (error as { data?: { message?: string } })?.data?.message || '操作失败，请检查服务连接后重试'
+  return (error as { data?: { message?: string }; message?: string })?.data?.message || (error as Error)?.message || '操作失败，请检查服务连接后重试'
 }
-function simulateUpload(size: number): Promise<boolean> {
-  const duration = uploadDurationMs(size)
-  const started = performance.now()
-  uploadProgress.value = 0
-  remainingSeconds.value = Math.ceil(duration / 1000)
-  return new Promise(resolve => {
-    const timer = setInterval(() => {
-      const elapsed = performance.now() - started
-      uploadProgress.value = uploadPercentage(elapsed, duration)
-      remainingSeconds.value = Math.max(0, Math.ceil((duration - elapsed) / 1000))
-      if (elapsed >= duration) { clearInterval(timer); cancelTransfer = undefined; resolve(true) }
-    }, 100)
-    cancelTransfer = () => { clearInterval(timer); cancelTransfer = undefined; resolve(false) }
-  })
+function showPreview(row: DatasetItem) {
+  previewDataset.value = row
+  previewOpen.value = true
 }
-async function handleUpload(row: DatasetItem): Promise<void> {
+async function chooseFile(row: DatasetItem) {
+  if (busy.value) return
+  selectedDataset.value = row
+  await nextTick()
+  if (fileInput.value) { fileInput.value.value = ''; fileInput.value.click() }
+}
+async function onFileSelected(event: Event) {
+  const file = (event.target as HTMLInputElement).files?.[0]
+  const row = selectedDataset.value
+  if (!file || !row || row.scenario_id !== props.scenarioId) return
+  await handleUpload(row, file)
+}
+watch(() => props.scenarioId, () => { cancelTransfer?.(); selectedDataset.value = undefined; previewOpen.value = false })
+async function handleUpload(row: DatasetItem, file: File): Promise<void> {
   if (row.uploaded || busy.value) return
+  if (!file.size) { feedback('文件不能为空', true); return }
+  if (file.size > 5 * 1024 * 1024) { feedback('文件不能超过 5 MB，请选择小规模演示数据', true); return }
   uploadingId.value = row.dataset_id
+  uploadProgress.value = 0
   message.value = ''
+  const controller = new AbortController()
+  cancelTransfer = () => controller.abort()
   try {
-    if (!await simulateUpload(row.size_bytes) || disposed) {
-      if (!disposed) {
-        feedback('已取消上传，可重新上传')
-        if (cancelling.value) await new Promise(resolve => setTimeout(resolve, 650))
-      }
-      return
-    }
-    committing.value = true
-    const updated = await uploadDataset(props.domain, row.dataset_id)
+    const updated = await uploadDataset(props.domain, row.dataset_id, file, {
+      signal: controller.signal,
+      onProgress: percent => { uploadProgress.value = percent },
+      onTransferred: () => { committing.value = true },
+    })
     if (disposed) return
     uploadProgress.value = 100
-    feedback(row.name + ' 上传完成，点击“导入并继续”进入资源调度')
+    feedback(`${row.name} 上传完成`)
     emit('updated', updated)
     highlightRow(row.dataset_id, 'uploaded')
-    // Hold 100% while the completed sweep settles and fades out.
-    await new Promise(resolve => setTimeout(resolve, 820))
-  } catch (error) { if (!disposed) feedback(errorText(error), true) }
-  finally { uploadingId.value = ''; committing.value = false; cancelling.value = false }
+    if (row.scenario_id === props.scenarioId) showPreview(updated)
+  } catch (error) { if (!disposed) feedback((error as Error).name === 'AbortError' ? '已取消上传，可重新选择文件' : errorText(error), (error as Error).name !== 'AbortError') }
+  finally { cancelTransfer = undefined; uploadingId.value = ''; committing.value = false; cancelling.value = false }
 }
 async function handleReset(row: DatasetItem): Promise<void> {
   if (row.builtin || !row.uploaded || busy.value) return
@@ -123,9 +128,11 @@ async function handleImport(): Promise<void> {
 
 <template>
   <div class="exp-dataprep">
+    <input ref="fileInput" type="file" hidden aria-label="选择上传数据文件" @change="onFileSelected" />
+    <DatasetFilePreview v-model="previewOpen" :domain="domain" :dataset="previewDataset" />
     <section class="exp-block">
       <div class="exp-block-head">
-        <div><h3>输入数据</h3><p class="exp-block-description">准备场景输入，上传完成后导入至资源调度。</p></div>
+        <div><h3>输入数据</h3><p class="exp-block-description">上传场景数据，预览后导入。</p></div>
         <div class="exp-block-actions">
           <div class="dataset-readiness" :aria-label="`${uploadedCount} / ${scenarioDatasets.length} 项已就绪`"><span><strong>{{ uploadedCount }}</strong><small> / {{ scenarioDatasets.length }} 项已就绪</small></span><div class="dataset-readiness-track" aria-hidden="true"><i v-for="item in scenarioDatasets" :key="item.dataset_id" :class="{ 'is-ready': item.uploaded }" /></div></div>
         </div>
@@ -137,9 +144,9 @@ async function handleImport(): Promise<void> {
       <div v-if="scenarioDatasets.length" class="exp-table-wrap dataset-table">
         <el-table :data="scenarioDatasets" size="default" :row-key="(row: DatasetItem) => row.dataset_id" :row-class-name="rowClass" :row-style="rowStyle">
           <el-table-column label="数据集" min-width="210" class-name="dataset-identity-cell">
-            <template #default="{ row }"><div class="dataset-identity"><span class="dataset-file-icon" :class="`is-${String(row.format).toLowerCase()}`"><Database v-if="row.builtin" :size="18" aria-hidden="true" /><FileSpreadsheet v-else-if="row.format === 'CSV'" :size="18" aria-hidden="true" /><FileJson v-else-if="row.format === 'JSON'" :size="18" aria-hidden="true" /><FileText v-else :size="18" aria-hidden="true" /></span><div><div class="dataset-name">{{ row.name }}</div><span class="dataset-id">{{ row.dataset_id }} · {{ typeLabels[row.type] ?? row.type }}</span></div></div></template>
+            <template #default="{ row }"><div class="dataset-identity"><span class="dataset-file-icon" :class="`is-${String(row.format).toLowerCase()}`"><Database v-if="row.builtin" :size="18" aria-hidden="true" /><FileSpreadsheet v-else-if="row.format === 'CSV'" :size="18" aria-hidden="true" /><FileJson v-else-if="row.format === 'JSON'" :size="18" aria-hidden="true" /><FileText v-else :size="18" aria-hidden="true" /></span><div><div class="dataset-name">{{ row.name }}</div><span class="dataset-id">{{ typeLabels[row.type] ?? row.type }}</span></div></div></template>
           </el-table-column>
-          <el-table-column label="格式" width="62" class-name="dataset-format-cell"><template #default="{ row }"><span class="dataset-format">{{ row.format }}</span></template></el-table-column>
+          <el-table-column label="格式" width="100" class-name="dataset-format-cell"><template #default="{ row }"><span class="dataset-format">{{ row.upload_format || row.format }}</span></template></el-table-column>
           <el-table-column prop="grid" label="规模" min-width="150" class-name="mono dataset-grid-cell" />
           <el-table-column label="大小" width="80" class-name="mono dataset-size-cell"><template #default="{ row }">{{ row.uploaded ? formatBytes(row.size_bytes) : '—' }}</template></el-table-column>
           <el-table-column label="来源" min-width="140" class-name="dataset-source-cell" show-overflow-tooltip><template #default="{ row }"><span class="dataset-source">{{ row.uploaded ? row.source : '—' }}</span></template></el-table-column>
@@ -147,7 +154,7 @@ async function handleImport(): Promise<void> {
             <span class="dataset-state" :title="row.uploaded && row.updated_at ? '更新于 ' + formatTimestamp(row.updated_at) : undefined" :class="{ 'is-imported': row.imported, 'is-ready': row.uploaded, 'is-working': (uploadingId === row.dataset_id && uploadProgress < 100) || resettingId === row.dataset_id }"><LoaderCircle v-if="resettingId === row.dataset_id" class="is-spinning" aria-hidden="true" /><i v-else-if="uploadingId === row.dataset_id && uploadProgress < 100" class="dataset-state-dot is-transferring" aria-hidden="true" /><CheckCheck v-else-if="row.imported" aria-hidden="true" /><Check v-else-if="row.uploaded" aria-hidden="true" /><i v-else class="dataset-state-dot" aria-hidden="true" />{{ uploadingId === row.dataset_id && cancelling ? '已取消' : uploadingId === row.dataset_id && uploadProgress < 100 ? '上传中' : resettingId === row.dataset_id ? '移除中' : row.imported ? '已导入' : row.uploaded ? '就绪' : '待上传' }}</span>
           </template></el-table-column>
           <el-table-column label="更新时间" width="144" class-name="dataset-time-cell"><template #default="{ row }"><time class="dataset-updated" :datetime="row.uploaded ? row.updated_at : undefined">{{ row.uploaded && row.updated_at ? formatTimestamp(row.updated_at) : '—' }}</time></template></el-table-column>
-          <el-table-column label="操作" width="152" class-name="dataset-actions-cell" align="right" header-align="right" fixed="right"><template #default="{ row }">
+          <el-table-column label="操作" width="190" class-name="dataset-actions-cell" align="right" header-align="right" fixed="right"><template #default="{ row }">
             <div class="dataset-operation-slot">
             <Transition name="upload-state">
             <div v-if="uploadingId === row.dataset_id" key="transferring" class="dataset-transfer" :class="{ 'is-complete': uploadProgress === 100, 'is-cancelled': cancelling }" aria-label="上传进度">
@@ -158,8 +165,8 @@ async function handleImport(): Promise<void> {
               <button type="button" class="dataset-transfer-cancel" aria-label="取消上传" :disabled="committing || cancelling" @click="cancelUpload"><X :size="14" aria-hidden="true" /><span>{{ cancelling ? '已取消' : '取消' }}</span></button>
             </div>
             <span v-else-if="row.builtin" key="builtin" class="dataset-builtin"><LockKeyhole :size="14" aria-hidden="true" />内置数据</span>
-            <button v-else-if="!row.uploaded" key="upload" type="button" class="dataset-upload-button sc-action sc-action--primary sc-action--small" :disabled="busy" @click="handleUpload(row as DatasetItem)"><CloudUpload aria-hidden="true" />上传数据</button>
-            <button v-else key="uploaded" type="button" class="dataset-remove-button sc-action sc-action--small" :aria-busy="resettingId === row.dataset_id" :disabled="busy" @click="handleReset(row as DatasetItem)"><LoaderCircle v-if="resettingId === row.dataset_id" class="is-spinning" aria-hidden="true" /><Trash2 v-else aria-hidden="true" />移除上传</button>
+            <button v-else-if="!row.uploaded" key="upload" type="button" class="dataset-upload-button sc-action sc-action--primary sc-action--small" :disabled="busy" @click="chooseFile(row as DatasetItem)"><CloudUpload aria-hidden="true" />上传数据</button>
+            <div v-else key="uploaded" class="dataset-uploaded-actions"><button v-if="row.preview_available" type="button" class="sc-action sc-action--small" @click="showPreview(row as DatasetItem)">预览</button><button type="button" class="dataset-remove-button sc-action sc-action--small" :aria-busy="resettingId === row.dataset_id" :disabled="busy" @click="handleReset(row as DatasetItem)"><LoaderCircle v-if="resettingId === row.dataset_id" class="is-spinning" aria-hidden="true" /><Trash2 v-else aria-hidden="true" />移除</button></div>
             </Transition>
             </div>
           </template></el-table-column>
@@ -184,6 +191,7 @@ async function handleImport(): Promise<void> {
 </template>
 
 <style scoped>
+.dataset-uploaded-actions { display:flex; align-items:center; gap:6px; }
 .dataset-summary { display: flex; align-items: center; gap: 14px; min-height: 44px; padding: 8px 24px; background: #fafbfd; color: #617289; font-size: 12px; border-bottom: 1px solid var(--scnet-divider); }
 .dataset-notice-slot { display: grid; flex: 1; min-width: 0; overflow: hidden; }
 .dataset-notice { grid-area: 1 / 1; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -212,7 +220,7 @@ svg { width: 17px; height: 17px; margin-right: 5px; fill: none; stroke: currentC
 .dataset-table :deep(.el-table__cell .cell) { padding-inline: 8px; }
 .dataset-table :deep(.dataset-size-cell .cell) { white-space: nowrap; }
 .dataset-updated { font-size: 12px; color: #617289; white-space: nowrap; font-variant-numeric: tabular-nums; }
-.dataset-operation-slot { display: grid; align-items: center; width: 128px; height: 40px; position: relative; margin-left: auto; }
+.dataset-operation-slot { display: grid; align-items: center; width: 166px; height: 40px; position: relative; margin-left: auto; }
 .dataset-operation-slot > * { grid-area: 1 / 1; justify-self: end; }
 .dataset-operation-slot > button { min-width: 104px; }
 .dataset-operation-slot > .exp-dataset-actions { width: 100%; justify-content: space-between; align-items: center; }

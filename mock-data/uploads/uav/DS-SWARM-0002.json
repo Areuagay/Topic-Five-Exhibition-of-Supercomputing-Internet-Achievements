@@ -1,0 +1,35 @@
+{
+  "dataset_id": "DS-SWARM-0002",
+  "scenario_id": "swarm-coordination",
+  "source_type": "simulated",
+  "directed": false,
+  "nodes": [
+    "UAV-1",
+    "UAV-2",
+    "UAV-3",
+    "UAV-4",
+    "UAV-5"
+  ],
+  "edges": [
+    {
+      "source": "UAV-1",
+      "target": "UAV-2",
+      "latency_ms": 10
+    },
+    {
+      "source": "UAV-2",
+      "target": "UAV-3",
+      "latency_ms": 10
+    },
+    {
+      "source": "UAV-3",
+      "target": "UAV-4",
+      "latency_ms": 10
+    },
+    {
+      "source": "UAV-4",
+      "target": "UAV-5",
+      "latency_ms": 10
+    }
+  ]
+}

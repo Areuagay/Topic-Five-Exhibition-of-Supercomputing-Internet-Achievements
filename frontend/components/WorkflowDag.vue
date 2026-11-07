@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, useId, watch } from 'vue'
 import {
   Handle,
   MarkerType,
@@ -22,31 +22,60 @@ interface PositionedNode {
   node: WorkflowNode
   x: number
   y: number
+  height: number
 }
 
 interface PopoverPosition {
   left: number
   top: number
-  placement: 'top' | 'bottom'
+  placement: 'top' | 'bottom' | 'floating'
   arrow: number
 }
 
-const FLOW_ID = 'run-workflow'
-const NODE_WIDTH = 184
-const NODE_HEIGHT = 72
+const FLOW_ID = `run-workflow-${useId()}`
+const NODE_WIDTH = 240
+const NODE_HEIGHT = 96
 const LAYER_GAP = 80
 const ROW_GAP = 28
 const CANVAS_PADDING = 48
-const POPOVER_WIDTH = 280
+const POPOVER_WIDTH = 320
 const POPOVER_FALLBACK_HEIGHT = 124
 
 const frame = ref<HTMLDivElement>()
+const nodeHeights = ref<Record<string, number>>({})
+const titlesMeasured = ref(false)
+const nameKey = computed(() => JSON.stringify(props.nodes.map(node => [node.id, node.name])))
+let titleFrame = 0
+function scheduleTitleMeasurement(): void {
+  cancelAnimationFrame(titleFrame)
+  titleFrame = requestAnimationFrame(measureNodeTitles)
+}
+
+function measureNodeTitles(): void {
+  if (!frame.value) return
+  const heights: Record<string, number> = {}
+  for (const node of props.nodes) {
+    const title = frame.value.querySelector<HTMLElement>(`.vue-flow__node[data-id="${CSS.escape(node.id)}"] .workflow-node > strong`)
+    if (!title) return
+    heights[node.id] = Math.max(NODE_HEIGHT, title.offsetHeight + 52)
+  }
+  if (JSON.stringify(nodeHeights.value) !== JSON.stringify(heights)) {
+    nodeHeights.value = heights
+    fittedTopology = ''
+  }
+  titlesMeasured.value = true
+  void nextTick(handleNodesInitialized)
+}
 const popoverElement = ref<HTMLElement>()
 const selectedNodeId = ref<string | null>(null)
 const popover = ref<PopoverPosition>({ left: 0, top: 0, placement: 'top', arrow: 140 })
 const popoverReady = ref(false)
 let resizeObserver: ResizeObserver | null = null
 let updateFrame = 0
+let fitFrame = 0
+const reducedMotion = ref(false)
+let motionQuery: MediaQueryList | undefined
+const updateMotion = () => { reducedMotion.value = motionQuery?.matches ?? false }
 
 const {
   fitView: flowFitView,
@@ -64,6 +93,7 @@ const STATUS_COLORS: Record<string, string> = {
   pending: '#9aa6b5',
   failed: '#d64b4b',
   stopped: '#687588',
+  blocked: '#d64b4b',
 }
 
 const STATUS_TEXT: Record<string, string> = {
@@ -73,6 +103,7 @@ const STATUS_TEXT: Record<string, string> = {
   pending: '等待执行',
   failed: '失败',
   stopped: '已停止',
+  blocked: '上游失败',
 }
 
 const graphLabel = computed(
@@ -98,9 +129,16 @@ function clampedProgress(progress?: number): number {
 }
 
 function nodeMeta(node: WorkflowNode): string {
+  if (node.status === 'success' && node.waiting_at_join) return '已完成 · 等待汇合'
+  const parents = props.edges.filter(edge => edge.target === node.id).map(edge => props.nodes.find(n => n.id === edge.source))
+  if (node.status === 'pending' && parents.length > 1) return `等待汇合 · ${parents.filter(p => p?.status === 'success').length}/${parents.length}`
   const status = statusText(node.status)
-  return node.progress != null ? `${status} · ${node.progress}%` : status
+  return node.progress != null ? `${status} · ${Math.round(node.progress)}%` : status
 }
+
+const activeNodeCount = computed(() => props.nodes.filter(n => n.status === 'running').length)
+const topologyKey = computed(() => JSON.stringify([nameKey.value, props.edges.map(e => [e.source, e.target])]))
+let fittedTopology = ''
 
 function computeLayeredLayout(nodes: WorkflowNode[], edges: WorkflowEdge[]): PositionedNode[] {
   const ids = new Set(nodes.map((node) => node.id))
@@ -141,19 +179,22 @@ function computeLayeredLayout(nodes: WorkflowNode[], edges: WorkflowEdge[]): Pos
     layers.set(rank, layer)
   }
 
-  const maxLayerSize = Math.max(1, ...Array.from(layers.values(), (layer) => layer.length))
-  const layoutHeight = maxLayerSize * NODE_HEIGHT + (maxLayerSize - 1) * ROW_GAP
+  const heightOf = (node: WorkflowNode) => nodeHeights.value[node.id] ?? NODE_HEIGHT
+  const layerSize = (layer: WorkflowNode[]) => layer.reduce((sum, node) => sum + heightOf(node), 0) + (layer.length - 1) * ROW_GAP
+  const layoutHeight = Math.max(NODE_HEIGHT, ...Array.from(layers.values(), layerSize))
   const positioned: PositionedNode[] = []
 
   for (const [rank, layer] of [...layers.entries()].sort(([a], [b]) => a - b)) {
-    const layerHeight = layer.length * NODE_HEIGHT + (layer.length - 1) * ROW_GAP
-    const startY = CANVAS_PADDING + (layoutHeight - layerHeight) / 2
-    layer.forEach((node, index) => {
+    const layerHeight = layerSize(layer)
+    let y = CANVAS_PADDING + (layoutHeight - layerHeight) / 2
+    layer.forEach((node) => {
       positioned.push({
         node,
         x: CANVAS_PADDING + rank * (NODE_WIDTH + LAYER_GAP),
-        y: startY + index * (NODE_HEIGHT + ROW_GAP),
+        y,
+        height: heightOf(node),
       })
+      y += heightOf(node) + ROW_GAP
     })
   }
 
@@ -161,12 +202,13 @@ function computeLayeredLayout(nodes: WorkflowNode[], edges: WorkflowEdge[]): Pos
 }
 
 const flowNodes = computed<Node<WorkflowNode>[]>(() =>
-  computeLayeredLayout(props.nodes, props.edges).map(({ node, x, y }) => ({
+  computeLayeredLayout(props.nodes, props.edges).map(({ node, x, y, height }) => ({
     id: node.id,
     type: 'workflow',
     position: { x, y },
     width: NODE_WIDTH,
-    height: NODE_HEIGHT,
+    height,
+    style: { width: `${NODE_WIDTH}px`, height: `${height}px` },
     data: node,
     draggable: false,
     connectable: false,
@@ -183,11 +225,18 @@ const flowEdges = computed<Edge[]>(() => {
   const ids = new Set(props.nodes.map((node) => node.id))
   return props.edges
     .filter((edge) => ids.has(edge.source) && ids.has(edge.target))
-    .map((edge, index) => ({
+    .map((edge, index) => {
+      const source = props.nodes.find(node => node.id === edge.source)
+      const target = props.nodes.find(node => node.id === edge.target)
+      const active = source?.status === 'success' && target?.status === 'running'
+      const complete = source?.status === 'success' && target?.status === 'success'
+      const color = active ? '#1769d2' : complete ? '#67a381' : '#b7c3d1'
+      return {
       id: `${edge.source}-${edge.target}-${index}`,
       source: edge.source,
       target: edge.target,
       type: 'smoothstep',
+      class: active ? 'is-flowing' : complete ? 'is-complete' : '',
       selectable: false,
       focusable: false,
       deletable: false,
@@ -195,10 +244,10 @@ const flowEdges = computed<Edge[]>(() => {
         type: MarkerType.ArrowClosed,
         width: 14,
         height: 14,
-        color: '#aebaca',
+        color,
       },
-      style: { stroke: '#aebaca', strokeWidth: 1.4 },
-    }))
+      style: { stroke: color, strokeWidth: active ? 1.8 : 1.4 },
+    } })
 })
 
 function schedulePopoverUpdate(): void {
@@ -268,16 +317,16 @@ function clearSelection(): void {
   removeSelectedElements()
 }
 
-function fitView(): void {
-  void flowFitView({ padding: '36px', minZoom: 0.42, maxZoom: 1.08, duration: 220 })
+function fitView() {
+  return flowFitView({ padding: '36px', minZoom: 0.2, maxZoom: 1.08, duration: reducedMotion.value ? 0 : 280 })
 }
 
 function zoomIn(): void {
-  void flowZoomIn({ duration: 160 })
+  void flowZoomIn({ duration: reducedMotion.value ? 0 : 180 })
 }
 
 function zoomOut(): void {
-  void flowZoomOut({ duration: 160 })
+  void flowZoomOut({ duration: reducedMotion.value ? 0 : 180 })
 }
 
 function handleCanvasWheel(event: WheelEvent): void {
@@ -289,23 +338,34 @@ function handleCanvasWheel(event: WheelEvent): void {
 }
 
 function handleNodesInitialized(): void {
-  requestAnimationFrame(fitView)
+  if (!titlesMeasured.value || !frame.value?.clientWidth || fittedTopology === topologyKey.value) return
+  cancelAnimationFrame(fitFrame)
+  fitFrame = requestAnimationFrame(() => {
+    const key = topologyKey.value
+    void fitView().then(fitted => { if (fitted) fittedTopology = key })
+  })
 }
 
 watch(
-  () => [props.nodes, props.edges],
+  topologyKey,
   () => {
     if (selectedNodeId.value && !props.nodes.some((node) => node.id === selectedNodeId.value)) {
       clearSelection()
     }
-    void nextTick(() => requestAnimationFrame(fitView))
+    void nextTick(handleNodesInitialized)
   },
-  { deep: true },
 )
+watch(() => props.nodes, schedulePopoverUpdate)
+watch(nameKey, () => { titlesMeasured.value = false; scheduleTitleMeasurement() })
 
 onMounted(() => {
+  scheduleTitleMeasurement()
+  void document.fonts.ready.then(() => { if (frame.value) scheduleTitleMeasurement() })
+  motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+  updateMotion()
+  motionQuery.addEventListener('change', updateMotion)
   if (frame.value) {
-    resizeObserver = new ResizeObserver(schedulePopoverUpdate)
+    resizeObserver = new ResizeObserver(() => { schedulePopoverUpdate(); handleNodesInitialized() })
     resizeObserver.observe(frame.value)
   }
 })
@@ -313,6 +373,9 @@ onMounted(() => {
 onBeforeUnmount(() => {
   resizeObserver?.disconnect()
   cancelAnimationFrame(updateFrame)
+  cancelAnimationFrame(fitFrame)
+  cancelAnimationFrame(titleFrame)
+  motionQuery?.removeEventListener('change', updateMotion)
 })
 </script>
 
@@ -323,6 +386,7 @@ onBeforeUnmount(() => {
         <h2 id="dag-viewer-title">工作流 DAG</h2>
         <span>Ctrl/⌘ + 滚轮缩放</span>
       </div>
+      <span v-if="activeNodeCount > 1" class="dag-parallel-status">{{ activeNodeCount }} 个节点并行执行</span>
       <div class="dag-controls" role="toolbar" aria-label="工作流视图控制">
         <button type="button" class="dag-control-button" aria-label="缩小工作流" @click="zoomOut">
           <span aria-hidden="true">−</span>
@@ -362,18 +426,17 @@ onBeforeUnmount(() => {
           :zoom-on-pinch="true"
           :pan-on-drag="true"
           :prevent-scrolling="false"
-          :min-zoom="0.35"
+          :min-zoom="0.2"
           :max-zoom="1.8"
           :elevate-nodes-on-select="false"
-          fit-view-on-init
           @node-click="handleNodeClick"
           @pane-click="clearSelection"
-          @nodes-initialized="handleNodesInitialized"
+          @nodes-initialized="scheduleTitleMeasurement"
           @viewport-change="schedulePopoverUpdate"
         >
           <Background variant="lines" :gap="20" :line-width="1" color="#edf1f5" />
           <template #node-workflow="{ data, selected }">
-            <article class="workflow-node" :class="{ 'is-selected': selected }">
+            <article class="workflow-node" :class="{ 'is-selected': selected, 'is-running': data.status === 'running', 'is-waiting': data.waiting_at_join }" :title="data.name">
               <Handle type="target" :position="Position.Left" :connectable="false" />
               <span class="workflow-node-accent" :style="{ backgroundColor: statusColor(data.status) }" aria-hidden="true" />
               <strong>{{ data.name }}</strong>
@@ -382,7 +445,7 @@ onBeforeUnmount(() => {
                 <span>{{ nodeMeta(data) }}</span>
               </div>
               <span class="workflow-node-progress" aria-hidden="true">
-                <i :style="{ width: `${clampedProgress(data.progress)}%`, backgroundColor: statusColor(data.status) }" />
+                <i :style="{ transform: `scaleX(${clampedProgress(data.progress) / 100})`, backgroundColor: statusColor(data.status) }" />
               </span>
               <Handle type="source" :position="Position.Right" :connectable="false" />
             </article>
@@ -409,7 +472,9 @@ onBeforeUnmount(() => {
             <dl class="dag-node-popover-facts">
               <div><dt>状态</dt><dd>{{ statusText(selectedNode.status) }}</dd></div>
               <div><dt>进度</dt><dd>{{ selectedNode.progress != null ? `${selectedNode.progress}%` : '—' }}</dd></div>
-              <div><dt>节点标识</dt><dd translate="no">{{ selectedNode.id }}</dd></div>
+              <div v-if="selectedNode.elapsed_seconds != null"><dt>运行耗时</dt><dd>{{ selectedNode.elapsed_seconds }} 秒</dd></div>
+              <div v-if="selectedNode.waiting_at_join" class="dag-node-popover-wide"><dt>同步状态</dt><dd>等待其他分支完成</dd></div>
+              <div v-if="selectedNode.waiting_for?.length" class="dag-node-popover-wide"><dt>等待上游</dt><dd>{{ selectedNode.waiting_for.map(id => nodes.find(n => n.id === id)?.name || id).join('、') }}</dd></div>
             </dl>
           </aside>
         </Transition>
@@ -441,6 +506,7 @@ onBeforeUnmount(() => {
 }
 
 .dag-toolbar-copy { min-width: 0; }
+.dag-parallel-status { margin-left:auto; color:#2563eb; font-size:12px; white-space:nowrap; }
 .dag-toolbar-copy h2 {
   margin: 0;
   display: block;
@@ -502,14 +568,19 @@ onBeforeUnmount(() => {
 }
 .dag-flow:active { cursor: grabbing; }
 .dag-flow :deep(.vue-flow__pane) { cursor: inherit; }
-.dag-flow :deep(.vue-flow__node) { width: 184px; height: 72px; border: 0; background: transparent; box-shadow: none; }
+.dag-flow :deep(.vue-flow__node) { border: 0; background: transparent; box-shadow: none; }
 .dag-flow :deep(.vue-flow__node:focus-visible) { outline: 2px solid #72a8e6; outline-offset: 4px; border-radius: 8px; }
 .dag-flow :deep(.vue-flow__handle) { width: 1px; height: 1px; min-width: 1px; min-height: 1px; border: 0; opacity: 0; pointer-events: none; }
+.dag-flow :deep(.vue-flow__edge-path) { transition:stroke 240ms ease, stroke-width 240ms ease; }
+@media (prefers-reduced-motion: no-preference) {
+  .dag-flow :deep(.is-flowing .vue-flow__edge-path) { stroke-dasharray:6 5; animation:dag-flow 1.4s linear infinite; }
+}
+@keyframes dag-flow { to { stroke-dashoffset:-22; } }
 
 .workflow-node {
   position: relative;
-  width: 184px;
-  height: 72px;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
   padding: 13px 18px 10px;
   border: 1px solid #d4dde8;
@@ -519,18 +590,20 @@ onBeforeUnmount(() => {
   transition: background-color 160ms cubic-bezier(0.22, 1, 0.36, 1), border-color 160ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 160ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 .workflow-node.is-selected { border-color: #d4dde8; background: #f3f7fc; box-shadow: 0 4px 14px rgb(30 83 142 / 10%); }
+.workflow-node.is-running { border-color:#a7c5ec; background:#f8fbff; }
+.workflow-node.is-waiting { border-color:#bfd9c9; }
 .workflow-node-accent { position: absolute; top: -1px; bottom: -1px; left: -1px; width: 5px; border-radius: 8px 0 0 8px; }
-.workflow-node > strong { display: block; overflow: hidden; color: inherit; font-size: 13px; font-weight: 650; line-height: 1.35; text-overflow: ellipsis; white-space: nowrap; }
+.workflow-node > strong { display: block; color: inherit; font-size: 13px; font-weight: 650; line-height: 1.4; white-space: normal; overflow-wrap: anywhere; }
 .workflow-node-meta { min-width: 0; display: flex; align-items: center; gap: 7px; margin-top: 7px; color: #758195; font-size: 11px; line-height: 1.3; }
 .workflow-node-meta > span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .workflow-node-status { width: 6px; height: 6px; flex: 0 0 auto; border-radius: 50%; }
 .workflow-node-progress { position: absolute; right: 18px; bottom: 7px; left: 18px; height: 3px; overflow: hidden; border-radius: 2px; background: #edf1f5; }
-.workflow-node-progress i { display: block; height: 100%; border-radius: inherit; }
+.workflow-node-progress i { display: block; width:100%; height: 100%; border-radius: inherit; transform-origin:left; transition:transform 600ms cubic-bezier(.22,1,.36,1), background-color 240ms ease; }
 
 .dag-node-popover {
   position: absolute;
   z-index: 20;
-  width: min(280px, calc(100% - 24px));
+  width: min(320px, calc(100% - 24px));
   padding: 12px;
   border: 1px solid #d9e2ed;
   border-radius: 10px;
@@ -540,18 +613,22 @@ onBeforeUnmount(() => {
 }
 .dag-node-popover[data-placement='top'] { transform: translate(-50%, -100%); transform-origin: bottom center; }
 .dag-node-popover[data-placement='bottom'] { transform: translate(-50%, 0); transform-origin: top center; }
+.dag-node-popover[data-placement='floating'] { transform: translate(-50%, 0); }
+.dag-node-popover[data-placement='floating']::after { display: none; }
 .dag-node-popover::after { position: absolute; left: var(--arrow-left, 50%); width: 10px; height: 10px; border-right: 1px solid #d9e2ed; border-bottom: 1px solid #d9e2ed; background: #fff; content: ''; }
 .dag-node-popover[data-placement='top']::after { bottom: -6px; transform: translateX(-50%) rotate(45deg); }
 .dag-node-popover[data-placement='bottom']::after { top: -6px; transform: translateX(-50%) rotate(225deg); }
 .dag-node-popover-heading { min-width: 0; display: grid; grid-template-columns: 4px minmax(0, 1fr); align-items: center; gap: 11px; }
 .dag-node-popover-marker { width: 4px; height: 42px; border-radius: 4px; }
 .dag-node-popover-heading span:not(.dag-node-popover-marker) { color: #718096; font-size: 12px; font-weight: 550; line-height: 1.3; }
-.dag-node-popover-title { display: block; margin-top: 2px; overflow: hidden; color: #253044; font-size: 16px; font-weight: 680; line-height: 1.35; text-overflow: ellipsis; white-space: nowrap; }
+.dag-node-popover-title { display: block; margin-top: 2px; color: #253044; font-size: 16px; font-weight: 680; line-height: 1.45; white-space: normal; overflow-wrap: anywhere; }
 .dag-node-popover-facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 8px 0 0; padding-top: 8px; border-top: 1px solid #edf1f5; }
 .dag-node-popover-facts dt,
 .dag-node-popover-facts dd { margin: 0; }
 .dag-node-popover-facts dt { color: #7b8798; font-size: 12px; font-weight: 500; line-height: 1.3; }
 .dag-node-popover-facts dd { margin-top: 4px; overflow: hidden; color: #344156; font-size: 14px; font-weight: 650; font-variant-numeric: tabular-nums; line-height: 1.35; text-overflow: ellipsis; white-space: nowrap; }
+.dag-node-popover-wide { grid-column: 1 / -1; }
+.dag-node-popover-wide dd { white-space: normal; overflow-wrap: anywhere; }
 
 .dag-popover-enter-active { transition: opacity 220ms cubic-bezier(0.16, 1, 0.3, 1), transform 220ms cubic-bezier(0.16, 1, 0.3, 1); }
 .dag-popover-leave-active { transition: opacity 150ms cubic-bezier(0.7, 0, 0.84, 0), transform 150ms cubic-bezier(0.7, 0, 0.84, 0); }
@@ -568,6 +645,7 @@ onBeforeUnmount(() => {
 @media (max-width: 700px) {
   .dag-toolbar { align-items: flex-start; flex-direction: column; padding: 14px 16px; }
   .dag-controls { width: 100%; }
+  .dag-parallel-status { margin-left:0; }
   .dag-fit-button { flex: 1 1 auto; }
   .dag-canvas-shell { padding: 10px; }
   .dag-canvas-frame { height: 340px; }
@@ -577,6 +655,7 @@ onBeforeUnmount(() => {
 @media (prefers-reduced-motion: reduce) {
   .dag-control-button,
   .workflow-node,
+  .workflow-node-progress i,
   .dag-popover-enter-active,
   .dag-popover-leave-active { transition-duration: 0.01ms; }
   .dag-node-popover[data-placement='top'].dag-popover-enter-from,

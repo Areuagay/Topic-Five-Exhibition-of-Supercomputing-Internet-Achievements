@@ -562,8 +562,8 @@ watch(activeKey, key => { if (key === 'resource') void refreshClusters() })
 .experience-flow { display: grid; gap: 20px; min-width: 0; overflow-anchor: none; }
 .experience-step-content { display: grid; align-items: start; min-width: 0; }
 .experience-step-content > :deep(*) { grid-area: 1 / 1; min-width: 0; }
-.experience-panel-enter-active { transition: opacity 160ms cubic-bezier(.2,.7,.2,1), translate 160ms cubic-bezier(.2,.7,.2,1); }
-.experience-panel-leave-active { transition: opacity 70ms ease-out; pointer-events: none; }
+.experience-panel-enter-active { transition: opacity 220ms cubic-bezier(.22,1,.36,1), translate 220ms cubic-bezier(.22,1,.36,1); }
+.experience-panel-leave-active { transition: opacity 120ms ease-out; pointer-events: none; }
 .experience-panel-enter-from { opacity: 0; translate: 0 var(--step-entry-offset, 6px); }
 .experience-panel-leave-to { opacity: 0; }
 @media (prefers-reduced-motion: reduce) {
@@ -618,7 +618,7 @@ watch(activeKey, key => { if (key === 'resource') void refreshClusters() })
 .experience-guide { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 16px; min-height: 60px; padding: 10px 20px; border-top: 1px solid var(--scnet-divider); background: #fbfcfe; }
 .experience-guide-line { display: flex; align-items: center; gap: 14px; min-width: 0; margin: 0; font-size: 16px; color: var(--scnet-text-secondary); }
 .experience-guide-progress { flex-shrink: 0; color: var(--scnet-primary); font-weight: 600; font-variant-numeric: tabular-nums; }
-.experience-guide-summary { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.experience-guide-summary { white-space: normal; overflow-wrap: anywhere; }
 .experience-guide-actions { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); width: 268px; min-width: 0; max-width: 100%; gap: 8px; }
 .experience-guide-actions button { width: 100%; min-width: 0; height: 44px; padding-inline: 10px; font-size: 14px; box-sizing: border-box; }
 .experience-next-icon { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 16px; width: 16px; height: 16px; }

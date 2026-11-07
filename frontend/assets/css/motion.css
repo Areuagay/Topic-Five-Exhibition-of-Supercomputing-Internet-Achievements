@@ -33,8 +33,7 @@
   .scnet-page-enter-from,
   .scnet-page-leave-to { opacity: 0; }
 
-  .application-overview,
-  .experience-body > :not(.exp-result) {
+  .application-overview {
     animation: scnet-reveal 360ms var(--scnet-hover-easing) backwards;
   }
 

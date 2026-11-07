@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { mkdtempSync, rmSync } from 'node:fs'
+import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { resolve } from 'node:path'
 
@@ -20,7 +20,8 @@ test('six domains share uploads, isolated runs, elapsed-time progress and result
     for (const scenario of scenarios) {
       const dataset = datasets.find(d => d.scenario_id === scenario && !d.builtin)
       assert.ok(dataset, `${scenario} has an uploadable sample`)
-      assert.equal(store.write('POST', [domain, 'datasets', dataset.dataset_id, 'upload']).data.uploaded, true)
+      const sample = store.file(domain, dataset.dataset_id, 'sample')
+      assert.equal(store.write('POST', [domain, 'datasets', dataset.dataset_id, 'upload'], { buffer: readFileSync(sample.path), file_name: sample.name }).data.uploaded, true)
       assert.equal(store.write('POST', [domain, 'scenarios', scenario, 'import']).data.status, 'imported')
       assert.equal(store.write('POST', [domain, 'scenarios', scenario, 'import']).data.status, 'already_all')
       assert.equal(store.write('DELETE', [domain, 'datasets', dataset.dataset_id]).data.uploaded, false)

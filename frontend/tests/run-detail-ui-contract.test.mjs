@@ -136,7 +136,7 @@ test('workflow DAG is a polished read-only Vue Flow viewport with accessible con
   assert.match(dag, /:nodes-draggable="false"/)
   assert.match(dag, /:nodes-connectable="false"/)
   assert.match(dag, /:zoom-on-scroll="false"/)
-  assert.match(dag, /fit-view-on-init/)
+  assert.match(dag, /@nodes-initialized="scheduleTitleMeasurement"/)
   assert.match(dag, /padding:\s*'36px'/)
   assert.match(dag, /function handleCanvasWheel/)
   assert.match(dag, /function zoomIn/)

@@ -1,0 +1,23 @@
+{
+  "dataset_id": "DS-PATH-0003",
+  "scenario_id": "path-planning",
+  "source_type": "simulated",
+  "coordinate_unit": "m",
+  "missions": [
+    {
+      "agent_id": "UAV-1",
+      "start": [
+        0,
+        0,
+        20
+      ],
+      "goal": [
+        100,
+        100,
+        20
+      ],
+      "max_speed_m_s": 10
+    }
+  ],
+  "safety_distance_m": 3
+}

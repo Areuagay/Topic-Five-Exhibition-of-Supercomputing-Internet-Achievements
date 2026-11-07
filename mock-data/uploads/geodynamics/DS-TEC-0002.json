@@ -1,12 +1,19 @@
 {
   "dataset_id": "DS-TEC-0002",
   "scenario_id": "tectonic-evolution",
-  "type": "rheology_params",
-  "description": "热-力学物性参数集（手动上传样例）",
+  "source_type": "simulated",
   "layers": [
-    { "name": "上地壳", "density": 2700, "viscosity": 1e22, "young_modulus": 5.0e10 },
-    { "name": "下地壳", "density": 2900, "viscosity": 5e21, "young_modulus": 6.5e10 },
-    { "name": "岩石圈地幔", "density": 3300, "viscosity": 1e21, "young_modulus": 1.2e11 }
-  ],
-  "source_type": "simulated"
+    {
+      "name": "upper_crust",
+      "density_kg_m3": 2700,
+      "viscosity_pa_s": 1e+22,
+      "young_modulus_pa": 50000000000
+    },
+    {
+      "name": "lower_crust",
+      "density_kg_m3": 2900,
+      "viscosity_pa_s": 5e+21,
+      "young_modulus_pa": 65000000000
+    }
+  ]
 }

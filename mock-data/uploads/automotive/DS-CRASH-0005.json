@@ -1,0 +1,22 @@
+{
+  "dataset_id": "DS-CRASH-0005",
+  "scenario_id": "vehicle-crash",
+  "source_type": "simulated",
+  "contacts": [
+    {
+      "id": "C1",
+      "type": "automatic_single_surface",
+      "friction": 0.2
+    }
+  ],
+  "welds": [
+    {
+      "id": "W1",
+      "node_ids": [
+        1,
+        2
+      ],
+      "failure_force_n": 5000
+    }
+  ]
+}

@@ -26,6 +26,7 @@
 import { createServer } from 'node:http'
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { createExperienceStore, EXPERIENCE_DOMAINS } from './experience-store.js'
+import { MAX_UPLOAD_BYTES } from './dataset-files.js'
 import { basename, extname, resolve, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -89,6 +90,21 @@ function readRequestBody(req) {
   })
 }
 
+function readUpload(req) {
+  return new Promise((resolveBody, reject) => {
+    const chunks = []; let size = 0; let rejected = false
+    req.on('data', chunk => {
+      size += chunk.length
+      if (size > MAX_UPLOAD_BYTES) {
+        if (!rejected) { rejected = true; chunks.length = 0; reject(new Error('文件不能超过 5 MB')) }
+      } else if (!rejected) chunks.push(chunk)
+    })
+    req.on('end', () => { if (!rejected) resolveBody(Buffer.concat(chunks)) })
+    req.on('aborted', () => reject(new Error('上传已取消')))
+    req.on('error', reject)
+  })
+}
+
 /** 读取 mock-data 下相对路径的 JSON 文件；不存在或解析失败返回 null */
 function readJson(relPath) {
   const file = resolve(MOCK_DATA_DIR, relPath)
@@ -125,7 +141,7 @@ function resolveArtifactPath(artifactId) {
   return null
 }
 
-function sendFile(res, absPath, { download = false } = {}) {
+function sendFile(res, absPath, { download = false, name = basename(absPath) } = {}) {
   const buf = readFileSync(absPath)
   const ext = extname(absPath).toLowerCase()
   const headers = {
@@ -135,7 +151,7 @@ function sendFile(res, absPath, { download = false } = {}) {
     ...CORS_HEADERS,
   }
   if (download) {
-    headers['Content-Disposition'] = `attachment; filename="${basename(absPath)}"`
+    headers['Content-Disposition'] = `attachment; filename="download${extname(absPath)}"; filename*=UTF-8''${encodeURIComponent(name)}`
   }
   res.writeHead(200, headers)
   res.end(buf)
@@ -257,6 +273,18 @@ const server = createServer(async (req, res) => {
   }
 
   const pathname = new URL(url, `http://${req.headers.host || 'localhost'}`).pathname
+  const routeParts = pathname.slice(API_PREFIX.length).split('/').filter(Boolean)
+
+  // Raw file bytes are bounded and validated before any dataset state changes.
+  if (method === 'POST' && EXPERIENCE_DOMAINS.includes(routeParts[0]) && routeParts[1] === 'datasets' && routeParts[3] === 'upload' && routeParts.length === 4) {
+    try {
+      const buffer = await readUpload(req)
+      const file_name = new URL(url, 'http://localhost').searchParams.get('filename')
+      const result = experienceStore.write(method, routeParts, { buffer, file_name })
+      sendJSON(res, result.code, result)
+    } catch (cause) { if (!res.destroyed) sendJSON(res, 413, {code:413,message:cause.message,data:null}) }
+    return
+  }
 
   // 仅处理 /api/v1 前缀
   if (pathname !== API_PREFIX && !pathname.startsWith(`${API_PREFIX}/`)) {
@@ -272,6 +300,13 @@ const server = createServer(async (req, res) => {
   // 读操作：GET 返回 mock-data 下的 JSON；文件预览/下载单独处理
   if (method === 'GET') {
     const parts = pathname.slice(API_PREFIX.length).split('/').filter(Boolean)
+
+    if (EXPERIENCE_DOMAINS.includes(parts[0]) && parts[1] === 'datasets' && ['sample', 'download'].includes(parts[3]) && parts.length === 4) {
+      const file = experienceStore.file(parts[0], parts[2], parts[3])
+      if (!file) { sendJSON(res,404,{code:404,message:'文件不存在，请先上传或选择有效的样例',data:null}); return }
+      sendFile(res,file.path,{download:true,name:file.name})
+      return
+    }
 
     // GET /api/v1/files/{artifact_id}/preview|download
     if (parts[0] === 'files' && parts[1] && (parts[2] === 'preview' || parts[2] === 'download')) {
@@ -404,7 +439,7 @@ const server = createServer(async (req, res) => {
 })
 
 server.listen(PORT, HOST, () => {
-  console.log(`[mock-backend] listening on http://${HOST}:${PORT}${API_PREFIX}`)
+  console.log(`[mock-backend] listening on http://${HOST}:${server.address().port}${API_PREFIX}`)
   console.log(`[mock-backend] mock data dir: ${MOCK_DATA_DIR}`)
   console.log(`[mock-backend] try: http://${HOST}:${PORT}${API_PREFIX}/llm/scenarios`)
 })

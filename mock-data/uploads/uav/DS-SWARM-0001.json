@@ -1,0 +1,74 @@
+{
+  "dataset_id": "DS-SWARM-0001",
+  "scenario_id": "swarm-coordination",
+  "source_type": "simulated",
+  "coordinate_unit": "m",
+  "agents": [
+    {
+      "id": "UAV-1",
+      "position": [
+        0,
+        0,
+        20
+      ],
+      "velocity": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "UAV-2",
+      "position": [
+        10,
+        0,
+        20
+      ],
+      "velocity": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "UAV-3",
+      "position": [
+        20,
+        0,
+        20
+      ],
+      "velocity": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "UAV-4",
+      "position": [
+        30,
+        0,
+        20
+      ],
+      "velocity": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "UAV-5",
+      "position": [
+        40,
+        0,
+        20
+      ],
+      "velocity": [
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "time_step_s": 0.1
+}

@@ -1,0 +1,10 @@
+{
+  "dataset_id": "DS-CRASH-0004",
+  "scenario_id": "vehicle-crash",
+  "source_type": "simulated",
+  "velocity_m_s": 15.56,
+  "impact_angle_deg": 0,
+  "overlap_ratio": 1,
+  "duration_s": 0.12,
+  "barrier": "rigid_wall"
+}

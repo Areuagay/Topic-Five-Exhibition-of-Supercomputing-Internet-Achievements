@@ -1490,13 +1490,13 @@ async function openMig(id: string): Promise<void> {
 .trace-summary dt { color: #7f8b9d; font-size: 13px; font-weight: 600; }
 .trace-summary dd {
   margin: 5px 0 0;
-  overflow: hidden;
+  overflow: visible;
   color: #3b485c;
   font-size: 15px;
   font-weight: 600;
   line-height: 1.4;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .trace-summary-latency dd {
@@ -1719,24 +1719,24 @@ async function openMig(id: string): Promise<void> {
 
 .workload-title-row h3 {
   min-width: 0;
-  overflow: hidden;
+  overflow: visible;
   margin: 0;
   color: #2f3d53;
   font-size: 15px;
   font-weight: 650;
   line-height: 1.45;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .workload-title-row :deep(.status-badge) { flex: 0 0 auto; }
 .workload-identity > p {
-  overflow: hidden;
+  overflow: visible;
   margin: 7px 0 0;
   color: #748195;
   font-size: 11.5px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 .workload-identity > span { display: block; margin-top: 13px; color: #929cab; font-size: 11px; }
 
@@ -1767,12 +1767,12 @@ async function openMig(id: string): Promise<void> {
 
 .workload-center-heading span {
   min-width: 0;
-  overflow: hidden;
+  overflow: visible;
   color: #657286;
   font-size: 11.5px;
   font-weight: 600;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .workload-center-heading i {
@@ -1842,7 +1842,7 @@ async function openMig(id: string): Promise<void> {
 
 .migration-route-cell { min-width: 0; display: flex; align-items: center; gap: 8px; color: #7b8798; }
 .migration-route-cell span,
-.migration-route-cell strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.migration-route-cell strong { overflow: visible; overflow-wrap: anywhere; white-space: normal; }
 .migration-route-cell strong { color: #435168; font-weight: 600; }
 .migration-route-cell svg { flex: 0 0 auto; width: 30px; fill: none; stroke: #a2adba; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.4; }
 
@@ -1901,7 +1901,7 @@ async function openMig(id: string): Promise<void> {
 .migration-detail-summary > div { min-width: 0; display: flex; flex-direction: column; justify-content: center; gap: 6px; padding: 15px 18px; }
 .migration-detail-summary > div + div { border-left: 1px solid var(--scnet-divider); }
 .migration-detail-summary span { color: #7f8b9c; font-size: 12px; font-weight: 600; }
-.migration-detail-summary strong { overflow: hidden; color: #3b485c; font-size: 14px; font-weight: 650; text-overflow: ellipsis; white-space: nowrap; }
+.migration-detail-summary strong { overflow: visible; color: #3b485c; font-size: 14px; font-weight: 650; overflow-wrap: anywhere; white-space: normal; }
 .migration-summary-status :deep(.status-badge) { align-self: flex-start; }
 .migration-summary-progress strong { color: var(--scnet-primary); font-family: var(--scnet-font-mono); font-size: 22px; line-height: 1; }
 
@@ -2127,7 +2127,7 @@ async function openMig(id: string): Promise<void> {
 .cluster-rail-button.is-offline .cluster-status-dot { background: #8b97a7; }
 .cluster-rail-copy { min-width: 0; flex: 1; }
 .cluster-rail-copy strong,
-.cluster-rail-copy small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cluster-rail-copy small { display: block; overflow: visible; overflow-wrap: anywhere; white-space: normal; }
 .cluster-rail-copy strong { color: #334057; font-size: 12.5px; font-weight: 600; }
 .cluster-rail-copy small { margin-top: 2px; color: #8994a4; font-size: 10.5px; }
 .cluster-rail-queue {
@@ -2222,7 +2222,7 @@ async function openMig(id: string): Promise<void> {
 .inspector-facts dt,
 .inspector-metrics dt { color: #8a95a4; font-size: 10px; }
 .inspector-facts dd,
-.inspector-metrics dd { overflow: hidden; margin: 3px 0 0; color: #3b495f; font-size: 13px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.inspector-metrics dd { overflow: visible; margin: 3px 0 0; color: #3b495f; font-size: 13px; font-weight: 600; overflow-wrap: anywhere; white-space: normal; }
 .inspector-metrics { grid-template-columns: 1fr; margin-top: 20px; }
 .inspector-metrics > div:nth-child(odd) { border-right: 0; }
 .inspector-metrics dd { font-size: 18px; }
@@ -2378,14 +2378,14 @@ async function openMig(id: string): Promise<void> {
 }
 
 .deployment-function-id {
-  overflow: hidden;
+  overflow: visible;
   margin: 3px 0 0;
   color: #7d8999;
   font-family: var(--scnet-font-mono);
   font-size: 11.5px;
   line-height: 1.5;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .deployment-description {
@@ -2434,13 +2434,13 @@ async function openMig(id: string): Promise<void> {
 
 .deployment-image code {
   min-width: 0;
-  overflow: hidden;
+  overflow: visible;
   color: #627087;
   font-family: var(--scnet-font-mono);
   font-size: 11px;
   line-height: 1.5;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .deployment-row > .deployment-centers {

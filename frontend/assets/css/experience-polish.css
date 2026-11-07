@@ -51,6 +51,8 @@
 .operator-selected-frame.has-selection .operator-selected-chips { padding-block: 3px 18px; }
 .selected-chip { display: inline-flex; align-items: center; gap: 7px; padding: 6px 9px; border: 1px solid #d8e5f5; border-radius: 7px; color: #38689f; background: #f2f7ff; font-size: 12px; cursor: pointer; }
 .selected-chip:hover { border-color: #9abce9; background: #e9f2ff; }
+.selected-chip { max-width:100%; white-space:normal; overflow-wrap:anywhere; text-align:left; }
+.selected-chip svg { flex:none; }
 .selected-chip .chip-remove { color: #8aa3c3; }
 .selected-chip:hover .chip-remove { color: #285eac; }
 .selected-chip:focus-visible { outline: 2px solid #74a6ea; outline-offset: 2px; }
@@ -83,6 +85,7 @@
 .dataset-readiness-track i { flex: 1; border-radius: 2px; background: #e7edf5; transition: background-color 300ms; }
 .dataset-readiness-track i.is-ready { background: #63a092; }
 .dataset-identity { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.dataset-identity > div { min-width:0; overflow-wrap:anywhere; }
 .dataset-file-icon { display: grid; place-items: center; flex: 0 0 36px; height: 40px; border: 1px solid #dce6f5; border-radius: 10px; color: #426db0; background: #f0f5fd; box-shadow: none; }
 .dataset-file-icon.is-json { color: #426db0; }
 .dataset-file-icon.is-csv { color: #327966; background: #edf7f3; border-color: #d9ece3; }

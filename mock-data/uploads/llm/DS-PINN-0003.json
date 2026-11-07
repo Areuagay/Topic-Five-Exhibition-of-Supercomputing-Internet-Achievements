@@ -1,0 +1,22 @@
+{
+  "dataset_id": "DS-PINN-0003",
+  "scenario_id": "pinn-acceleration",
+  "source_type": "simulated",
+  "boundary_type": "Dirichlet",
+  "boundary_value": 0,
+  "initial_condition": "sin(pi*x)*sin(pi*y)",
+  "points": [
+    {
+      "x": 0,
+      "y": 0,
+      "t": 0,
+      "value": 0
+    },
+    {
+      "x": 0.5,
+      "y": 0.5,
+      "t": 0,
+      "value": 1
+    }
+  ]
+}

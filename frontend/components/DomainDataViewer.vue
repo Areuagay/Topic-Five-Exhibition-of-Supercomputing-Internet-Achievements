@@ -487,7 +487,7 @@ const blockEntries = computed(() => {
   display: inline-block;
   min-width: 0;
   max-width: 240px;
-  overflow: hidden;
+  overflow: visible;
   padding: 2px 8px;
   border: 1px solid #e2e8f0;
   border-radius: 4px;
@@ -495,8 +495,8 @@ const blockEntries = computed(() => {
   color: #4a5a70;
   font-family: 'JetBrains Mono', 'Consolas', monospace;
   font-size: 12px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .ddv-chip-more {

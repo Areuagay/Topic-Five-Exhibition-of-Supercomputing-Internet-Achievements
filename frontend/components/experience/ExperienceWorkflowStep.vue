@@ -50,6 +50,7 @@ function selectRun(value: string): void {
           :model-value="selectedRunId"
           placeholder="选择运行记录"
           aria-label="选择运行记录"
+          popper-class="workflow-run-options"
           @update:model-value="selectRun"
         >
           <el-option
@@ -131,6 +132,8 @@ function selectRun(value: string): void {
 .exp-toolbar-field :deep(.el-select) {
   width: 320px;
 }
+.exp-toolbar-field :deep(.el-select__placeholder) { position: static; transform: none; white-space: normal; overflow-wrap: anywhere; }
+.exp-toolbar-field :deep(.el-select__wrapper) { padding-block: 8px; }
 
 .exp-toolbar-meta {
   display: flex;
@@ -172,4 +175,8 @@ function selectRun(value: string): void {
     width: 220px;
   }
 }
+</style>
+
+<style>
+.workflow-run-options .el-select-dropdown__item { height: auto; min-height: 34px; padding-block: 8px; line-height: 1.5; white-space: normal; overflow-wrap: anywhere; }
 </style>

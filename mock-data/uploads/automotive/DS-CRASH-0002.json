@@ -1,0 +1,46 @@
+{
+  "dataset_id": "DS-CRASH-0002",
+  "scenario_id": "vehicle-crash",
+  "source_type": "simulated",
+  "demo_format": "mesh-json-v1",
+  "coordinate_unit": "mm",
+  "nodes": [
+    {
+      "id": 1,
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    {
+      "id": 2,
+      "x": 100,
+      "y": 0,
+      "z": 0
+    },
+    {
+      "id": 3,
+      "x": 100,
+      "y": 100,
+      "z": 0
+    },
+    {
+      "id": 4,
+      "x": 0,
+      "y": 100,
+      "z": 0
+    }
+  ],
+  "elements": [
+    {
+      "id": 1,
+      "type": "shell4",
+      "node_ids": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "material_id": "steel"
+    }
+  ]
+}

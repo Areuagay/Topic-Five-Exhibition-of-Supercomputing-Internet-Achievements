@@ -1,0 +1,11 @@
+{
+  "dataset_id": "DS-BANDOS-0004",
+  "scenario_id": "band-dos",
+  "source_type": "simulated",
+  "calculation": "scf",
+  "ecutwfc_ry": 40,
+  "convergence_threshold_ry": 0.000001,
+  "max_iterations": 50,
+  "smearing": "gaussian",
+  "degauss_ry": 0.01
+}

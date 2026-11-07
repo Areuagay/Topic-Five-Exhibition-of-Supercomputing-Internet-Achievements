@@ -1,0 +1,4 @@
+molecule_id,absorption_probability,hepatotoxicity_label,clearance_ml_min_kg
+MOL-1,0.9,0,15
+MOL-2,0.7,1,12
+MOL-3,0.8,0,8

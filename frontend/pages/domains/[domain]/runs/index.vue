@@ -194,7 +194,7 @@ function runRowClassName({ row }: { row: { status?: string } }): string {
             <span v-else class="mono muted" translate="no">{{ row.run_id }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="scenario_name" label="场景" min-width="150" show-overflow-tooltip />
+        <el-table-column prop="scenario_name" label="场景" min-width="150" />
         <el-table-column label="状态" width="100">
           <template #default="{ row }"><StatusBadge :status="row.status" /></template>
         </el-table-column>
@@ -207,7 +207,7 @@ function runRowClassName({ row }: { row: { status?: string } }): string {
             />
           </template>
         </el-table-column>
-        <el-table-column prop="cluster_name" label="集群" min-width="140" show-overflow-tooltip />
+        <el-table-column prop="cluster_name" label="集群" min-width="140" />
         <el-table-column prop="job_id" label="Job ID" width="110" class-name="mono" />
         <el-table-column label="耗时" width="110">
           <template #default="{ row }">{{ formatDuration(row.elapsed_seconds) }}</template>
@@ -323,12 +323,12 @@ function runRowClassName({ row }: { row: { status?: string } }): string {
 .run-status-item.is-queued::before { background: #c17a18; }
 
 .run-status-item dt {
-  overflow: hidden;
+  overflow: visible;
   color: var(--scnet-text-secondary);
   font-size: 12px;
   line-height: 1.4;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .run-status-item dd {

@@ -286,13 +286,13 @@ function architectureDescription(item: ScenarioDetail['architecture'][number]): 
 }
 
 .scenario-summary-metrics dt {
-  overflow: hidden;
+  overflow: visible;
   color: var(--scnet-text-muted);
   font-size: 14px;
   font-weight: 500;
   line-height: 1.5;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .scenario-summary-metrics dd {
@@ -519,13 +519,13 @@ function architectureDescription(item: ScenarioDetail['architecture'][number]): 
 }
 
 .scenario-highlight-grid dt {
-  overflow: hidden;
+  overflow: visible;
   color: var(--scnet-text-muted);
   font-size: 14px;
   font-weight: 500;
   line-height: 1.5;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .scenario-highlight-grid dd {

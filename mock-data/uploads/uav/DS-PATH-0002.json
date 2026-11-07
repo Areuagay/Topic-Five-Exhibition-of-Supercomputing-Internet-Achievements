@@ -1,0 +1,38 @@
+{
+  "dataset_id": "DS-PATH-0002",
+  "scenario_id": "path-planning",
+  "source_type": "simulated",
+  "coordinate_unit": "m",
+  "obstacles": [
+    {
+      "id": "O1",
+      "type": "sphere",
+      "center": [
+        50,
+        50,
+        20
+      ],
+      "radius": 10,
+      "velocity": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "O2",
+      "type": "sphere",
+      "center": [
+        70,
+        30,
+        15
+      ],
+      "radius": 5,
+      "velocity": [
+        0,
+        0.5,
+        0
+      ]
+    }
+  ]
+}

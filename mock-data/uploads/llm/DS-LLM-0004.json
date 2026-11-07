@@ -1,0 +1,11 @@
+{
+  "dataset_id": "DS-LLM-0004",
+  "scenario_id": "llm-pretraining",
+  "source_type": "simulated",
+  "data_parallel": 2,
+  "tensor_parallel": 1,
+  "pipeline_parallel": 1,
+  "micro_batch_size": 2,
+  "gradient_accumulation_steps": 4,
+  "precision": "fp32"
+}

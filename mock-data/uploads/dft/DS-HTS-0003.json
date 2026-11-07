@@ -1,0 +1,14 @@
+{
+  "dataset_id": "DS-HTS-0003",
+  "scenario_id": "high-throughput-screening",
+  "source_type": "simulated",
+  "calculation": "relax+scf",
+  "ecutwfc_ry": 40,
+  "kpoint_grid": [
+    4,
+    4,
+    4
+  ],
+  "convergence_threshold_ry": 0.000001,
+  "max_iterations": 50
+}

@@ -1,0 +1,49 @@
+{
+  "dataset_id": "DS-SWARM-0003",
+  "scenario_id": "swarm-coordination",
+  "source_type": "simulated",
+  "formation": "line",
+  "coordinate_unit": "m",
+  "targets": [
+    {
+      "agent_id": "UAV-1",
+      "position": [
+        0,
+        100,
+        20
+      ]
+    },
+    {
+      "agent_id": "UAV-2",
+      "position": [
+        10,
+        100,
+        20
+      ]
+    },
+    {
+      "agent_id": "UAV-3",
+      "position": [
+        20,
+        100,
+        20
+      ]
+    },
+    {
+      "agent_id": "UAV-4",
+      "position": [
+        30,
+        100,
+        20
+      ]
+    },
+    {
+      "agent_id": "UAV-5",
+      "position": [
+        40,
+        100,
+        20
+      ]
+    }
+  ]
+}

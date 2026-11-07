@@ -4,6 +4,7 @@ import type { Artifact } from '~/types'
 import { resolveArtifactUrl } from '~/utils/workspace'
 import ArtifactPreview from './ArtifactPreview.vue'
 import { previewKind } from '~/utils/artifact-preview'
+import { X, LoaderCircle } from '@lucide/vue'
 const props = defineProps<{ artifact: Artifact; sourceType?: string }>()
 const config = useRuntimeConfig()
 const show = ref(false)
@@ -39,7 +40,6 @@ onBeforeUnmount(() => { controller?.abort(); closeNotice() })
 async function download() {
   if (busy.value || !downloadUrl.value) return
   busy.value = true
-  error.value = ''
   activeNotice.value = noticeId
   controller = new AbortController()
   try {
@@ -47,11 +47,12 @@ async function download() {
     const response = await fetch(downloadUrl.value, { headers: { Range: 'bytes=0-0' }, signal: controller.signal })
     await response.body?.cancel()
     if (!response.ok) throw new Error('Unavailable')
+    closeNotice()
     const link = document.createElement('a')
     link.href = downloadUrl.value
     link.download = props.artifact.name
     link.click()
-  } catch { if (!controller.signal.aborted) error.value = '下载失败，请重试' }
+  } catch { if (!controller.signal.aborted && activeNotice.value === noticeId) error.value = '下载失败，请重试' }
   finally { busy.value = false }
 }
 </script>
@@ -59,12 +60,16 @@ async function download() {
 <template>
   <div class="artifact-actions">
     <button v-if="previewUrl && artifact.preview_supported !== false" type="button" @click="show = true">预览</button>
-    <el-popover v-if="downloadUrl" :visible="noticeVisible" placement="bottom-end" :width="280">
-      <template #reference><button ref="downloadButton" type="button" :disabled="busy" @click="download">{{ busy ? '准备中…' : '下载' }}</button></template>
-      <div ref="noticePanel" class="download-failure" role="alert"><div class="download-failure-heading"><strong>暂时无法下载</strong><button type="button" aria-label="关闭下载提示" @click="closeNotice">×</button></div><p>文件可能暂不可用，请稍后重试。</p><button class="retry-download" type="button" @click="download">重新下载</button></div>
+    <el-popover v-if="downloadUrl" :visible="noticeVisible" placement="bottom-end" :width="280" transition="artifact-notice" popper-class="artifact-download-popover">
+      <template #reference><button ref="downloadButton" class="download-trigger" type="button" :disabled="busy" :aria-busy="busy" @click="download"><span class="download-label">下载</span><LoaderCircle v-if="busy" class="download-spinner" :size="14" aria-hidden="true" /></button></template>
+      <div ref="noticePanel" class="download-failure" role="alert">
+        <div class="download-failure-heading"><strong>暂时无法下载</strong><button type="button" class="download-notice-close" aria-label="关闭下载提示" title="关闭提示" @click="closeNotice"><X :size="18" aria-hidden="true" /></button></div>
+        <p>文件可能暂不可用，请稍后重试。</p>
+        <div class="download-notice-actions"><button class="retry-download" type="button" :disabled="busy" :aria-busy="busy" @click="download"><span class="download-label">重新下载</span><LoaderCircle v-if="busy" class="download-spinner" :size="14" aria-hidden="true" /></button></div>
+      </div>
     </el-popover>
     <span v-if="!downloadUrl && !previewUrl">暂无可用文件</span>
-    <el-dialog v-model="show" :title="artifact.name" width="min(900px, 92vw)" append-to-body destroy-on-close>
+    <el-dialog v-model="show" class="artifact-preview-dialog" :title="artifact.name" width="min(900px, 92vw)" append-to-body destroy-on-close>
       <ArtifactPreview v-if="show" hide-caption :artifact="artifact" :source-type="sourceType" />
     </el-dialog>
   </div>
@@ -72,10 +77,49 @@ async function download() {
 
 <style scoped>
 .artifact-actions { display: flex; flex-wrap: wrap; gap: 8px; font-size: 13px; }
-button { min-height: 44px; padding: 0 8px; background: transparent; color: var(--scnet-primary); border: 0; cursor: pointer; }
-button:hover { text-decoration: underline; }
+button { display:inline-flex; align-items:center; justify-content:center; gap:6px; min-height: 44px; padding: 0 10px; border-radius:6px; background: transparent; color: var(--scnet-primary); border: 0; cursor: pointer; transition:background-color 180ms ease, color 180ms ease, box-shadow 180ms ease, transform 180ms cubic-bezier(.22,1,.36,1); }
+button:enabled:hover { background:#edf4ff; color:#1659c7; box-shadow:0 2px 6px rgb(30 83 142 / 8%); transform:translateY(-1px); }
+button:enabled:active { transform:translateY(0); background:#e0edff; box-shadow:none; }
 button:disabled { opacity: .6; cursor: wait; }
 button:focus-visible { outline: 2px solid var(--scnet-primary); outline-offset: -2px; }
 span { color: var(--scnet-text-muted); }
-.download-failure { padding:4px; font-family:var(--scnet-font-sans); }.download-failure-heading { display:flex; align-items:center; justify-content:space-between; gap:12px; color:var(--scnet-text); }.download-failure-heading strong { font-size:14px; font-weight:600; }.download-failure-heading button { min-height:28px; padding:0 6px; color:#8b96a7; font-size:22px; }.download-failure p { margin:8px 0 16px; font-size:13px; line-height:1.6; color:var(--scnet-text-secondary); }.download-failure .retry-download { min-height:34px; padding:6px 12px; border:1px solid #c4d5ed; border-radius:5px; background:#f5f8fd; font-size:13px; font-weight:600; }
+.download-failure { padding:4px; font-family:var(--scnet-font-sans); }
+.download-failure-heading { display:flex; align-items:center; justify-content:space-between; gap:12px; color:var(--scnet-text); }
+.download-failure-heading strong { font-size:14px; font-weight:600; }
+.download-failure-heading .download-notice-close { flex:none; width:32px; min-height:32px; padding:0; border-radius:50%; color:#64748b; }
+.download-notice-close:enabled:hover { background:#e9eef5; color:#25364b; }
+.download-notice-close svg { transition:transform 180ms ease; }
+.download-notice-close:hover svg { transform:rotate(90deg); }
+.download-failure p { margin:8px 0 16px; font-size:13px; line-height:1.6; color:var(--scnet-text-secondary); }
+.download-notice-actions { display:flex; gap:8px; }
+.download-failure .retry-download { min-height:36px; padding:6px 12px; border:1px solid #c4d5ed; border-radius:6px; background:#f5f8fd; font-size:13px; font-weight:600; }
+.download-failure .retry-download:hover { background:#e8f1ff; }
+.download-trigger, .retry-download { position:relative; }
+.download-trigger:enabled:hover, .retry-download:enabled:hover { transform:none; }
+.download-label { color:inherit; }
+[aria-busy='true'] > .download-label { visibility:hidden; }
+.download-spinner { position:absolute; inset:0; margin:auto; animation:download-spin 900ms linear infinite; }
+@keyframes download-spin { to { transform:rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  button, .download-notice-close svg { transition:none; }
+  button:enabled:hover, .download-notice-close:hover svg { transform:none; }
+  .download-spinner { animation:none; }
+}
+</style>
+
+<style>
+.artifact-download-popover.artifact-notice-enter-active { transition:opacity 200ms ease; }
+.artifact-download-popover.artifact-notice-leave-active { transition:opacity 140ms ease; pointer-events:none; }
+.artifact-notice-enter-active .download-failure, .artifact-notice-leave-active .download-failure { transition:transform 200ms cubic-bezier(.22,1,.36,1); transform-origin:top right; }
+.artifact-notice-enter-from, .artifact-notice-leave-to { opacity:0; }
+.artifact-notice-enter-from .download-failure, .artifact-notice-leave-to .download-failure { transform:translateY(-5px) scale(.98); }
+.artifact-preview-dialog .el-dialog__title { white-space:normal; overflow-wrap:anywhere; }
+.artifact-preview-dialog .el-dialog__headerbtn { border-radius:50%; transition:background-color 180ms ease; }
+.artifact-preview-dialog .el-dialog__headerbtn:hover { background:#edf2f8; }
+@media (prefers-reduced-motion: reduce) {
+  .artifact-download-popover.artifact-notice-enter-active, .artifact-download-popover.artifact-notice-leave-active,
+  .artifact-notice-enter-active .download-failure, .artifact-notice-leave-active .download-failure,
+  .artifact-preview-dialog .el-dialog__headerbtn { transition:none; }
+  .artifact-notice-enter-from .download-failure, .artifact-notice-leave-to .download-failure { transform:none; }
+}
 </style>

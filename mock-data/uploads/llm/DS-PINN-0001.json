@@ -1,0 +1,26 @@
+{
+  "dataset_id": "DS-PINN-0001",
+  "scenario_id": "pinn-acceleration",
+  "source_type": "simulated",
+  "equation": "heat_2d",
+  "diffusivity": 0.01,
+  "domain": {
+    "x": [
+      0,
+      1
+    ],
+    "y": [
+      0,
+      1
+    ],
+    "t": [
+      0,
+      1
+    ]
+  },
+  "loss_weights": {
+    "pde": 1,
+    "boundary": 1,
+    "initial": 1
+  }
+}

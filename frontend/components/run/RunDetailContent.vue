@@ -636,7 +636,7 @@ function chartOption(section: ExtraSection): Record<string, unknown> | null {
                   <span class="run-artifact-kind">{{ artifactType(row.type) }}</span>
                 </template>
               </el-table-column>
-              <el-table-column prop="name" label="名称" min-width="220" show-overflow-tooltip>
+              <el-table-column prop="name" label="名称" min-width="220">
                 <template #default="{ row }">
                   <span class="mono" translate="no">{{ row.name }}</span>
                 </template>
@@ -645,7 +645,7 @@ function chartOption(section: ExtraSection): Record<string, unknown> | null {
               <el-table-column label="大小" width="110">
                 <template #default="{ row }">{{ formatBytes(row.size) }}</template>
               </el-table-column>
-              <el-table-column prop="storage_path" label="存储路径" min-width="280" show-overflow-tooltip>
+              <el-table-column prop="storage_path" label="存储路径" min-width="280">
                 <template #default="{ row }">
                   <span class="mono" translate="no">{{ row.storage_path || '-' }}</span>
                 </template>
@@ -867,14 +867,14 @@ function chartOption(section: ExtraSection): Record<string, unknown> | null {
 }
 
 .run-summary-item strong {
-  overflow: hidden;
+  overflow: visible;
   margin-top: 5px;
   color: var(--scnet-text);
   font-size: 14px;
   font-weight: 650;
   line-height: 1.45;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .run-dag-section {
@@ -1057,15 +1057,15 @@ function chartOption(section: ExtraSection): Record<string, unknown> | null {
 }
 
 .run-resource-strip dd {
-  overflow: hidden;
+  overflow: visible;
   margin: 5px 0 0;
   color: var(--scnet-text);
   font-family: var(--scnet-font-mono);
   font-size: 18px;
   font-weight: 600;
   line-height: 1.35;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .run-metric-grid,
@@ -1133,14 +1133,14 @@ function chartOption(section: ExtraSection): Record<string, unknown> | null {
 
 .run-facts-grid dd,
 .run-extra-kv dd {
-  overflow: hidden;
+  overflow: visible;
   margin: 6px 0 0;
   color: var(--scnet-text-secondary);
   font-size: 13px;
   font-weight: 600;
   line-height: 1.5;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .run-extra-kv {
@@ -1189,14 +1189,14 @@ function chartOption(section: ExtraSection): Record<string, unknown> | null {
 .run-cluster-center strong,
 .run-cluster-throughput strong {
   display: block;
-  overflow: hidden;
+  overflow: visible;
   margin-top: 4px;
   color: var(--scnet-text);
   font-size: 14px;
   font-weight: 650;
   line-height: 1.4;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .run-cluster-throughput strong {

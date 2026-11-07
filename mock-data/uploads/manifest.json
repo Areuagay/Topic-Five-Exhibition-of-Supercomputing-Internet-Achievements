@@ -1,0 +1,200 @@
+{
+  "DS-WAVE-0002": {
+    "domain": "geodynamics",
+    "file_name": "DS-WAVE-0002.json",
+    "format": "JSON",
+    "note": "小规模模拟样例，仅用于上传与预览演示。"
+  },
+  "DS-WAVE-0003": {
+    "domain": "geodynamics",
+    "file_name": "DS-WAVE-0003.json",
+    "format": "JSON",
+    "note": "小规模模拟样例，仅用于上传与预览演示。"
+  },
+  "DS-WAVE-0004": {
+    "domain": "geodynamics",
+    "file_name": "DS-WAVE-0004.csv",
+    "format": "CSV",
+    "note": "小规模模拟样例，仅用于上传与预览演示。"
+  },
+  "DS-WAVE-0005": {
+    "domain": "geodynamics",
+    "file_name": "DS-WAVE-0005.csv",
+    "format": "CSV",
+    "note": "小规模模拟样例，仅用于上传与预览演示。"
+  },
+  "DS-TEC-0002": {
+    "domain": "geodynamics",
+    "file_name": "DS-TEC-0002.json",
+    "format": "JSON",
+    "note": "小规模模拟样例，仅用于上传与预览演示。"
+  },
+  "DS-TEC-0003": {
+    "domain": "geodynamics",
+    "file_name": "DS-TEC-0003.csv",
+    "format": "CSV",
+    "note": "小规模模拟样例，仅用于上传与预览演示。"
+  },
+  "DS-LLM-0002": {
+    "domain": "llm",
+    "file_name": "DS-LLM-0002.json",
+    "format": "JSON",
+    "note": "小规模模拟样例，仅用于上传与预览演示。"
+  },
+  "DS-LLM-0003": {
+    "domain": "llm",
+    "file_name": "DS-LLM-0003.safetensors",
+    "format": "SAFETENSORS",
+    "note": "小规模模拟样例，仅用于上传与预览演示。"
+  },
+  "DS-LLM-0004": {
+    "domain": "llm",
+    "file_name": "DS-LLM-0004.json",
+    "format": "JSON",
+    "note": "小规模模拟样例，仅用于上传与预览演示。"
+  },
+  "DS-PINN-0001": {
+    "domain": "llm",
+    "file_name": "DS-PINN-0001.json",
+    "format": "JSON",
+    "note": "小规模模拟样例，仅用于上传与预览演示。"
+  },
+  "DS-PINN-0003": {
+    "domain": "llm",
+    "file_name": "DS-PINN-0003.json",
+    "format": "JSON",
+    "note": "小规模模拟样例，仅用于上传与预览演示。"
+  },
+  "DS-CRASH-0002": {
+    "domain": "automotive",
+    "file_name": "DS-CRASH-0002.json",
+    "format": "JSON",
+    "note": "LSDA 专用格式的演示替代：JSON 小网格，可预览节点；不是 LSDA 文件，不能直接交给 LS-DYNA 求解。"
+  },
+  "DS-CRASH-0003": {
+    "domain": "automotive",
+    "file_name": "DS-CRASH-0003.json",
+    "format": "JSON",
+    "note": "小规模模拟样例，仅用于上传与预览演示。"
+  },
+  "DS-CRASH-0004": {
+    "domain": "automotive",
+    "file_name": "DS-CRASH-0004.json",
+    "format": "JSON",
+    "note": "小规模模拟样例，仅用于上传与预览演示。"
+  },
+  "DS-CRASH-0005": {
+    "domain": "automotive",
+    "file_name": "DS-CRASH-0005.json",
+    "format": "JSON",
+    "note": "小规模模拟样例，仅用于上传与预览演示。"
+  },
+  "DS-FATIGUE-0002": {
+    "domain": "automotive",
+    "file_name": "DS-FATIGUE-0002.csv",
+    "format": "CSV",
+    "note": "小规模模拟样例，仅用于上传与预览演示。"
+  },
+  "DS-FATIGUE-0003": {
+    "domain": "automotive",
+    "file_name": "DS-FATIGUE-0003.csv",
+    "format": "CSV",
+    "note": "小规模模拟样例，仅用于上传与预览演示。"
+  },
+  "DS-FATIGUE-0004": {
+    "domain": "automotive",
+    "file_name": "DS-FATIGUE-0004.json",
+    "format": "JSON",
+    "note": "小规模模拟样例，仅用于上传与预览演示。"
+  },
+  "DS-SWARM-0001": {
+    "domain": "uav",
+    "file_name": "DS-SWARM-0001.json",
+    "format": "JSON",
+    "note": "小规模模拟样例，仅用于上传与预览演示。"
+  },
+  "DS-SWARM-0002": {
+    "domain": "uav",
+    "file_name": "DS-SWARM-0002.json",
+    "format": "JSON",
+    "note": "小规模模拟样例，仅用于上传与预览演示。"
+  },
+  "DS-SWARM-0003": {
+    "domain": "uav",
+    "file_name": "DS-SWARM-0003.json",
+    "format": "JSON",
+    "note": "小规模模拟样例，仅用于上传与预览演示。"
+  },
+  "DS-PATH-0002": {
+    "domain": "uav",
+    "file_name": "DS-PATH-0002.json",
+    "format": "JSON",
+    "note": "小规模模拟样例，仅用于上传与预览演示。"
+  },
+  "DS-PATH-0003": {
+    "domain": "uav",
+    "file_name": "DS-PATH-0003.json",
+    "format": "JSON",
+    "note": "小规模模拟样例，仅用于上传与预览演示。"
+  },
+  "DS-VS-0002": {
+    "domain": "drug",
+    "file_name": "DS-VS-0002.pdb",
+    "format": "PDB",
+    "note": "小规模模拟样例，仅用于上传与预览演示。"
+  },
+  "DS-VS-0003": {
+    "domain": "drug",
+    "file_name": "DS-VS-0003.json",
+    "format": "JSON",
+    "note": "小规模模拟样例，仅用于上传与预览演示。"
+  },
+  "DS-VS-0004": {
+    "domain": "drug",
+    "file_name": "DS-VS-0004.sdf",
+    "format": "SDF",
+    "note": "小规模模拟样例，仅用于上传与预览演示。"
+  },
+  "DS-ADMET-0001": {
+    "domain": "drug",
+    "file_name": "DS-ADMET-0001.csv",
+    "format": "CSV",
+    "note": "小规模模拟样例，仅用于上传与预览演示。"
+  },
+  "DS-ADMET-0003": {
+    "domain": "drug",
+    "file_name": "DS-ADMET-0003.csv",
+    "format": "CSV",
+    "note": "小规模模拟样例，仅用于上传与预览演示。"
+  },
+  "DS-BANDOS-0002": {
+    "domain": "dft",
+    "file_name": "DS-BANDOS-0002.upf",
+    "format": "UPF",
+    "note": "UPF 结构展示样例，非可用于自洽场计算的完整赝势。"
+  },
+  "DS-BANDOS-0003": {
+    "domain": "dft",
+    "file_name": "DS-BANDOS-0003.json",
+    "format": "JSON",
+    "note": "小规模模拟样例，仅用于上传与预览演示。"
+  },
+  "DS-BANDOS-0004": {
+    "domain": "dft",
+    "file_name": "DS-BANDOS-0004.json",
+    "format": "JSON",
+    "note": "小规模模拟样例，仅用于上传与预览演示。"
+  },
+  "DS-HTS-0002": {
+    "domain": "dft",
+    "file_name": "DS-HTS-0002.json",
+    "format": "JSON",
+    "note": "小规模模拟样例，仅用于上传与预览演示。"
+  },
+  "DS-HTS-0003": {
+    "domain": "dft",
+    "file_name": "DS-HTS-0003.json",
+    "format": "JSON",
+    "note": "小规模模拟样例，仅用于上传与预览演示。"
+  }
+}

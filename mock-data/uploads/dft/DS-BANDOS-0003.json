@@ -1,0 +1,16 @@
+{
+  "dataset_id": "DS-BANDOS-0003",
+  "scenario_id": "band-dos",
+  "source_type": "simulated",
+  "grid": [
+    4,
+    4,
+    4
+  ],
+  "shift": [
+    0,
+    0,
+    0
+  ],
+  "scheme": "Monkhorst-Pack"
+}

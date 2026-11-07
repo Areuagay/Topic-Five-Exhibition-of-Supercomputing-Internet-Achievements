@@ -165,6 +165,22 @@ export interface DatasetItem {
   builtin?: boolean
   /** 是否已一键导入至资源调度 */
   imported?: boolean
+  file_name?: string
+  upload_format?: string
+  preview_available?: boolean
+}
+
+export interface DatasetPreview {
+  file_name: string
+  format: string
+  size_bytes: number
+  kind: 'table' | 'json' | 'text' | 'binary'
+  headers: string[]
+  rows: string[][]
+  text: string
+  total_rows: number
+  truncated: boolean
+  summary: string
 }
 
 /** 上传样例文件（mock-data/uploads/{domain} 下的模拟数据） */
@@ -249,6 +265,10 @@ export interface WorkflowNode {
   status: string
   progress?: number
   cluster_id?: string
+  operator_id?: string
+  elapsed_seconds?: number
+  waiting_for?: string[]
+  waiting_at_join?: boolean
 }
 
 export interface WorkflowEdge {

@@ -8,6 +8,13 @@ export function positionDagPopover(frame: { width:number; height:number }, node:
   if (arrow < 12 || arrow > width-12) return null
   const above = node.top-gap-height >= edge
   const below = node.bottom+gap+height <= frame.height-edge
-  if (!above && !below) return null
+  if (!above && !below) {
+    if (height > frame.height - edge * 2) return null
+    // Keep details accessible when zooming leaves no vertical clearance.
+    // Prefer beside the node; narrow canvases use an inset overlay.
+    const left = node.right + gap + width <= frame.width - edge ? node.right + gap + width / 2
+      : node.left - gap - width >= edge ? node.left - gap - width / 2 : panelLeft + width / 2
+    return { left, top:Math.max(edge, Math.min(frame.height - height - edge, (node.top + node.bottom - height) / 2)), placement:'floating' as const, arrow }
+  }
   return { left:panelLeft+width/2, top:above ? node.top-gap : node.bottom+gap, placement:above ? 'top' as const : 'bottom' as const, arrow }
 }

@@ -1,0 +1,6 @@
+material_id,stress_amplitude_mpa,cycles_to_failure
+steel,400,10000
+steel,350,100000
+steel,300,1000000
+steel,250,10000000
+steel,200,100000000

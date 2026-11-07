@@ -677,13 +677,13 @@ function utilization(value: number): string {
 }
 .cluster-status-card h3 { font-size: 14px; line-height: 1.45; }
 .cluster-status-head p {
-  overflow: hidden;
+  overflow: visible;
   margin: 3px 0 0;
   color: var(--scnet-text-muted);
   font-size: 11px;
   line-height: 1.5;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 .utilization-row { margin-top: 13px; }
 .utilization-label {

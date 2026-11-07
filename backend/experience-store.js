@@ -1,6 +1,8 @@
 import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { scenarioMetrics } from './scenario-metrics.js'
+import { createDatasetFiles } from './dataset-files.js'
+import { advanceWorkflow, buildOperatorWorkflow } from './workflow-engine.js'
 
 export const EXPERIENCE_DOMAINS = ['geodynamics', 'llm', 'automotive', 'uav', 'drug', 'dft']
 const PREFIXES = ['GEO', 'LLM', 'AUTO', 'UAV', 'DRUG', 'DFT']
@@ -25,6 +27,7 @@ function chain(nodes) {
 }
 
 export function createExperienceStore({ dataDir, runtimeDir, now = Date.now }) {
+  const files = createDatasetFiles({ dataDir, runtimeDir })
   const states = new Map()
   const readSeed = path => {
     try { return JSON.parse(readFileSync(resolve(dataDir, path), 'utf8')).data } catch { return null }
@@ -42,8 +45,22 @@ export function createExperienceStore({ dataDir, runtimeDir, now = Date.now }) {
     const path = resolve(runtimeDir, `${domain}.json`)
     if (existsSync(path)) {
       const state = JSON.parse(readFileSync(path, 'utf8'))
+      for (const dataset of state.datasets) {
+        if (!dataset.builtin && !files.stored(domain, dataset)) {
+          dataset.uploaded = false
+          dataset.imported = false
+          dataset.status = 'pending'
+          delete dataset.upload_file
+        }
+      }
       for (const run of state.runs) {
         const detail = state.details[run.run_id]
+        // Completed simulated runtime records can adopt the dependency layout
+        // without changing execution history or restarting an active task.
+        if (detail.origin === 'runtime' && detail.status === 'success' && !detail._workflow_version) {
+          detail.workflow = buildOperatorWorkflow(domain, detail.workflow.nodes, detail._ticks_per_node || 5)
+          detail._workflow_version = 2
+        }
         const metrics = scenarioMetrics(detail.scenario_id, detail.metrics?.domain_data, detail.progress)
         if (metrics) detail.metrics.metrics = metrics
         syncSummary(run, detail)
@@ -66,7 +83,7 @@ export function createExperienceStore({ dataDir, runtimeDir, now = Date.now }) {
       const builtin = scope.find(d => d.format === 'HDF5') ?? scope[0]
       for (const dataset of scope) {
         dataset.builtin = dataset.format === 'HDF5' || dataset === builtin
-        dataset.uploaded = dataset.builtin || dataset.uploaded === true
+        dataset.uploaded = dataset.builtin
         dataset.imported = dataset.uploaded && dataset.imported === true
         dataset.source_type = 'simulated'
         if (dataset._pristine?.size_bytes) dataset.size_bytes = dataset._pristine.size_bytes
@@ -123,32 +140,24 @@ export function createExperienceStore({ dataDir, runtimeDir, now = Date.now }) {
     run.metrics_snapshot = copy(detail.metrics?.metrics ?? [])
   }
 
-  function tick(detail) {
+  function tick(detail, tickTime) {
     if (['queued', 'pending'].includes(detail.status)) {
       detail._queue_ticks += 1
       if (detail._queue_ticks >= 4) {
         detail.status = 'running'
-        detail.start_time = new Date(now()).toISOString()
+        detail.start_time = new Date(tickTime).toISOString()
       }
       return
     }
     const nodes = detail.workflow.nodes
-    // Only nodes whose incoming dependencies completed may advance. This also
-    // handles the parallel branches in the existing scientific workflows.
-    const complete = new Set(nodes.filter(n => n.progress >= 100).map(n => n.id))
-    const ready = nodes.filter(n => n.progress < 100 && detail.workflow.edges.every(e => e.target !== n.id || complete.has(e.source)))
-    for (const node of ready) node.progress = Math.min(100, node.progress + 100 / detail._ticks_per_node)
-    const allDone = nodes.every(n => n.progress >= 100)
-    for (const node of nodes) {
-      const eligible = detail.workflow.edges.every(e => e.target !== node.id || nodes.find(n => n.id === e.source)?.progress >= 100)
-      node.progress = Math.round(node.progress * 100) / 100
-      node.status = node.progress >= 100 ? 'success' : eligible ? 'running' : 'pending'
-    }
+    const allDone = advanceWorkflow(detail.workflow, detail._ticks_per_node, detail._tick_seconds)
     detail.progress = allDone ? 100 : Math.min(99, Math.round(nodes.reduce((sum, n) => sum + n.progress, 0) / nodes.length))
     detail.elapsed_seconds += detail._tick_seconds
-    detail.status = allDone ? 'success' : 'running'
-    detail.current_stage = allDone ? 'completed' : nodes.find(n => n.status === 'running')?.name ?? '准备执行'
-    if (allDone) detail.end_time = new Date(now()).toISOString()
+    const failed = nodes.some(n => ['failed', 'blocked'].includes(n.status))
+    const active = nodes.filter(n => n.status === 'running')
+    detail.status = failed ? 'failed' : allDone ? 'success' : 'running'
+    detail.current_stage = failed ? '执行失败' : allDone ? 'completed' : active.length > 1 ? `并行执行 · ${active.length} 个节点` : active[0]?.name ?? '等待依赖'
+    if (allDone || failed) detail.end_time = new Date(tickTime).toISOString()
     if (detail.metrics) {
       detail.metrics.progress = detail.progress
       for (const metric of detail.metrics.metrics ?? []) {
@@ -168,7 +177,7 @@ export function createExperienceStore({ dataDir, runtimeDir, now = Date.now }) {
       const ticks = Math.max(0, Math.floor((now() - detail._last_tick) / TICK_MS))
       if (!ticks) continue
       // A complete demo needs fewer than 200 ticks; long absences stay bounded.
-      for (let i = 0; i < Math.min(ticks, 500) && detail.status !== 'success'; i++) tick(detail)
+      for (let i = 0; i < Math.min(ticks, 500) && ['running', 'queued', 'pending'].includes(detail.status); i++) tick(detail, detail._last_tick + (i + 1) * TICK_MS)
       detail._last_tick += ticks * TICK_MS
       syncSummary(run, detail)
       dirty = true
@@ -180,6 +189,7 @@ export function createExperienceStore({ dataDir, runtimeDir, now = Date.now }) {
     const result = copy(detail)
     result.core_hours = Number(((result.cpu_cores || 0) * (result.elapsed_seconds || 0) / 3600).toFixed(1))
     for (const key of Object.keys(result)) if (key.startsWith('_')) delete result[key]
+    for (const node of result.workflow?.nodes ?? []) delete node._elapsed_ticks
     result.has_result = result.status === 'success' && result.has_result === true
     if (!result.has_result) {
       delete result.domain_data
@@ -204,7 +214,18 @@ export function createExperienceStore({ dataDir, runtimeDir, now = Date.now }) {
     if (domain === 'multicenter' && resource === 'clusters') return envelope(clusters())
     if (!EXPERIENCE_DOMAINS.includes(domain) || !['datasets', 'runs'].includes(resource)) return null
     const state = stateFor(domain)
-    if (resource === 'datasets') return envelope(copy(state.datasets))
+    if (resource === 'datasets') {
+      if (!id) return envelope(state.datasets.map(dataset => files.describe(domain, dataset)))
+      const dataset = state.datasets.find(item => item.dataset_id === id)
+      if (!dataset) return error('数据集不存在', 404)
+      if (sub === 'preview') {
+        const file = files.stored(domain, dataset)
+        if (!file) return error('请先上传文件后再预览', 404)
+        try { return envelope(files.inspect(domain, dataset, readFileSync(file.path), file.name)) }
+        catch (cause) { return error(cause.message) }
+      }
+      return envelope(files.describe(domain, dataset))
+    }
     advance(domain, state)
     if (!id) return envelope(copy(state.runs))
     if (!state.details[id]) return error('运行记录不存在', 404)
@@ -219,13 +240,35 @@ export function createExperienceStore({ dataDir, runtimeDir, now = Date.now }) {
     if (resource === 'datasets' && (method === 'DELETE' || (method === 'POST' && action === 'upload'))) {
       const dataset = state.datasets.find(d => d.dataset_id === id)
       if (!dataset) return error('数据集不存在', 404)
-      if (method === 'DELETE' && dataset.builtin) return error('内置数据无需上传，不能移除')
+      if (dataset.builtin) return error('内置数据无需上传，不能移除或替换')
+      const previous = copy(dataset)
+      if (method === 'POST') {
+        if (!Buffer.isBuffer(body?.buffer)) return error('请选择并上传本地文件')
+        try {
+          dataset.upload_file = files.save(domain, dataset, body.buffer, body.file_name)
+        } catch (cause) { return error(cause.message) }
+        dataset.size_bytes = dataset.upload_file.size_bytes
+        dataset.grid = dataset.upload_file.summary
+        dataset.source = '用户上传'
+      } else {
+        delete dataset.upload_file
+        dataset.size_bytes = 0
+        dataset.grid = '—'
+        dataset.source = ''
+      }
       dataset.uploaded = method === 'POST'
       dataset.imported = false
       dataset.status = dataset.uploaded ? 'ready' : 'pending'
       dataset.updated_at = new Date(now()).toISOString()
-      save(domain, state)
-      return envelope(copy(dataset))
+      try { save(domain, state) }
+      catch (cause) {
+        if (method === 'POST') files.remove(domain, dataset)
+        Object.keys(dataset).forEach(key => delete dataset[key])
+        Object.assign(dataset, previous)
+        return error('文件状态保存失败，请重试', 500)
+      }
+      files.remove(domain, previous)
+      return envelope(files.describe(domain, dataset))
     }
     if (resource === 'scenarios' && method === 'POST' && action === 'import') {
       const scope = state.datasets.filter(d => d.scenario_id === id)
@@ -251,12 +294,14 @@ export function createExperienceStore({ dataDir, runtimeDir, now = Date.now }) {
       const scenario = Object.values(scenarios).find(s => s.id === id) ?? scenarios[id]
       const nodes = [{ id: 'prepare', name: '输入数据准备' }, ...chosen.map((op, i) => ({ id: `operator-${i}`, name: scenario?.operators?.find(ref => ref.id === op.name)?.name ?? op.display_name ?? op.name, operator_id: op.name })), { id: 'post', name: '结果整理与输出' }]
       const cpu = chosen.reduce((sum, op) => sum + (op.cpu_cores || 0), 0)
+      const ticksPerNode = Math.min(6, 3 + Math.floor(cpu / 256))
+      const workflow = buildOperatorWorkflow(domain, nodes.map((node, i) => ({ ...node, progress: 0, status: i === 0 ? 'running' : 'pending', cluster_id: template.cluster_id })), ticksPerNode)
       const detail = { ...copy(template), run_id: runId, domain, scenario_id: id, status: 'running', progress: 0,
         execution_mode: 'simulated', source_type: 'simulated', origin: 'runtime', has_detail: true, has_result: true,
         job_id: String(now()).slice(-8) + seq, start_time: new Date(now()).toISOString(), end_time: '', elapsed_seconds: 0,
         selected_operator_ids: ids, current_stage: '输入数据准备',
-        _last_tick: now(), _ticks_per_node: Math.min(6, 3 + Math.floor(cpu / 256)), _tick_seconds: Math.min(600, 90 + cpu), _queue_ticks: 0,
-        workflow: chain(nodes.map((node, i) => ({ ...node, progress: 0, status: i === 0 ? 'running' : 'pending', cluster_id: template.cluster_id }))),
+        _last_tick: now(), _ticks_per_node: ticksPerNode, _tick_seconds: Math.min(600, 90 + cpu), _queue_ticks: 0, _workflow_version: 2,
+        workflow,
         logs: { lines: [], next_offset: 0, has_more: false },
       }
       detail.metrics.progress = 0
@@ -278,5 +323,11 @@ export function createExperienceStore({ dataDir, runtimeDir, now = Date.now }) {
     }
     return null
   }
-  return { read, write, operators }
+  function file(domain, id, kind) {
+    if (!EXPERIENCE_DOMAINS.includes(domain)) return null
+    const dataset = stateFor(domain).datasets.find(item => item.dataset_id === id)
+    if (!dataset || dataset.builtin) return null
+    return kind === 'sample' ? files.sample(domain, id) : files.stored(domain, dataset)
+  }
+  return { read, write, operators, file }
 }

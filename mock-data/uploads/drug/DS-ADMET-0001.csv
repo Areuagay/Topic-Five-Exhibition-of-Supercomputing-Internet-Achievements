@@ -1,0 +1,4 @@
+molecule_id,molecular_weight,logp,hbd,hba,tpsa
+MOL-1,46.07,-0.3,1,1,20.23
+MOL-2,78.11,2.13,0,0,0
+MOL-3,180.16,1.19,1,4,63.6

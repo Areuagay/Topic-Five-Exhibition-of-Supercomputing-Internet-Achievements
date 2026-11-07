@@ -1,0 +1,14 @@
+{
+  "dataset_id": "DS-CRASH-0003",
+  "scenario_id": "vehicle-crash",
+  "source_type": "simulated",
+  "materials": [
+    {
+      "id": "steel",
+      "density_kg_m3": 7850,
+      "young_modulus_mpa": 210000,
+      "poisson_ratio": 0.3,
+      "yield_stress_mpa": 350
+    }
+  ]
+}

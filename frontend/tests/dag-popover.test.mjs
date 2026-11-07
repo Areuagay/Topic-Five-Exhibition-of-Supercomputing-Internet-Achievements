@@ -17,3 +17,12 @@ test('popover flips below near top and closes when node leaves viewport or no sp
   assert.equal(positionDagPopover({width:700,height:450},{left:-200,right:-10,top:220,bottom:280},280,124),null)
   assert.equal(positionDagPopover({width:700,height:100},{left:200,right:380,top:20,bottom:80},280,124),null)
 })
+
+test('zoomed middle nodes keep details inside desktop and narrow canvases', () => {
+  for (const frame of [{width:1140,height:390},{width:320,height:340}]) {
+    const p = positionDagPopover(frame,{left:frame.width/2-90,right:frame.width/2+90,top:frame.height/2-46,bottom:frame.height/2+46},280,190)
+    assert.equal(p?.placement,'floating')
+    assert.ok(p.left-140 >= 12 && p.left+140 <= frame.width-12)
+    assert.ok(p.top >= 12 && p.top+190 <= frame.height-12)
+  }
+})

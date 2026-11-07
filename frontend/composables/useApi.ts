@@ -2,6 +2,7 @@ import type {
   ApiResponse,
   Benchmark,
   DatasetItem,
+  DatasetPreview,
   DeploymentMatrix,
   FunctionInfo,
   ImportResult,
@@ -90,8 +91,37 @@ export function useApi() {
 
     // 一键体验 · 数据准备与流程写接口
     getUploadSamples: (domain: string) => request<UploadSample[]>(`/${domain}/upload-samples`),
-    uploadDataset: (domain: string, datasetId: string) =>
-      mutate<DatasetItem>(`/${domain}/datasets/${datasetId}/upload`, 'POST'),
+    getDatasetPreview: (domain: string, datasetId: string) =>
+      request<DatasetPreview>(`/${domain}/datasets/${datasetId}/preview`),
+    datasetFileUrl: (domain: string, datasetId: string, kind: 'sample' | 'download') =>
+      `${baseURL()}/${domain}/datasets/${encodeURIComponent(datasetId)}/${kind}`,
+    uploadDataset: (domain: string, datasetId: string, file: File, options: { signal: AbortSignal; onProgress: (percent: number) => void; onTransferred: () => void }) => {
+      const url = `${baseURL()}/${domain}/datasets/${encodeURIComponent(datasetId)}/upload?filename=${encodeURIComponent(file.name)}`
+      return new Promise<DatasetItem>((resolve, reject) => {
+        const xhr = new XMLHttpRequest()
+        const abort = () => xhr.abort()
+        const cleanup = () => options.signal.removeEventListener('abort', abort)
+        xhr.open('POST', url)
+        xhr.setRequestHeader('Content-Type', 'application/octet-stream')
+        xhr.timeout = 60000
+        xhr.upload.onprogress = event => { if (event.lengthComputable) options.onProgress(Math.min(99, Math.round(event.loaded / event.total * 100))) }
+        xhr.upload.onload = () => options.onTransferred()
+        xhr.onload = () => {
+          cleanup()
+          try {
+            const result = JSON.parse(xhr.responseText) as ApiResponse<DatasetItem>
+            if (xhr.status < 200 || xhr.status >= 300 || result.code !== 200) throw new Error(result.message || '上传失败')
+            resolve(result.data)
+          } catch (error) { reject(error instanceof Error ? error : new Error('上传响应无效')) }
+        }
+        xhr.onerror = () => { cleanup(); reject(new Error('上传连接失败，请检查服务后重试')) }
+        xhr.ontimeout = () => { cleanup(); reject(new Error('上传超时，请刷新列表确认状态后重试')) }
+        xhr.onabort = () => { cleanup(); reject(new DOMException('已取消上传', 'AbortError')) }
+        options.signal.addEventListener('abort', abort, { once: true })
+        if (options.signal.aborted) { cleanup(); reject(new DOMException('已取消上传', 'AbortError')); return }
+        xhr.send(file)
+      })
+    },
     resetDataset: (domain: string, datasetId: string) =>
       mutate<DatasetItem>(`/${domain}/datasets/${datasetId}`, 'DELETE'),
     importDatasets: (domain: string, scenarioId: string) =>

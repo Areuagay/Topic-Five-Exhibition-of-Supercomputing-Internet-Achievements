@@ -1,0 +1,18 @@
+{
+  "dataset_id": "DS-VS-0003",
+  "scenario_id": "virtual-screening",
+  "source_type": "simulated",
+  "center_angstrom": [
+    1,
+    1,
+    0
+  ],
+  "box_size_angstrom": [
+    20,
+    20,
+    20
+  ],
+  "exhaustiveness": 8,
+  "num_modes": 3,
+  "seed": 42
+}

@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<UPF version="2.0.1">
+  <PP_INFO>SIMULATED PREVIEW FIXTURE. Not a usable pseudopotential for SCF calculations.</PP_INFO>
+  <PP_HEADER element="Si" pseudo_type="NC" z_valence="4.0" functional="PBE"/>
+  <PP_MESH><PP_R>0.0 0.1 0.2 0.3</PP_R></PP_MESH>
+  <PP_LOCAL>0.0 -1.0 -0.5 -0.1</PP_LOCAL>
+</UPF>
