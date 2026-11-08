@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onDeactivated, ref, watch } from 'vue'
-import { Check, CheckCheck, CloudUpload, Database, FileJson, FileSpreadsheet, FileText, LoaderCircle, LockKeyhole, Trash2, X } from '@lucide/vue'
+import { AlertCircle, Check, CheckCheck, CloudUpload, Database, FileJson, FileSpreadsheet, FileText, LoaderCircle, LockKeyhole, RotateCcw, Trash2, X } from '@lucide/vue'
 import ScenarioDetailContent from '~/components/ScenarioDetailContent.vue'
 import { getDatasetTypeLabels } from '~/config/scenario-experience'
 import { formatBytes, formatTimestamp } from '~/composables/useFormat'
@@ -11,6 +11,9 @@ import type { Benchmark, DatasetItem, ImportResult, ParamField, ScenarioDetail }
 const props = defineProps<{
   domain: string; scenarioId: string; detail?: ScenarioDetail; benchmark?: Benchmark[string]
   params: ParamField[]; clusterName: (id: string) => string; datasets: DatasetItem[]
+  uploadRequest?: ReturnType<typeof useApi>['uploadDataset']
+  resetRequest?: ReturnType<typeof useApi>['resetDataset']
+  previewOnUpload?: boolean
 }>()
 const emit = defineEmits<{ updated: [dataset: DatasetItem]; imported: [result: ImportResult] }>()
 const { uploadDataset, resetDataset, importDatasets } = useApi()
@@ -24,6 +27,14 @@ const importing = ref(false)
 const committing = ref(false)
 const cancelling = ref(false)
 const uploadProgress = ref(0)
+const stalled = ref(false)
+const uploadFailures = ref<Record<string, { file: File; message: string }>>({})
+let stallTimer: ReturnType<typeof setTimeout> | undefined
+function trackProgress() {
+  clearTimeout(stallTimer)
+  stalled.value = false
+  stallTimer = setTimeout(() => { stalled.value = true }, 3000)
+}
 const message = ref('')
 const messageError = ref(false)
 const busy = computed(() => !!uploadingId.value || !!resettingId.value || importing.value)
@@ -31,7 +42,7 @@ const scenarioDatasets = computed(() => props.datasets.filter(item => item.scena
 const uploadedCount = computed(() => scenarioDatasets.value.filter(item => item.uploaded).length)
 const importedCount = computed(() => scenarioDatasets.value.filter(item => item.imported).length)
 const pendingImport = computed(() => scenarioDatasets.value.filter(item => item.uploaded && !item.imported).length)
-defineExpose({ handleImport, busy, importing, uploadedCount, pendingImport })
+defineExpose({ handleImport, handleUpload, busy, importing, uploadedCount, pendingImport })
 const typeLabels = computed(() => getDatasetTypeLabels(props.domain))
 let cancelTransfer: (() => void) | undefined
 let disposed = false
@@ -43,17 +54,18 @@ function highlightRow(id: string, state: 'uploaded' | 'removed') {
   feedbackTimers.set(id, setTimeout(() => { delete rowFeedback.value[id]; feedbackTimers.delete(id) }, 1100))
 }
 function rowClass({ row }: { row: DatasetItem }) {
-  return [rowFeedback.value[row.dataset_id] ? `dataset-row--${rowFeedback.value[row.dataset_id]}` : '', uploadingId.value === row.dataset_id ? 'dataset-row--transferring' : '', uploadingId.value === row.dataset_id && cancelling.value ? 'dataset-row--cancelled' : ''].filter(Boolean).join(' ')
+  return [rowFeedback.value[row.dataset_id] ? `dataset-row--${rowFeedback.value[row.dataset_id]}` : '', uploadingId.value === row.dataset_id ? 'dataset-row--transferring' : '', uploadingId.value === row.dataset_id && stalled.value ? 'dataset-row--stalled' : '', uploadFailures.value[row.dataset_id] ? 'dataset-row--failed' : '', uploadingId.value === row.dataset_id && cancelling.value ? 'dataset-row--cancelled' : ''].filter(Boolean).join(' ')
 }
 function rowStyle({ row }: { row: DatasetItem }) {
-  return row.dataset_id === uploadingId.value ? { '--dataset-upload-offset': `${cancelling.value ? -100 : uploadProgress.value - 100}%` } : {}
+  if (rowFeedback.value[row.dataset_id] === 'uploaded') return { '--dataset-upload-offset': '0%' }
+  return uploadingId.value === row.dataset_id ? { '--dataset-upload-offset': `${uploadProgress.value - 100}%` } : {}
 }
 function cancelUpload() {
   if (!cancelTransfer || committing.value || cancelling.value) return
   cancelling.value = true
   cancelTransfer()
 }
-onBeforeUnmount(() => { disposed = true; cancelTransfer?.(); feedbackTimers.forEach(clearTimeout) })
+onBeforeUnmount(() => { disposed = true; cancelTransfer?.(); clearTimeout(stallTimer); feedbackTimers.forEach(clearTimeout) })
 onDeactivated(() => cancelTransfer?.())
 
 function feedback(text: string, failed = false): void { message.value = text; messageError.value = failed }
@@ -76,36 +88,54 @@ async function onFileSelected(event: Event) {
   if (!file || !row || row.scenario_id !== props.scenarioId) return
   await handleUpload(row, file)
 }
-watch(() => props.scenarioId, () => { cancelTransfer?.(); selectedDataset.value = undefined; previewOpen.value = false })
+watch(() => props.scenarioId, () => { cancelTransfer?.(); uploadFailures.value = {}; selectedDataset.value = undefined; previewOpen.value = false })
 async function handleUpload(row: DatasetItem, file: File): Promise<void> {
   if (row.uploaded || busy.value) return
   if (!file.size) { feedback('文件不能为空', true); return }
   if (file.size > 5 * 1024 * 1024) { feedback('文件不能超过 5 MB，请选择小规模演示数据', true); return }
   uploadingId.value = row.dataset_id
+  delete uploadFailures.value[row.dataset_id]
+  clearTimeout(feedbackTimers.get(row.dataset_id))
+  delete rowFeedback.value[row.dataset_id]
   uploadProgress.value = 0
   message.value = ''
+  trackProgress()
   const controller = new AbortController()
   cancelTransfer = () => controller.abort()
   try {
-    const updated = await uploadDataset(props.domain, row.dataset_id, file, {
+    const updated = await (props.uploadRequest ?? uploadDataset)(props.domain, row.dataset_id, file, {
       signal: controller.signal,
-      onProgress: percent => { uploadProgress.value = percent },
-      onTransferred: () => { committing.value = true },
+      onProgress: percent => {
+        if (committing.value) return
+        if (percent > uploadProgress.value) trackProgress()
+        uploadProgress.value = percent
+      },
+      onTransferred: () => { uploadProgress.value = 100; committing.value = true; clearTimeout(stallTimer); stalled.value = false },
     })
     if (disposed) return
     uploadProgress.value = 100
     feedback(`${row.name} 上传完成`)
     emit('updated', updated)
     highlightRow(row.dataset_id, 'uploaded')
-    if (row.scenario_id === props.scenarioId) showPreview(updated)
-  } catch (error) { if (!disposed) feedback((error as Error).name === 'AbortError' ? '已取消上传，可重新选择文件' : errorText(error), (error as Error).name !== 'AbortError') }
-  finally { cancelTransfer = undefined; uploadingId.value = ''; committing.value = false; cancelling.value = false }
+    if (props.previewOnUpload !== false && row.scenario_id === props.scenarioId) showPreview(updated)
+  } catch (error) {
+    if (!disposed) {
+      const cancelled = (error as Error).name === 'AbortError'
+      if (!cancelled && row.scenario_id === props.scenarioId) uploadFailures.value[row.dataset_id] = { file, message: errorText(error) }
+      feedback(cancelled ? '已取消上传，可重新选择文件' : errorText(error), !cancelled)
+    }
+  }
+  finally { clearTimeout(stallTimer); stalled.value = false; cancelTransfer = undefined; uploadingId.value = ''; committing.value = false; cancelling.value = false }
+}
+function retryUpload(row: DatasetItem) {
+  const failed = uploadFailures.value[row.dataset_id]
+  if (failed) void handleUpload(row, failed.file)
 }
 async function handleReset(row: DatasetItem): Promise<void> {
   if (row.builtin || !row.uploaded || busy.value) return
   resettingId.value = row.dataset_id
   try {
-    const updated = await resetDataset(props.domain, row.dataset_id)
+    const updated = await (props.resetRequest ?? resetDataset)(props.domain, row.dataset_id)
     if (disposed) return
     feedback('已移除上传，数据条目保留，可重新上传')
     emit('updated', updated)
@@ -150,22 +180,32 @@ async function handleImport(): Promise<void> {
           <el-table-column prop="grid" label="规模" min-width="150" class-name="mono dataset-grid-cell" />
           <el-table-column label="大小" width="80" class-name="mono dataset-size-cell"><template #default="{ row }">{{ row.uploaded ? formatBytes(row.size_bytes) : '—' }}</template></el-table-column>
           <el-table-column label="来源" min-width="140" class-name="dataset-source-cell" show-overflow-tooltip><template #default="{ row }"><span class="dataset-source">{{ row.uploaded ? row.source : '—' }}</span></template></el-table-column>
-          <el-table-column label="状态" width="96" class-name="dataset-state-cell"><template #default="{ row }">
-            <span class="dataset-state" :title="row.uploaded && row.updated_at ? '更新于 ' + formatTimestamp(row.updated_at) : undefined" :class="{ 'is-imported': row.imported, 'is-ready': row.uploaded, 'is-working': (uploadingId === row.dataset_id && uploadProgress < 100) || resettingId === row.dataset_id }"><LoaderCircle v-if="resettingId === row.dataset_id" class="is-spinning" aria-hidden="true" /><i v-else-if="uploadingId === row.dataset_id && uploadProgress < 100" class="dataset-state-dot is-transferring" aria-hidden="true" /><CheckCheck v-else-if="row.imported" aria-hidden="true" /><Check v-else-if="row.uploaded" aria-hidden="true" /><i v-else class="dataset-state-dot" aria-hidden="true" />{{ uploadingId === row.dataset_id && cancelling ? '已取消' : uploadingId === row.dataset_id && uploadProgress < 100 ? '上传中' : resettingId === row.dataset_id ? '移除中' : row.imported ? '已导入' : row.uploaded ? '就绪' : '待上传' }}</span>
+          <el-table-column label="状态" width="112" class-name="dataset-state-cell"><template #default="{ row }">
+            <span class="dataset-state" :title="uploadFailures[row.dataset_id]?.message || (row.uploaded && row.updated_at ? '更新于 ' + formatTimestamp(row.updated_at) : undefined)" :class="{ 'is-imported': row.imported, 'is-ready': row.uploaded, 'is-working': uploadingId === row.dataset_id || resettingId === row.dataset_id }">
+              <AlertCircle v-if="uploadFailures[row.dataset_id]" aria-hidden="true" />
+              <LoaderCircle v-else-if="resettingId === row.dataset_id || (uploadingId === row.dataset_id && (committing || stalled))" class="is-spinning" aria-hidden="true" />
+              <i v-else-if="uploadingId === row.dataset_id" class="dataset-state-dot is-transferring" aria-hidden="true" />
+              <CheckCheck v-else-if="row.imported" aria-hidden="true" /><Check v-else-if="row.uploaded" aria-hidden="true" /><i v-else class="dataset-state-dot" aria-hidden="true" />
+              {{ uploadFailures[row.dataset_id] ? '上传失败' : uploadingId === row.dataset_id && cancelling ? '已取消' : uploadingId === row.dataset_id ? committing ? '确认中' : stalled ? '网络缓慢' : '上传中' : resettingId === row.dataset_id ? '移除中' : row.imported ? '已导入' : row.uploaded ? '就绪' : '待上传' }}
+            </span>
           </template></el-table-column>
           <el-table-column label="更新时间" width="144" class-name="dataset-time-cell"><template #default="{ row }"><time class="dataset-updated" :datetime="row.uploaded ? row.updated_at : undefined">{{ row.uploaded && row.updated_at ? formatTimestamp(row.updated_at) : '—' }}</time></template></el-table-column>
-          <el-table-column label="操作" width="190" class-name="dataset-actions-cell" align="right" header-align="right" fixed="right"><template #default="{ row }">
+          <el-table-column label="操作" width="248" class-name="dataset-actions-cell" align="right" header-align="right" fixed="right"><template #default="{ row }">
             <div class="dataset-operation-slot">
             <Transition name="upload-state">
-            <div v-if="uploadingId === row.dataset_id" key="transferring" class="dataset-transfer" :class="{ 'is-complete': uploadProgress === 100, 'is-cancelled': cancelling }" aria-label="上传进度">
+            <div v-if="uploadingId === row.dataset_id" key="transferring" class="dataset-transfer" :class="{ 'is-complete': uploadProgress === 100, 'is-cancelled': cancelling, 'is-stalled': stalled }" aria-label="上传进度">
               <div class="dataset-transfer-meter" role="progressbar" :aria-valuenow="uploadProgress" aria-valuemin="0" aria-valuemax="100" aria-label="数据上传">
+                <i class="dataset-transfer-fill" :style="{ transform: `scaleX(${uploadProgress / 100})` }" aria-hidden="true" />
                 <strong>{{ uploadProgress }}<small>%</small></strong>
-                <span v-if="committing" class="dataset-transfer-caption">{{ uploadProgress === 100 ? '完成' : '确认中' }}</span>
               </div>
-              <button type="button" class="dataset-transfer-cancel" aria-label="取消上传" :disabled="committing || cancelling" @click="cancelUpload"><X :size="14" aria-hidden="true" /><span>{{ cancelling ? '已取消' : '取消' }}</span></button>
+              <button type="button" class="dataset-transfer-cancel dataset-remove-button sc-action sc-action--small" aria-label="取消上传" :disabled="committing || cancelling" @click="cancelUpload"><X :size="14" aria-hidden="true" /><span>{{ cancelling ? '已取消' : '取消' }}</span></button>
             </div>
             <span v-else-if="row.builtin" key="builtin" class="dataset-builtin"><LockKeyhole :size="14" aria-hidden="true" />内置数据</span>
-            <button v-else-if="!row.uploaded" key="upload" type="button" class="dataset-upload-button sc-action sc-action--primary sc-action--small" :disabled="busy" @click="chooseFile(row as DatasetItem)"><CloudUpload aria-hidden="true" />上传数据</button>
+            <div v-else-if="uploadFailures[row.dataset_id]" key="retry" class="dataset-uploaded-actions">
+              <button type="button" class="sc-action sc-action--small" :disabled="busy" @click="retryUpload(row as DatasetItem)"><RotateCcw aria-hidden="true" />重试上传</button>
+              <button type="button" class="sc-action sc-action--small" :disabled="busy" @click="chooseFile(row as DatasetItem)">更换文件</button>
+            </div>
+            <button v-else-if="!row.uploaded" key="upload" type="button" class="dataset-upload-button sc-action sc-action--small" :disabled="busy" @click="chooseFile(row as DatasetItem)"><CloudUpload aria-hidden="true" />上传数据</button>
             <div v-else key="uploaded" class="dataset-uploaded-actions"><button v-if="row.preview_available" type="button" class="sc-action sc-action--small" @click="showPreview(row as DatasetItem)">预览</button><button type="button" class="dataset-remove-button sc-action sc-action--small" :aria-busy="resettingId === row.dataset_id" :disabled="busy" @click="handleReset(row as DatasetItem)"><LoaderCircle v-if="resettingId === row.dataset_id" class="is-spinning" aria-hidden="true" /><Trash2 v-else aria-hidden="true" />移除</button></div>
             </Transition>
             </div>
@@ -191,7 +231,9 @@ async function handleImport(): Promise<void> {
 </template>
 
 <style scoped>
-.dataset-uploaded-actions { display:flex; align-items:center; gap:6px; }
+.dataset-uploaded-actions { display:grid; grid-template-columns:minmax(0, 1fr) 112px; align-items:center; gap:8px; width:100%; }
+.dataset-uploaded-actions > .sc-action { width:100%; }
+.dataset-uploaded-actions > .dataset-remove-button { grid-column:2; }
 .dataset-summary { display: flex; align-items: center; gap: 14px; min-height: 44px; padding: 8px 24px; background: #fafbfd; color: #617289; font-size: 12px; border-bottom: 1px solid var(--scnet-divider); }
 .dataset-notice-slot { display: grid; flex: 1; min-width: 0; overflow: hidden; }
 .dataset-notice { grid-area: 1 / 1; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -220,58 +262,42 @@ svg { width: 17px; height: 17px; margin-right: 5px; fill: none; stroke: currentC
 .dataset-table :deep(.el-table__cell .cell) { padding-inline: 8px; }
 .dataset-table :deep(.dataset-size-cell .cell) { white-space: nowrap; }
 .dataset-updated { font-size: 12px; color: #617289; white-space: nowrap; font-variant-numeric: tabular-nums; }
-.dataset-operation-slot { display: grid; align-items: center; width: 166px; height: 40px; position: relative; margin-left: auto; }
+.dataset-operation-slot { display: grid; align-items: center; width: 224px; height: 40px; position: relative; margin-left: auto; }
 .dataset-operation-slot > * { grid-area: 1 / 1; justify-self: end; }
 .dataset-operation-slot > button { min-width: 104px; }
 .dataset-operation-slot > .exp-dataset-actions { width: 100%; justify-content: space-between; align-items: center; }
-.dataset-transfer { display: flex; align-items: center; justify-content: flex-end; gap: 6px; width: 128px; height: 36px; }
-.dataset-transfer-meter { display: flex; align-items: baseline; justify-content: flex-end; gap: 5px; min-width: 0; }
-.dataset-transfer-meter strong { color: #247858; font: 600 14px/1 var(--scnet-font-mono); font-variant-numeric: tabular-nums; }
+.dataset-transfer { --transfer-ink:#265fbc; --transfer-fill:#dce9fc; --transfer-border:#d0def3; --transfer-track:#f5f8fd; display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 224px; height: 36px; }
+.dataset-transfer-meter { position:relative; display:grid; place-items:center; flex:1; min-width:0; height:36px; overflow:hidden; border:1px solid var(--transfer-border); border-radius:8px; background:var(--transfer-track); transition:background-color 180ms ease, border-color 180ms ease; }
+.dataset-transfer-fill { position:absolute; inset:0; background:var(--transfer-fill); transform-origin:left; transition:transform 180ms linear, background-color 180ms ease; }
+.dataset-transfer-meter strong { position:relative; color:var(--transfer-ink); font: 600 13px/1 var(--scnet-font-mono); font-variant-numeric: tabular-nums; transition:color 180ms ease; }
 .dataset-transfer-meter small { margin-left: 2px; font-size: 11px; font-weight: 500; }
-.dataset-transfer-caption { color: #56816e; font-size: 11px; }
-.dataset-state-dot.is-transferring { background: #278361; }
-.dataset-table :deep(.dataset-row--transferring .dataset-state) { color: #247858; background: #e7f5ed; border-color: #cfe9dc; }
-.dataset-transfer-cancel { display: inline-flex; align-items: center; justify-content: center; gap: 3px; flex: 0 0 54px; height: 30px; padding: 0; border: 0; border-radius: 6px; background: transparent; color: #617289; font-size: 12px; cursor: pointer; transition: color 140ms, background-color 140ms, scale 140ms; }
-.dataset-transfer-cancel svg { margin: 0; }
-.dataset-transfer-cancel:hover { background: #dce8f8; color: #264e82; }
-.dataset-transfer-cancel:enabled:active { scale: .9; }
-.dataset-transfer-cancel:disabled { cursor: wait; opacity: .5; }
+.dataset-state-dot.is-transferring { background: #265fbc; }
+.dataset-table :deep(.dataset-row--transferring .dataset-state) { color:#265fbc; background:#eaf2ff; border-color:#d8e6fc; }
+.dataset-transfer-cancel { flex: 0 0 auto; }
 .dataset-transfer.is-cancelled .dataset-transfer-meter strong { color: #8290a2; }
 .dataset-transfer.is-cancelled .dataset-transfer-cancel:disabled { color: #617289; opacity: 1; cursor: default; }
 .dataset-table :deep(.dataset-row--cancelled .dataset-state) { color: #617289; border-color: #e0e5ed; background: #f0f3f7; }
 .dataset-table :deep(.dataset-row--cancelled .dataset-state-dot) { background: #94a1b2; }
+.dataset-table :deep(.dataset-row--stalled .dataset-state) { color:#96641f; background:#fff5df; border-color:#ead8b4; }
+.dataset-table :deep(.dataset-row--failed .dataset-state) { color:#b54747; background:#fff1f1; border-color:#efd1d1; }
 .upload-state-enter-active, .upload-state-leave-active { transition: opacity 180ms ease, transform 200ms var(--scnet-hover-easing); }
 .upload-state-leave-active { pointer-events: none; }
 .upload-state-enter-from { opacity: 0; transform: translateY(3px); }
 .upload-state-leave-to { opacity: 0; transform: translateY(-3px); }
 .exp-table-wrap :deep(.el-table td.el-table__cell) { height: 80px; }
 .exp-table-wrap :deep(.el-table__row) { position: relative; }
-.exp-table-wrap :deep(.dataset-row--uploaded) { --dataset-flash: #28a67d; clip-path: inset(0); }
-.exp-table-wrap :deep(.dataset-row--removed) { --dataset-flash: #d36060; clip-path: inset(0); }
-.exp-table-wrap :deep(.dataset-row--uploaded)::after,
-.exp-table-wrap :deep(.dataset-row--removed)::after { content: ''; position: absolute; inset: 0; z-index: 4; pointer-events: none; background: linear-gradient(90deg, transparent 0%, color-mix(in srgb, var(--dataset-flash) 5%, transparent) 24%, color-mix(in srgb, var(--dataset-flash) 16%, transparent) 65%, color-mix(in srgb, var(--dataset-flash) 34%, transparent) 100%); animation: dataset-sweep 950ms cubic-bezier(.3, .1, .3, 1) both; }
-@keyframes dataset-sweep { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
-.exp-table-wrap :deep(.dataset-row--removed)::after { animation-name: dataset-sweep-remove; }
+.exp-table-wrap :deep(.dataset-row--transferring),
+.exp-table-wrap :deep(.dataset-row--uploaded) { clip-path:inset(0); }
+.exp-table-wrap :deep(.dataset-row--transferring)::after,
 .exp-table-wrap :deep(.dataset-row--uploaded)::after {
-  background: linear-gradient(90deg, transparent 15%, rgb(40 166 125 / 3%) 38%, rgb(40 166 125 / 12%) 76%, rgb(40 166 125 / 24%) 100%);
-  transform: translateX(0);
-  animation: dataset-upload-finish 600ms ease-out 180ms both;
+  content:''; position:absolute; inset:0; z-index:4; pointer-events:none;
+  background:linear-gradient(90deg, transparent 12%, rgb(37 99 235 / 3%) 38%, rgb(37 99 235 / 10%) 76%, rgb(37 99 235 / 19%) 100%);
+  transform:translateX(var(--dataset-upload-offset, -100%));
+  opacity:1; transition:transform 180ms linear, opacity 600ms ease-out;
 }
-@keyframes dataset-upload-finish { from { opacity: 1; } to { opacity: 0; } }
-.exp-table-wrap :deep(.dataset-row--transferring) { clip-path: inset(0); }
-.exp-table-wrap :deep(.dataset-row--transferring)::after {
-  content: ''; position: absolute; inset: 0; z-index: 4; pointer-events: none;
-  background: linear-gradient(90deg, transparent 15%, rgb(40 166 125 / 3%) 38%, rgb(40 166 125 / 12%) 76%, rgb(40 166 125 / 24%) 100%);
-  transform: translateX(var(--dataset-upload-offset, -100%));
-  transition: transform 100ms linear;
-  animation: none;
-}
-.exp-table-wrap :deep(.dataset-row--transferring.dataset-row--uploaded)::after {
-  animation: dataset-upload-finish 600ms ease-out 180ms both;
-}
-.exp-table-wrap :deep(.dataset-row--transferring.dataset-row--cancelled)::after {
-  opacity: 0; transition: transform 450ms cubic-bezier(.2,.7,.2,1), opacity 450ms ease-out;
-}
+.exp-table-wrap :deep(.dataset-row--uploaded)::after { opacity:0; }
+.exp-table-wrap :deep(.dataset-row--removed) { --dataset-flash: #d36060; clip-path: inset(0); }
+.exp-table-wrap :deep(.dataset-row--removed)::after { content: ''; position: absolute; inset: 0; z-index: 4; pointer-events: none; background: linear-gradient(90deg, transparent 0%, color-mix(in srgb, var(--dataset-flash) 5%, transparent) 24%, color-mix(in srgb, var(--dataset-flash) 16%, transparent) 65%, color-mix(in srgb, var(--dataset-flash) 34%, transparent) 100%); animation: dataset-sweep-remove 950ms cubic-bezier(.3, .1, .3, 1) both; }
 @keyframes dataset-sweep-remove { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
 .exp-table-wrap :deep(.el-table th.el-table__cell) { background: #f7f9fc; color: #637187; font-size: 13px; }
 button:focus-visible { outline: 2px solid var(--scnet-primary); outline-offset: 3px; }
@@ -354,7 +380,6 @@ button:focus-visible { outline: 2px solid var(--scnet-primary); outline-offset: 
    must not leave a second highlighted row when the pointer moves quickly. */
 .dataset-table :deep(.el-table__body tr) { --dataset-row-bg: #fff; }
 .dataset-table :deep(.el-table__body tr:hover) { --dataset-row-bg: #f4f7fd; }
-.dataset-table :deep(.el-table__body tr.dataset-row--transferring) { --dataset-row-bg: #f7fcf9; }
 .dataset-table :deep(.el-table__body tr > td.el-table__cell) {
   background-color: var(--dataset-row-bg) !important;
   transition: background-color 180ms ease;
@@ -389,12 +414,11 @@ button:focus-visible { outline: 2px solid var(--scnet-primary); outline-offset: 
 
 @media (prefers-reduced-motion: reduce) {
   .exp-scenario-details::details-content { transition: none; }
-  .dataset-notice-enter-active, .dataset-notice-leave-active, .upload-state-enter-active, .upload-state-leave-active, .dataset-transfer-cancel { transition: none; }
-  .exp-table-wrap :deep(.dataset-row--transferring)::after,
-  .exp-table-wrap :deep(.dataset-row--transferring.dataset-row--cancelled)::after,
-  .exp-table-wrap :deep(.dataset-row--transferring.dataset-row--uploaded)::after { animation: none; transition: none; opacity: 0; }
+  .dataset-notice-enter-active, .dataset-notice-leave-active, .upload-state-enter-active, .upload-state-leave-active, .dataset-transfer-cancel, .dataset-transfer-meter, .dataset-transfer-fill, .dataset-transfer-meter strong { transition: none; }
   .dataset-transfer-cancel:enabled:active { scale: none; }
-  .exp-table-wrap :deep(.dataset-row--uploaded)::after, .exp-table-wrap :deep(.dataset-row--removed)::after { animation: none; transform: none; opacity: .3; }
+  .exp-table-wrap :deep(.dataset-row--transferring)::after,
+  .exp-table-wrap :deep(.dataset-row--uploaded)::after { transition:none; opacity:0; }
+  .exp-table-wrap :deep(.dataset-row--removed)::after { animation: none; transform: none; opacity: .3; }
 }
 
 @media (max-width: 760px) {

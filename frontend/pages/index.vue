@@ -86,7 +86,7 @@ function utilization(value: number): string {
     <div v-if="error" class="application-error">
       <el-result icon="error" title="应用数据加载失败" sub-title="请刷新重试或检查服务连接">
         <template #extra>
-          <el-button type="primary" @click="refresh()">重新加载</el-button>
+          <el-button class="sc-action" @click="refresh()">重新加载</el-button>
         </template>
       </el-result>
     </div>
@@ -211,7 +211,7 @@ function utilization(value: number): string {
                 v-for="cluster in clusters"
                 :key="cluster.id"
                 class="cluster-status-card"
-                :class="{ 'is-degraded': cluster.status === 'degraded' }"
+                :class="{ 'is-degraded': cluster.status === 'degraded', 'is-maintenance': cluster.resource_status === 'maintenance' || cluster.status === 'offline' }"
               >
                 <header class="cluster-status-head">
                   <div>
@@ -746,4 +746,8 @@ function utilization(value: number): string {
   .application-card-grid { grid-template-columns: 1fr; }
   .cluster-status-grid { grid-template-columns: 1fr; }
 }
+
+.cluster-status-card.is-maintenance { background:#fcf4f4; border-color:#ead4d7; }
+.cluster-status-card.is-maintenance:hover { background:#faeeee; border-color:#dfbdc2; }
+.cluster-status-card.is-maintenance .utilization-track { background:#f0e5e7; }
 </style>

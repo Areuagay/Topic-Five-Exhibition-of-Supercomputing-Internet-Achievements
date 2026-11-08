@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
+import { ArrowRight } from '@lucide/vue'
 import { useApi } from '~/composables/useApi'
 import { useAppStore } from '~/stores/app'
 import { formatDuration, formatNumber, statusText } from '~/composables/useFormat'
@@ -215,14 +216,14 @@ function runRowClassName({ row }: { row: { status?: string } }): string {
         <el-table-column label="核时" width="100">
           <template #default="{ row }">{{ formatNumber(row.core_hours) }}</template>
         </el-table-column>
-        <el-table-column label="操作" width="90" fixed="right">
+        <el-table-column label="操作" width="116" fixed="right">
           <template #default="{ row }">
             <NuxtLink
               v-if="row.has_detail"
-              class="run-table-link run-detail-link"
+              class="run-detail-link sc-action sc-action--small"
               :to="`/domains/${domain}/runs/${row.run_id}`"
             >
-              详情
+              <span>详情</span><ArrowRight class="action-arrow" aria-hidden="true" />
             </NuxtLink>
             <span v-else class="muted">-</span>
           </template>

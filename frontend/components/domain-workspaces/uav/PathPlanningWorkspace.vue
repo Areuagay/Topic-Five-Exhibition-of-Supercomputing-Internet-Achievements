@@ -27,7 +27,7 @@ const last = computed(() => props.data.cost_series?.at(-1))
           <SpatialPlot v-else-if="environment || path.length" :lines="[{ id: '最优路径', points: path, selected: true }]" :markers="markers" :bounds-points="bounds" :obstacles="environment?.obstacles" :x-label="quantityLabel('X', data.units?.x)" :y-label="quantityLabel('Y', data.units?.y)" label="航迹规划地图" />
           <div v-else class="auto-empty">暂无航迹与环境数据</div>
         </div>
-        <div v-if="data.path_preview" class="auto-controls" role="group" aria-label="航迹视图"><button :aria-pressed="!original" @click="original = false">路径地图</button><button :aria-pressed="original" @click="original = true">原始结果图</button></div>
+        <div v-if="data.path_preview" class="auto-controls" role="group" aria-label="航迹视图"><button type="button" class="sc-action sc-action--small" :aria-pressed="!original" @click="original = false">路径地图</button><button type="button" class="sc-action sc-action--small" :aria-pressed="original" @click="original = true">原始结果图</button></div>
         <p class="auto-note">蓝色为最优路径 · 灰色为障碍物 · 绿色为起点 · 红色为终点</p>
         <p v-if="!path.length" class="auto-note">暂无最优路径数据</p><p v-if="!environment" class="auto-note">暂无环境数据</p>
       </section>

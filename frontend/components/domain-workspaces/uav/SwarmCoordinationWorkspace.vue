@@ -48,8 +48,8 @@ onDeactivated(stop)
       <section class="auto-section"><h3>集群轨迹</h3>
         <template v-if="tracks.length">
           <SpatialPlot :lines="lines" :markers="markers" :bounds-points="bounds" :x-label="quantityLabel('X', data.units?.x)" :y-label="quantityLabel(projection.toUpperCase(), data.units?.[projection])" :label="projection === 'y' ? '集群轨迹俯视图' : '集群轨迹侧视图'" />
-          <div class="auto-controls" role="group" aria-label="轨迹投影"><button :aria-pressed="projection === 'y'" @click="projection = 'y'">俯视 X–Y</button><button :aria-pressed="projection === 'z'" @click="projection = 'z'">侧视 X–Z</button></div>
-          <div class="playback"><button :disabled="times.length < 2" @click="play">{{ playing ? '暂停' : '播放' }}</button><label for="swarm-time">{{ quantityLabel('轨迹时间', data.units?.t) }} <strong>{{ time }}</strong></label><input id="swarm-time" type="range" min="0" :max="Math.max(0,times.length-1)" :value="frame" :disabled="times.length < 2" @input="seek" /></div>
+          <div class="auto-controls" role="group" aria-label="轨迹投影"><button type="button" class="sc-action sc-action--small" :aria-pressed="projection === 'y'" @click="projection = 'y'">俯视 X–Y</button><button type="button" class="sc-action sc-action--small" :aria-pressed="projection === 'z'" @click="projection = 'z'">侧视 X–Z</button></div>
+          <div class="playback"><button type="button" class="sc-action sc-action--small" :disabled="times.length < 2" @click="play">{{ playing ? '暂停' : '播放' }}</button><label for="swarm-time">{{ quantityLabel('轨迹时间', data.units?.t) }} <strong>{{ time }}</strong></label><input id="swarm-time" type="range" min="0" :max="Math.max(0,times.length-1)" :value="frame" :disabled="times.length < 2" @input="seek" /></div>
           <p class="auto-note">显示 {{ tracks.length }} 架采样轨迹 · 绿色标记为任务目标</p>
         </template><div v-else class="auto-empty">暂无轨迹数据</div>
       </section>
@@ -60,7 +60,7 @@ onDeactivated(stop)
       <div class="selection"><label for="swarm-aircraft">查看无人机</label><select id="swarm-aircraft" v-model="selected" @change="eventIndex = -1"><option value="">全部采样无人机</option><option v-for="track in tracks" :key="track.uav_id" :value="track.uav_id">{{ track.uav_id }}</option></select></div>
       <p v-if="current" class="auto-note current-position">采样时间 {{ current.t }}{{ data.units?.t ? ` ${data.units.t}` : '' }} · {{ quantityLabel('X', data.units?.x) }} {{ current.x }} · {{ quantityLabel('Y', data.units?.y) }} {{ current.y }} · {{ quantityLabel('Z', data.units?.z) }} {{ current.z }}</p>
       <h3 class="subheading">碰撞事件</h3>
-      <div v-if="data.collision_events?.length" class="events"><button v-for="(item,index) in data.collision_events" :key="index" :aria-pressed="eventIndex === index" @click="eventIndex = eventIndex === index ? -1 : index; selected = ''">步 {{ item.step }} · {{ item.uav_ids.join(' / ') }}</button><p class="auto-note">选择事件查看位置与相关轨迹；事件步数与轨迹时间独立显示。</p></div>
+      <div v-if="data.collision_events?.length" class="events"><button type="button" class="sc-action sc-action--small" v-for="(item,index) in data.collision_events" :key="index" :aria-pressed="eventIndex === index" @click="eventIndex = eventIndex === index ? -1 : index; selected = ''">步 {{ item.step }} · {{ item.uav_ids.join(' / ') }}</button><p class="auto-note">选择事件查看位置与相关轨迹；事件步数与轨迹时间独立显示。</p></div>
       <div v-else class="auto-empty">{{ data.collision_events ? '无碰撞事件' : '暂无碰撞事件数据' }}</div>
       </section>
     </div>
@@ -73,5 +73,5 @@ onDeactivated(stop)
 .playback input { flex:1; min-width:100px; accent-color:var(--scnet-primary); }
 .selection { display:flex; align-items:center; flex-wrap:wrap; gap:12px; margin-top:24px; font-size:14px; }
 select { max-width:100%; min-height:44px; padding:8px 12px; border:1px solid #dfe3e8; border-radius:6px; color:var(--scnet-text); background:#fff; font:inherit; }
-.subheading { margin-top:28px; }.events button { width:100%; text-align:left; margin-bottom:8px; } button:disabled { opacity:.5; cursor:default; }
+.subheading { margin-top:28px; }.events button { white-space:normal; justify-content:flex-start; line-height:1.5; padding-block:8px; width:100%; text-align:left; margin-bottom:8px; } button:disabled { opacity:.5; cursor:default; }
 </style>

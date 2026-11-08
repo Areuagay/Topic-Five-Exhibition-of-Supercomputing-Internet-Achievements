@@ -50,6 +50,7 @@ function selectRun(value: string): void {
           :model-value="selectedRunId"
           placeholder="选择运行记录"
           aria-label="选择运行记录"
+          :title="selectedRun ? `${selectedRun.run_id} · ${selectedRun.scenario_name} · ${statusText(selectedRun.status)}` : undefined"
           popper-class="workflow-run-options"
           @update:model-value="selectRun"
         >
@@ -123,6 +124,8 @@ function selectRun(value: string): void {
 
 .exp-toolbar-field {
   display: flex;
+  flex: 1 1 600px;
+  min-width: 0;
   align-items: center;
   gap: 10px;
   font-size: 13px;
@@ -130,9 +133,13 @@ function selectRun(value: string): void {
 }
 
 .exp-toolbar-field :deep(.el-select) {
-  width: 320px;
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  max-width: 600px;
 }
-.exp-toolbar-field :deep(.el-select__placeholder) { position: static; transform: none; white-space: normal; overflow-wrap: anywhere; }
+.exp-toolbar-field > span { flex: none; white-space: nowrap; }
+.exp-toolbar-field :deep(.el-select__placeholder) { position: static; transform: none; white-space: nowrap; overflow-x: auto; text-overflow: clip; scrollbar-width: none; }
 .exp-toolbar-field :deep(.el-select__wrapper) { padding-block: 8px; }
 
 .exp-toolbar-meta {
@@ -172,7 +179,7 @@ function selectRun(value: string): void {
 
 @media (max-width: 760px) {
   .exp-toolbar-field :deep(.el-select) {
-    width: 220px;
+    width: 100%;
   }
 }
 </style>

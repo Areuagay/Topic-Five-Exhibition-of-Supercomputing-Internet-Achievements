@@ -420,7 +420,7 @@ const blockEntries = computed(() => {
       </div>
       <p class="ddv-table-note">
         <span>共 {{ tableRowsAll.length }} 行</span>
-        <button v-if="tableHidden" type="button" class="ddv-more" @click="showAllRows = true">
+        <button v-if="tableHidden" type="button" class="ddv-more sc-action sc-action--small" @click="showAllRows = true">
           展开全部（还有 {{ tableHidden }} 行）
         </button>
       </p>

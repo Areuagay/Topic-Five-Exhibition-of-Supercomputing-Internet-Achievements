@@ -164,8 +164,8 @@ function runtimeTypeText(operator: Operator): string {
     <div class="operator-toolbar">
       <div ref="filterTrack" class="operator-filters scnet-segmented" :class="{ 'has-sliding-highlight': filterReady }" role="group" aria-label="筛选算子">
         <span class="scnet-sliding-highlight" :class="{ 'is-ready': filterReady }" :style="filterStyle" aria-hidden="true" />
-        <button data-highlight-item type="button" :aria-pressed="!recommendedOnly" @click="recommendedOnly = false">全部算子 <span>{{ operators.length }}</span></button>
-        <button data-highlight-item type="button" :aria-pressed="recommendedOnly" @click="recommendedOnly = true">场景推荐 <span>{{ recommendedCount }}</span></button>
+        <button class="sc-pressable" data-highlight-item type="button" :aria-pressed="!recommendedOnly" @click="recommendedOnly = false">全部算子 <span>{{ operators.length }}</span></button>
+        <button class="sc-pressable" data-highlight-item type="button" :aria-pressed="recommendedOnly" @click="recommendedOnly = true">场景推荐 <span>{{ recommendedCount }}</span></button>
       </div>
       <label class="operator-search">
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>
@@ -188,7 +188,7 @@ function runtimeTypeText(operator: Operator): string {
     </div>
     <div ref="selectedFrame" class="operator-selected-frame" :class="{ 'has-selection': chosenCount > 0 }">
     <TransitionGroup name="selected-chip" tag="div" class="operator-selected-chips" aria-label="已选算子" @before-leave="positionLeavingItem" @after-leave="clearItemPosition" @leave-cancelled="clearItemPosition" @before-enter="clearItemPosition">
-      <button v-for="operator in selectedItems" :key="operator.name" type="button" class="selected-chip" :disabled="submitting" :aria-label="'取消选择：' + displayName(operator)" @click="toggleOperator(operator)"><Check :size="13" aria-hidden="true" />{{ displayName(operator) }}<X :size="13" class="chip-remove" aria-hidden="true" /></button>
+      <button v-for="operator in selectedItems" :key="operator.name" type="button" class="selected-chip sc-pressable" :disabled="submitting" :aria-label="'取消选择：' + displayName(operator)" @click="toggleOperator(operator)"><Check :size="13" aria-hidden="true" />{{ displayName(operator) }}<X :size="13" class="chip-remove" aria-hidden="true" /></button>
     </TransitionGroup>
     </div>
     <p v-if="showSubmitPanel" class="operator-submit-panel" role="alert">{{ props.submittedMessage }}</p>
@@ -217,7 +217,7 @@ function runtimeTypeText(operator: Operator): string {
           <div class="operator-actions">
           <el-popover trigger="click" placement="bottom-start" :width="440" :show-arrow="false" :visible="runtimeOperatorId === operator.name" @update:visible="value => setRuntimeVisible(operator.name, value)" :popper-style="{ maxWidth: 'calc(100vw - 32px)', padding: '20px' }" popper-class="operator-runtime-popover" transition="operator-runtime">
             <template #reference><button type="button" class="operator-detail-trigger sc-action sc-action--ghost" :data-runtime-trigger="operator.name" :aria-expanded="runtimeOperatorId === operator.name" :aria-label="'查看 ' + displayName(operator) + ' 的运行详情'" @keydown.esc.stop="closeRuntime(operator.name)"><Info aria-hidden="true" />运行详情<ArrowUpRight class="detail-arrow" aria-hidden="true" /></button></template>
-            <div class="operator-runtime-content" @keydown.esc.stop="closeRuntime(operator.name)"><button type="button" class="operator-runtime-close" aria-label="关闭运行详情" @click="closeRuntime(operator.name)"><X :size="16" aria-hidden="true" /></button><strong>{{ displayName(operator) }}</strong><p>运行配置</p><dl><div><dt>运行镜像</dt><dd>{{ operator.image || operator.runtime || '未提供' }}</dd></div><div><dt>调用入口</dt><dd>{{ operator.handler || '未提供' }}</dd></div><div><dt>运行环境</dt><dd>{{ runtimeTypeText(operator) }}</dd></div><div><dt>资源要求</dt><dd>{{ operator.resource_requirement || '未限定' }}</dd></div><div><dt>算子类型</dt><dd>{{ operator.backend_categories || '未提供' }}</dd></div><div><dt>所属场景</dt><dd>{{ operator.backend_tags || '未提供' }}</dd></div></dl></div>
+            <div class="operator-runtime-content" @keydown.esc.stop="closeRuntime(operator.name)"><button type="button" class="operator-runtime-close sc-action sc-action--ghost sc-action--icon" aria-label="关闭运行详情" @click="closeRuntime(operator.name)"><X :size="16" aria-hidden="true" /></button><strong>{{ displayName(operator) }}</strong><p>运行配置</p><dl><div><dt>运行镜像</dt><dd>{{ operator.image || operator.runtime || '未提供' }}</dd></div><div><dt>调用入口</dt><dd>{{ operator.handler || '未提供' }}</dd></div><div><dt>运行环境</dt><dd>{{ runtimeTypeText(operator) }}</dd></div><div><dt>资源要求</dt><dd>{{ operator.resource_requirement || '未限定' }}</dd></div><div><dt>算子类型</dt><dd>{{ operator.backend_categories || '未提供' }}</dd></div><div><dt>所属场景</dt><dd>{{ operator.backend_tags || '未提供' }}</dd></div></dl></div>
           </el-popover>
           <button type="button" class="operator-select-button sc-action" :aria-pressed="chosenSet.has(operator.name)" :aria-label="'选择算子：' + displayName(operator)" :disabled="submitting || (!isAvailable(operator) && !chosenSet.has(operator.name))" @click="toggleOperator(operator)">
             <span class="operator-select-icon" aria-hidden="true"><Plus class="operator-icon-add" /><Check class="operator-icon-check" /></span>
@@ -228,7 +228,7 @@ function runtimeTypeText(operator: Operator): string {
       </article>
     <div v-if="!ordered.length" key="empty" class="operator-empty">
       <el-empty :description="operators.length ? '未找到匹配算子，试试其他关键词' : '暂无算子数据'" :image-size="60" />
-      <button v-if="operators.length" type="button" @click="resetFilters">清除筛选</button>
+      <button class="sc-action" v-if="operators.length" type="button" @click="resetFilters">清除筛选</button>
     </div>
     </TransitionGroup>
     </div>
@@ -321,7 +321,7 @@ function runtimeTypeText(operator: Operator): string {
 .operator-detail-trigger:hover .detail-arrow { transform: translate(2px, -2px); opacity: 1; }
 .operator-runtime-content { position: relative; }
 .operator-runtime-content > strong { display: block; padding-right: 28px; color: #263c58; font-size: 15px; }
-.operator-runtime-close { position: absolute; right: -6px; top: -6px; display: grid; place-items: center; width: 30px; height: 30px; border: 0; border-radius: 6px; color: #64748b; background: transparent; cursor: pointer; transition: background-color 140ms, color 140ms; }
+.operator-runtime-content > .operator-runtime-close.sc-action { position: absolute; right: -6px; top: -6px; display: grid; place-items: center; width: 30px; height: 30px; border: 0; border-radius: 6px; color: #64748b; background: transparent; cursor: pointer; transition: background-color 140ms, color 140ms; }
 .operator-runtime-close:hover { background: #edf2f8; color: #263c58; }
 .operator-runtime-close:focus-visible { outline: 2px solid var(--scnet-primary); outline-offset: 2px; }
 .operator-runtime-content > p { margin: 5px 0 16px; color: #8290a2; font-size: 12px; }

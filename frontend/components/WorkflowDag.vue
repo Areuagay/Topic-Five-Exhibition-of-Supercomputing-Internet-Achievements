@@ -388,13 +388,13 @@ onBeforeUnmount(() => {
       </div>
       <span v-if="activeNodeCount > 1" class="dag-parallel-status">{{ activeNodeCount }} 个节点并行执行</span>
       <div class="dag-controls" role="toolbar" aria-label="工作流视图控制">
-        <button type="button" class="dag-control-button" aria-label="缩小工作流" @click="zoomOut">
+        <button type="button" class="dag-control-button sc-action sc-action--small sc-action--icon" aria-label="缩小工作流" @click="zoomOut">
           <span aria-hidden="true">−</span>
         </button>
-        <button type="button" class="dag-control-button" aria-label="放大工作流" @click="zoomIn">
+        <button type="button" class="dag-control-button sc-action sc-action--small sc-action--icon" aria-label="放大工作流" @click="zoomIn">
           <span aria-hidden="true">+</span>
         </button>
-        <button type="button" class="dag-control-button dag-fit-button" aria-label="适应工作流视图" @click="fitView">
+        <button type="button" class="dag-control-button dag-fit-button sc-action sc-action--small" aria-label="适应工作流视图" @click="fitView">
           <svg aria-hidden="true" viewBox="0 0 20 20">
             <path d="M7 3H3v4M13 3h4v4M7 17H3v-4m10 4h4v-4" />
           </svg>

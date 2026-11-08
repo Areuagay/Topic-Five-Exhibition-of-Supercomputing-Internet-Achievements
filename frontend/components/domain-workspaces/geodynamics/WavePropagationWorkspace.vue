@@ -54,7 +54,7 @@ const seismogramOption = computed(() => chart(props.data.seismogram_series, 'tim
       <ArtifactPreview v-if="frame" hide-caption :preload-urls="preloadUrls" :artifact="{ id: frame.artifact_id, name: `波场 · ${frame.simulation_time}${frameTimeUnit ? ` ${frameTimeUnit}` : ''}`, type: 'image', format: 'png', preview_url: frame.preview_url, source_type: data.source_type }" />
       <div v-else class="wave-empty" role="status">暂无波场快照，仍可查看下方曲线。</div>
       <div v-if="frames.length" class="wave-controls">
-        <button type="button" :disabled="frames.length < 2" :aria-pressed="playing" @click="togglePlayback">{{ playing ? '暂停' : '播放' }}</button>
+        <button class="sc-action sc-action--small" type="button" :disabled="frames.length < 2" :aria-pressed="playing" @click="togglePlayback">{{ playing ? '暂停' : '播放' }}</button>
         <div v-if="frame" class="wave-frame-meta"><span>计算步 <strong>{{ frame.step }}</strong></span><span>模拟时间 <strong>{{ frame.simulation_time }} <small v-if="frameTimeUnit">{{ frameTimeUnit }}</small></strong></span></div>
         <label for="wave-frame">时间帧</label>
         <input id="wave-frame" type="range" min="0" :max="frames.length - 1" :value="frameIndex" :disabled="frames.length < 2" :aria-valuetext="frame ? `${frame.simulation_time}${frameTimeUnit ? ` ${frameTimeUnit}` : ''}，第 ${frameIndex + 1} 帧` : ''" @input="selectFrame" />
@@ -98,9 +98,6 @@ h3 { margin: 0; color: var(--scnet-text); font-size: 17px; font-weight: 600; }
 .wave-frame-meta strong { margin-left: 8px; color: var(--scnet-text); font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
 .wave-frame-meta small { font-size: 14px; }
 .wave-controls { display: flex; align-items: center; gap: 16px; padding-top: 16px; font-size: 13px; color: var(--scnet-text-muted); }
-.wave-controls button { min-height: 44px; padding: 0 22px; border: 1px solid #c9d9ec; border-radius: 6px; background: #f5f8fc; color: var(--scnet-primary); cursor: pointer; }
-.wave-controls button:hover { background: #edf4fc; }
-.wave-controls button:disabled { opacity: .5; cursor: default; }
 .wave-controls input { flex: 1; min-width: 50px; min-height: 44px; accent-color: var(--scnet-primary); cursor: pointer; }
 .wave-controls output { min-width: 52px; font-variant-numeric: tabular-nums; }
 .wave-controls :focus-visible { outline: 2px solid var(--scnet-primary); outline-offset: 2px; }

@@ -395,7 +395,7 @@ watch(activeKey, key => { if (key === 'resource') void refreshClusters() })
           v-for="step in experienceSteps"
           :key="step.key"
           type="button"
-          class="experience-step"
+          class="experience-step sc-pressable"
           data-highlight-item
           :class="{ 'is-active': step.key === activeKey }"
           :aria-current="step.key === activeKey ? 'step' : undefined"

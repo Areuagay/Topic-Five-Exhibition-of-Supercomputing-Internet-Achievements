@@ -89,8 +89,8 @@ function usage(value: number): number {
     <div class="resource-toolbar">
       <div ref="filterTrack" class="resource-filters scnet-segmented" :class="{ 'has-sliding-highlight': filterReady }" role="group" aria-label="筛选算力中心">
         <span class="scnet-sliding-highlight" :class="{ 'is-ready': filterReady }" :style="filterStyle" aria-hidden="true" />
-        <button data-highlight-item type="button" :aria-pressed="!onlySupported" @click="onlySupported = false">全部中心 <span>{{ clusters.length }}</span></button>
-        <button data-highlight-item type="button" :aria-pressed="onlySupported" @click="onlySupported = true">适配本场景 <span>{{ supported.length }}</span></button>
+        <button class="sc-pressable" data-highlight-item type="button" :aria-pressed="!onlySupported" @click="onlySupported = false">全部中心 <span>{{ clusters.length }}</span></button>
+        <button class="sc-pressable" data-highlight-item type="button" :aria-pressed="onlySupported" @click="onlySupported = true">适配本场景 <span>{{ supported.length }}</span></button>
       </div>
       <span class="resource-note">容量为中心总量，负载按最近更新展示</span>
     </div>
@@ -133,7 +133,7 @@ function usage(value: number): number {
     </div>
     <div v-if="!ordered.length" class="resource-empty">
       <el-empty :description="onlySupported ? '暂无适配本场景的中心' : '暂无算力中心数据'" :image-size="60" />
-      <button v-if="onlySupported" type="button" @click="onlySupported = false">查看全部中心</button>
+      <button class="sc-action" v-if="onlySupported" type="button" @click="onlySupported = false">查看全部中心</button>
     </div>
   </section>
 </template>

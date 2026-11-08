@@ -32,7 +32,7 @@ function mediaName(name: string) { return ({ 'stress_front.png': '前部应力',
       <section class="auto-section"><h3>碰撞应力结果</h3>
         <ResourceState :pending="artifactsPending" :error="artifactsError" :empty="!current" label="碰撞图像" @retry="$emit('retryArtifacts')">
           <ArtifactPreview v-if="current" hide-caption :artifact="current" :preload-urls="preload" />
-          <div class="auto-controls" role="group" aria-label="碰撞结果切换"><button v-for="(item, index) in media" :key="item.id" type="button" :aria-pressed="current?.id === item.id" @click="mediaIndex = index">{{ mediaName(item.name) }}</button></div>
+          <div class="auto-controls" role="group" aria-label="碰撞结果切换"><button class="sc-action sc-action--small" v-for="(item, index) in media" :key="item.id" type="button" :aria-pressed="current?.id === item.id" @click="mediaIndex = index">{{ mediaName(item.name) }}</button></div>
         </ResourceState>
       </section>
       <section class="auto-section"><h3>关键结果</h3><dl class="auto-stats"><div v-for="item in facts" :key="item.key"><dt>{{ quantityLabel(item.label, data.units?.[item.key] ?? item.unit) }}</dt><dd>{{ item.value?.toLocaleString() ?? '—' }}</dd></div></dl>

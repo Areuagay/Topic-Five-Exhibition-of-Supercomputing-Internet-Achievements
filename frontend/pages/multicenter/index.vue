@@ -625,12 +625,7 @@ async function openMig(id: string): Promise<void> {
   <section ref="surface" class="multicenter-surface">
     <header class="multicenter-surface-header">
       <div class="multicenter-heading-row">
-        <NuxtLink to="/" class="multicenter-home-link" aria-label="返回主页">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M3 10.8 12 3l9 7.8v9.7a.5.5 0 0 1-.5.5H15v-6H9v6H3.5a.5.5 0 0 1-.5-.5v-9.7Z" />
-          </svg>
-          <span>主页</span>
-        </NuxtLink>
+        <AppHomeLink />
         <span class="multicenter-heading-divider" aria-hidden="true" />
         <div>
           <h1>函数多中心联调</h1>
@@ -673,7 +668,7 @@ async function openMig(id: string): Promise<void> {
                 <span class="topology-legend is-online"><i aria-hidden="true" />在线链路</span>
                 <span class="topology-legend is-degraded"><i aria-hidden="true" />降级链路</span>
                 <span class="topology-legend is-offline"><i aria-hidden="true" />离线链路</span>
-                <button type="button" class="topology-reset-button" aria-label="重置拓扑布局" @click="resetTopology">
+                <button type="button" class="topology-reset-button sc-action sc-action--small" aria-label="重置拓扑布局" @click="resetTopology">
                   <svg viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M20 11a8 8 0 1 0-2.34 5.66M20 5v6h-6" />
                   </svg>
@@ -693,7 +688,7 @@ async function openMig(id: string): Promise<void> {
                   v-for="c in clusterList"
                   :key="c.id"
                   type="button"
-                  class="cluster-rail-button"
+                  class="cluster-rail-button sc-pressable"
                   data-highlight-item
                   :class="[
                     `is-${c.status}`,
@@ -781,7 +776,7 @@ async function openMig(id: string): Promise<void> {
                   </dl>
                   <div class="inspector-links">
                     <p>相连链路</p>
-                    <button
+                    <button class="sc-pressable"
                       v-for="link in selectedClusterLinks"
                       :key="linkKey(link.source, link.target)"
                       type="button"
@@ -913,9 +908,9 @@ async function openMig(id: string): Promise<void> {
             <el-table-column label="开始时间" min-width="150">
               <template #default="{ row }">{{ formatTimestamp(row.start_time) }}</template>
             </el-table-column>
-            <el-table-column label="操作" width="100" fixed="right">
+            <el-table-column label="操作" width="116" fixed="right">
               <template #default="{ row }">
-                <el-button class="invocation-trace-button" size="small" type="primary" link @click="openTraceRow(row)">链路追踪</el-button>
+                <el-button class="invocation-trace-button sc-action sc-action--small" @click="openTraceRow(row)">链路追踪</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -1031,9 +1026,9 @@ async function openMig(id: string): Promise<void> {
                 <el-table-column label="开始时间" min-width="155">
                   <template #default="{ row }">{{ row.start_time ? formatTimestamp(row.start_time) : '尚未开始' }}</template>
                 </el-table-column>
-                <el-table-column label="操作" width="105" fixed="right">
+                <el-table-column label="操作" width="116" fixed="right">
                   <template #default="{ row }">
-                    <el-button class="migration-detail-button" size="small" type="primary" link @click="openMig(row.migration_id)">
+                    <el-button class="migration-detail-button sc-action sc-action--small" @click="openMig(row.migration_id)">
                       查看详情
                     </el-button>
                   </template>
@@ -1051,11 +1046,13 @@ async function openMig(id: string): Promise<void> {
       class="trace-detail-dialog"
       transition="mc-dialog"
       title="调用链路追踪"
+      :show-close="false"
       width="min(960px, calc(100vw - 40px))"
       align-center
       append-to-body
       destroy-on-close
     >
+      <template #header="{ titleId }"><AppDialogHeader title="调用链路追踪" :title-id="titleId" close-label="关闭调用链路追踪" @close="traceVisible = false" /></template>
       <div v-loading="traceLoading" class="trace-detail-shell">
         <template v-if="trace">
           <dl class="trace-summary" aria-label="调用摘要">
@@ -1132,11 +1129,13 @@ async function openMig(id: string): Promise<void> {
       class="migration-detail-dialog"
       transition="mc-dialog"
       title="迁移事件详情"
+      :show-close="false"
       width="min(920px, calc(100vw - 40px))"
       align-center
       append-to-body
       destroy-on-close
     >
+      <template #header="{ titleId }"><AppDialogHeader title="迁移事件详情" :title-id="titleId" close-label="关闭迁移事件详情" @close="migVisible = false" /></template>
       <div v-loading="migLoading" class="migration-detail-shell">
         <template v-if="migDetail">
           <header class="migration-detail-summary">
@@ -1256,7 +1255,6 @@ async function openMig(id: string): Promise<void> {
 }
 
 .multicenter-heading-row,
-.multicenter-home-link,
 .topology-title-row,
 .topology-actions,
 .topology-legend,
@@ -1271,29 +1269,9 @@ async function openMig(id: string): Promise<void> {
 .multicenter-heading-row { gap: 20px; min-width: 0; }
 .multicenter-heading-row > div { min-width: 0; }
 
-.multicenter-home-link {
-  flex: 0 0 auto;
-  gap: 7px;
-  min-height: 36px;
-  padding: 0 10px;
-  border-radius: 5px;
-  color: #586579;
-  font-size: 13px;
-  font-weight: 500;
-  transition: background-color 180ms cubic-bezier(0.22, 1, 0.36, 1), color 180ms cubic-bezier(0.22, 1, 0.36, 1);
-}
 
-.multicenter-home-link svg {
-  width: 17px;
-  fill: none;
-  stroke: currentColor;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-width: 1.7;
-}
 
-.multicenter-home-link:hover { background: var(--scnet-primary-soft); color: var(--scnet-primary); }
-.multicenter-heading-divider { width: 1px; height: 38px; background: var(--scnet-divider); }
+.multicenter-heading-divider { width: 1px; height: 28px; background: var(--scnet-divider); }
 
 .multicenter-heading-row h1 {
   margin: 0;
@@ -1439,19 +1417,6 @@ async function openMig(id: string): Promise<void> {
   margin: 0;
   padding: 18px 22px;
   border-bottom: 1px solid var(--scnet-divider);
-}
-
-:global(.trace-detail-dialog .el-dialog__title) {
-  color: #273449;
-  font-size: 19px;
-  font-weight: 650;
-}
-
-:global(.trace-detail-dialog .el-dialog__headerbtn) {
-  top: 12px;
-  right: 14px;
-  width: 42px;
-  height: 42px;
 }
 
 :global(.trace-detail-dialog .el-dialog__body) {
@@ -1871,8 +1836,6 @@ async function openMig(id: string): Promise<void> {
   padding: 18px 22px;
   border-bottom: 1px solid var(--scnet-divider);
 }
-:global(.migration-detail-dialog .el-dialog__title) { color: #273449; font-size: 19px; font-weight: 650; }
-:global(.migration-detail-dialog .el-dialog__headerbtn) { top: 12px; right: 14px; width: 42px; height: 42px; }
 :global(.migration-detail-dialog .el-dialog__body) {
   flex: 1 1 auto;
   min-height: 0;
@@ -2539,7 +2502,6 @@ async function openMig(id: string): Promise<void> {
   margin-right: 8px;
 }
 
-.multicenter-home-link:focus-visible,
 .topology-reset-button:focus-visible,
 .cluster-rail-button:focus-visible,
 .inspector-links button:focus-visible,
@@ -2594,7 +2556,6 @@ async function openMig(id: string): Promise<void> {
   .multicenter-heading-row { gap: 10px; }
   .multicenter-heading-divider { display: none; }
   .multicenter-heading-row h1 { font-size: 20px; }
-  .multicenter-home-link span { display: none; }
   .multicenter-tabs :deep(.el-tabs__header) { padding: 0 12px; }
   .multicenter-tabs { --mc-tab-padding: 12px; }
   .multicenter-tabs :deep(.el-tabs__content) { padding: 12px; }
@@ -2649,7 +2610,6 @@ async function openMig(id: string): Promise<void> {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .multicenter-home-link,
   .topology-reset-button,
   .cluster-rail-button { transition-duration: 0.01ms; }
 }

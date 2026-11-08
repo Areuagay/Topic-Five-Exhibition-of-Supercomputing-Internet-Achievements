@@ -50,9 +50,9 @@ function gpuBackground(value: number) {
       </section>
       <section class="ai-section">
         <h3>GPU 状态矩阵</h3>
-        <div class="ai-controls" role="group" aria-label="GPU 显示指标"><button v-for="item in gpuFields" :key="item.key" type="button" :aria-pressed="gpuField === item.key" @click="gpuField = item.key">{{ quantityLabel(item.label, data.units?.[item.key]) }}</button></div>
+        <div class="ai-controls" role="group" aria-label="GPU 显示指标"><button class="sc-action sc-action--small" v-for="item in gpuFields" :key="item.key" type="button" :aria-pressed="gpuField === item.key" @click="gpuField = item.key">{{ quantityLabel(item.label, data.units?.[item.key]) }}</button></div>
         <div v-if="data.gpu_metrics?.length" class="gpu-grid">
-          <button v-for="(item, index) in data.gpu_metrics" :key="item.gpu_id" type="button" :aria-pressed="gpuIndex === index" :style="{ background: gpuBackground(item[gpuField]) }" @mouseenter="gpuIndex = index" @focus="gpuIndex = index" @click="gpuIndex = index"><span>GPU {{ item.gpu_id }}</span><strong>{{ item[gpuField] }}<small v-if="data.units?.[gpuField]"> {{ data.units[gpuField] }}</small></strong></button>
+          <button class="sc-pressable" v-for="(item, index) in data.gpu_metrics" :key="item.gpu_id" type="button" :aria-pressed="gpuIndex === index" :style="{ background: gpuBackground(item[gpuField]) }" @mouseenter="gpuIndex = index" @focus="gpuIndex = index" @click="gpuIndex = index"><span>GPU {{ item.gpu_id }}</span><strong>{{ item[gpuField] }}<small v-if="data.units?.[gpuField]"> {{ data.units[gpuField] }}</small></strong></button>
         </div>
         <div v-else class="ai-empty">暂无 GPU 数据</div>
         <template v-if="gpu"><p class="ai-caption">GPU {{ gpu.gpu_id }} · 当前选中</p><dl class="ai-stats gpu-facts"><div v-for="item in gpuFields" :key="item.key"><dt>{{ quantityLabel(item.label, data.units?.[item.key]) }}</dt><dd>{{ gpu[item.key] }}</dd></div></dl></template>
@@ -63,7 +63,7 @@ function gpuBackground(value: number) {
     </section>
     <section class="ai-section">
       <h3>检查点时间线</h3>
-      <div v-if="data.checkpoint_events?.length" class="checkpoint-list"><button v-for="(item, index) in data.checkpoint_events" :key="`${item.step}-${index}`" type="button" :aria-pressed="checkpointIndex === index" @click="checkpointIndex = index"><strong>Step {{ item.step }}</strong><span>{{ formatTimestamp(item.timestamp) }}</span></button></div>
+      <div v-if="data.checkpoint_events?.length" class="checkpoint-list"><button class="sc-pressable" v-for="(item, index) in data.checkpoint_events" :key="`${item.step}-${index}`" type="button" :aria-pressed="checkpointIndex === index" @click="checkpointIndex = index"><strong>Step {{ item.step }}</strong><span>{{ formatTimestamp(item.timestamp) }}</span></button></div>
       <div v-else class="ai-empty">暂无检查点</div>
       <div v-if="checkpoint" class="checkpoint-detail" aria-live="polite"><strong>Step {{ checkpoint.step }} · {{ checkpoint.size_gb }} GB</strong><span>{{ checkpoint.path }}</span></div>
     </section>

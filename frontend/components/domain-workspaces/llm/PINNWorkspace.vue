@@ -39,7 +39,7 @@ const samples = computed(() => [
     <div class="ai-two-column">
       <section class="ai-section">
         <h3>物理约束训练损失</h3>
-        <div class="ai-controls" role="group" aria-label="损失曲线显示"><button v-for="(item, index) in losses" :key="item.key" type="button" :aria-pressed="selected[item.key]" @click="selected[item.key] = !selected[item.key]"><span class="loss-swatch" :style="{ background: ['#1769d2', '#b57820', '#4d8b78'][index] }" aria-hidden="true" />{{ quantityLabel(item.label, data.units?.[item.key]) }}</button></div>
+        <div class="ai-controls" role="group" aria-label="损失曲线显示"><button class="sc-action sc-action--small" v-for="(item, index) in losses" :key="item.key" type="button" :aria-pressed="selected[item.key]" @click="selected[item.key] = !selected[item.key]"><span class="loss-swatch" :style="{ background: ['#1769d2', '#b57820', '#4d8b78'][index] }" aria-hidden="true" />{{ quantityLabel(item.label, data.units?.[item.key]) }}</button></div>
         <BaseChart v-if="data.pinn_training_series?.length" :option="lossOption" height="390px" aria-label="Total Physics Data Loss 曲线" />
         <div v-else class="ai-empty">暂无训练损失数据</div>
       </section>

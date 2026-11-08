@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, nextTick, onActivated, onBeforeUnmount, onDeactivated, onMounted, ref, watch } from 'vue'
+import { ArrowLeft } from '@lucide/vue'
 import ResourceState from '~/components/run/ResourceState.vue'
 import ScenarioWorkspace from '~/components/run/ScenarioWorkspace.vue'
 import ArtifactActions from '~/components/run/ArtifactActions.vue'
@@ -363,12 +364,12 @@ function chartOption(section: ExtraSection): Record<string, unknown> | null {
   <div class="run-detail-workspace">
     <p v-if="pollFailed" class="run-poll-feedback" role="status">连接暂时中断，保留上次状态并自动重试…</p>
     <ResourceState v-if="summaryPending || summaryError" :pending="summaryPending" :error="summaryError" label="任务摘要" @retry="refreshSummary()">
-      <template #actions><button v-if="embedded" type="button" class="summary-back" @click="emit('back-to-monitor')">返回执行监控</button><NuxtLink v-else class="summary-back" :to="`/domains/${domain}/runs`">返回运行列表</NuxtLink></template>
+      <template #actions><button v-if="embedded" type="button" class="summary-back sc-action" @click="emit('back-to-monitor')">返回执行监控</button><NuxtLink v-else class="summary-back sc-action" :to="`/domains/${domain}/runs`">返回运行列表</NuxtLink></template>
     </ResourceState>
     <section v-else-if="!detail" class="run-detail-empty" aria-live="polite">
       <strong>未找到该运行详情</strong>
       <p>该记录可能不存在，或尚未生成可查看的运行数据。</p>
-      <button v-if="embedded" type="button" class="summary-back" @click="emit('back-to-monitor')">返回执行监控</button>
+      <button v-if="embedded" type="button" class="summary-back sc-action" @click="emit('back-to-monitor')">返回执行监控</button>
       <NuxtLink v-else :to="`/domains/${domain}/runs`">返回运行列表</NuxtLink>
     </section>
 
@@ -385,12 +386,10 @@ function chartOption(section: ExtraSection): Record<string, unknown> | null {
 
           <NuxtLink
             v-if="!embedded"
-            class="run-detail-back-link"
+            class="run-detail-back-link sc-action"
             :to="`/domains/${domain}/runs`"
           >
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="m15 18-6-6 6-6" />
-            </svg>
+            <ArrowLeft aria-hidden="true" />
             <span>返回运行记录</span>
           </NuxtLink>
         </header>
@@ -497,8 +496,8 @@ function chartOption(section: ExtraSection): Record<string, unknown> | null {
 
               <div v-if="section.kind === 'line' || section.kind === 'bar'" class="run-chart-region">
                 <div v-if="section.key === 'scf_series'" class="scf-metric-controls" role="group" aria-label="SCF 收敛指标切换">
-                  <button type="button" :aria-pressed="scfMetric === 'total_energy'" @click="scfMetric = 'total_energy'">总能量</button>
-                  <button type="button" :aria-pressed="scfMetric === 'energy_delta'" @click="scfMetric = 'energy_delta'">能量变化</button>
+                  <button class="sc-action" type="button" :aria-pressed="scfMetric === 'total_energy'" @click="scfMetric = 'total_energy'">总能量</button>
+                  <button class="sc-action" type="button" :aria-pressed="scfMetric === 'energy_delta'" @click="scfMetric = 'energy_delta'">能量变化</button>
                 </div>
                 <BaseChart v-if="chartOption(section)" :option="chartOption(section)!" height="300px" />
                 <div v-else class="run-inline-empty">暂无数据</div>
@@ -668,9 +667,6 @@ function chartOption(section: ExtraSection): Record<string, unknown> | null {
 .run-poll-feedback { padding: 12px 18px; color: #92632e; background: #fff5e5; border-radius: 8px; font-size: 14px; }
 .summary-back { display:inline-flex; align-items:center; justify-content:center; min-height:44px; box-sizing:border-box; padding:0 16px; border:1px solid #dce3ec; border-radius:6px; background:#fff; color:var(--scnet-text-secondary); font-size:14px; text-decoration:none; }.summary-back:hover { color:var(--scnet-primary); border-color:#a9c3e8; }.summary-back:focus-visible { outline:2px solid var(--scnet-primary); outline-offset:2px; }
 .scf-metric-controls { display: flex; gap: 10px; margin-bottom: 16px; }
-.scf-metric-controls button { min-height: 44px; padding: 8px 16px; border: 1px solid #dfe3e8; border-radius: 6px; background: #fff; color: var(--scnet-text-secondary); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
-.scf-metric-controls button[aria-pressed="true"] { color: var(--scnet-primary); background: #edf3fd; border-color: #85abe8; }
-.scf-metric-controls button:focus-visible { outline: 2px solid var(--scnet-primary); outline-offset: 2px; }
 /* 运行详情采用展示型分层：宏观区域独立，字段内部保持平面化。 */
 .run-download-link:focus-visible {
   outline: 2px solid var(--el-color-primary-light-3);
@@ -775,25 +771,7 @@ function chartOption(section: ExtraSection): Record<string, unknown> | null {
   line-height: 1.55;
 }
 
-.run-detail-back-link {
-  min-height: 44px;
-  display: inline-flex;
-  align-items: center;
-  flex: 0 0 auto;
-  gap: 8px;
-  padding: 0 16px;
-  border: 1px solid #c9d9ec;
-  border-radius: 7px;
-  background: #f5f8fc;
-  color: #3f5f86;
-  font-size: 15px;
-  font-weight: 600;
-  touch-action: manipulation;
-  transition:
-    border-color 180ms cubic-bezier(0.22, 1, 0.36, 1),
-    background-color 180ms cubic-bezier(0.22, 1, 0.36, 1),
-    color 180ms cubic-bezier(0.22, 1, 0.36, 1);
-}
+.run-detail-back-link { flex: 0 0 auto; }
 
 .run-detail-back-link svg {
   width: 17px;
@@ -804,11 +782,7 @@ function chartOption(section: ExtraSection): Record<string, unknown> | null {
   stroke-width: 1.8;
 }
 
-.run-detail-back-link:hover {
-  border-color: #9ebbe0;
-  background: #eaf2fb;
-  color: var(--scnet-primary);
-}
+
 
 .run-summary-strip {
   min-width: 0;
@@ -1112,6 +1086,9 @@ function chartOption(section: ExtraSection): Record<string, unknown> | null {
 .run-facts-grid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
+
+.run-facts-grid > div:last-child:nth-child(3n + 1) { grid-column: 1 / -1; }
+.run-facts-grid > div:last-child:nth-child(3n + 2) { grid-column: span 2; }
 
 .run-facts-grid > div,
 .run-extra-kv > div {
@@ -1488,6 +1465,8 @@ function chartOption(section: ExtraSection): Record<string, unknown> | null {
   .run-data-primary .run-metric-grid {
     grid-template-columns: 1fr;
   }
+
+  .run-facts-grid > div:last-child { grid-column: 1 / -1; }
 
   .run-progress-summary,
   .run-summary-item,

@@ -63,8 +63,8 @@ const residualOption = computed(() => chart(props.data.nonlinear_series, 'iterat
 <template>
   <div class="tectonic-workspace">
     <div class="tectonic-tabs" role="group" aria-label="场类型">
-      <button type="button" :aria-pressed="isTemperature" @click="selectField('temperature')">温度场</button>
-      <button type="button" :aria-pressed="!isTemperature" @click="selectField('velocity')">速度场</button>
+      <button class="sc-action sc-action--small" type="button" :aria-pressed="isTemperature" @click="selectField('temperature')">温度场</button>
+      <button class="sc-action sc-action--small" type="button" :aria-pressed="!isTemperature" @click="selectField('velocity')">速度场</button>
     </div>
     <div class="tectonic-main">
       <section class="tectonic-field" aria-labelledby="tectonic-field-title">
@@ -72,7 +72,7 @@ const residualOption = computed(() => chart(props.data.nonlinear_series, 'iterat
         <ArtifactPreview v-if="preview" hide-caption :preload-urls="preloadUrls" :artifact="{ id: `${field}-${frameIndex}`, name: `${fieldName}场 · 模拟时间 ${frame?.time}`, type: 'image', format: 'png', preview_url: preview }" />
         <div v-else class="tectonic-empty field-empty" role="status">暂无{{ fieldName }}场图像</div>
         <div v-if="frames.length" class="tectonic-controls">
-          <button type="button" :disabled="frames.length < 2" :aria-pressed="playing" @click="togglePlayback">{{ playing ? '暂停' : '播放' }}</button>
+          <button class="sc-action sc-action--small" type="button" :disabled="frames.length < 2" :aria-pressed="playing" @click="togglePlayback">{{ playing ? '暂停' : '播放' }}</button>
           <span class="tectonic-time">模拟时间 <strong>{{ frame?.time }}</strong><small v-if="timeUnit"> {{ timeUnit }}</small></span>
           <input type="range" aria-label="板块场时间帧" min="0" :max="frames.length - 1" :value="frameIndex" :aria-valuetext="`模拟时间 ${frame?.time}，第 ${frameIndex + 1} 帧`" :disabled="frames.length < 2" @input="selectFrame" />
           <output>{{ frameIndex + 1 }} / {{ frames.length }}</output>
@@ -99,8 +99,6 @@ const residualOption = computed(() => chart(props.data.nonlinear_series, 'iterat
 <style scoped>
 .tectonic-workspace { min-width: 0; font-family: var(--scnet-font-sans); font-weight: 500; }
 .tectonic-tabs { display: flex; gap: 24px; padding: 0 32px; border-bottom: 1px solid var(--scnet-divider); }
-.tectonic-tabs button { min-height: 54px; padding: 0 4px; border: 0; border-bottom: 2px solid transparent; background: transparent; color: var(--scnet-text-secondary); font-size: 15px; font-weight: 600; cursor: pointer; }
-.tectonic-tabs button[aria-pressed="true"] { border-bottom-color: var(--scnet-primary); color: var(--scnet-primary); }
 .tectonic-main { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); }
 .tectonic-field, .tectonic-trend, .tectonic-convergence { min-width: 0; padding: 24px 32px; }
 .tectonic-trend { border-left: 1px solid var(--scnet-divider); }
@@ -111,8 +109,6 @@ h3 { margin: 0 0 18px; color: var(--scnet-text); font-size: 17px; font-weight: 6
 dt { color: var(--scnet-text-secondary); font-size: 14px; font-weight: 600; }
 dd { margin: 8px 0 0; font-family: var(--scnet-font-mono); font-size: 22px; font-weight: 600; color: var(--scnet-text); font-variant-numeric: tabular-nums; }
 .tectonic-controls { display: flex; align-items: center; gap: 12px; padding-top: 16px; font-size: 14px; color: var(--scnet-text-secondary); }
-.tectonic-controls button { min-height: 44px; padding: 0 18px; border: 1px solid #c9d9ec; border-radius: 6px; background: #f5f8fc; color: var(--scnet-primary); cursor: pointer; }
-.tectonic-controls button:disabled { opacity: .5; cursor: default; }
 .tectonic-time { flex: 0 0 164px; white-space: nowrap; }
 .tectonic-time strong { color: var(--scnet-text); font-weight: 600; font-variant-numeric: tabular-nums; }
 .tectonic-controls input { flex: 1; min-width: 40px; min-height: 44px; accent-color: var(--scnet-primary); cursor: pointer; }

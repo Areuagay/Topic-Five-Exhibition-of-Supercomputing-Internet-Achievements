@@ -135,7 +135,7 @@ onBeforeUnmount(() => {
         <button
           v-else
           type="button"
-          class="scenario-selector-option"
+          class="scenario-selector-option sc-pressable"
           :data-nav-key="scenario.id"
           :class="{ 'is-active': scenario.id === modelValue }"
           :aria-current="scenario.id === modelValue ? 'page' : undefined"
