@@ -6,86 +6,189 @@
     "scenario_id": "llm-pretraining",
     "scenario_name": "大语言模型分布式预训练",
     "status": "running",
-    "progress": 42,
+    "progress": 46,
     "execution_mode": "simulated",
     "cluster_id": "kunshan",
     "cluster_name": "曙光星云",
     "job_id": "45201",
-    "current_stage": "train",
+    "current_stage": "基于Megatron Core的张量并行预训练算子接口、基于DeepSpeed ZeRO的大模型训练算子接口、基于PyTorch FSDP的全分片参数训练算子接口、基于PyTorch的数据并行训练算子接口",
     "start_time": "2026-08-11T09:30:00+08:00",
     "end_time": "",
-    "elapsed_seconds": 5400,
-    "nodes": 16,
-    "cpu_cores": 1536,
-    "gpu_count": 128,
-    "memory_gb": 32768,
-    "core_hours": 2304,
+    "elapsed_seconds": 22,
+    "nodes": 4,
+    "cpu_cores": 32,
+    "gpu_count": 4,
+    "memory_gb": 88,
+    "core_hours": 0.17,
     "source_type": "simulated",
     "workflow": {
       "nodes": [
         {
           "id": "prepare",
-          "name": "训练数据检查",
+          "name": "输入数据准备",
+          "duration_ticks": 1,
           "status": "success",
           "progress": 100,
-          "cluster_id": "kunshan"
+          "elapsed_seconds": 3,
+          "core_hours": 0,
+          "resource_source": "none",
+          "planned_start_seconds": 0,
+          "planned_seconds": 3,
+          "waiting_for": [],
+          "waiting_at_join": false
         },
         {
-          "id": "shard",
-          "name": "数据分片",
-          "status": "success",
-          "progress": 100,
-          "cluster_id": "kunshan"
-        },
-        {
-          "id": "init",
-          "name": "模型初始化",
-          "status": "success",
-          "progress": 100,
-          "cluster_id": "kunshan"
-        },
-        {
-          "id": "train",
-          "name": "分布式训练",
+          "id": "operator-0",
+          "operator_id": "megatron-core",
+          "name": "基于Megatron Core的张量并行预训练算子接口",
+          "duration_ticks": 3,
           "status": "running",
-          "progress": 42,
-          "cluster_id": "kunshan"
+          "progress": 45.43,
+          "elapsed_seconds": 19,
+          "core_hours": 0.04,
+          "operator_name": "megatron-core",
+          "operator_title": "基于Megatron Core的张量并行预训练算子接口",
+          "runtime_type": "docker",
+          "runtime_label": "Docker",
+          "runtime_deployment": "",
+          "runtime_detail": "local/ai-operator/ai-train-megatron-server:20260629",
+          "cpu_cores": 8,
+          "gpu_count": 1,
+          "memory_mb": 24576,
+          "memory_gb": 24,
+          "resource_source": "operator",
+          "planned_start_seconds": 3,
+          "planned_seconds": 42,
+          "waiting_for": [],
+          "waiting_at_join": false
         },
         {
-          "id": "checkpoint",
-          "name": "Checkpoint保存",
-          "status": "pending",
-          "progress": 0,
-          "cluster_id": "kunshan"
+          "id": "operator-1",
+          "operator_id": "deepspeed-zero",
+          "name": "基于DeepSpeed ZeRO的大模型训练算子接口",
+          "duration_ticks": 1,
+          "status": "running",
+          "progress": 45.43,
+          "elapsed_seconds": 19,
+          "core_hours": 0.04,
+          "operator_name": "deepspeed-zero",
+          "operator_title": "基于DeepSpeed ZeRO的大模型训练算子接口",
+          "runtime_type": "docker",
+          "runtime_label": "Docker",
+          "runtime_deployment": "",
+          "runtime_detail": "local/ai-operator/ai-train-deepspeed-server:20260629",
+          "cpu_cores": 8,
+          "gpu_count": 1,
+          "memory_mb": 24576,
+          "memory_gb": 24,
+          "resource_source": "operator",
+          "planned_start_seconds": 3,
+          "planned_seconds": 42,
+          "waiting_for": [],
+          "waiting_at_join": false
         },
         {
-          "id": "evaluate",
-          "name": "模型评估",
+          "id": "operator-2",
+          "operator_id": "pytorch-fsdp",
+          "name": "基于PyTorch FSDP的全分片参数训练算子接口",
+          "duration_ticks": 7,
+          "status": "running",
+          "progress": 45.43,
+          "elapsed_seconds": 19,
+          "core_hours": 0.04,
+          "operator_name": "pytorch-fsdp",
+          "operator_title": "基于PyTorch FSDP的全分片参数训练算子接口",
+          "runtime_type": "docker",
+          "runtime_label": "Docker",
+          "runtime_deployment": "",
+          "runtime_detail": "local/ai-operator/ai-train-fsdp-server:20260629",
+          "cpu_cores": 8,
+          "gpu_count": 1,
+          "memory_mb": 24576,
+          "memory_gb": 24,
+          "resource_source": "operator",
+          "planned_start_seconds": 3,
+          "planned_seconds": 42,
+          "waiting_for": [],
+          "waiting_at_join": false
+        },
+        {
+          "id": "operator-3",
+          "operator_id": "pytorch-ddp",
+          "name": "基于PyTorch的数据并行训练算子接口",
+          "duration_ticks": 5,
+          "status": "running",
+          "progress": 45.43,
+          "elapsed_seconds": 19,
+          "core_hours": 0.04,
+          "operator_name": "pytorch-ddp",
+          "operator_title": "基于PyTorch的数据并行训练算子接口",
+          "runtime_type": "docker",
+          "runtime_label": "Docker",
+          "runtime_deployment": "",
+          "runtime_detail": "local/ai-operator/ai-train-ddp-server:20260629",
+          "cpu_cores": 8,
+          "gpu_count": 1,
+          "memory_mb": 16384,
+          "memory_gb": 16,
+          "resource_source": "operator",
+          "planned_start_seconds": 3,
+          "planned_seconds": 42,
+          "waiting_for": [],
+          "waiting_at_join": false
+        },
+        {
+          "id": "post",
+          "name": "结果整理与输出",
+          "duration_ticks": 1,
           "status": "pending",
           "progress": 0,
-          "cluster_id": "kunshan"
+          "elapsed_seconds": 0,
+          "core_hours": 0,
+          "resource_source": "none",
+          "planned_start_seconds": 45,
+          "planned_seconds": 3,
+          "waiting_for": [
+            "operator-0",
+            "operator-1",
+            "operator-2",
+            "operator-3"
+          ],
+          "waiting_at_join": false
         }
       ],
       "edges": [
         {
           "source": "prepare",
-          "target": "shard"
+          "target": "operator-0"
         },
         {
-          "source": "shard",
-          "target": "init"
+          "source": "prepare",
+          "target": "operator-1"
         },
         {
-          "source": "init",
-          "target": "train"
+          "source": "prepare",
+          "target": "operator-2"
         },
         {
-          "source": "train",
-          "target": "checkpoint"
+          "source": "prepare",
+          "target": "operator-3"
         },
         {
-          "source": "checkpoint",
-          "target": "evaluate"
+          "source": "operator-0",
+          "target": "post"
+        },
+        {
+          "source": "operator-1",
+          "target": "post"
+        },
+        {
+          "source": "operator-2",
+          "target": "post"
+        },
+        {
+          "source": "operator-3",
+          "target": "post"
         }
       ]
     },
@@ -1813,7 +1916,17 @@
           "path": "simulated://checkpoints/LLM-20260811-0001/ckpt-4200"
         }
       ]
-    }
+    },
+    "selected_operator_ids": [
+      "megatron-core",
+      "deepspeed-zero",
+      "pytorch-fsdp",
+      "pytorch-ddp"
+    ],
+    "resource_source": "operator",
+    "planned_seconds": 48,
+    "remaining_seconds": 26,
+    "_operator_version": 4
   },
   "timestamp": "2026-08-11T10:58:35+08:00"
 }

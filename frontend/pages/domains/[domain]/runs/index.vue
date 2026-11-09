@@ -214,7 +214,7 @@ function runRowClassName({ row }: { row: { status?: string } }): string {
           <template #default="{ row }">{{ formatDuration(row.elapsed_seconds) }}</template>
         </el-table-column>
         <el-table-column label="核时" width="100">
-          <template #default="{ row }">{{ formatNumber(row.core_hours) }}</template>
+          <template #default="{ row }">{{ formatNumber(row.core_hours, 1) }}</template>
         </el-table-column>
         <el-table-column label="操作" width="116" fixed="right">
           <template #default="{ row }">

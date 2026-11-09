@@ -118,7 +118,8 @@ test('poll cadence and restart preserve branch progress and only expose results 
   const stores=options.map(createExperienceStore)
   const ids=stores.map(store=>store.write('POST',['geodynamics','scenarios','tectonic-evolution','operators','submit'],{operator_ids:['uzawa','citcoms-global','citcoms-regional']}).data.run_id)
   const start=time
-  for(let i=1;i<=6;i++){time=start+i*1300;stores[0].read(['geodynamics','runs',ids[0]])}
+  time=start+120000
+  for(let i=1;i<=6;i++){stores[0].read(['geodynamics','runs',ids[0]])}
   const a=stores[0].read(['geodynamics','runs',ids[0]])
   const b=stores[1].read(['geodynamics','runs',ids[1]])
   assert.deepEqual(a.data.workflow,b.data.workflow)
@@ -128,10 +129,11 @@ test('poll cadence and restart preserve branch progress and only expose results 
   stores[0]=createExperienceStore(options[0])
   assert.deepEqual(stores[0].read(['geodynamics','runs',ids[0]]).data.workflow,a.data.workflow)
   assert.ok(a.data.workflow.nodes.every(n=>n._elapsed_ticks===undefined))
-  time=start+240000
+  time=start+(a.data.planned_seconds+60)*1000
   const finished=stores.map((store,i)=>store.read(['geodynamics','runs',ids[i]]).data)
   assert.equal(finished[0].status,'success')
   assert.equal(finished[0].has_result,true)
+  assert.equal(finished[0].elapsed_seconds,finished[0].planned_seconds)
   assert.equal(finished[0].end_time,finished[1].end_time)
   assert.deepEqual(finished[0].workflow,finished[1].workflow)
 })

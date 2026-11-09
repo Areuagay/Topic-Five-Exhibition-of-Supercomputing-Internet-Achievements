@@ -13,56 +13,74 @@
     "job_id": "210001",
     "current_stage": "completed",
     "start_time": "2026-09-22T21:04:26+08:00",
-    "end_time": "2026-09-22T21:04:53+08:00",
+    "end_time": "2026-09-22T21:44:26+08:00",
     "elapsed_seconds": 2400,
-    "nodes": 8,
-    "cpu_cores": 512,
+    "nodes": 1,
+    "cpu_cores": 1,
     "gpu_count": 0,
-    "memory_gb": 2048,
-    "core_hours": 665.6,
+    "memory_gb": 0,
+    "core_hours": 0.22,
     "source_type": "simulated",
     "workflow": {
       "nodes": [
         {
           "id": "prepare",
-          "name": "数据预处理",
+          "name": "输入数据准备",
           "status": "success",
           "progress": 100,
-          "cluster_id": "changsha"
+          "elapsed_seconds": 800,
+          "core_hours": 0,
+          "resource_source": "none",
+          "planned_start_seconds": 0,
+          "planned_seconds": 800,
+          "waiting_for": [],
+          "waiting_at_join": false
         },
         {
-          "id": "partition",
-          "name": "网格划分与域分解",
+          "id": "operator-0",
+          "operator_id": "supg",
+          "name": "SUPG稳定化有限元求解算子函数接口",
           "status": "success",
           "progress": 100,
-          "cluster_id": "changsha"
-        },
-        {
-          "id": "solver",
-          "name": "并行求解",
-          "status": "success",
-          "progress": 100,
-          "cluster_id": "changsha"
+          "elapsed_seconds": 800,
+          "core_hours": 0.22,
+          "operator_name": "supg",
+          "operator_title": "SUPG稳定化有限元求解算子函数接口",
+          "runtime_type": "singularity",
+          "runtime_label": "Singularity",
+          "runtime_deployment": "平台实例",
+          "runtime_detail": "/public/home/wxn/image/scnet/common/supg.sif",
+          "cpu_cores": 1,
+          "gpu_count": 0,
+          "memory_mb": 0,
+          "memory_gb": 0,
+          "resource_source": "operator",
+          "planned_start_seconds": 800,
+          "planned_seconds": 800,
+          "waiting_for": [],
+          "waiting_at_join": false
         },
         {
           "id": "post",
-          "name": "结果后处理",
+          "name": "结果整理与输出",
           "status": "success",
           "progress": 100,
-          "cluster_id": "changsha"
+          "elapsed_seconds": 800,
+          "core_hours": 0,
+          "resource_source": "none",
+          "planned_start_seconds": 1600,
+          "planned_seconds": 800,
+          "waiting_for": [],
+          "waiting_at_join": false
         }
       ],
       "edges": [
         {
           "source": "prepare",
-          "target": "partition"
+          "target": "operator-0"
         },
         {
-          "source": "partition",
-          "target": "solver"
-        },
-        {
-          "source": "solver",
+          "source": "operator-0",
           "target": "post"
         }
       ]
@@ -2217,7 +2235,11 @@
     },
     "selected_operator_ids": [
       "supg"
-    ]
+    ],
+    "resource_source": "operator",
+    "planned_seconds": 2400,
+    "remaining_seconds": 0,
+    "_operator_version": 4
   },
   "timestamp": "2026-09-22T21:04:53+08:00"
 }

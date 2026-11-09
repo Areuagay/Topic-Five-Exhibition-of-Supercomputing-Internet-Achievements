@@ -15,99 +15,167 @@
     "start_time": "2026-08-10T13:00:00+08:00",
     "end_time": "2026-08-10T13:26:00+08:00",
     "elapsed_seconds": 1560,
-    "nodes": 8,
-    "cpu_cores": 512,
+    "nodes": 4,
+    "cpu_cores": 11,
     "gpu_count": 0,
-    "memory_gb": 2048,
-    "core_hours": 221.9,
+    "memory_gb": 8,
+    "core_hours": 2.42,
     "source_type": "simulated",
     "workflow": {
       "nodes": [
         {
-          "id": "init",
-          "name": "场景初始化",
+          "id": "prepare",
+          "name": "输入数据准备",
+          "duration_ticks": 1,
           "status": "success",
           "progress": 100,
-          "cluster_id": "changsha"
+          "elapsed_seconds": 130,
+          "core_hours": 0,
+          "resource_source": "none",
+          "planned_start_seconds": 0,
+          "planned_seconds": 130,
+          "waiting_for": [],
+          "waiting_at_join": false
         },
         {
-          "id": "topology",
-          "name": "通信拓扑构建",
+          "id": "operator-0",
+          "operator_id": "foam-to-vtk",
+          "name": "基于foamToVTK的结果导出函数接口",
+          "duration_ticks": 1,
           "status": "success",
           "progress": 100,
-          "cluster_id": "changsha"
+          "elapsed_seconds": 130,
+          "core_hours": 0.04,
+          "operator_name": "foam-to-vtk",
+          "operator_title": "基于foamToVTK的结果导出函数接口",
+          "runtime_type": "singularity",
+          "runtime_label": "Singularity",
+          "runtime_deployment": "",
+          "runtime_detail": "/public/home/wxn/image/scnet/simulation/openfoam/openfoam _13.sif",
+          "cpu_cores": 1,
+          "gpu_count": 0,
+          "memory_mb": 8192,
+          "memory_gb": 8,
+          "resource_source": "operator",
+          "planned_start_seconds": 1300,
+          "planned_seconds": 130,
+          "waiting_for": [],
+          "waiting_at_join": false
         },
         {
-          "id": "assignment",
-          "name": "任务分配",
+          "id": "operator-1",
+          "operator_id": "postprocess-metrics",
+          "name": "基于postProcess的指标提取函数接口",
+          "duration_ticks": 3,
           "status": "success",
           "progress": 100,
-          "cluster_id": "changsha"
+          "elapsed_seconds": 130,
+          "core_hours": 0.04,
+          "operator_name": "postprocess-metrics",
+          "operator_title": "基于postProcess的指标提取函数接口",
+          "runtime_type": "singularity",
+          "runtime_label": "Singularity",
+          "runtime_deployment": "",
+          "runtime_detail": "/public/home/wxn/image/scnet/simulation/openfoam/openfoam _13.sif",
+          "cpu_cores": 1,
+          "gpu_count": 0,
+          "memory_mb": 0,
+          "memory_gb": 0,
+          "resource_source": "operator",
+          "planned_start_seconds": 1300,
+          "planned_seconds": 130,
+          "waiting_for": [],
+          "waiting_at_join": false
         },
         {
-          "id": "control",
-          "name": "协同控制求解",
+          "id": "operator-2",
+          "operator_id": "reconstruct-par",
+          "name": "基于reconstructPar的结果重构函数接口",
+          "duration_ticks": 1,
           "status": "success",
           "progress": 100,
-          "cluster_id": "changsha"
+          "elapsed_seconds": 130,
+          "core_hours": 0.04,
+          "operator_name": "reconstruct-par",
+          "operator_title": "基于reconstructPar的结果重构函数接口",
+          "runtime_type": "singularity",
+          "runtime_label": "Singularity",
+          "runtime_deployment": "",
+          "runtime_detail": "/public/home/wxn/image/scnet/simulation/openfoam/openfoam _13.sif",
+          "cpu_cores": 1,
+          "gpu_count": 0,
+          "memory_mb": 0,
+          "memory_gb": 0,
+          "resource_source": "operator",
+          "planned_start_seconds": 1170,
+          "planned_seconds": 130,
+          "waiting_for": [],
+          "waiting_at_join": false
         },
         {
-          "id": "simulation",
-          "name": "多智能体动力学仿真",
+          "id": "operator-3",
+          "operator_id": "solid-displacement",
+          "name": "基于solidDisplacement的结构响应函数接口",
+          "duration_ticks": 1,
           "status": "success",
           "progress": 100,
-          "cluster_id": "changsha"
+          "elapsed_seconds": 1040,
+          "core_hours": 2.31,
+          "operator_name": "solid-displacement",
+          "operator_title": "基于solidDisplacement的结构响应函数接口",
+          "runtime_type": "singularity",
+          "runtime_label": "Singularity",
+          "runtime_deployment": "",
+          "runtime_detail": "/public/home/wxn/image/scnet/simulation/openfoam/openfoam _13.sif",
+          "cpu_cores": 8,
+          "gpu_count": 0,
+          "memory_mb": 0,
+          "memory_gb": 0,
+          "resource_source": "operator",
+          "planned_start_seconds": 130,
+          "planned_seconds": 1040,
+          "waiting_for": [],
+          "waiting_at_join": false
         },
         {
-          "id": "collision",
-          "name": "碰撞检测",
+          "id": "post",
+          "name": "结果整理与输出",
+          "duration_ticks": 1,
           "status": "success",
           "progress": 100,
-          "cluster_id": "changsha"
-        },
-        {
-          "id": "statistics",
-          "name": "任务统计",
-          "status": "success",
-          "progress": 100,
-          "cluster_id": "changsha"
-        },
-        {
-          "id": "output",
-          "name": "结果输出",
-          "status": "success",
-          "progress": 100,
-          "cluster_id": "changsha"
+          "elapsed_seconds": 130,
+          "core_hours": 0,
+          "resource_source": "none",
+          "planned_start_seconds": 1430,
+          "planned_seconds": 130,
+          "waiting_for": [],
+          "waiting_at_join": false
         }
       ],
       "edges": [
         {
-          "source": "init",
-          "target": "topology"
+          "source": "operator-2",
+          "target": "operator-0"
         },
         {
-          "source": "topology",
-          "target": "assignment"
+          "source": "operator-2",
+          "target": "operator-1"
         },
         {
-          "source": "assignment",
-          "target": "control"
+          "source": "operator-3",
+          "target": "operator-2"
         },
         {
-          "source": "control",
-          "target": "simulation"
+          "source": "prepare",
+          "target": "operator-3"
         },
         {
-          "source": "simulation",
-          "target": "collision"
+          "source": "operator-0",
+          "target": "post"
         },
         {
-          "source": "collision",
-          "target": "statistics"
-        },
-        {
-          "source": "statistics",
-          "target": "output"
+          "source": "operator-1",
+          "target": "post"
         }
       ]
     },
@@ -1743,7 +1811,17 @@
         }
       ],
       "path_preview": "/api/v1/files/ART-UAV-PIMG1/preview"
-    }
+    },
+    "selected_operator_ids": [
+      "foam-to-vtk",
+      "postprocess-metrics",
+      "reconstruct-par",
+      "solid-displacement"
+    ],
+    "resource_source": "operator",
+    "planned_seconds": 1560,
+    "remaining_seconds": 0,
+    "_operator_version": 4
   },
   "timestamp": "2026-08-10T13:26:30+08:00"
 }

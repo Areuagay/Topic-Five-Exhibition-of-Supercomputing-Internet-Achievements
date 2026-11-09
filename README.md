@@ -71,8 +71,16 @@ node scripts/sync-operator-library.mjs --offline
 - 63 个领域算子分别落入 6 个领域的 12 个方向：算子既出现在领域「全部算子」列表中，
   又在该方向的 `scenario-details.json` 里作为「场景推荐」
 - 卡片样式保持不变，只替换标题、摘要、资源与「运行详情」；运行详情展示平台镜像、调用入口、
-  运行环境、资源要求、算子类型与所属场景
-- 同步脚本会把运行详情里已失效的 `selected_operator_ids` 迁移到新算子，避免运行记录引用旧 ID
+  运行环境、部署方式、资源要求、算子类型与所属场景
+- 运行环境按平台函数注册示例中的真实 `runtime` 判定：`.sif` 镜像显示 Singularity，
+  `hub…:tag` / `local/…:tag` 镜像显示 Docker；`runtimeType=instance` 作为部署方式单独标注为「平台实例」。
+  六个领域并非全是 Singularity：AI 模型训练为 Docker，汽车设计为 Singularity + Docker，
+  地球动力学为 Singularity（其中 2 个以平台实例方式部署）
+- 算子选择卡片提供「运行环境」筛选，可按 Singularity / Docker 过滤
+- 同步脚本会把运行详情里已失效的 `selected_operator_ids` 迁移到新算子；执行
+  `node scripts/migrate-run-operators.mjs` 可进一步重建历史记录的工作流节点，并按算子补齐
+  CPU / GPU / 内存 / 累计核时，同时对齐起止时间。迁移 `.runtime-data/` 前请先停止后端，
+  避免运行中的内存状态覆盖迁移结果。
 
 ## Applications
 

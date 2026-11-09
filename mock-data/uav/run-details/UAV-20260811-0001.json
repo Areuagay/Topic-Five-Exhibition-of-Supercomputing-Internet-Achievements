@@ -6,108 +6,184 @@
     "scenario_id": "swarm-coordination",
     "scenario_name": "千架无人机集群协同控制",
     "status": "running",
-    "progress": 62,
+    "progress": 65,
     "execution_mode": "simulated",
     "cluster_id": "changsha",
     "cluster_name": "天河新一代",
     "job_id": "210019",
-    "current_stage": "simulation",
+    "current_stage": "基于incompressibleDriftFlux的滑移流评估函数接口、基于compressibleMultiphaseVoF的界面流评估函数接口、基于shockFluid的高速流评估函数接口",
     "start_time": "2026-08-11T09:00:00+08:00",
     "end_time": "",
-    "elapsed_seconds": 5400,
-    "nodes": 8,
-    "cpu_cores": 512,
+    "elapsed_seconds": 253,
+    "nodes": 4,
+    "cpu_cores": 25,
     "gpu_count": 0,
-    "memory_gb": 2048,
-    "core_hours": 768,
+    "memory_gb": 0,
+    "core_hours": 1.22,
     "source_type": "simulated",
     "workflow": {
       "nodes": [
         {
-          "id": "init",
-          "name": "场景初始化",
+          "id": "prepare",
+          "name": "输入数据准备",
+          "duration_ticks": 1,
           "status": "success",
           "progress": 100,
-          "cluster_id": "changsha"
+          "elapsed_seconds": 35,
+          "core_hours": 0,
+          "resource_source": "none",
+          "planned_start_seconds": 0,
+          "planned_seconds": 35,
+          "waiting_for": [],
+          "waiting_at_join": false
         },
         {
-          "id": "topology",
-          "name": "通信拓扑构建",
+          "id": "operator-0",
+          "operator_id": "decompose-par",
+          "name": "基于decomposePar的并行划分函数接口",
+          "duration_ticks": 1,
           "status": "success",
           "progress": 100,
-          "cluster_id": "changsha"
+          "elapsed_seconds": 36,
+          "core_hours": 0.01,
+          "operator_name": "decompose-par",
+          "operator_title": "基于decomposePar的并行划分函数接口",
+          "runtime_type": "singularity",
+          "runtime_label": "Singularity",
+          "runtime_deployment": "",
+          "runtime_detail": "/public/home/wxn/image/scnet/simulation/openfoam/openfoam _13.sif",
+          "cpu_cores": 1,
+          "gpu_count": 0,
+          "memory_mb": 0,
+          "memory_gb": 0,
+          "resource_source": "operator",
+          "planned_start_seconds": 35,
+          "planned_seconds": 36,
+          "waiting_for": [],
+          "waiting_at_join": false
         },
         {
-          "id": "assignment",
-          "name": "任务分配",
-          "status": "success",
-          "progress": 100,
-          "cluster_id": "changsha"
-        },
-        {
-          "id": "control",
-          "name": "协同控制求解",
-          "status": "success",
-          "progress": 100,
-          "cluster_id": "changsha"
-        },
-        {
-          "id": "simulation",
-          "name": "多智能体动力学仿真",
+          "id": "operator-1",
+          "operator_id": "incompressible-driftflux",
+          "name": "基于incompressibleDriftFlux的滑移流评估函数接口",
+          "duration_ticks": 3,
           "status": "running",
-          "progress": 62,
-          "cluster_id": "changsha"
+          "progress": 64.26,
+          "elapsed_seconds": 182,
+          "core_hours": 0.4,
+          "operator_name": "incompressible-driftflux",
+          "operator_title": "基于incompressibleDriftFlux的滑移流评估函数接口",
+          "runtime_type": "singularity",
+          "runtime_label": "Singularity",
+          "runtime_deployment": "",
+          "runtime_detail": "/public/home/wxn/image/scnet/simulation/openfoam/openfoam _13.sif",
+          "cpu_cores": 8,
+          "gpu_count": 0,
+          "memory_mb": 0,
+          "memory_gb": 0,
+          "resource_source": "operator",
+          "planned_start_seconds": 71,
+          "planned_seconds": 283,
+          "waiting_for": [],
+          "waiting_at_join": false
         },
         {
-          "id": "collision",
-          "name": "碰撞检测",
+          "id": "operator-2",
+          "operator_id": "compressible-multiphase-vof",
+          "name": "基于compressibleMultiphaseVoF的界面流评估函数接口",
+          "duration_ticks": 1,
           "status": "running",
-          "progress": 62,
-          "cluster_id": "changsha"
+          "progress": 64.26,
+          "elapsed_seconds": 182,
+          "core_hours": 0.4,
+          "operator_name": "compressible-multiphase-vof",
+          "operator_title": "基于compressibleMultiphaseVoF的界面流评估函数接口",
+          "runtime_type": "singularity",
+          "runtime_label": "Singularity",
+          "runtime_deployment": "",
+          "runtime_detail": "/public/home/wxn/image/scnet/simulation/openfoam/openfoam _13.sif",
+          "cpu_cores": 8,
+          "gpu_count": 0,
+          "memory_mb": 0,
+          "memory_gb": 0,
+          "resource_source": "operator",
+          "planned_start_seconds": 71,
+          "planned_seconds": 283,
+          "waiting_for": [],
+          "waiting_at_join": false
         },
         {
-          "id": "statistics",
-          "name": "任务统计",
+          "id": "operator-3",
+          "operator_id": "shockfluid",
+          "name": "基于shockFluid的高速流评估函数接口",
+          "duration_ticks": 5,
+          "status": "running",
+          "progress": 64.26,
+          "elapsed_seconds": 182,
+          "core_hours": 0.4,
+          "operator_name": "shockfluid",
+          "operator_title": "基于shockFluid的高速流评估函数接口",
+          "runtime_type": "singularity",
+          "runtime_label": "Singularity",
+          "runtime_deployment": "",
+          "runtime_detail": "/public/home/wxn/image/scnet/simulation/openfoam/openfoam _13.sif",
+          "cpu_cores": 8,
+          "gpu_count": 0,
+          "memory_mb": 0,
+          "memory_gb": 0,
+          "resource_source": "operator",
+          "planned_start_seconds": 71,
+          "planned_seconds": 283,
+          "waiting_for": [],
+          "waiting_at_join": false
+        },
+        {
+          "id": "post",
+          "name": "结果整理与输出",
+          "duration_ticks": 1,
           "status": "pending",
           "progress": 0,
-          "cluster_id": "changsha"
-        },
-        {
-          "id": "output",
-          "name": "结果输出",
-          "status": "pending",
-          "progress": 0,
-          "cluster_id": "changsha"
+          "elapsed_seconds": 0,
+          "core_hours": 0,
+          "resource_source": "none",
+          "planned_start_seconds": 354,
+          "planned_seconds": 35,
+          "waiting_for": [
+            "operator-1",
+            "operator-2",
+            "operator-3"
+          ],
+          "waiting_at_join": false
         }
       ],
       "edges": [
         {
-          "source": "init",
-          "target": "topology"
+          "source": "prepare",
+          "target": "operator-0"
         },
         {
-          "source": "topology",
-          "target": "assignment"
+          "source": "operator-0",
+          "target": "operator-1"
         },
         {
-          "source": "assignment",
-          "target": "control"
+          "source": "operator-0",
+          "target": "operator-2"
         },
         {
-          "source": "control",
-          "target": "simulation"
+          "source": "operator-0",
+          "target": "operator-3"
         },
         {
-          "source": "simulation",
-          "target": "collision"
+          "source": "operator-1",
+          "target": "post"
         },
         {
-          "source": "collision",
-          "target": "statistics"
+          "source": "operator-2",
+          "target": "post"
         },
         {
-          "source": "statistics",
-          "target": "output"
+          "source": "operator-3",
+          "target": "post"
         }
       ]
     },
@@ -35072,7 +35148,17 @@
           "z": 85
         }
       ]
-    }
+    },
+    "selected_operator_ids": [
+      "decompose-par",
+      "incompressible-driftflux",
+      "compressible-multiphase-vof",
+      "shockfluid"
+    ],
+    "resource_source": "operator",
+    "planned_seconds": 389,
+    "remaining_seconds": 136,
+    "_operator_version": 4
   },
   "timestamp": "2026-08-11T10:28:30+08:00"
 }

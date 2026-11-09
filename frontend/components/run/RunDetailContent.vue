@@ -134,10 +134,16 @@ function stageText(stage?: string): string {
   return stageLabels.value[stage] ?? stage
 }
 
-/** All domains share the server's persisted simulation clock. */
+/** All domains share the server's persisted run clock. */
 const runRunning = computed(() => ['running', 'queued', 'pending'].includes(detail.value?.status ?? ''))
-const durationLabel = computed(() => '累计模拟耗时')
+const durationLabel = computed(() => runRunning.value ? '已运行 / 预计' : '运行耗时')
 const metricsTitle = computed(() => '指标展示')
+const durationValue = computed(() => {
+  const run = detail.value
+  if (!run) return '-'
+  if (!runRunning.value || !run.planned_seconds) return formatDuration(run.elapsed_seconds)
+  return `${formatDuration(run.elapsed_seconds)} / ${formatDuration(run.planned_seconds)}`
+})
 let pollTimer: ReturnType<typeof setTimeout> | undefined
 let polling = false
 let active = true
@@ -238,10 +244,10 @@ const resourceItems = computed(() => {
   const run = detail.value
   if (!run) return []
   return [
-    { label: '计算节点', value: run.nodes != null ? formatNumber(run.nodes) : '-' },
+    { label: '工作节点', value: run.nodes != null ? `${formatNumber(run.nodes)} 个` : '-' },
     { label: 'CPU 核数', value: run.cpu_cores != null ? `${formatNumber(run.cpu_cores)} 核` : '-' },
     { label: 'GPU 卡数', value: run.gpu_count != null ? `${formatNumber(run.gpu_count)} 卡` : '-' },
-    { label: '内存', value: run.memory_gb != null ? `${formatNumber(run.memory_gb)} GB` : '-' },
+    { label: '内存', value: run.memory_gb != null && run.memory_gb > 0 ? `${formatNumber(run.memory_gb, 1)} GB` : '按需' },
     { label: '累计核时', value: run.core_hours != null ? formatNumber(run.core_hours, 1) : '-' },
   ]
 })
@@ -249,15 +255,20 @@ const resourceItems = computed(() => {
 const taskFacts = computed(() => {
   const run = detail.value
   if (!run) return []
-  return [
+  const facts = [
     { label: '运行集群', value: run.cluster_name || run.cluster_id || '-' },
     { label: 'Job ID', value: run.job_id || '-' },
     { label: '应用场景', value: run.scenario_name || run.scenario_id || '-' },
     { label: '开始时间', value: formatTimestamp(run.start_time) },
     { label: '结束时间', value: run.end_time ? formatTimestamp(run.end_time) : '-' },
-    { label: durationLabel.value, value: formatDuration(run.elapsed_seconds) },
+    { label: '预计总耗时', value: run.planned_seconds ? formatDuration(run.planned_seconds) : '-' },
+    { label: durationLabel.value, value: durationValue.value },
     { label: '当前阶段', value: stageText(run.current_stage) },
   ]
+  if (runRunning.value && run.remaining_seconds != null) {
+    facts.splice(7, 0, { label: '剩余时间', value: formatDuration(run.remaining_seconds) })
+  }
+  return facts
 })
 
 function baseChartStyle(): Record<string, unknown> {
@@ -422,7 +433,7 @@ function chartOption(section: ExtraSection): Record<string, unknown> | null {
           </div>
           <div class="run-summary-item">
             <span>{{ durationLabel }}</span>
-            <strong>{{ formatDuration(detail.elapsed_seconds) }}</strong>
+            <strong>{{ durationValue }}</strong>
           </div>
         </section>
       </section>

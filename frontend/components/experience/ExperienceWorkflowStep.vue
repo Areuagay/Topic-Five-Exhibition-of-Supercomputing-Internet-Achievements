@@ -31,6 +31,27 @@ function stageText(stage?: string): string {
   return stageLabels.value[stage] ?? stage
 }
 
+const RUNTIME_LABELS: Record<string, string> = {
+  instance: '平台实例',
+  singularity: 'Singularity',
+  docker: 'Docker',
+  'docker-run': 'Docker',
+  container: '容器',
+}
+function runtimeLabel(operator: Operator): string {
+  return operator.runtime_label || RUNTIME_LABELS[operator.runtime_type] || operator.runtime_type || '容器'
+}
+function memoryText(value?: number): string {
+  return value && value > 0 ? `${formatNumber(value, 1)} GB` : '按需'
+}
+function durationText(run?: Run): string {
+  if (!run) return '-'
+  if (['running', 'queued', 'pending'].includes(run.status) && run.planned_seconds) {
+    return `${formatDuration(run.elapsed_seconds)} / ${formatDuration(run.planned_seconds)}`
+  }
+  return formatDuration(run.elapsed_seconds)
+}
+
 function selectRun(value: string): void {
   emit('update:selectedRunId', value)
 }
@@ -40,7 +61,7 @@ function selectRun(value: string): void {
   <div class="exp-workflow">
     <section class="exp-chosen-operators" aria-label="本次体验已选算子">
       <header class="exp-chosen-heading"><div><strong>本条任务算子</strong><span class="exp-chosen-count">{{ chosenOperators.length }} 项</span></div><p>与下方工作流、执行监控同步</p></header>
-      <ul v-if="chosenOperators.length"><li v-for="operator in chosenOperators" :key="operator.name"><span class="exp-chosen-icon"><Box :size="17" aria-hidden="true" /></span><span class="exp-chosen-name">{{ operator.title || (operator.description.includes('：') ? operator.description.split('：')[0] : operator.name) }}<small>{{ operator.name }}</small></span></li></ul>
+      <ul v-if="chosenOperators.length"><li v-for="operator in chosenOperators" :key="operator.name"><span class="exp-chosen-icon"><Box :size="17" aria-hidden="true" /></span><span class="exp-chosen-name">{{ operator.title || (operator.description.includes('：') ? operator.description.split('：')[0] : operator.name) }}<small>{{ operator.name }} · {{ runtimeLabel(operator) }}</small></span></li></ul>
       <p v-else>预置运行记录，计算阶段请查看下方工作流。</p>
     </section>
     <div class="exp-toolbar">
@@ -77,8 +98,20 @@ function selectRun(value: string): void {
           <dd>{{ formatNumber(selectedRun.cpu_cores) }} 核</dd>
         </div>
         <div>
-          <dt>运行耗时</dt>
-          <dd>{{ formatDuration(selectedRun.elapsed_seconds) }}</dd>
+          <dt>GPU</dt>
+          <dd>{{ formatNumber(selectedRun.gpu_count) }} 卡</dd>
+        </div>
+        <div>
+          <dt>内存</dt>
+          <dd>{{ memoryText(selectedRun.memory_gb) }}</dd>
+        </div>
+        <div>
+          <dt>累计核时</dt>
+          <dd>{{ formatNumber(selectedRun.core_hours, 1) }}</dd>
+        </div>
+        <div>
+          <dt>{{ ['running', 'queued', 'pending'].includes(selectedRun.status) ? '已运行 / 预计' : '运行耗时' }}</dt>
+          <dd>{{ durationText(selectedRun) }}</dd>
         </div>
       </dl>
     </div>

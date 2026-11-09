@@ -13,6 +13,7 @@ import {
 } from '@vue-flow/core'
 import { Background } from '@vue-flow/background'
 import type { WorkflowEdge, WorkflowNode } from '~/types'
+import { formatBytes, formatDuration, formatNumber } from '~/composables/useFormat'
 import { positionDagPopover } from '~/utils/dag-popover'
 import { layoutDag, dagViewport, DAG_NODE_WIDTH, DAG_NODE_HEIGHT, type DagLayout, type DagPort } from '~/utils/dag-layout'
 import '@vue-flow/core/dist/style.css'
@@ -51,7 +52,7 @@ function measureNodeTitles(): void {
   for (const node of [...props.nodes].sort((a, b) => a.id.localeCompare(b.id))) {
     const title = frame.value.querySelector<HTMLElement>(`.vue-flow__node[data-id="${CSS.escape(node.id)}"] .workflow-node > strong`)
     if (!title) return
-    heights[node.id] = Math.max(NODE_HEIGHT, title.offsetHeight + 52)
+    heights[node.id] = Math.max(NODE_HEIGHT, title.offsetHeight + (node.operator_id ? 78 : 52))
   }
   if (JSON.stringify(nodeHeights.value) !== JSON.stringify(heights)) {
     nodeHeights.value = heights
@@ -129,6 +130,23 @@ function nodeMeta(node: WorkflowNode): string {
   if (node.status === 'pending' && parents.length > 1) return `等待汇合 · ${parents.filter(p => p?.status === 'success').length}/${parents.length}`
   const status = statusText(node.status)
   return node.progress != null ? `${status} · ${Math.round(node.progress)}%` : status
+}
+
+/** 节点附带的工作负载信息全部来自算子记录，不在前端写死。 */
+function nodeCpu(node: WorkflowNode): string {
+  return Number(node.cpu_cores) > 0 ? `${formatNumber(node.cpu_cores)}核` : 'CPU 按需'
+}
+function nodeGpu(node: WorkflowNode): string {
+  return Number(node.gpu_count) > 0 ? `${formatNumber(node.gpu_count)}卡` : '无 GPU'
+}
+function nodeMemory(node: WorkflowNode): string {
+  return Number(node.memory_mb) > 0 ? formatBytes(Number(node.memory_mb) * 1024 * 1024) : '内存按需'
+}
+function nodeCoreHours(node: WorkflowNode): string {
+  return Number(node.core_hours) > 0 ? `${formatNumber(node.core_hours, 2)} 核时` : '—'
+}
+function nodeResourceLine(node: WorkflowNode): string {
+  return [nodeCpu(node), nodeGpu(node), nodeMemory(node)].join(' · ')
 }
 
 const activeNodeCount = computed(() => props.nodes.filter(n => n.status === 'running').length)
@@ -404,6 +422,12 @@ onBeforeUnmount(() => {
                 <span class="workflow-node-status" :style="{ backgroundColor: statusColor(data.status) }" aria-hidden="true" />
                 <span>{{ nodeMeta(data) }}</span>
               </div>
+              <div v-if="data.operator_id" class="workflow-node-resources" :title="`${nodeResourceLine(data)} · 累计 ${nodeCoreHours(data)}`">
+                <span>{{ nodeCpu(data) }}</span>
+                <span>{{ nodeGpu(data) }}</span>
+                <span>{{ nodeMemory(data) }}</span>
+                <span>{{ nodeCoreHours(data) }}</span>
+              </div>
               <span class="workflow-node-progress" aria-hidden="true">
                 <i :style="{ transform: `scaleX(${clampedProgress(data.progress) / 100})`, backgroundColor: statusColor(data.status) }" />
               </span>
@@ -435,6 +459,13 @@ onBeforeUnmount(() => {
               <div><dt>状态</dt><dd>{{ statusText(selectedNode.status) }}</dd></div>
               <div><dt>进度</dt><dd>{{ selectedNode.progress != null ? `${selectedNode.progress}%` : '—' }}</dd></div>
               <div v-if="selectedNode.elapsed_seconds != null"><dt>运行耗时</dt><dd>{{ selectedNode.elapsed_seconds }} 秒</dd></div>
+              <div v-if="selectedNode.operator_title" class="dag-node-popover-wide"><dt>工作算子</dt><dd>{{ selectedNode.operator_title }}<small>{{ selectedNode.operator_id }}</small></dd></div>
+              <div v-if="selectedNode.runtime_label"><dt>运行环境</dt><dd>{{ selectedNode.runtime_label }}<small v-if="selectedNode.runtime_deployment">{{ selectedNode.runtime_deployment }}</small></dd></div>
+              <div v-if="selectedNode.cpu_cores != null"><dt>CPU 核数</dt><dd>{{ nodeCpu(selectedNode) }}</dd></div>
+              <div v-if="selectedNode.gpu_count != null"><dt>GPU 卡数</dt><dd>{{ nodeGpu(selectedNode) }}</dd></div>
+              <div v-if="selectedNode.memory_mb != null"><dt>内存</dt><dd>{{ nodeMemory(selectedNode) }}</dd></div>
+              <div v-if="selectedNode.core_hours != null"><dt>累计核时</dt><dd>{{ nodeCoreHours(selectedNode) }}</dd></div>
+              <div v-if="selectedNode.planned_seconds != null" class="dag-node-popover-wide"><dt>计划耗时</dt><dd>{{ formatDuration(selectedNode.planned_seconds) }}</dd></div>
               <div v-if="selectedNode.waiting_at_join" class="dag-node-popover-wide"><dt>同步状态</dt><dd>等待其他分支完成</dd></div>
               <div v-if="selectedNode.waiting_for?.length" class="dag-node-popover-wide"><dt>等待上游</dt><dd>{{ selectedNode.waiting_for.map(id => nodes.find(n => n.id === id)?.name || id).join('、') }}</dd></div>
             </dl>
@@ -562,6 +593,8 @@ onBeforeUnmount(() => {
 .workflow-node-meta { min-width: 0; display: flex; align-items: center; gap: 7px; margin-top: 7px; color: #758195; font-size: 11px; line-height: 1.3; }
 .workflow-node-meta > span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .workflow-node-status { width: 6px; height: 6px; flex: 0 0 auto; border-radius: 50%; }
+.workflow-node-resources { display: flex; flex-wrap: wrap; gap: 2px 8px; margin-top: 5px; color: #5b6b80; font-size: 10px; line-height: 1.35; }
+.workflow-node-resources span { white-space: nowrap; }
 .workflow-node-progress { position: absolute; right: 18px; bottom: 7px; left: 18px; height: 3px; overflow: hidden; border-radius: 2px; background: #edf1f5; }
 .workflow-node-progress i { display: block; width:100%; height: 100%; border-radius: inherit; transform-origin:left; transition:transform 600ms cubic-bezier(.22,1,.36,1), background-color 240ms ease; }
 
@@ -594,6 +627,7 @@ onBeforeUnmount(() => {
 .dag-node-popover-facts dd { margin-top: 4px; overflow: hidden; color: #344156; font-size: 14px; font-weight: 650; font-variant-numeric: tabular-nums; line-height: 1.35; text-overflow: ellipsis; white-space: nowrap; }
 .dag-node-popover-wide { grid-column: 1 / -1; }
 .dag-node-popover-wide dd { white-space: normal; overflow-wrap: anywhere; }
+.dag-node-popover-facts dd small { display: block; margin-top: 2px; color: #7b8798; font-size: 11px; font-weight: 400; }
 
 .dag-popover-enter-active { transition: opacity 220ms cubic-bezier(0.16, 1, 0.3, 1), transform 220ms cubic-bezier(0.16, 1, 0.3, 1); }
 .dag-popover-leave-active { transition: opacity 150ms cubic-bezier(0.7, 0, 0.84, 0), transform 150ms cubic-bezier(0.7, 0, 0.84, 0); }

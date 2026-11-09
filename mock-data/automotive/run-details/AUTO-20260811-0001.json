@@ -6,97 +6,182 @@
     "scenario_id": "vehicle-crash",
     "scenario_name": "整车碰撞仿真",
     "status": "running",
-    "progress": 68,
+    "progress": 76,
     "execution_mode": "simulated",
     "cluster_id": "changsha",
     "cluster_name": "天河新一代",
     "job_id": "210011",
-    "current_stage": "solver",
+    "current_stage": "汽车液膜附着演化函数接口",
     "start_time": "2026-08-11T09:00:00+08:00",
     "end_time": "",
-    "elapsed_seconds": 4320,
-    "nodes": 16,
-    "cpu_cores": 1024,
+    "elapsed_seconds": 600,
+    "nodes": 4,
+    "cpu_cores": 32,
     "gpu_count": 0,
-    "memory_gb": 4096,
-    "core_hours": 1228.8,
+    "memory_gb": 0,
+    "core_hours": 2.8,
     "source_type": "simulated",
     "workflow": {
       "nodes": [
         {
-          "id": "model-import",
-          "name": "模型导入",
+          "id": "prepare",
+          "name": "输入数据准备",
+          "duration_ticks": 1,
           "status": "success",
           "progress": 100,
-          "cluster_id": "changsha"
+          "elapsed_seconds": 44,
+          "core_hours": 0,
+          "resource_source": "none",
+          "planned_start_seconds": 0,
+          "planned_seconds": 44,
+          "waiting_for": [],
+          "waiting_at_join": false
         },
         {
-          "id": "model-check",
-          "name": "网格与模型检查",
+          "id": "operator-0",
+          "operator_id": "isothermal-film",
+          "name": "汽车等温液膜附着评估函数接口",
+          "duration_ticks": 1,
           "status": "success",
           "progress": 100,
-          "cluster_id": "changsha"
+          "elapsed_seconds": 351,
+          "core_hours": 0.78,
+          "operator_name": "isothermal-film",
+          "operator_title": "汽车等温液膜附着评估函数接口",
+          "runtime_type": "singularity",
+          "runtime_label": "Singularity",
+          "runtime_deployment": "",
+          "runtime_detail": "/public/home/wxn/image/scnet/simulation/openfoam/openfoam _13.sif",
+          "cpu_cores": 8,
+          "gpu_count": 0,
+          "memory_mb": 0,
+          "memory_gb": 0,
+          "resource_source": "operator",
+          "planned_start_seconds": 44,
+          "planned_seconds": 351,
+          "waiting_for": [],
+          "waiting_at_join": false
         },
         {
-          "id": "boundary",
-          "name": "接触/材料/边界条件",
-          "status": "success",
-          "progress": 100,
-          "cluster_id": "changsha"
-        },
-        {
-          "id": "partition",
-          "name": "区域分解",
-          "status": "success",
-          "progress": 100,
-          "cluster_id": "changsha"
-        },
-        {
-          "id": "solver",
-          "name": "并行显式求解",
+          "id": "operator-1",
+          "operator_id": "film-evolution",
+          "name": "汽车液膜附着演化函数接口",
+          "duration_ticks": 1,
           "status": "running",
-          "progress": 68,
-          "cluster_id": "changsha"
+          "progress": 58.47,
+          "elapsed_seconds": 205,
+          "core_hours": 0.46,
+          "operator_name": "film-evolution",
+          "operator_title": "汽车液膜附着演化函数接口",
+          "runtime_type": "singularity",
+          "runtime_label": "Singularity",
+          "runtime_deployment": "",
+          "runtime_detail": "/public/home/wxn/image/scnet/simulation/openfoam/openfoam _13.sif",
+          "cpu_cores": 8,
+          "gpu_count": 0,
+          "memory_mb": 0,
+          "memory_gb": 0,
+          "resource_source": "operator",
+          "planned_start_seconds": 395,
+          "planned_seconds": 350,
+          "waiting_for": [],
+          "waiting_at_join": false
+        },
+        {
+          "id": "operator-2",
+          "operator_id": "particle-spray",
+          "name": "汽车颗粒喷雾评估函数接口",
+          "duration_ticks": 5,
+          "status": "success",
+          "progress": 100,
+          "elapsed_seconds": 351,
+          "core_hours": 0.78,
+          "operator_name": "particle-spray",
+          "operator_title": "汽车颗粒喷雾评估函数接口",
+          "runtime_type": "singularity",
+          "runtime_label": "Singularity",
+          "runtime_deployment": "",
+          "runtime_detail": "/public/home/wxn/image/scnet/simulation/openfoam/openfoam _13.sif",
+          "cpu_cores": 8,
+          "gpu_count": 0,
+          "memory_mb": 0,
+          "memory_gb": 0,
+          "resource_source": "operator",
+          "planned_start_seconds": 44,
+          "planned_seconds": 351,
+          "waiting_for": [],
+          "waiting_at_join": true
+        },
+        {
+          "id": "operator-3",
+          "operator_id": "oil-multiphase-transport",
+          "name": "汽车油液多相输运函数接口",
+          "duration_ticks": 3,
+          "status": "success",
+          "progress": 100,
+          "elapsed_seconds": 351,
+          "core_hours": 0.78,
+          "operator_name": "oil-multiphase-transport",
+          "operator_title": "汽车油液多相输运函数接口",
+          "runtime_type": "singularity",
+          "runtime_label": "Singularity",
+          "runtime_deployment": "",
+          "runtime_detail": "/public/home/wxn/image/scnet/simulation/openfoam/openfoam _13.sif",
+          "cpu_cores": 8,
+          "gpu_count": 0,
+          "memory_mb": 0,
+          "memory_gb": 0,
+          "resource_source": "operator",
+          "planned_start_seconds": 44,
+          "planned_seconds": 351,
+          "waiting_for": [],
+          "waiting_at_join": true
         },
         {
           "id": "post",
-          "name": "结果后处理",
+          "name": "结果整理与输出",
+          "duration_ticks": 1,
           "status": "pending",
           "progress": 0,
-          "cluster_id": "changsha"
-        },
-        {
-          "id": "validate",
-          "name": "安全指标验证",
-          "status": "pending",
-          "progress": 0,
-          "cluster_id": "changsha"
+          "elapsed_seconds": 0,
+          "core_hours": 0,
+          "resource_source": "none",
+          "planned_start_seconds": 745,
+          "planned_seconds": 44,
+          "waiting_for": [
+            "operator-1"
+          ],
+          "waiting_at_join": false
         }
       ],
       "edges": [
         {
-          "source": "model-import",
-          "target": "model-check"
+          "source": "prepare",
+          "target": "operator-0"
         },
         {
-          "source": "model-check",
-          "target": "boundary"
+          "source": "operator-0",
+          "target": "operator-1"
         },
         {
-          "source": "boundary",
-          "target": "partition"
+          "source": "prepare",
+          "target": "operator-2"
         },
         {
-          "source": "partition",
-          "target": "solver"
+          "source": "prepare",
+          "target": "operator-3"
         },
         {
-          "source": "solver",
+          "source": "operator-1",
           "target": "post"
         },
         {
-          "source": "post",
-          "target": "validate"
+          "source": "operator-2",
+          "target": "post"
+        },
+        {
+          "source": "operator-3",
+          "target": "post"
         }
       ]
     },
@@ -5429,7 +5514,17 @@
         "max_stress_mpa": 422.5,
         "energy_error_percent": 2.4
       }
-    }
+    },
+    "selected_operator_ids": [
+      "isothermal-film",
+      "film-evolution",
+      "particle-spray",
+      "oil-multiphase-transport"
+    ],
+    "resource_source": "operator",
+    "planned_seconds": 789,
+    "remaining_seconds": 189,
+    "_operator_version": 4
   },
   "timestamp": "2026-08-11T10:12:05+08:00"
 }

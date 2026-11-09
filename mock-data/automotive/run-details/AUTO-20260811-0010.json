@@ -15,88 +15,142 @@
     "start_time": "2026-08-10T13:00:00+08:00",
     "end_time": "2026-08-10T13:45:00+08:00",
     "elapsed_seconds": 2700,
-    "nodes": 8,
-    "cpu_cores": 512,
-    "gpu_count": 0,
-    "memory_gb": 2048,
-    "core_hours": 384,
+    "nodes": 3,
+    "cpu_cores": 10,
+    "gpu_count": 2,
+    "memory_gb": 0,
+    "core_hours": 5.55,
     "source_type": "simulated",
     "workflow": {
       "nodes": [
         {
-          "id": "model-import",
-          "name": "模型导入",
+          "id": "prepare",
+          "name": "输入数据准备",
+          "duration_ticks": 1,
           "status": "success",
           "progress": 100,
-          "cluster_id": "changsha"
+          "elapsed_seconds": 270,
+          "core_hours": 0,
+          "resource_source": "none",
+          "planned_start_seconds": 0,
+          "planned_seconds": 270,
+          "waiting_for": [],
+          "waiting_at_join": false
         },
         {
-          "id": "model-check",
-          "name": "网格与模型检查",
+          "id": "operator-0",
+          "operator_id": "ipfno",
+          "name": "IPFNO隐式傅里叶神经算子快速评估函数接口",
+          "duration_ticks": 1,
           "status": "success",
           "progress": 100,
-          "cluster_id": "changsha"
+          "elapsed_seconds": 1350,
+          "core_hours": 0.38,
+          "operator_name": "ipfno",
+          "operator_title": "IPFNO隐式傅里叶神经算子快速评估函数接口",
+          "runtime_type": "docker",
+          "runtime_label": "Docker",
+          "runtime_deployment": "Docker 运行",
+          "runtime_detail": "hub.cngrid.org:5000/scnet/cars/ipfno:gpu20250827_nodata",
+          "cpu_cores": 1,
+          "gpu_count": 1,
+          "memory_mb": 0,
+          "memory_gb": 0,
+          "resource_source": "operator",
+          "planned_start_seconds": 270,
+          "planned_seconds": 1350,
+          "waiting_for": [],
+          "waiting_at_join": false
         },
         {
-          "id": "boundary",
-          "name": "接触/材料/边界条件",
+          "id": "operator-1",
+          "operator_id": "transolver",
+          "name": "Transolver几何PDE代理模型快速评估函数接口",
+          "duration_ticks": 5,
           "status": "success",
           "progress": 100,
-          "cluster_id": "changsha"
+          "elapsed_seconds": 1350,
+          "core_hours": 0.38,
+          "operator_name": "transolver",
+          "operator_title": "Transolver几何PDE代理模型快速评估函数接口",
+          "runtime_type": "docker",
+          "runtime_label": "Docker",
+          "runtime_deployment": "Docker 运行",
+          "runtime_detail": "hub.cngrid.org:5000/scnet/cars/transolver:gpu20250820",
+          "cpu_cores": 1,
+          "gpu_count": 1,
+          "memory_mb": 0,
+          "memory_gb": 0,
+          "resource_source": "operator",
+          "planned_start_seconds": 270,
+          "planned_seconds": 1350,
+          "waiting_for": [],
+          "waiting_at_join": false
         },
         {
-          "id": "partition",
-          "name": "区域分解",
+          "id": "operator-2",
+          "operator_id": "structural-thermal-load",
+          "name": "汽车结构热负荷评估函数接口",
+          "duration_ticks": 3,
           "status": "success",
           "progress": 100,
-          "cluster_id": "changsha"
-        },
-        {
-          "id": "solver",
-          "name": "并行显式求解",
-          "status": "success",
-          "progress": 100,
-          "cluster_id": "changsha"
+          "elapsed_seconds": 2160,
+          "core_hours": 4.8,
+          "operator_name": "structural-thermal-load",
+          "operator_title": "汽车结构热负荷评估函数接口",
+          "runtime_type": "singularity",
+          "runtime_label": "Singularity",
+          "runtime_deployment": "",
+          "runtime_detail": "/public/home/wxn/image/scnet/simulation/openfoam/openfoam _13.sif",
+          "cpu_cores": 8,
+          "gpu_count": 0,
+          "memory_mb": 0,
+          "memory_gb": 0,
+          "resource_source": "operator",
+          "planned_start_seconds": 270,
+          "planned_seconds": 2160,
+          "waiting_for": [],
+          "waiting_at_join": false
         },
         {
           "id": "post",
-          "name": "结果后处理",
+          "name": "结果整理与输出",
+          "duration_ticks": 1,
           "status": "success",
           "progress": 100,
-          "cluster_id": "changsha"
-        },
-        {
-          "id": "validate",
-          "name": "安全指标验证",
-          "status": "success",
-          "progress": 100,
-          "cluster_id": "changsha"
+          "elapsed_seconds": 270,
+          "core_hours": 0,
+          "resource_source": "none",
+          "planned_start_seconds": 2430,
+          "planned_seconds": 270,
+          "waiting_for": [],
+          "waiting_at_join": false
         }
       ],
       "edges": [
         {
-          "source": "model-import",
-          "target": "model-check"
+          "source": "prepare",
+          "target": "operator-0"
         },
         {
-          "source": "model-check",
-          "target": "boundary"
+          "source": "prepare",
+          "target": "operator-1"
         },
         {
-          "source": "boundary",
-          "target": "partition"
+          "source": "prepare",
+          "target": "operator-2"
         },
         {
-          "source": "partition",
-          "target": "solver"
-        },
-        {
-          "source": "solver",
+          "source": "operator-0",
           "target": "post"
         },
         {
-          "source": "post",
-          "target": "validate"
+          "source": "operator-1",
+          "target": "post"
+        },
+        {
+          "source": "operator-2",
+          "target": "post"
         }
       ]
     },
@@ -1065,7 +1119,16 @@
           "predicted_life": 1267700
         }
       ]
-    }
+    },
+    "selected_operator_ids": [
+      "ipfno",
+      "transolver",
+      "structural-thermal-load"
+    ],
+    "resource_source": "operator",
+    "planned_seconds": 2700,
+    "remaining_seconds": 0,
+    "_operator_version": 4
   },
   "timestamp": "2026-08-10T13:45:02+08:00"
 }

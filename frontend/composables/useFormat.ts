@@ -6,7 +6,8 @@ export function formatNumber(value?: number | string | null, digits = 0): string
   if (value === undefined || value === null || value === '') return '-'
   const n = Number(value)
   if (Number.isNaN(n)) return String(value)
-  if (n !== 0 && Math.abs(n) < 10 ** -digits) return Number(n.toPrecision(3)).toExponential()
+  // 极小值才使用科学计数法；0.2、0.05 这类展示值必须保持普通小数。
+  if (n !== 0 && Math.abs(n) < 10 ** -Math.max(digits, 3)) return Number(n.toPrecision(3)).toExponential()
   return n.toLocaleString('zh-CN', { maximumFractionDigits: digits })
 }
 

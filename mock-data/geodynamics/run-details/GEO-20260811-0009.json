@@ -13,56 +13,143 @@
     "job_id": "45210",
     "current_stage": "completed",
     "start_time": "2026-09-22T20:32:55+08:00",
-    "end_time": "2026-09-22T20:33:23+08:00",
+    "end_time": "2026-09-22T21:12:55+08:00",
     "elapsed_seconds": 2400,
-    "nodes": 16,
-    "cpu_cores": 1024,
+    "nodes": 3,
+    "cpu_cores": 17,
     "gpu_count": 0,
-    "memory_gb": 8192,
-    "core_hours": 2560,
+    "memory_gb": 16,
+    "core_hours": 7.67,
     "source_type": "simulated",
     "workflow": {
       "nodes": [
         {
           "id": "prepare",
-          "name": "数据预处理",
+          "name": "输入数据准备",
+          "duration_ticks": 1,
           "status": "success",
           "progress": 100,
-          "cluster_id": "kunshan"
+          "elapsed_seconds": 171,
+          "core_hours": 0,
+          "resource_source": "none",
+          "planned_start_seconds": 0,
+          "planned_seconds": 171,
+          "waiting_for": [],
+          "waiting_at_join": false
         },
         {
-          "id": "partition",
-          "name": "网格划分与域分解",
+          "id": "operator-0",
+          "operator_id": "uzawa",
+          "name": "Uzawa鞍点问题求解算子函数接口",
+          "duration_ticks": 5,
           "status": "success",
           "progress": 100,
-          "cluster_id": "kunshan"
+          "elapsed_seconds": 172,
+          "core_hours": 0.05,
+          "operator_name": "uzawa",
+          "operator_title": "Uzawa鞍点问题求解算子函数接口",
+          "runtime_type": "singularity",
+          "runtime_label": "Singularity",
+          "runtime_deployment": "平台实例",
+          "runtime_detail": "/public/home/wxn/image/scnet/common/uzawa.sif",
+          "cpu_cores": 1,
+          "gpu_count": 0,
+          "memory_mb": 0,
+          "memory_gb": 0,
+          "resource_source": "operator",
+          "planned_start_seconds": 171,
+          "planned_seconds": 172,
+          "waiting_for": [],
+          "waiting_at_join": false
         },
         {
-          "id": "solver",
-          "name": "耦合求解",
+          "id": "operator-1",
+          "operator_id": "citcoms-global",
+          "name": "全球尺度地球动力学模拟",
+          "duration_ticks": 1,
           "status": "success",
           "progress": 100,
-          "cluster_id": "kunshan"
+          "elapsed_seconds": 2058,
+          "core_hours": 6.86,
+          "operator_name": "citcoms-global",
+          "operator_title": "全球尺度地球动力学模拟",
+          "runtime_type": "singularity",
+          "runtime_label": "Singularity",
+          "runtime_deployment": "",
+          "runtime_detail": "/public/home/wxn/image/scnet/earth/citcoms/citcoms.sif",
+          "cpu_cores": 12,
+          "gpu_count": 0,
+          "memory_mb": 8192,
+          "memory_gb": 8,
+          "resource_source": "operator",
+          "planned_start_seconds": 171,
+          "planned_seconds": 2058,
+          "waiting_for": [],
+          "waiting_at_join": false
+        },
+        {
+          "id": "operator-2",
+          "operator_id": "citcoms-regional",
+          "name": "区域尺度地球动力学模拟",
+          "duration_ticks": 3,
+          "status": "success",
+          "progress": 100,
+          "elapsed_seconds": 686,
+          "core_hours": 0.76,
+          "operator_name": "citcoms-regional",
+          "operator_title": "区域尺度地球动力学模拟",
+          "runtime_type": "singularity",
+          "runtime_label": "Singularity",
+          "runtime_deployment": "",
+          "runtime_detail": "/public/home/wxn/image/scnet/earth/citcoms/citcoms.sif",
+          "cpu_cores": 4,
+          "gpu_count": 0,
+          "memory_mb": 8192,
+          "memory_gb": 8,
+          "resource_source": "operator",
+          "planned_start_seconds": 171,
+          "planned_seconds": 686,
+          "waiting_for": [],
+          "waiting_at_join": false
         },
         {
           "id": "post",
-          "name": "结果后处理",
+          "name": "结果整理与输出",
+          "duration_ticks": 1,
           "status": "success",
           "progress": 100,
-          "cluster_id": "kunshan"
+          "elapsed_seconds": 171,
+          "core_hours": 0,
+          "resource_source": "none",
+          "planned_start_seconds": 2229,
+          "planned_seconds": 171,
+          "waiting_for": [],
+          "waiting_at_join": false
         }
       ],
       "edges": [
         {
           "source": "prepare",
-          "target": "partition"
+          "target": "operator-0"
         },
         {
-          "source": "partition",
-          "target": "solver"
+          "source": "prepare",
+          "target": "operator-1"
         },
         {
-          "source": "solver",
+          "source": "prepare",
+          "target": "operator-2"
+        },
+        {
+          "source": "operator-0",
+          "target": "post"
+        },
+        {
+          "source": "operator-1",
+          "target": "post"
+        },
+        {
+          "source": "operator-2",
           "target": "post"
         }
       ]
@@ -1743,7 +1830,11 @@
       "uzawa",
       "citcoms-global",
       "citcoms-regional"
-    ]
+    ],
+    "resource_source": "operator",
+    "planned_seconds": 2400,
+    "remaining_seconds": 0,
+    "_operator_version": 4
   },
   "timestamp": "2026-09-22T20:33:23+08:00"
 }

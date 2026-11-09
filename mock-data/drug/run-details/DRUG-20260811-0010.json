@@ -15,99 +15,129 @@
     "start_time": "2026-08-10T15:00:00+08:00",
     "end_time": "2026-08-10T15:04:42+08:00",
     "elapsed_seconds": 282,
-    "nodes": 8,
-    "cpu_cores": 512,
-    "gpu_count": 4,
-    "memory_gb": 2048,
-    "core_hours": 160.1,
+    "nodes": 3,
+    "cpu_cores": 3,
+    "gpu_count": 0,
+    "memory_gb": 24,
+    "core_hours": 0.05,
     "source_type": "simulated",
     "workflow": {
       "nodes": [
         {
           "id": "prepare",
-          "name": "靶点与配体准备",
+          "name": "输入数据准备",
           "status": "success",
           "progress": 100,
-          "cluster_id": "changsha"
+          "elapsed_seconds": 56,
+          "core_hours": 0,
+          "resource_source": "none",
+          "planned_start_seconds": 0,
+          "planned_seconds": 56,
+          "waiting_for": [],
+          "waiting_at_join": false
         },
         {
-          "id": "ligand-preprocess",
-          "name": "配体库预处理",
+          "id": "operator-0",
+          "operator_id": "reasonability-assessment",
+          "name": "合理性评估函数接口",
           "status": "success",
           "progress": 100,
-          "cluster_id": "changsha"
+          "elapsed_seconds": 57,
+          "core_hours": 0.02,
+          "operator_name": "reasonability-assessment",
+          "operator_title": "合理性评估函数接口",
+          "runtime_type": "singularity",
+          "runtime_label": "Singularity",
+          "runtime_deployment": "",
+          "runtime_detail": "/public/home/wxn/image/scnet/bio/meeko/meeko.sif",
+          "cpu_cores": 1,
+          "gpu_count": 0,
+          "memory_mb": 8192,
+          "memory_gb": 8,
+          "resource_source": "operator",
+          "planned_start_seconds": 169,
+          "planned_seconds": 57,
+          "waiting_for": [],
+          "waiting_at_join": false
         },
         {
-          "id": "shard",
-          "name": "化合物库分片",
+          "id": "operator-1",
+          "operator_id": "pose-energy-extraction",
+          "name": "能量构象提取函数接口",
           "status": "success",
           "progress": 100,
-          "cluster_id": "changsha"
+          "elapsed_seconds": 56,
+          "core_hours": 0.02,
+          "operator_name": "pose-energy-extraction",
+          "operator_title": "能量构象提取函数接口",
+          "runtime_type": "singularity",
+          "runtime_label": "Singularity",
+          "runtime_deployment": "",
+          "runtime_detail": "/public/home/wxn/image/scnet/bio/meeko/meeko.sif",
+          "cpu_cores": 1,
+          "gpu_count": 0,
+          "memory_mb": 8192,
+          "memory_gb": 8,
+          "resource_source": "operator",
+          "planned_start_seconds": 113,
+          "planned_seconds": 56,
+          "waiting_for": [],
+          "waiting_at_join": false
         },
         {
-          "id": "docking",
-          "name": "跨中心并行分子对接",
+          "id": "operator-2",
+          "operator_id": "molecule-format-conversion",
+          "name": "分子格式转换接口",
           "status": "success",
           "progress": 100,
-          "cluster_id": "multi-center"
+          "elapsed_seconds": 57,
+          "core_hours": 0.02,
+          "operator_name": "molecule-format-conversion",
+          "operator_title": "分子格式转换接口",
+          "runtime_type": "singularity",
+          "runtime_label": "Singularity",
+          "runtime_deployment": "",
+          "runtime_detail": "/public/home/wxn/image/scnet/bio/meeko/meeko.sif",
+          "cpu_cores": 1,
+          "gpu_count": 0,
+          "memory_mb": 8192,
+          "memory_gb": 8,
+          "resource_source": "operator",
+          "planned_start_seconds": 56,
+          "planned_seconds": 57,
+          "waiting_for": [],
+          "waiting_at_join": false
         },
         {
-          "id": "merge",
-          "name": "对接结果汇总",
+          "id": "post",
+          "name": "结果整理与输出",
           "status": "success",
           "progress": 100,
-          "cluster_id": "changsha"
-        },
-        {
-          "id": "property",
-          "name": "分子属性评价",
-          "status": "success",
-          "progress": 100,
-          "cluster_id": "guangzhou"
-        },
-        {
-          "id": "topn",
-          "name": "Top-N候选筛选",
-          "status": "success",
-          "progress": 100,
-          "cluster_id": "guangzhou"
-        },
-        {
-          "id": "report",
-          "name": "报告生成",
-          "status": "success",
-          "progress": 100,
-          "cluster_id": "guangzhou"
+          "elapsed_seconds": 56,
+          "core_hours": 0,
+          "resource_source": "none",
+          "planned_start_seconds": 226,
+          "planned_seconds": 56,
+          "waiting_for": [],
+          "waiting_at_join": false
         }
       ],
       "edges": [
         {
+          "source": "operator-1",
+          "target": "operator-0"
+        },
+        {
+          "source": "operator-2",
+          "target": "operator-1"
+        },
+        {
           "source": "prepare",
-          "target": "ligand-preprocess"
+          "target": "operator-2"
         },
         {
-          "source": "ligand-preprocess",
-          "target": "shard"
-        },
-        {
-          "source": "shard",
-          "target": "docking"
-        },
-        {
-          "source": "docking",
-          "target": "merge"
-        },
-        {
-          "source": "merge",
-          "target": "property"
-        },
-        {
-          "source": "property",
-          "target": "topn"
-        },
-        {
-          "source": "topn",
-          "target": "report"
+          "source": "operator-0",
+          "target": "post"
         }
       ]
     },
@@ -1581,7 +1611,16 @@
           ]
         }
       }
-    }
+    },
+    "selected_operator_ids": [
+      "reasonability-assessment",
+      "pose-energy-extraction",
+      "molecule-format-conversion"
+    ],
+    "resource_source": "operator",
+    "planned_seconds": 282,
+    "remaining_seconds": 0,
+    "_operator_version": 4
   },
   "timestamp": "2026-08-10T15:04:50+08:00"
 }

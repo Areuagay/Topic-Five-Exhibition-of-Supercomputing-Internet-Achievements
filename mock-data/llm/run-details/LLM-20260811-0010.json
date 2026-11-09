@@ -16,76 +16,174 @@
     "end_time": "2026-08-10T15:38:00+08:00",
     "elapsed_seconds": 2280,
     "nodes": 4,
-    "cpu_cores": 384,
-    "gpu_count": 32,
-    "memory_gb": 8192,
-    "core_hours": 243.2,
+    "cpu_cores": 24,
+    "gpu_count": 2,
+    "memory_gb": 48,
+    "core_hours": 10.13,
     "source_type": "simulated",
     "workflow": {
       "nodes": [
         {
           "id": "prepare",
-          "name": "训练数据检查",
+          "name": "输入数据准备",
+          "duration_ticks": 1,
           "status": "success",
           "progress": 100,
-          "cluster_id": "kunshan"
+          "elapsed_seconds": 163,
+          "core_hours": 0,
+          "resource_source": "none",
+          "planned_start_seconds": 0,
+          "planned_seconds": 163,
+          "waiting_for": [],
+          "waiting_at_join": false
         },
         {
-          "id": "shard",
-          "name": "数据分片",
+          "id": "operator-0",
+          "operator_id": "lightgbm",
+          "name": "基于LightGBM的梯度提升机训练算子接口",
+          "duration_ticks": 1,
           "status": "success",
           "progress": 100,
-          "cluster_id": "kunshan"
+          "elapsed_seconds": 651,
+          "core_hours": 0.72,
+          "operator_name": "lightgbm",
+          "operator_title": "基于LightGBM的梯度提升机训练算子接口",
+          "runtime_type": "docker",
+          "runtime_label": "Docker",
+          "runtime_deployment": "",
+          "runtime_detail": "local/ai-operator/ai-train-lightgbm-server:20260629",
+          "cpu_cores": 4,
+          "gpu_count": 0,
+          "memory_mb": 8192,
+          "memory_gb": 8,
+          "resource_source": "operator",
+          "planned_start_seconds": 163,
+          "planned_seconds": 651,
+          "waiting_for": [],
+          "waiting_at_join": false
         },
         {
-          "id": "init",
-          "name": "模型初始化",
+          "id": "operator-1",
+          "operator_id": "xgboost",
+          "name": "基于XGBoost的梯度提升树训练算子接口",
+          "duration_ticks": 7,
           "status": "success",
           "progress": 100,
-          "cluster_id": "kunshan"
+          "elapsed_seconds": 651,
+          "core_hours": 0.72,
+          "operator_name": "xgboost",
+          "operator_title": "基于XGBoost的梯度提升树训练算子接口",
+          "runtime_type": "docker",
+          "runtime_label": "Docker",
+          "runtime_deployment": "",
+          "runtime_detail": "local/ai-operator/ai-train-xgboost-server:20260629",
+          "cpu_cores": 4,
+          "gpu_count": 0,
+          "memory_mb": 8192,
+          "memory_gb": 8,
+          "resource_source": "operator",
+          "planned_start_seconds": 163,
+          "planned_seconds": 651,
+          "waiting_for": [],
+          "waiting_at_join": false
         },
         {
-          "id": "train",
-          "name": "分布式训练",
+          "id": "operator-2",
+          "operator_id": "peft-lora",
+          "name": "基于PEFT LoRA的参数高效微调算子接口",
+          "duration_ticks": 3,
           "status": "success",
           "progress": 100,
-          "cluster_id": "kunshan"
+          "elapsed_seconds": 1954,
+          "core_hours": 4.34,
+          "operator_name": "peft-lora",
+          "operator_title": "基于PEFT LoRA的参数高效微调算子接口",
+          "runtime_type": "docker",
+          "runtime_label": "Docker",
+          "runtime_deployment": "",
+          "runtime_detail": "local/ai-operator/ai-train-peft-lora-server:20260629",
+          "cpu_cores": 8,
+          "gpu_count": 1,
+          "memory_mb": 16384,
+          "memory_gb": 16,
+          "resource_source": "operator",
+          "planned_start_seconds": 163,
+          "planned_seconds": 1954,
+          "waiting_for": [],
+          "waiting_at_join": false
         },
         {
-          "id": "checkpoint",
-          "name": "Checkpoint保存",
+          "id": "operator-3",
+          "operator_id": "transformers-trainer",
+          "name": "基于Transformers Trainer的监督微调算子接口",
+          "duration_ticks": 5,
           "status": "success",
           "progress": 100,
-          "cluster_id": "kunshan"
+          "elapsed_seconds": 1954,
+          "core_hours": 4.34,
+          "operator_name": "transformers-trainer",
+          "operator_title": "基于Transformers Trainer的监督微调算子接口",
+          "runtime_type": "docker",
+          "runtime_label": "Docker",
+          "runtime_deployment": "",
+          "runtime_detail": "local/ai-operator/ai-train-trainer-server:20260629",
+          "cpu_cores": 8,
+          "gpu_count": 1,
+          "memory_mb": 16384,
+          "memory_gb": 16,
+          "resource_source": "operator",
+          "planned_start_seconds": 163,
+          "planned_seconds": 1954,
+          "waiting_for": [],
+          "waiting_at_join": false
         },
         {
-          "id": "evaluate",
-          "name": "模型评估",
+          "id": "post",
+          "name": "结果整理与输出",
+          "duration_ticks": 1,
           "status": "success",
           "progress": 100,
-          "cluster_id": "kunshan"
+          "elapsed_seconds": 163,
+          "core_hours": 0,
+          "resource_source": "none",
+          "planned_start_seconds": 2117,
+          "planned_seconds": 163,
+          "waiting_for": [],
+          "waiting_at_join": false
         }
       ],
       "edges": [
         {
           "source": "prepare",
-          "target": "shard"
+          "target": "operator-0"
         },
         {
-          "source": "shard",
-          "target": "init"
+          "source": "prepare",
+          "target": "operator-1"
         },
         {
-          "source": "init",
-          "target": "train"
+          "source": "prepare",
+          "target": "operator-2"
         },
         {
-          "source": "train",
-          "target": "checkpoint"
+          "source": "prepare",
+          "target": "operator-3"
         },
         {
-          "source": "checkpoint",
-          "target": "evaluate"
+          "source": "operator-0",
+          "target": "post"
+        },
+        {
+          "source": "operator-1",
+          "target": "post"
+        },
+        {
+          "source": "operator-2",
+          "target": "post"
+        },
+        {
+          "source": "operator-3",
+          "target": "post"
         }
       ]
     },
@@ -4905,7 +5003,17 @@
         "boundary_points": 2400,
         "data_points": 1800
       }
-    }
+    },
+    "selected_operator_ids": [
+      "lightgbm",
+      "xgboost",
+      "peft-lora",
+      "transformers-trainer"
+    ],
+    "resource_source": "operator",
+    "planned_seconds": 2280,
+    "remaining_seconds": 0,
+    "_operator_version": 4
   },
   "timestamp": "2026-08-10T15:38:02+08:00"
 }

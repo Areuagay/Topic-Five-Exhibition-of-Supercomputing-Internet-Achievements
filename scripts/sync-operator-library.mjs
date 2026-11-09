@@ -129,6 +129,7 @@ function parseRegistry(record) {
     version: text('version'),
     runtimeType: text('runtimeType'),
     runtime: text('runtime'),
+    runtimeArgs: text('runtimeArgs'),
     handler,
     mpiEnabled: /"mpiEnabled"\s*:\s*true/.test(content),
     mpiCommand,
@@ -136,6 +137,45 @@ function parseRegistry(record) {
     gpuCount: number('gpuCount'),
     memoryMB: number('memoryMB'),
     timeoutSec: number('timeoutSec'),
+  }
+}
+
+/** 调用示例里的 cpuCores / gpuCount / memoryMB 是算子实际申请资源，用于补全注册示例缺省值。 */
+function parseCalledResources(record) {
+  const content = record?.funtion_called_example?.content || ''
+  const number = (key) => {
+    const match = content.match(new RegExp(`"${key}"\\s*:\\s*(\\d+)`))
+    return match ? Number(match[1]) : 0
+  }
+  return {
+    cpuCores: number('cpuCores'),
+    gpuCount: number('gpuCount'),
+    memoryMB: number('memoryMB'),
+  }
+}
+
+/** 真实运行环境以 runtime 镜像为准；runtimeType=instance 只是平台部署方式。 */
+function resolveRuntime(registry, image) {
+  const rawType = String(registry.runtimeType || '').toLowerCase()
+  const runtime = registry.runtime || (/^参考/.test(image) ? '' : image)
+  const isSif = /\.sif(?:\s|$)/i.test(runtime) || /\.sif(?:\s|$)/i.test(image)
+  const looksDocker = /^(?:hub\.|local\/|docker:)/i.test(runtime)
+    || /:[\w][\w.-]*$/.test(runtime)
+    || rawType === 'docker'
+    || rawType === 'docker-run'
+  const kind = isSif || rawType === 'singularity'
+    ? 'singularity'
+    : looksDocker
+      ? 'docker'
+      : rawType === 'instance'
+        ? 'instance'
+        : 'container'
+  return {
+    runtime,
+    kind,
+    label: kind === 'singularity' ? 'Singularity' : kind === 'docker' ? 'Docker' : kind === 'instance' ? '平台实例' : '容器',
+    deployment: rawType === 'instance' ? '平台实例' : rawType === 'docker-run' ? 'Docker 运行' : '',
+    deploymentType: rawType || kind,
   }
 }
 
@@ -149,24 +189,31 @@ function shortDescription(full) {
 
 function normalize(record, assignment) {
   const registry = parseRegistry(record)
+  const called = parseCalledResources(record)
   const image = cleanText(record.image_address)
     .replace(/^Docker镜像[：:]\s*/i, '')
     .replace(/^镜像[：:]\s*/i, '')
-  const runtime = registry.runtime || (/^参考/.test(image) ? '' : image)
-  const runtimeType = registry.runtimeType
-    || (/\.sif$/i.test(runtime) ? 'singularity' : /docker|:\d+\//i.test(image) ? 'docker' : 'container')
+  const runtimeInfo = resolveRuntime(registry, image)
+  const runtime = runtimeInfo.runtime || '未提供'
   const requirement = cleanText(record.compute_resource_requirement).replace(/[。；;]+$/, '')
+  const cpuCores = registry.cpuCores || called.cpuCores || 1
+  const gpuHint = /(?:GPU|DCU)(?:加速卡|节点|卡)?/i.test(cleanText(record.compute_resource_requirement)) ? 1 : 0
+  const gpuCount = registry.gpuCount || called.gpuCount || (/--gpus(?:\s+all)?/i.test(registry.runtimeArgs || '') ? 1 : gpuHint)
+  const memoryMB = registry.memoryMB || called.memoryMB || 0
   return {
     name: assignment.slug,
     title: cleanText(record.title),
     version: registry.version || 'v1',
-    runtime_type: runtimeType,
+    runtime_type: runtimeInfo.kind,
+    runtime_label: runtimeInfo.label,
+    deployment_type: runtimeInfo.deploymentType,
+    deployment_label: runtimeInfo.deployment,
     runtime: runtime || '未提供',
     handler: registry.handler || '',
     image: image || runtime || '',
-    cpu_cores: registry.cpuCores,
-    gpu_count: registry.gpuCount,
-    memory_mb: registry.memoryMB,
+    cpu_cores: cpuCores,
+    gpu_count: gpuCount,
+    memory_mb: memoryMB,
     resource_requirement: requirement && requirement !== '无' ? requirement : '未限定',
     status: 'registered',
     description: shortDescription(record.description),

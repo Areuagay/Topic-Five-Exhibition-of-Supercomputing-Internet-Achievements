@@ -40,6 +40,7 @@ function clearSelection(): void {
 }
 const query = ref('')
 const recommendedOnly = ref(false)
+const runtimeFilter = ref('')
 const { track: filterTrack, ready: filterReady, style: filterStyle } = useSlidingHighlight(computed(() => Number(recommendedOnly.value)))
 const selectedNames = computed(() => new Set(props.selectedOperators.flatMap((item) => [item.id, item.name])))
 function isRecommended(operator: Operator): boolean {
@@ -58,7 +59,8 @@ const ordered = computed(() => {
   const keyword = query.value.trim().toLocaleLowerCase()
   return [...props.operators].filter((operator) =>
     (!recommendedOnly.value || isRecommended(operator))
-    && (!keyword || [operator.name, operator.title, displayName(operator), operator.description, operator.runtime_type, operator.backend_tags, operator.backend_categories, operator.resource_requirement].join(' ').toLocaleLowerCase().includes(keyword)),
+    && (!runtimeFilter.value || runtimeTypeText(operator) === runtimeFilter.value)
+    && (!keyword || [operator.name, operator.title, displayName(operator), operator.description, operator.runtime_type, operator.runtime_label, operator.backend_tags, operator.backend_categories, operator.resource_requirement].join(' ').toLocaleLowerCase().includes(keyword)),
   ).sort((a, b) => Number(isRecommended(b)) - Number(isRecommended(a)))
 })
 const listFrame = ref<HTMLElement>()
@@ -125,6 +127,7 @@ function clearItemPosition(element: Element) {
 function resetFilters(): void {
   query.value = ''
   recommendedOnly.value = false
+  runtimeFilter.value = ''
 }
 function requirement(operator: Operator): string {
   return operator.resource_requirement ?? ''
@@ -151,7 +154,23 @@ const RUNTIME_LABELS: Record<string, string> = {
   container: '容器',
 }
 function runtimeTypeText(operator: Operator): string {
-  return RUNTIME_LABELS[operator.runtime_type] || operator.runtime_type || '容器'
+  return operator.runtime_label || RUNTIME_LABELS[operator.runtime_type] || operator.runtime_type || '容器'
+}
+function deploymentText(operator: Operator): string {
+  return operator.deployment_label || ''
+}
+const runtimeOptions = computed(() => {
+  const counts = new Map<string, number>()
+  for (const operator of props.operators) {
+    const label = runtimeTypeText(operator)
+    counts.set(label, (counts.get(label) ?? 0) + 1)
+  }
+  return [...counts.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .map(([label, count]) => ({ label, count }))
+})
+function resetRuntimeFilter(): void {
+  runtimeFilter.value = ''
 }
 </script>
 
@@ -167,6 +186,23 @@ function runtimeTypeText(operator: Operator): string {
         <button class="sc-pressable" data-highlight-item type="button" :aria-pressed="!recommendedOnly" @click="recommendedOnly = false">全部算子 <span>{{ operators.length }}</span></button>
         <button class="sc-pressable" data-highlight-item type="button" :aria-pressed="recommendedOnly" @click="recommendedOnly = true">场景推荐 <span>{{ recommendedCount }}</span></button>
       </div>
+      <label class="operator-runtime-filter">
+        <span>运行环境</span>
+        <el-select
+          v-model="runtimeFilter"
+          name="operator-runtime"
+          aria-label="按运行环境筛选"
+          placeholder="全部环境"
+          clearable
+        >
+          <el-option
+            v-for="item in runtimeOptions"
+            :key="item.label"
+            :label="`${item.label}（${item.count}）`"
+            :value="item.label"
+          />
+        </el-select>
+      </label>
       <label class="operator-search">
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>
         <input v-model="query" type="search" aria-label="搜索算子" placeholder="搜索名称、功能或运行环境" />
@@ -212,12 +248,12 @@ function runtimeTypeText(operator: Operator): string {
             <div><dt>CPU</dt><dd>{{ cpuText(operator) }}</dd></div>
             <div><dt>GPU</dt><dd>{{ gpuText(operator) }}</dd></div>
             <div><dt>内存</dt><dd>{{ memoryText(operator) }}</dd></div>
-            <div><dt>运行环境</dt><dd class="operator-runtime">{{ runtimeTypeText(operator) }}</dd></div>
+            <div><dt>运行环境</dt><dd class="operator-runtime">{{ runtimeTypeText(operator) }}<small v-if="deploymentText(operator)">{{ deploymentText(operator) }}</small></dd></div>
           </dl>
           <div class="operator-actions">
           <el-popover trigger="click" placement="bottom-start" :width="440" :show-arrow="false" :visible="runtimeOperatorId === operator.name" @update:visible="value => setRuntimeVisible(operator.name, value)" :popper-style="{ maxWidth: 'calc(100vw - 32px)', padding: '20px' }" popper-class="operator-runtime-popover" transition="operator-runtime">
             <template #reference><button type="button" class="operator-detail-trigger sc-action sc-action--ghost" :data-runtime-trigger="operator.name" :aria-expanded="runtimeOperatorId === operator.name" :aria-label="'查看 ' + displayName(operator) + ' 的运行详情'" @keydown.esc.stop="closeRuntime(operator.name)"><Info aria-hidden="true" />运行详情<ArrowUpRight class="detail-arrow" aria-hidden="true" /></button></template>
-            <div class="operator-runtime-content" @keydown.esc.stop="closeRuntime(operator.name)"><button type="button" class="operator-runtime-close sc-action sc-action--ghost sc-action--icon" aria-label="关闭运行详情" @click="closeRuntime(operator.name)"><X :size="16" aria-hidden="true" /></button><strong>{{ displayName(operator) }}</strong><p>运行配置</p><dl><div><dt>运行镜像</dt><dd>{{ operator.image || operator.runtime || '未提供' }}</dd></div><div><dt>调用入口</dt><dd>{{ operator.handler || '未提供' }}</dd></div><div><dt>运行环境</dt><dd>{{ runtimeTypeText(operator) }}</dd></div><div><dt>资源要求</dt><dd>{{ operator.resource_requirement || '未限定' }}</dd></div><div><dt>算子类型</dt><dd>{{ operator.backend_categories || '未提供' }}</dd></div><div><dt>所属场景</dt><dd>{{ operator.backend_tags || '未提供' }}</dd></div></dl></div>
+            <div class="operator-runtime-content" @keydown.esc.stop="closeRuntime(operator.name)"><button type="button" class="operator-runtime-close sc-action sc-action--ghost sc-action--icon" aria-label="关闭运行详情" @click="closeRuntime(operator.name)"><X :size="16" aria-hidden="true" /></button><strong>{{ displayName(operator) }}</strong><p>运行配置</p><dl><div><dt>运行镜像</dt><dd>{{ operator.image || operator.runtime || '未提供' }}</dd></div><div><dt>运行环境</dt><dd>{{ runtimeTypeText(operator) }}</dd></div><div><dt>部署方式</dt><dd>{{ deploymentText(operator) || '原生运行' }}</dd></div><div><dt>调用入口</dt><dd>{{ operator.handler || '未提供' }}</dd></div><div><dt>资源要求</dt><dd>{{ operator.resource_requirement || '未限定' }}</dd></div><div><dt>算子类型</dt><dd>{{ operator.backend_categories || '未提供' }}</dd></div><div><dt>所属场景</dt><dd>{{ operator.backend_tags || '未提供' }}</dd></div></dl></div>
           </el-popover>
           <button type="button" class="operator-select-button sc-action" :aria-pressed="chosenSet.has(operator.name)" :aria-label="'选择算子：' + displayName(operator)" :disabled="submitting || (!isAvailable(operator) && !chosenSet.has(operator.name))" @click="toggleOperator(operator)">
             <span class="operator-select-icon" aria-hidden="true"><Plus class="operator-icon-add" /><Check class="operator-icon-check" /></span>
@@ -315,6 +351,9 @@ function runtimeTypeText(operator: Operator): string {
 .operator-requirements dd { margin: 0; font: 500 14px var(--scnet-font-mono); overflow-wrap: anywhere; }
 .operator-requirements small { font: 12px var(--scnet-font-sans); }
 .operator-runtime { text-transform: capitalize; }
+.operator-runtime small { display: block; margin-top: 2px; color: #687588; font: 11px/1.5 var(--scnet-font-sans); text-transform: none; }
+.operator-runtime-filter { display: flex; align-items: center; gap: 8px; color: var(--scnet-text-secondary); font-size: 13px; white-space: nowrap; }
+.operator-runtime-filter :deep(.el-select) { width: 174px; }
 .operator-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px; }
 .operator-detail-trigger { padding-inline: 8px; }
 .operator-detail-trigger .detail-arrow { width: 13px; opacity: .5; transition: transform 220ms ease, opacity 220ms ease; }

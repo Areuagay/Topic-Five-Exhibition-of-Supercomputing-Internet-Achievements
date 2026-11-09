@@ -6,96 +6,177 @@
     "scenario_id": "band-dos",
     "scenario_name": "材料能带结构与态密度计算",
     "status": "running",
-    "progress": 54,
+    "progress": 73,
     "execution_mode": "simulated",
     "cluster_id": "changsha",
     "cluster_name": "天河新一代",
     "job_id": "DFT-SLURM-71429",
-    "current_stage": "scf",
+    "current_stage": "基于SymTopo的拓扑分类函数接口",
     "start_time": "2026-08-11T09:00:00+08:00",
     "end_time": "",
-    "elapsed_seconds": 842,
-    "nodes": 8,
-    "cpu_cores": 512,
+    "elapsed_seconds": 74,
+    "nodes": 4,
+    "cpu_cores": 4,
     "gpu_count": 0,
-    "memory_gb": 1024,
-    "core_hours": 479.4,
+    "memory_gb": 32,
+    "core_hours": 0.02,
     "source_type": "simulated",
     "workflow": {
       "nodes": [
         {
-          "id": "structure",
-          "name": "结构读取与检查",
+          "id": "prepare",
+          "name": "输入数据准备",
+          "duration_ticks": 1,
           "status": "success",
           "progress": 100,
-          "cluster_id": "changsha"
+          "elapsed_seconds": 20,
+          "core_hours": 0,
+          "resource_source": "none",
+          "planned_start_seconds": 0,
+          "planned_seconds": 20,
+          "waiting_for": [],
+          "waiting_at_join": false
         },
         {
-          "id": "pseudo",
-          "name": "赝势与参数准备",
+          "id": "operator-0",
+          "operator_id": "symtopo-band",
+          "name": "基于SymTopo的高对称点与能带分析函数接口",
+          "duration_ticks": 1,
           "status": "success",
           "progress": 100,
-          "cluster_id": "changsha"
+          "elapsed_seconds": 21,
+          "core_hours": 0.01,
+          "operator_name": "symtopo-band",
+          "operator_title": "基于SymTopo的高对称点与能带分析函数接口",
+          "runtime_type": "singularity",
+          "runtime_label": "Singularity",
+          "runtime_deployment": "",
+          "runtime_detail": "/public/home/wxn/image/scnet/material/symtopo/symtopo.sif",
+          "cpu_cores": 1,
+          "gpu_count": 0,
+          "memory_mb": 8192,
+          "memory_gb": 8,
+          "resource_source": "operator",
+          "planned_start_seconds": 40,
+          "planned_seconds": 21,
+          "waiting_for": [],
+          "waiting_at_join": false
         },
         {
-          "id": "relax",
-          "name": "结构优化",
-          "status": "success",
-          "progress": 100,
-          "cluster_id": "changsha"
-        },
-        {
-          "id": "scf",
-          "name": "SCF自洽场计算",
+          "id": "operator-1",
+          "operator_id": "symtopo-topology",
+          "name": "基于SymTopo的拓扑分类函数接口",
+          "duration_ticks": 1,
           "status": "running",
-          "progress": 54,
-          "cluster_id": "changsha"
+          "progress": 63.65,
+          "elapsed_seconds": 13,
+          "core_hours": 0,
+          "operator_name": "symtopo-topology",
+          "operator_title": "基于SymTopo的拓扑分类函数接口",
+          "runtime_type": "singularity",
+          "runtime_label": "Singularity",
+          "runtime_deployment": "",
+          "runtime_detail": "/public/home/wxn/image/scnet/material/symtopo/symtopo.sif",
+          "cpu_cores": 1,
+          "gpu_count": 0,
+          "memory_mb": 8192,
+          "memory_gb": 8,
+          "resource_source": "operator",
+          "planned_start_seconds": 61,
+          "planned_seconds": 20,
+          "waiting_for": [],
+          "waiting_at_join": false
         },
         {
-          "id": "band",
-          "name": "能带计算",
-          "status": "pending",
-          "progress": 0,
-          "cluster_id": "changsha"
+          "id": "operator-2",
+          "operator_id": "symtopo-abinit-input",
+          "name": "基于SymTopo的ABINIT输入生成函数接口",
+          "duration_ticks": 1,
+          "status": "success",
+          "progress": 100,
+          "elapsed_seconds": 20,
+          "core_hours": 0.01,
+          "operator_name": "symtopo-abinit-input",
+          "operator_title": "基于SymTopo的ABINIT输入生成函数接口",
+          "runtime_type": "singularity",
+          "runtime_label": "Singularity",
+          "runtime_deployment": "",
+          "runtime_detail": "/public/home/wxn/image/scnet/material/symtopo/symtopo.sif",
+          "cpu_cores": 1,
+          "gpu_count": 0,
+          "memory_mb": 8192,
+          "memory_gb": 8,
+          "resource_source": "operator",
+          "planned_start_seconds": 20,
+          "planned_seconds": 20,
+          "waiting_for": [],
+          "waiting_at_join": true
         },
         {
-          "id": "dos",
-          "name": "态密度计算",
-          "status": "pending",
-          "progress": 0,
-          "cluster_id": "changsha"
+          "id": "operator-3",
+          "operator_id": "symtopo-vasp-input",
+          "name": "基于SymTopo的VASP输入生成函数接口",
+          "duration_ticks": 3,
+          "status": "success",
+          "progress": 100,
+          "elapsed_seconds": 20,
+          "core_hours": 0.01,
+          "operator_name": "symtopo-vasp-input",
+          "operator_title": "基于SymTopo的VASP输入生成函数接口",
+          "runtime_type": "singularity",
+          "runtime_label": "Singularity",
+          "runtime_deployment": "",
+          "runtime_detail": "/public/home/wxn/image/scnet/material/symtopo/symtopo.sif",
+          "cpu_cores": 1,
+          "gpu_count": 0,
+          "memory_mb": 8192,
+          "memory_gb": 8,
+          "resource_source": "operator",
+          "planned_start_seconds": 20,
+          "planned_seconds": 20,
+          "waiting_for": [],
+          "waiting_at_join": false
         },
         {
           "id": "post",
-          "name": "电子结构后处理",
+          "name": "结果整理与输出",
+          "duration_ticks": 1,
           "status": "pending",
           "progress": 0,
-          "cluster_id": "changsha"
+          "elapsed_seconds": 0,
+          "core_hours": 0,
+          "resource_source": "none",
+          "planned_start_seconds": 81,
+          "planned_seconds": 20,
+          "waiting_for": [
+            "operator-1"
+          ],
+          "waiting_at_join": false
         }
       ],
       "edges": [
         {
-          "source": "structure",
-          "target": "pseudo"
+          "source": "operator-3",
+          "target": "operator-0"
         },
         {
-          "source": "pseudo",
-          "target": "relax"
+          "source": "operator-0",
+          "target": "operator-1"
         },
         {
-          "source": "relax",
-          "target": "scf"
+          "source": "prepare",
+          "target": "operator-2"
         },
         {
-          "source": "scf",
-          "target": "band"
+          "source": "prepare",
+          "target": "operator-3"
         },
         {
-          "source": "band",
-          "target": "dos"
+          "source": "operator-1",
+          "target": "post"
         },
         {
-          "source": "dos",
+          "source": "operator-2",
           "target": "post"
         }
       ]
@@ -4230,7 +4311,17 @@
         ],
         "note": "simulated diamond-like cell for demo only"
       }
-    }
+    },
+    "selected_operator_ids": [
+      "symtopo-band",
+      "symtopo-topology",
+      "symtopo-abinit-input",
+      "symtopo-vasp-input"
+    ],
+    "resource_source": "operator",
+    "planned_seconds": 101,
+    "remaining_seconds": 27,
+    "_operator_version": 4
   },
   "timestamp": "2026-08-11T09:14:10+08:00"
 }

@@ -2,14 +2,24 @@ import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from '
 import { resolve } from 'node:path'
 import { scenarioMetrics } from './scenario-metrics.js'
 import { createDatasetFiles } from './dataset-files.js'
-import { advanceWorkflow, buildOperatorWorkflow } from './workflow-engine.js'
+import { applyOperatorPlan, annotateJoins, estimatePlanSeconds, needsOperatorPlan } from './operator-plan.js'
 
 export const EXPERIENCE_DOMAINS = ['geodynamics', 'llm', 'automotive', 'uav', 'drug', 'dft']
 const PREFIXES = ['GEO', 'LLM', 'AUTO', 'UAV', 'DRUG', 'DFT']
-const TICK_MS = 1300
 const copy = value => structuredClone(value)
 const envelope = data => ({ code: 200, message: 'success', data })
 const error = (message, code = 400) => ({ code, message, data: null })
+const addSeconds = (iso, seconds) => {
+  const time = new Date(iso).getTime()
+  if (!Number.isFinite(time)) return iso
+  const target = new Date(time + seconds * 1000)
+  if (String(iso).endsWith('Z')) return target.toISOString()
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Shanghai', year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false,
+  }).formatToParts(target).reduce((acc, part) => ({ ...acc, [part.type]: part.value }), {})
+  return `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}:${parts.second}+08:00`
+}
 
 // Secondary scenarios have their own scientific stages, rather than borrowing
 // the first scenario's workflow. Newly submitted runs use the selected operators.
@@ -33,6 +43,27 @@ export function createExperienceStore({ dataDir, runtimeDir, now = Date.now }) {
     try { return JSON.parse(readFileSync(resolve(dataDir, path), 'utf8')).data } catch { return null }
   }
   const operators = domain => readSeed(`${domain}/operators.json`) ?? []
+  const scenarioDetails = domain => {
+    const document = readSeed(`${domain}/scenario-details.json`)
+    const data = document?.data ?? document ?? {}
+    return Array.isArray(data) ? data : Object.values(data)
+  }
+  const scenarioOperators = (domain, scenarioId) => {
+    const scenario = scenarioDetails(domain).find(item => item?.id === scenarioId)
+    return scenario?.operators ?? []
+  }
+  /** 历史记录迁移：旧算子换成当前算子库，并按算子信息生成节点资源。 */
+  const ensureOperatorPlan = (domain, detail, options = {}) => {
+    if (!detail) return false
+    const list = operators(domain)
+    const names = new Set(list.map(operator => operator.name))
+    if (!needsOperatorPlan(detail, names) && !options.force) return false
+    const changed = applyOperatorPlan(domain, detail, list, scenarioOperators(domain, detail.scenario_id), {
+      plannedSeconds: detail.elapsed_seconds,
+      ...options,
+    })
+    return changed
+  }
   const save = (domain, state) => {
     mkdirSync(runtimeDir, { recursive: true })
     const path = resolve(runtimeDir, `${domain}.json`)
@@ -69,11 +100,25 @@ export function createExperienceStore({ dataDir, runtimeDir, now = Date.now }) {
       }
       for (const run of state.runs) {
         const detail = state.details[run.run_id]
-        // Completed simulated runtime records can adopt the dependency layout
-        // without changing execution history or restarting an active task.
-        if (detail.origin === 'runtime' && detail.status === 'success' && !detail._workflow_version) {
-          detail.workflow = buildOperatorWorkflow(domain, detail.workflow.nodes, detail._ticks_per_node || 5)
-          detail._workflow_version = 2
+        if (!detail) continue
+        // 旧版按 tick 压缩的实时任务没有新时钟标记；按已记录的耗时收尾，避免永久停在运行中。
+        if (detail.origin === 'runtime' && !detail._clock && ['running', 'queued', 'pending'].includes(detail.status)) {
+          detail._clock = 'static'
+          detail.status = 'success'
+          detail.progress = 100
+          detail.current_stage = 'completed'
+          if (detail.start_time) detail.end_time = addSeconds(detail.start_time, detail.elapsed_seconds)
+        }
+        ensureOperatorPlan(domain, detail, detail._clock === 'realtime'
+          ? { realtime: true, plannedSeconds: detail.planned_seconds }
+          : { plannedSeconds: detail.elapsed_seconds })
+        // 历史记录的起止时间与累计运行时间保持一致；实时任务由推进逻辑维护。
+        if (detail._clock !== 'realtime' && detail.start_time && ['success', 'failed', 'stopped'].includes(detail.status)) {
+          detail.end_time = addSeconds(detail.start_time, detail.elapsed_seconds)
+        }
+        if (detail._clock !== 'realtime' && detail.status === 'success') {
+          detail.progress = 100
+          for (const node of detail.workflow?.nodes ?? []) { node.status = 'success'; node.progress = 100 }
         }
         const metrics = scenarioMetrics(detail.scenario_id, detail.metrics?.domain_data, detail.progress)
         if (metrics) detail.metrics.metrics = metrics
@@ -125,14 +170,21 @@ export function createExperienceStore({ dataDir, runtimeDir, now = Date.now }) {
       detail.metrics = copy(original?.metrics ?? { metrics: run.metrics_snapshot ?? [] })
       if (!detail.has_result) detail.artifacts = []
       const progress = run.status === 'success' ? 100 : Math.min(99, Math.max(0, Number(run.progress) || 0))
-      let remaining = progress * detail.workflow.nodes.length
-      for (const node of detail.workflow.nodes) {
-        node.progress = Math.min(100, remaining)
-        remaining -= node.progress
-        node.status = node.progress >= 100 ? 'success' : node.progress > 0 ? run.status : 'pending'
-      }
       detail.progress = progress
-      const metrics = scenarioMetrics(detail.scenario_id, detail.metrics?.domain_data, progress)
+      if (run.status === 'success') detail.status = 'success'
+      // 预置记录是历史任务；已开始且耗时已过期的运行中记录按完成处理，避免永久停在运行中。
+      if (run.status === 'running' && detail.start_time) {
+        detail.status = 'success'
+        detail.progress = 100
+        detail.current_stage = 'completed'
+        detail.end_time = addSeconds(detail.start_time, detail.elapsed_seconds)
+      }
+      ensureOperatorPlan(domain, detail, { plannedSeconds: detail.elapsed_seconds })
+      detail._clock = 'static'
+      if (detail.start_time && ['success', 'failed', 'stopped'].includes(detail.status)) {
+        detail.end_time = addSeconds(detail.start_time, detail.elapsed_seconds)
+      }
+      const metrics = scenarioMetrics(detail.scenario_id, detail.metrics?.domain_data, detail.progress)
       if (metrics) detail.metrics.metrics = metrics
       detail._last_tick = now()
       detail._queue_ticks = 0
@@ -148,32 +200,65 @@ export function createExperienceStore({ dataDir, runtimeDir, now = Date.now }) {
   }
 
   function syncSummary(run, detail) {
-    for (const key of ['status', 'progress', 'current_stage', 'elapsed_seconds', 'start_time', 'end_time', 'origin']) run[key] = detail[key]
-    detail.core_hours = Number(((detail.cpu_cores || 0) * (detail.elapsed_seconds || 0) / 3600).toFixed(1))
-    run.core_hours = detail.core_hours
+    for (const key of ['status', 'progress', 'current_stage', 'elapsed_seconds', 'start_time', 'end_time', 'origin',
+      'nodes', 'cpu_cores', 'gpu_count', 'memory_gb', 'core_hours', 'planned_seconds', 'remaining_seconds', 'resource_source']) {
+      run[key] = detail[key]
+    }
+    run.selected_operator_ids = Array.isArray(detail.selected_operator_ids) ? [...detail.selected_operator_ids] : []
     run.has_result = detail.status === 'success' && detail.has_result === true
     run.has_workflow = true
     run.metrics_snapshot = copy(detail.metrics?.metrics ?? [])
   }
 
-  function tick(detail, tickTime) {
+  /**
+   * 实时推进：界面耗时和进度条都按墙钟时间计算，不再用固定 tick 压缩演示时长。
+   * 每个节点按算子资源排出的计划区间推进；总进度与总时长始终一致。
+   */
+  function tickRealtime(detail, time) {
+    const queuedUntil = detail._queued_until ? Date.parse(detail._queued_until) : 0
     if (['queued', 'pending'].includes(detail.status)) {
-      detail._queue_ticks += 1
-      if (detail._queue_ticks >= 4) {
-        detail.status = 'running'
-        detail.start_time = new Date(tickTime).toISOString()
-      }
-      return
+      if (!queuedUntil || time < queuedUntil) return
+      detail.status = 'running'
+      detail.start_time = new Date(queuedUntil).toISOString()
     }
+    if (detail.status !== 'running') return
+    const started = Date.parse(detail.start_time)
+    if (!Number.isFinite(started)) return
+    const planned = Math.max(1, Number(detail.planned_seconds) || 1)
+    const elapsed = Math.max(0, Math.min(planned, (time - started) / 1000))
+    const runSeconds = Math.min(planned, Math.floor(elapsed))
+    detail.elapsed_seconds = runSeconds
+    detail.remaining_seconds = Math.max(0, planned - runSeconds)
+
     const nodes = detail.workflow.nodes
-    const allDone = advanceWorkflow(detail.workflow, detail._ticks_per_node, detail._tick_seconds)
-    detail.progress = allDone ? 100 : Math.min(99, Math.round(nodes.reduce((sum, n) => sum + n.progress, 0) / nodes.length))
-    detail.elapsed_seconds += detail._tick_seconds
-    const failed = nodes.some(n => ['failed', 'blocked'].includes(n.status))
-    const active = nodes.filter(n => n.status === 'running')
-    detail.status = failed ? 'failed' : allDone ? 'success' : 'running'
-    detail.current_stage = failed ? '执行失败' : allDone ? 'completed' : active.length > 1 ? `并行执行 · ${active.length} 个节点` : active[0]?.name ?? '等待依赖'
-    if (allDone || failed) detail.end_time = new Date(tickTime).toISOString()
+    for (const node of nodes) {
+      const start = Number(node.planned_start_seconds) || 0
+      const duration = Math.max(1, Number(node.planned_seconds) || 1)
+      const nodeProgress = Math.min(100, Math.max(0, (elapsed - start) / duration * 100))
+      node.progress = Math.round(nodeProgress * 100) / 100
+      node.elapsed_seconds = Math.round(duration * nodeProgress / 100)
+      node.core_hours = Math.round((Number(node.cpu_cores) || 0) * node.elapsed_seconds / 3600 * 100) / 100
+      node.status = nodeProgress >= 100 ? 'success' : elapsed >= start ? 'running' : 'pending'
+    }
+    annotateJoins(detail.workflow)
+
+    const allDone = nodes.every(node => node.status === 'success')
+    // 总进度与墙钟时间严格同步：走完计划总时长才到 100%，不受轮询或节点并行数影响。
+    const overall = Math.min(99, Math.floor(runSeconds / planned * 100))
+    detail.progress = allDone ? 100 : overall
+    detail.core_hours = Math.round(nodes.reduce((sum, node) => sum + (Number(node.core_hours) || 0), 0) * 100) / 100
+    const running = nodes.filter(node => node.status === 'running')
+    if (allDone) {
+      detail.status = 'success'
+      detail.progress = 100
+      detail.elapsed_seconds = planned
+      detail.remaining_seconds = 0
+      detail.end_time = new Date(started + planned * 1000).toISOString()
+      detail.current_stage = 'completed'
+      for (const node of nodes) { node.status = 'success'; node.progress = 100 }
+    } else {
+      detail.current_stage = running.length ? running.map(node => node.name).join('、') : '等待依赖'
+    }
     if (detail.metrics) {
       detail.metrics.progress = detail.progress
       for (const metric of detail.metrics.metrics ?? []) {
@@ -189,23 +274,21 @@ export function createExperienceStore({ dataDir, runtimeDir, now = Date.now }) {
     let dirty = false
     for (const run of state.runs) {
       const detail = state.details[run.run_id]
+      if (!detail || detail._clock !== 'realtime') continue
       if (!['running', 'queued', 'pending'].includes(detail.status)) continue
-      const ticks = Math.max(0, Math.floor((now() - detail._last_tick) / TICK_MS))
-      if (!ticks) continue
-      // A complete demo needs fewer than 200 ticks; long absences stay bounded.
-      for (let i = 0; i < Math.min(ticks, 500) && ['running', 'queued', 'pending'].includes(detail.status); i++) tick(detail, detail._last_tick + (i + 1) * TICK_MS)
-      detail._last_tick += ticks * TICK_MS
+      const before = `${detail.status}:${detail.progress}:${detail.elapsed_seconds}`
+      tickRealtime(detail, now())
+      if (`${detail.status}:${detail.progress}:${detail.elapsed_seconds}` !== before) dirty = true
       syncSummary(run, detail)
-      dirty = true
     }
     if (dirty) save(domain, state)
   }
 
   function publicDetail(detail) {
     const result = copy(detail)
-    result.core_hours = Number(((result.cpu_cores || 0) * (result.elapsed_seconds || 0) / 3600).toFixed(1))
     for (const key of Object.keys(result)) if (key.startsWith('_')) delete result[key]
     for (const node of result.workflow?.nodes ?? []) delete node._elapsed_ticks
+    result.server_time = new Date(now()).toISOString()
     result.has_result = result.status === 'success' && result.has_result === true
     if (!result.has_result) {
       delete result.domain_data
@@ -310,18 +393,24 @@ export function createExperienceStore({ dataDir, runtimeDir, now = Date.now }) {
       const runId = `${prefix}-${new Date(now()).toISOString().slice(0, 10).replaceAll('-', '')}-${String(seq).padStart(4, '0')}`
       const scenarios = readSeed(`${domain}/scenario-details.json`) ?? []
       const scenario = Object.values(scenarios).find(s => s.id === id) ?? scenarios[id]
-      const nodes = [{ id: 'prepare', name: '输入数据准备' }, ...chosen.map((op, i) => ({ id: `operator-${i}`, name: scenario?.operators?.find(ref => ref.id === op.name)?.name ?? op.display_name ?? op.name, operator_id: op.name })), { id: 'post', name: '结果整理与输出' }]
-      const cpu = chosen.reduce((sum, op) => sum + (op.cpu_cores || 0), 0)
-      const ticksPerNode = Math.min(6, 3 + Math.floor(cpu / 256))
-      const workflow = buildOperatorWorkflow(domain, nodes.map((node, i) => ({ ...node, progress: 0, status: i === 0 ? 'running' : 'pending', cluster_id: template.cluster_id })), ticksPerNode)
-      const detail = { ...copy(template), run_id: runId, domain, scenario_id: id, status: 'running', progress: 0,
+      const planSeconds = estimatePlanSeconds(chosen)
+      const queuedUntil = now() + 5000
+      const detail = { ...copy(template), run_id: runId, domain, scenario_id: id, status: 'queued', progress: 0,
         execution_mode: 'simulated', source_type: 'simulated', origin: 'runtime', has_detail: true, has_result: true,
-        job_id: String(now()).slice(-8) + seq, start_time: new Date(now()).toISOString(), end_time: '', elapsed_seconds: 0,
-        selected_operator_ids: ids, current_stage: '输入数据准备',
-        _last_tick: now(), _ticks_per_node: ticksPerNode, _tick_seconds: Math.min(600, 90 + cpu), _queue_ticks: 0, _workflow_version: 2,
-        workflow,
+        job_id: String(now()).slice(-8) + seq, start_time: '', end_time: '', elapsed_seconds: 0,
+        selected_operator_ids: ids, current_stage: '排队等待', status_note: '',
+        _clock: 'realtime', _queued_until: new Date(queuedUntil).toISOString(), _last_tick: now(),
+        planned_seconds: planSeconds, remaining_seconds: planSeconds,
+        workflow: { nodes: [{ id: 'prepare' }, ...chosen.map((op, i) => ({ id: `operator-${i}`, operator_id: op.name })), { id: 'post' }], edges: [] },
         logs: { lines: [], next_offset: 0, has_more: false },
       }
+      applyOperatorPlan(domain, detail, available, scenario?.operators ?? [], { realtime: true, plannedSeconds: planSeconds })
+      detail.status = 'queued'
+      detail.current_stage = '排队等待'
+      detail.elapsed_seconds = 0
+      detail.progress = 0
+      detail.remaining_seconds = planSeconds
+      for (const node of detail.workflow.nodes) { node.status = 'pending'; node.progress = 0; node.elapsed_seconds = 0; node.core_hours = 0 }
       detail.metrics.progress = 0
       for (const metric of detail.metrics.metrics ?? []) {
         if (['time_step', 'step', 'simulation_step', 'scf_iteration', 'completed_compounds', 'kpoint_progress', 'cpu_utilization', 'gpu_utilization'].includes(metric.name)) metric.value = 0
@@ -329,11 +418,11 @@ export function createExperienceStore({ dataDir, runtimeDir, now = Date.now }) {
       const initialMetrics = scenarioMetrics(id, detail.metrics.domain_data, 0)
       if (initialMetrics) detail.metrics.metrics = initialMetrics
       state.details[runId] = detail
-      const run = { ...copy(state.runs.find(r => r.scenario_id === id)), run_id: runId, job_id: detail.job_id, has_detail: true, selected_operator_ids: ids }
+      const run = { ...copy(state.runs.find(r => r.scenario_id === id)), run_id: runId, job_id: detail.job_id, has_detail: true }
       syncSummary(run, detail)
       state.runs.unshift(run)
       save(domain, state)
-      return envelope({ run_id: runId, workflow: copy(detail.workflow), progress: 0, selected_operator_ids: ids })
+      return envelope({ run_id: runId, workflow: copy(detail.workflow), progress: 0, selected_operator_ids: ids, planned_seconds: planSeconds })
     }
     if (resource === 'runs' && method === 'POST' && action === 'advance') {
       // Compatibility endpoint; elapsed time, never request count, drives progress.

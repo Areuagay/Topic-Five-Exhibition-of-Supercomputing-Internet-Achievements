@@ -124,6 +124,11 @@ export interface Operator {
   title?: string
   version: string
   runtime_type: string
+  /** 平台真实运行环境（Singularity / Docker / 容器） */
+  runtime_label?: string
+  /** 平台部署方式（平台实例 / Docker 运行） */
+  deployment_type?: string
+  deployment_label?: string
   runtime: string
   handler: string
   /** 平台登记的镜像地址（与运行环境 runtime 分开保留） */
@@ -257,6 +262,9 @@ export interface Run {
   has_workflow?: boolean
   origin?: 'seed' | 'runtime'
   selected_operator_ids?: string[]
+  planned_seconds?: number
+  remaining_seconds?: number
+  resource_source?: string
   metrics_snapshot: MetricItem[]
 }
 
@@ -267,7 +275,20 @@ export interface WorkflowNode {
   progress?: number
   cluster_id?: string
   operator_id?: string
+  operator_title?: string
+  runtime_type?: string
+  runtime_label?: string
+  runtime_deployment?: string
+  runtime_detail?: string
+  cpu_cores?: number
+  gpu_count?: number
+  memory_mb?: number
+  memory_gb?: number
+  core_hours?: number
   elapsed_seconds?: number
+  planned_seconds?: number
+  planned_start_seconds?: number
+  resource_source?: string
   waiting_for?: string[]
   waiting_at_join?: boolean
 }
@@ -326,6 +347,10 @@ export interface RunDetail {
   gpu_count?: number
   memory_gb?: number
   core_hours?: number
+  planned_seconds?: number
+  remaining_seconds?: number
+  resource_source?: string
+  selected_operator_ids?: string[]
   source_type?: string
   workflow: { nodes: WorkflowNode[]; edges: WorkflowEdge[] }
   metrics: RunDetailMetrics
