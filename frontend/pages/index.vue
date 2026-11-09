@@ -361,7 +361,7 @@ function utilization(value: number): string {
     background-color 280ms cubic-bezier(0.22, 1, 0.36, 1),
     border-color 280ms cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 280ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
+    transform 420ms var(--scnet-button-spring);
 }
 .application-card:hover,
 .application-card:focus-visible {

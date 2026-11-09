@@ -21,6 +21,7 @@
     "@vue-flow/core": "^1.48.2",
     "echarts": "^5.5.1",
     "element-plus": "^2.8.8",
+    "elkjs": "^0.12.1",
     "motion": "^13.4.1",
     "nuxt": "^3.14.0",
     "pinia": "^2.2.6",

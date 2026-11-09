@@ -62,6 +62,33 @@ test('known serial chains keep uniform timing and unknown operators retain selec
   assert.deepEqual(legacy.edges,legacy.nodes.slice(1).map((n,i)=>({source:legacy.nodes[i].id,target:n.id})))
 })
 
+test('unequal parallel branches advance independently and join only after both branch tails finish',()=>{
+  // Long branch: transport -> interface. Short branch: particle spray.
+  for (const durations of [[1,3,6],[3,3,1]]) {
+    const workflow=plan('automotive',['oil-multiphase-interface','particle-spray','oil-multiphase-transport'])
+    const first=get(workflow,'oil-multiphase-transport'), second=get(workflow,'oil-multiphase-interface'), short=get(workflow,'particle-spray')
+    const input=get(workflow,'prepare'), join=get(workflow,'post')
+    ;[first.duration_ticks,second.duration_ticks,short.duration_ticks]=durations
+    input.duration_ticks=1;join.duration_ticks=1
+    const graph=analyzeWorkflow(workflow)
+    assert.deepEqual(graph.incoming.get(second.id),[first.id])
+    assert.deepEqual(new Set(graph.incoming.get(join.id)),new Set([second.id,short.id]))
+    let overlappingStages=false,observedWait=false,done=false
+    for(let tick=0;tick<30&&!done;tick++) {
+      const allParentsDone=second.status==='success'&&short.status==='success'
+      done=step(workflow)
+      if(!allParentsDone) assert.equal(join.progress,0,'join cannot advance on an incomplete branch')
+      if(second.progress>0&&short.status==='running')overlappingStages=true
+      if(second.waiting_at_join||short.waiting_at_join)observedWait=true
+      assert.equal(first.waiting_at_join,false,'an internal chain node does not wait for the other branch')
+    }
+    assert.ok(done)
+    assert.ok(observedWait)
+    if(durations[0]===1)assert.ok(overlappingStages,'second operator starts while the other parallel branch is still running')
+    assert.ok(workflow.nodes.every(node=>node.progress===100&&!node.waiting_at_join))
+  }
+})
+
 test('failure blocks join and output; malformed graphs are rejected',()=>{
   const workflow=plan('geodynamics',['citcoms-global','citcoms-regional'])
   for(let i=0;i<4;i++)step(workflow)

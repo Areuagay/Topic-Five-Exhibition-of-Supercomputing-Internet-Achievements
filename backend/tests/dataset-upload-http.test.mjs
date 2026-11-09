@@ -5,7 +5,7 @@ import { mkdtempSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { resolve } from 'node:path'
 
-test('HTTP sample -> raw upload -> preview -> exact download -> remove, with bounded input',async t=>{
+test('HTTP sample -> raw upload -> preview -> exact download -> restore default, with bounded input',async t=>{
   const runtime=mkdtempSync(resolve(tmpdir(),'topic5-http-'))
   const child=spawn(process.execPath,[resolve(import.meta.dirname,'../server.js')],{env:{...process.env,BACKEND_PORT:'0',MOCK_RUNTIME_DIR:runtime},stdio:['ignore','pipe','pipe']})
   t.after(async()=>{
@@ -37,6 +37,9 @@ test('HTTP sample -> raw upload -> preview -> exact download -> remove, with bou
   const oversized=await fetch(path+'/upload?filename=large.csv',{method:'POST',body:Buffer.alloc(5*1024*1024+1)})
   assert.equal(oversized.status,413)
   const removed=await fetch(path,{method:'DELETE'});assert.equal(removed.status,200)
-  assert.equal((await fetch(path+'/preview')).status,404)
-  assert.equal((await fetch(path+'/download')).status,404)
+  assert.equal((await fetch(path+'/preview')).status,200)
+  const restored=await (await fetch(path)).json()
+  assert.equal(restored.data.input_source,'default')
+  assert.match(restored.data.file_name,/台站.*\.csv$/)
+  assert.deepEqual(Buffer.from(await (await fetch(path+'/download')).arrayBuffer()),bytes)
 })

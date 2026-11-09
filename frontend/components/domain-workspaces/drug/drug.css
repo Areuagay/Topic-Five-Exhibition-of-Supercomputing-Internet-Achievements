@@ -12,7 +12,23 @@ dd { margin:8px 0 0; font-family:var(--scnet-font-mono); font-size:22px; font-we
 input, select, button { min-height:44px; box-sizing:border-box; padding:8px 12px; border:1px solid #dfe3e8; border-radius:6px; background:#fff; color:var(--scnet-text); font:inherit; }
 input { width:220px; max-width:100%; } select { max-width:100%; }
 button { cursor:pointer; } button[aria-pressed="true"] { background:#edf3fd; color:var(--scnet-primary); border-color:#85abe8; }
-button:focus-visible, input:focus-visible, select:focus-visible, .drug-table:focus-visible { outline:2px solid var(--scnet-primary); outline-offset:2px; }
+button:focus-visible, .drug-table:focus-visible { outline:2px solid var(--scnet-primary); outline-offset:2px; }
+.drug-workspace :is(input, select) {
+  border-color:#d6dfeb; border-radius:8px; background:#fbfcfe;
+  outline:2px solid transparent; outline-offset:2px;
+}
+.drug-workspace .drug-toolbar :is(input, select):enabled {
+  transition:border-color 180ms ease, background-color 180ms ease, box-shadow 220ms var(--scnet-hover-easing);
+}
+.drug-workspace input::placeholder { color:#8794a6; }
+.drug-workspace select { cursor:pointer; }
+.drug-workspace :is(input, select):hover { border-color:#acbed6; background:#fff; }
+.drug-workspace :is(input, select):focus {
+  border-color:#7897be; background:#fff;
+  box-shadow:0 0 0 3px rgb(74 112 164 / 9%), 0 2px 5px rgb(36 50 71 / 4%);
+}
+@media (prefers-reduced-motion: reduce) { .drug-workspace .drug-toolbar :is(input, select):enabled { transition:none; } }
+@media (forced-colors: active) { .drug-workspace :is(input, select):focus { outline-color:Highlight; box-shadow:none; } }
 .drug-table { max-height:420px; overflow:auto; border:1px solid #e2e8f0; border-radius:6px; }
 table { width:100%; border-collapse:collapse; text-align:left; font-size:14px; }
 th { position:sticky; top:0; background:#f5f8fc; z-index:1; font-weight:600; }

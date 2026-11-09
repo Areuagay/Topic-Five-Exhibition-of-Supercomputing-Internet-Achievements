@@ -51,6 +51,7 @@
 .embedded-shell :is(.page-header, .chart-box, .scenario-workspace, .topology-panel, .run-data-disclosure) { border-color: var(--scnet-border); border-radius: var(--scnet-panel-radius); box-shadow: none; }
 .embedded-shell .application-card { border-color: var(--scnet-border); border-radius: var(--scnet-panel-radius); background: #fff; box-shadow: none; }
 .embedded-shell .application-card:is(:hover, :focus-visible) { transform: translateY(-2px); background: #fff; border-color: #9fb8da; box-shadow: 0 6px 18px #24324709; }
+:root .application-card[href]:active { transform: translateY(1px) scale(.985); background: #f5f8fe; border-color: #8caad2; box-shadow: inset 0 1px 3px #2432470c; transition-duration: 80ms; transition-timing-function: ease-out; }
 .embedded-shell .application-code { border: 1px solid var(--scnet-divider); border-radius: 8px; background: var(--scnet-subtle); color: var(--scnet-primary); }
 .embedded-shell .multicenter-card { box-shadow: none; }
 .embedded-shell .multicenter-card::before { background: var(--scnet-primary-soft); }
@@ -62,6 +63,7 @@
   :root .sc-action.sc-action, .embedded-shell .scenario-workspace :is(button, input, select),
   .el-button, .el-input__wrapper, .el-select__wrapper { transition: none; }
   :root .sc-action.sc-action:is(:hover, :active), .el-button:active { transform: none; }
+  :root .application-card[href]:is(:hover, :focus-visible, :active) { transform: none; transition-duration: 0.01ms; }
 }
 
 /* A single working area with a quiet process rail, instead of stacked navigation cards. */

@@ -160,13 +160,14 @@ export interface DatasetItem {
   source?: string
   status: string
   updated_at?: string
-  /** 是否已上传（HDF5 数据集默认为已上传，其余需用户手动上传） */
+  /** 是否就绪（内置数据、默认文件或已上传的文件） */
   uploaded?: boolean
   builtin?: boolean
   /** 是否已一键导入至资源调度 */
   imported?: boolean
   file_name?: string
   upload_format?: string
+  input_source?: 'builtin' | 'default' | 'upload'
   preview_available?: boolean
 }
 

@@ -24,7 +24,7 @@ test('six domains share uploads, isolated runs, elapsed-time progress and result
       assert.equal(store.write('POST', [domain, 'datasets', dataset.dataset_id, 'upload'], { buffer: readFileSync(sample.path), file_name: sample.name }).data.uploaded, true)
       assert.equal(store.write('POST', [domain, 'scenarios', scenario, 'import']).data.status, 'imported')
       assert.equal(store.write('POST', [domain, 'scenarios', scenario, 'import']).data.status, 'already_all')
-      assert.equal(store.write('DELETE', [domain, 'datasets', dataset.dataset_id]).data.uploaded, false)
+      assert.equal(store.write('DELETE', [domain, 'datasets', dataset.dataset_id]).data.uploaded, true)
       const before = store.read([domain, 'runs']).data.length
       const operators = store.operators(domain).filter(o => ['available', 'registered'].includes(o.status)).slice(0, 2).map(o => o.name)
       const created = store.write('POST', [domain, 'scenarios', scenario, 'operators', 'submit'], { operator_ids: operators })

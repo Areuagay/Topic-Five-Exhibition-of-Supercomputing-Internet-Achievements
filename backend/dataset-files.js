@@ -63,13 +63,23 @@ export function createDatasetFiles({ dataDir, runtimeDir }) {
     const path=resolve(uploadRoot,domain,key)
     return existsSync(path) ? {path,name:dataset.upload_file.file_name} : null
   }
+  function defaultFile(domain,dataset) {
+    const file=sample(domain,dataset.dataset_id)
+    if (!file || !existsSync(file.path)) return null
+    const name=dataset.name.replace(/[<>:"/\\|?*\x00-\x1f]/g,'_').slice(0,120)
+    return {...file,name:`${name}.${file.format.toLowerCase()}`}
+  }
+  function current(domain,dataset) {
+    return dataset.input_source==='default' ? defaultFile(domain,dataset) : stored(domain,dataset)
+  }
   function describe(domain,dataset) {
+    const file=current(domain,dataset)
     return {
       ...dataset,
       upload_file: undefined,
-      file_name:dataset.upload_file?.file_name,
-      upload_format:dataset.upload_file?.format,
-      preview_available:!!stored(domain,dataset),
+      file_name:file?.name,
+      upload_format:dataset.upload_file?.format ?? (dataset.input_source==='default' ? file?.format : undefined),
+      preview_available:!!file,
     }
   }
   function inspect(domain,dataset,buffer,filename) {
@@ -152,5 +162,5 @@ export function createDatasetFiles({ dataDir, runtimeDir }) {
     return {storage_key,file_name:filename,format:preview.format,size_bytes:buffer.length,summary:preview.summary}
   }
   function remove(domain,dataset) { const file=stored(domain,dataset); if (file) unlinkSync(file.path) }
-  return { sample, stored, describe, inspect, save, remove }
+  return { sample, defaultFile, current, stored, describe, inspect, save, remove }
 }

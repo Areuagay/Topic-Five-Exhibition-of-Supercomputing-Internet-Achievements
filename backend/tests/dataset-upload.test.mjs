@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { resolve } from 'node:path'
 import { createExperienceStore, EXPERIENCE_DOMAINS } from '../experience-store.js'
@@ -13,13 +13,20 @@ function setup(t) {
   return {options,store:createExperienceStore(options)}
 }
 
-test('all 33 upload entries have valid downloadable samples, persistent previews and exact file bytes',t=>{
+test('all 33 default inputs are ready, previewable, replaceable and restorable with exact file bytes',t=>{
   const {options,store}=setup(t)
   let count=0
   for(const domain of EXPERIENCE_DOMAINS) {
     for(const dataset of store.read([domain,'datasets']).data.filter(d=>!d.builtin)) {
       count++
-      assert.equal(dataset.uploaded,false,'legacy flags are not actual uploads')
+      assert.equal(dataset.uploaded,true)
+      assert.equal(dataset.input_source,'default')
+      assert.equal(dataset.preview_available,true)
+      const initial=store.read([domain,'datasets',dataset.dataset_id,'preview'])
+      assert.equal(initial.code,200)
+      assert.equal(initial.data.size_bytes,dataset.size_bytes)
+      assert.equal(initial.data.format,dataset.upload_format)
+      assert.ok(dataset.file_name.startsWith(dataset.name))
       const file=store.file(domain,dataset.dataset_id,'sample')
       assert.ok(file,`${domain}/${dataset.dataset_id} has a sample`)
       const buffer=readFileSync(file.path)
@@ -36,11 +43,53 @@ test('all 33 upload entries have valid downloadable samples, persistent previews
       assert.equal(preview.data.size_bytes,buffer.length)
       assert.deepEqual(readFileSync(restarted.file(domain,dataset.dataset_id,'download').path),buffer)
       assert.equal(store.write('DELETE',[domain,'datasets',dataset.dataset_id]).code,200)
-      assert.equal(store.read([domain,'datasets',dataset.dataset_id,'preview']).code,404)
-      assert.equal(store.file(domain,dataset.dataset_id,'download'),null)
+      assert.equal(store.read([domain,'datasets',dataset.dataset_id,'preview']).code,200)
+      assert.equal(store.read([domain,'datasets',dataset.dataset_id]).data.input_source,'default')
+      assert.equal(store.read([domain,'datasets',dataset.dataset_id]).data.imported,false)
+      assert.deepEqual(readFileSync(store.file(domain,dataset.dataset_id,'download').path),buffer)
+      assert.equal(createExperienceStore(options).read([domain,'datasets',dataset.dataset_id]).data.input_source,'default')
     }
   }
   assert.equal(count,33)
+})
+
+test('defaults import directly, legacy empty slots migrate, and user files survive migration',t=>{
+  const {store,options}=setup(t)
+  for (const domain of EXPERIENCE_DOMAINS) {
+    const rows=store.read([domain,'datasets']).data
+    for (const scenario of new Set(rows.map(row=>row.scenario_id))) {
+      const imported=store.write('POST',[domain,'scenarios',scenario,'import'])
+      assert.equal(imported.code,200)
+      assert.equal(imported.data.total_imported,rows.filter(row=>row.scenario_id===scenario).length)
+    }
+  }
+  const domain='geodynamics',id='DS-WAVE-0004'
+  const bytes=Buffer.from('station_id,x,y,z,elevation_m\nMY-STATION,1,2,3,4\n')
+  assert.equal(store.write('POST',[domain,'datasets',id,'upload'],{buffer:bytes,file_name:'观测数据_新版本.txt'}).code,200)
+  store.write('POST',[domain,'scenarios','wave-propagation','import'])
+  const path=resolve(options.runtimeDir,`${domain}.json`)
+  const legacy=JSON.parse(readFileSync(path,'utf8'))
+  for (const row of legacy.datasets) {
+    delete row.input_source
+    if (!row.builtin&&!row.upload_file) { row.uploaded=false;row.imported=false;row.status='pending' }
+  }
+  writeFileSync(path,JSON.stringify(legacy))
+  const restarted=createExperienceStore(options)
+  const rows=restarted.read([domain,'datasets']).data
+  assert.ok(rows.every(row=>row.uploaded))
+  const custom=rows.find(row=>row.dataset_id===id)
+  assert.equal(custom.input_source,'upload')
+  assert.equal(custom.file_name,'观测数据_新版本.txt')
+  assert.equal(custom.imported,true)
+  assert.deepEqual(readFileSync(restarted.file(domain,id,'download').path),bytes)
+  const defaultId='DS-WAVE-0002'
+  restarted.write('POST',[domain,'scenarios','wave-propagation','import'])
+  const invalid=restarted.write('POST',[domain,'datasets',defaultId,'upload'],{buffer:Buffer.from('{}'),file_name:'anything.json'})
+  assert.equal(invalid.code,400)
+  const unchanged=restarted.read([domain,'datasets',defaultId]).data
+  assert.equal(unchanged.input_source,'default')
+  assert.equal(unchanged.imported,true)
+  assert.equal(createExperienceStore(options).read([domain,'datasets',defaultId]).data.imported,true)
 })
 
 test('invalid uploads do not overwrite valid files or import state',t=>{

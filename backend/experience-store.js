@@ -40,17 +40,31 @@ export function createExperienceStore({ dataDir, runtimeDir, now = Date.now }) {
     renameSync(`${path}.tmp`, path)
   }
 
+  function useDefault(domain, dataset) {
+    const file = files.defaultFile(domain, dataset)
+    if (!file) return false
+    const preview = files.inspect(domain, dataset, readFileSync(file.path), file.name)
+    Object.assign(dataset, { input_source: 'default', uploaded: true, status: 'ready', source: '默认数据', size_bytes: preview.size_bytes, grid: preview.summary })
+    return true
+  }
+
   function stateFor(domain) {
     if (states.has(domain)) return states.get(domain)
     const path = resolve(runtimeDir, `${domain}.json`)
     if (existsSync(path)) {
       const state = JSON.parse(readFileSync(path, 'utf8'))
       for (const dataset of state.datasets) {
-        if (!dataset.builtin && !files.stored(domain, dataset)) {
+        if (dataset.builtin) { dataset.input_source = 'builtin'; continue }
+        if (files.stored(domain, dataset)) { dataset.input_source = 'upload'; continue }
+        if (dataset.upload_file || dataset.input_source === 'upload') {
+          dataset.input_source = 'upload'
           dataset.uploaded = false
           dataset.imported = false
           dataset.status = 'pending'
           delete dataset.upload_file
+        } else {
+          if (dataset.input_source !== 'default') dataset.imported = false
+          useDefault(domain, dataset)
         }
       }
       for (const run of state.runs) {
@@ -88,6 +102,8 @@ export function createExperienceStore({ dataDir, runtimeDir, now = Date.now }) {
         dataset.source_type = 'simulated'
         if (dataset._pristine?.size_bytes) dataset.size_bytes = dataset._pristine.size_bytes
         if (dataset.uploaded) dataset.status = 'ready'
+        if (dataset.builtin) dataset.input_source = 'builtin'
+        else useDefault(domain, dataset)
       }
       // Include a complete result and a history-only success in every scenario.
       const completed = runs.filter(r => r.scenario_id === scenario && r.status === 'success')
@@ -219,7 +235,7 @@ export function createExperienceStore({ dataDir, runtimeDir, now = Date.now }) {
       const dataset = state.datasets.find(item => item.dataset_id === id)
       if (!dataset) return error('数据集不存在', 404)
       if (sub === 'preview') {
-        const file = files.stored(domain, dataset)
+        const file = files.current(domain, dataset)
         if (!file) return error('请先上传文件后再预览', 404)
         try { return envelope(files.inspect(domain, dataset, readFileSync(file.path), file.name)) }
         catch (cause) { return error(cause.message) }
@@ -250,13 +266,15 @@ export function createExperienceStore({ dataDir, runtimeDir, now = Date.now }) {
         dataset.size_bytes = dataset.upload_file.size_bytes
         dataset.grid = dataset.upload_file.summary
         dataset.source = '用户上传'
+        dataset.input_source = 'upload'
       } else {
         delete dataset.upload_file
-        dataset.size_bytes = 0
-        dataset.grid = '—'
-        dataset.source = ''
+        if (!useDefault(domain, dataset)) {
+          Object.assign(dataset, previous)
+          return error('默认数据不可用', 404)
+        }
       }
-      dataset.uploaded = method === 'POST'
+      dataset.uploaded = true
       dataset.imported = false
       dataset.status = dataset.uploaded ? 'ready' : 'pending'
       dataset.updated_at = new Date(now()).toISOString()
@@ -278,7 +296,7 @@ export function createExperienceStore({ dataDir, runtimeDir, now = Date.now }) {
       const newly = uploaded.filter(d => !d.imported)
       newly.forEach(d => { d.imported = true })
       save(domain, state)
-      return envelope({ status: newly.length ? 'imported' : 'already_all', message: newly.length ? `本次导入 ${newly.length} 项数据，可前往资源调度` : '当前已上传数据均已导入', newly_count: newly.length, total_imported: uploaded.length, total_uploaded: uploaded.length })
+      return envelope({ status: newly.length ? 'imported' : 'already_all', message: newly.length ? `本次导入 ${newly.length} 项数据，可前往资源调度` : '当前就绪数据均已导入', newly_count: newly.length, total_imported: uploaded.length, total_uploaded: uploaded.length })
     }
     if (resource === 'scenarios' && method === 'POST' && action === 'operators' && verb === 'submit') {
       const template = state.templates[id]
@@ -327,7 +345,7 @@ export function createExperienceStore({ dataDir, runtimeDir, now = Date.now }) {
     if (!EXPERIENCE_DOMAINS.includes(domain)) return null
     const dataset = stateFor(domain).datasets.find(item => item.dataset_id === id)
     if (!dataset || dataset.builtin) return null
-    return kind === 'sample' ? files.sample(domain, id) : files.stored(domain, dataset)
+    return kind === 'sample' ? files.defaultFile(domain, dataset) : files.current(domain, dataset)
   }
   return { read, write, operators, file }
 }

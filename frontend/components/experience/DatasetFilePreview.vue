@@ -5,8 +5,8 @@ import type { DatasetItem, DatasetPreview } from '~/types'
 import { useApi } from '~/composables/useApi'
 import { formatBytes } from '~/composables/useFormat'
 
-const props = defineProps<{ modelValue: boolean; domain: string; dataset?: DatasetItem }>()
-const emit = defineEmits<{ 'update:modelValue': [value: boolean] }>()
+const props = defineProps<{ modelValue: boolean; domain: string; dataset?: DatasetItem; busy?: boolean }>()
+const emit = defineEmits<{ 'update:modelValue': [value: boolean]; restore: [] }>()
 const { getDatasetPreview, datasetFileUrl } = useApi()
 const preview = ref<DatasetPreview>()
 const pending = ref(false)
@@ -54,7 +54,7 @@ const plot = computed(() => {
           <h2 :id="titleId">{{ dataset?.name || '文件预览' }}</h2>
           <span v-if="preview || dataset?.format" class="preview-format">{{ preview?.format || dataset?.format }}</span>
         </div>
-        <div v-if="preview" class="preview-metadata"><span>{{ formatBytes(preview.size_bytes) }}</span><span v-if="preview.summary">{{ preview.summary }}</span></div>
+        <div v-if="preview" class="preview-metadata"><span class="preview-filename">{{ preview.file_name }}</span><span>{{ formatBytes(preview.size_bytes) }}</span><span v-if="preview.summary">{{ preview.summary }}</span></div>
       </header>
     </template>
     <div class="dataset-preview" :aria-busy="pending">
@@ -80,7 +80,7 @@ const plot = computed(() => {
         <p v-if="preview.truncated" class="preview-limit">{{ preview.kind === 'table' ? `已显示前 ${preview.rows.length} 条，共 ${preview.total_rows} 条` : '已显示前 30,000 字符' }}</p>
       </template>
     </div>
-    <template #footer><div class="preview-footer"><button v-if="preview && dataset" type="button" class="sc-action" @click="downloadFile"><Download aria-hidden="true" />下载文件</button><button type="button" class="sc-action" @click="emit('update:modelValue', false)">关闭</button></div></template>
+    <template #footer><div class="preview-footer"><button v-if="dataset?.input_source === 'upload'" type="button" class="sc-action" :disabled="busy" @click="emit('restore')">{{ busy ? '恢复中…' : '恢复默认' }}</button><button v-if="preview && dataset" type="button" class="sc-action" @click="downloadFile"><Download aria-hidden="true" />下载文件</button><button type="button" class="sc-action" @click="emit('update:modelValue', false)">关闭</button></div></template>
   </el-dialog>
 </template>
 
@@ -90,11 +90,12 @@ const plot = computed(() => {
 .preview-heading h2 { margin:0; color:#25344a; font:650 24px/1.4 var(--scnet-font-sans); letter-spacing:.01em; overflow-wrap:anywhere; }
 .preview-format { flex:none; padding:4px 9px; border:1px solid #dbe7f8; border-radius:6px; background:#eff5fd; color:#3565a5; font:600 13px/1.5 var(--scnet-font-mono); }
 .preview-metadata { display:flex; align-items:center; flex-wrap:wrap; gap:12px; color:#617289; font-size:14px; line-height:1.6; font-variant-numeric:tabular-nums; }
+.preview-filename { overflow-wrap:anywhere; }
 .preview-metadata span + span { border-left:1px solid #dbe2ea; padding-left:10px; }
 .dataset-preview { color:#334155; min-height:120px; max-height:calc(88dvh - 200px); overflow:auto; padding-right:4px; }
 .preview-limit, .preview-empty { color:#64748b; font-size:13px; line-height:1.7; }
 .preview-empty { text-align:center; padding:32px 0; }
-.preview-footer { display:flex; justify-content:flex-end; gap:10px; border-top:1px solid #e2e8f0; padding-top:16px; }
+.preview-footer { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:10px; border-top:1px solid #e2e8f0; padding-top:16px; }
 .preview-footer .sc-action { min-width:100px; font-size:14px; }
 .preview-error { padding:16px; color:#b42318; background:#fff5f5; }
 .preview-table { overflow:auto; border:1px solid #e2e8f0; border-radius:8px; }

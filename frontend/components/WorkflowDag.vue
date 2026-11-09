@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, useId, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, shallowRef, useId, watch } from 'vue'
 import {
+  BaseEdge,
   Handle,
   MarkerType,
   Position,
@@ -13,17 +14,13 @@ import {
 import { Background } from '@vue-flow/background'
 import type { WorkflowEdge, WorkflowNode } from '~/types'
 import { positionDagPopover } from '~/utils/dag-popover'
+import { layoutDag, dagViewport, DAG_NODE_WIDTH, DAG_NODE_HEIGHT, type DagLayout, type DagPort } from '~/utils/dag-layout'
 import '@vue-flow/core/dist/style.css'
 import '@vue-flow/core/dist/theme-default.css'
 
 const props = defineProps<{ nodes: WorkflowNode[]; edges: WorkflowEdge[] }>()
 
-interface PositionedNode {
-  node: WorkflowNode
-  x: number
-  y: number
-  height: number
-}
+interface WorkflowNodeView extends WorkflowNode { inputs: DagPort[]; outputs: DagPort[] }
 
 interface PopoverPosition {
   left: number
@@ -33,18 +30,15 @@ interface PopoverPosition {
 }
 
 const FLOW_ID = `run-workflow-${useId()}`
-const NODE_WIDTH = 240
-const NODE_HEIGHT = 96
-const LAYER_GAP = 80
-const ROW_GAP = 28
-const CANVAS_PADDING = 48
+const NODE_WIDTH = DAG_NODE_WIDTH
+const NODE_HEIGHT = DAG_NODE_HEIGHT
 const POPOVER_WIDTH = 320
 const POPOVER_FALLBACK_HEIGHT = 124
 
 const frame = ref<HTMLDivElement>()
 const nodeHeights = ref<Record<string, number>>({})
 const titlesMeasured = ref(false)
-const nameKey = computed(() => JSON.stringify(props.nodes.map(node => [node.id, node.name])))
+const nameKey = computed(() => JSON.stringify(props.nodes.map(node => [node.id, node.name]).sort((a, b) => a[0].localeCompare(b[0]))))
 let titleFrame = 0
 function scheduleTitleMeasurement(): void {
   cancelAnimationFrame(titleFrame)
@@ -54,7 +48,7 @@ function scheduleTitleMeasurement(): void {
 function measureNodeTitles(): void {
   if (!frame.value) return
   const heights: Record<string, number> = {}
-  for (const node of props.nodes) {
+  for (const node of [...props.nodes].sort((a, b) => a.id.localeCompare(b.id))) {
     const title = frame.value.querySelector<HTMLElement>(`.vue-flow__node[data-id="${CSS.escape(node.id)}"] .workflow-node > strong`)
     if (!title) return
     heights[node.id] = Math.max(NODE_HEIGHT, title.offsetHeight + 52)
@@ -78,7 +72,8 @@ let motionQuery: MediaQueryList | undefined
 const updateMotion = () => { reducedMotion.value = motionQuery?.matches ?? false }
 
 const {
-  fitView: flowFitView,
+  setViewport,
+  updateNodeInternals,
   zoomIn: flowZoomIn,
   zoomOut: flowZoomOut,
   findNode,
@@ -137,117 +132,68 @@ function nodeMeta(node: WorkflowNode): string {
 }
 
 const activeNodeCount = computed(() => props.nodes.filter(n => n.status === 'running').length)
-const topologyKey = computed(() => JSON.stringify([nameKey.value, props.edges.map(e => [e.source, e.target])]))
+const topologyKey = computed(() => JSON.stringify([nameKey.value, props.edges.map(e => [e.source, e.target]).sort((a, b) => JSON.stringify(a).localeCompare(JSON.stringify(b)))]))
 let fittedTopology = ''
 
-function computeLayeredLayout(nodes: WorkflowNode[], edges: WorkflowEdge[]): PositionedNode[] {
-  const ids = new Set(nodes.map((node) => node.id))
-  const indegree = new Map(nodes.map((node) => [node.id, 0]))
-  const outgoing = new Map(nodes.map((node) => [node.id, [] as string[]]))
-  const ranks = new Map(nodes.map((node) => [node.id, 0]))
+const layout = shallowRef<DagLayout | null>(null)
+const layoutPending = ref(true)
+const layoutError = ref(false)
+let layoutGeneration = 0
+let mounted = false
 
-  for (const edge of edges) {
-    if (!ids.has(edge.source) || !ids.has(edge.target)) continue
-    outgoing.get(edge.source)?.push(edge.target)
-    indegree.set(edge.target, (indegree.get(edge.target) ?? 0) + 1)
+async function refreshLayout(): Promise<void> {
+  if (!mounted) return
+  const generation = ++layoutGeneration
+  layoutPending.value = true
+  layoutError.value = false
+  try {
+    const result = await layoutDag(props.nodes.map(node => ({ id: node.id, height: nodeHeights.value[node.id] ?? NODE_HEIGHT })), props.edges)
+    if (!mounted || generation !== layoutGeneration) return
+    layout.value = result
+    layoutPending.value = false
+    await nextTick()
+    updateNodeInternals()
+    scheduleTitleMeasurement()
+  } catch {
+    if (!mounted || generation !== layoutGeneration) return
+    layoutPending.value = false
+    layoutError.value = true
   }
-
-  const queue = nodes.filter((node) => indegree.get(node.id) === 0).map((node) => node.id)
-  const visited = new Set<string>()
-  for (let cursor = 0; cursor < queue.length; cursor += 1) {
-    const id = queue[cursor]
-    visited.add(id)
-    const rank = ranks.get(id) ?? 0
-    for (const target of outgoing.get(id) ?? []) {
-      ranks.set(target, Math.max(ranks.get(target) ?? 0, rank + 1))
-      const nextIndegree = (indegree.get(target) ?? 1) - 1
-      indegree.set(target, nextIndegree)
-      if (nextIndegree === 0) queue.push(target)
-    }
-  }
-
-  const lastRank = Math.max(0, ...ranks.values())
-  for (const node of nodes) {
-    if (!visited.has(node.id)) ranks.set(node.id, lastRank + 1)
-  }
-
-  const layers = new Map<number, WorkflowNode[]>()
-  for (const node of nodes) {
-    const rank = ranks.get(node.id) ?? 0
-    const layer = layers.get(rank) ?? []
-    layer.push(node)
-    layers.set(rank, layer)
-  }
-
-  const heightOf = (node: WorkflowNode) => nodeHeights.value[node.id] ?? NODE_HEIGHT
-  const layerSize = (layer: WorkflowNode[]) => layer.reduce((sum, node) => sum + heightOf(node), 0) + (layer.length - 1) * ROW_GAP
-  const layoutHeight = Math.max(NODE_HEIGHT, ...Array.from(layers.values(), layerSize))
-  const positioned: PositionedNode[] = []
-
-  for (const [rank, layer] of [...layers.entries()].sort(([a], [b]) => a - b)) {
-    const layerHeight = layerSize(layer)
-    let y = CANVAS_PADDING + (layoutHeight - layerHeight) / 2
-    layer.forEach((node) => {
-      positioned.push({
-        node,
-        x: CANVAS_PADDING + rank * (NODE_WIDTH + LAYER_GAP),
-        y,
-        height: heightOf(node),
-      })
-      y += heightOf(node) + ROW_GAP
-    })
-  }
-
-  return positioned
 }
 
-const flowNodes = computed<Node<WorkflowNode>[]>(() =>
-  computeLayeredLayout(props.nodes, props.edges).map(({ node, x, y, height }) => ({
-    id: node.id,
-    type: 'workflow',
-    position: { x, y },
-    width: NODE_WIDTH,
-    height,
-    style: { width: `${NODE_WIDTH}px`, height: `${height}px` },
-    data: node,
-    draggable: false,
-    connectable: false,
-    selectable: true,
-    focusable: true,
-    deletable: false,
-    ariaLabel: `${node.name}，${nodeMeta(node)}`,
-    sourcePosition: Position.Right,
-    targetPosition: Position.Left,
-  })),
-)
+const flowNodes = computed<Node<WorkflowNodeView>[]>(() => {
+  const byId = new Map(props.nodes.map(node => [node.id, node]))
+  return (layout.value?.nodes ?? []).filter(position => byId.has(position.id)).map(position => {
+    const node = byId.get(position.id)!
+    return {
+      id: node.id, type: 'workflow', position: { x: position.x, y: position.y },
+      width: NODE_WIDTH, height: position.height,
+      style: { width: `${NODE_WIDTH}px`, height: `${position.height}px` },
+      data: { ...node, inputs: position.inputs, outputs: position.outputs },
+      draggable: false, connectable: false, selectable: true, focusable: true, deletable: false,
+      ariaLabel: `${node.name}，${nodeMeta(node)}`,
+      sourcePosition: Position.Right, targetPosition: Position.Left,
+    }
+  })
+})
 
 const flowEdges = computed<Edge[]>(() => {
-  const ids = new Set(props.nodes.map((node) => node.id))
-  return props.edges
-    .filter((edge) => ids.has(edge.source) && ids.has(edge.target))
-    .map((edge, index) => {
-      const source = props.nodes.find(node => node.id === edge.source)
-      const target = props.nodes.find(node => node.id === edge.target)
-      const active = source?.status === 'success' && target?.status === 'running'
-      const complete = source?.status === 'success' && target?.status === 'success'
-      const color = active ? '#1769d2' : complete ? '#67a381' : '#b7c3d1'
-      return {
-      id: `${edge.source}-${edge.target}-${index}`,
-      source: edge.source,
-      target: edge.target,
-      type: 'smoothstep',
+  const byId = new Map(props.nodes.map(node => [node.id, node]))
+  return (layout.value?.edges ?? []).filter(edge => byId.has(edge.source) && byId.has(edge.target)).map(edge => {
+    const source = byId.get(edge.source), target = byId.get(edge.target)
+    const active = source?.status === 'success' && target?.status === 'running'
+    const complete = source?.status === 'success' && target?.status === 'success'
+    const color = active ? '#1769d2' : complete ? '#67a381' : '#b7c3d1'
+    return {
+      id: edge.id, source: edge.source, target: edge.target,
+      sourceHandle: edge.sourceHandle, targetHandle: edge.targetHandle,
+      type: 'routed', data: { path: edge.path },
       class: active ? 'is-flowing' : complete ? 'is-complete' : '',
-      selectable: false,
-      focusable: false,
-      deletable: false,
-      markerEnd: {
-        type: MarkerType.ArrowClosed,
-        width: 14,
-        height: 14,
-        color,
-      },
+      selectable: false, focusable: false, deletable: false,
+      markerEnd: { type: MarkerType.ArrowClosed, width: 14, height: 14, color },
       style: { stroke: color, strokeWidth: active ? 1.8 : 1.4 },
-    } })
+    }
+  })
 })
 
 function schedulePopoverUpdate(): void {
@@ -317,8 +263,9 @@ function clearSelection(): void {
   removeSelectedElements()
 }
 
-function fitView() {
-  return flowFitView({ padding: '36px', minZoom: 0.2, maxZoom: 1.08, duration: reducedMotion.value ? 0 : 280 })
+function fitView(overview = true) {
+  if (!layout.value || !frame.value) return Promise.resolve(false)
+  return setViewport(dagViewport(layout.value, frame.value.clientWidth, frame.value.clientHeight, overview), { duration: reducedMotion.value || !overview ? 0 : 280 })
 }
 
 function zoomIn(): void {
@@ -338,11 +285,11 @@ function handleCanvasWheel(event: WheelEvent): void {
 }
 
 function handleNodesInitialized(): void {
-  if (!titlesMeasured.value || !frame.value?.clientWidth || fittedTopology === topologyKey.value) return
+  if (layoutPending.value || layoutError.value || !titlesMeasured.value || !frame.value?.clientWidth || fittedTopology === topologyKey.value) return
   cancelAnimationFrame(fitFrame)
   fitFrame = requestAnimationFrame(() => {
     const key = topologyKey.value
-    void fitView().then(fitted => { if (fitted) fittedTopology = key })
+    void fitView(false).then(fitted => { if (fitted && key === topologyKey.value) fittedTopology = key })
   })
 }
 
@@ -352,13 +299,19 @@ watch(
     if (selectedNodeId.value && !props.nodes.some((node) => node.id === selectedNodeId.value)) {
       clearSelection()
     }
-    void nextTick(handleNodesInitialized)
+    titlesMeasured.value = false
+    fittedTopology = ''
+    layout.value = null
+    void refreshLayout()
   },
 )
+watch(nodeHeights, () => { void refreshLayout() })
 watch(() => props.nodes, schedulePopoverUpdate)
 watch(nameKey, () => { titlesMeasured.value = false; scheduleTitleMeasurement() })
 
 onMounted(() => {
+  mounted = true
+  void refreshLayout()
   scheduleTitleMeasurement()
   void document.fonts.ready.then(() => { if (frame.value) scheduleTitleMeasurement() })
   motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
@@ -371,6 +324,8 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
+  mounted = false
+  layoutGeneration++
   resizeObserver?.disconnect()
   cancelAnimationFrame(updateFrame)
   cancelAnimationFrame(fitFrame)
@@ -384,7 +339,7 @@ onBeforeUnmount(() => {
     <header class="dag-toolbar">
       <div class="dag-toolbar-copy">
         <h2 id="dag-viewer-title">工作流 DAG</h2>
-        <span>Ctrl/⌘ + 滚轮缩放</span>
+        <span>拖动平移 · Ctrl/⌘ + 滚轮缩放</span>
       </div>
       <span v-if="activeNodeCount > 1" class="dag-parallel-status">{{ activeNodeCount }} 个节点并行执行</span>
       <div class="dag-controls" role="toolbar" aria-label="工作流视图控制">
@@ -394,7 +349,7 @@ onBeforeUnmount(() => {
         <button type="button" class="dag-control-button sc-action sc-action--small sc-action--icon" aria-label="放大工作流" @click="zoomIn">
           <span aria-hidden="true">+</span>
         </button>
-        <button type="button" class="dag-control-button dag-fit-button sc-action sc-action--small" aria-label="适应工作流视图" @click="fitView">
+        <button type="button" class="dag-control-button dag-fit-button sc-action sc-action--small" aria-label="适应工作流视图" @click="fitView()">
           <svg aria-hidden="true" viewBox="0 0 20 20">
             <path d="M7 3H3v4M13 3h4v4M7 17H3v-4m10 4h4v-4" />
           </svg>
@@ -416,6 +371,7 @@ onBeforeUnmount(() => {
         <VueFlow
           :id="FLOW_ID"
           class="dag-flow"
+          :class="{ 'is-layout-pending': !titlesMeasured || layoutError }"
           :nodes="flowNodes"
           :edges="flowEdges"
           :nodes-draggable="false"
@@ -426,7 +382,7 @@ onBeforeUnmount(() => {
           :zoom-on-pinch="true"
           :pan-on-drag="true"
           :prevent-scrolling="false"
-          :min-zoom="0.2"
+          :min-zoom="0.05"
           :max-zoom="1.8"
           :elevate-nodes-on-select="false"
           @node-click="handleNodeClick"
@@ -435,9 +391,13 @@ onBeforeUnmount(() => {
           @viewport-change="schedulePopoverUpdate"
         >
           <Background variant="lines" :gap="20" :line-width="1" color="#edf1f5" />
+          <template #edge-routed="{ id, data, markerEnd, style }">
+            <path :d="data.path" class="dag-edge-underlay" fill="none" aria-hidden="true" />
+            <BaseEdge :id="id" :path="data.path" :marker-end="markerEnd" :style="style" :interaction-width="0" />
+          </template>
           <template #node-workflow="{ data, selected }">
             <article class="workflow-node" :class="{ 'is-selected': selected, 'is-running': data.status === 'running', 'is-waiting': data.waiting_at_join }" :title="data.name">
-              <Handle type="target" :position="Position.Left" :connectable="false" />
+              <Handle v-for="port in data.inputs" :id="port.id" :key="port.id" type="target" :position="Position.Left" :style="{ top: `${port.y}px` }" :connectable="false" />
               <span class="workflow-node-accent" :style="{ backgroundColor: statusColor(data.status) }" aria-hidden="true" />
               <strong>{{ data.name }}</strong>
               <div class="workflow-node-meta">
@@ -447,11 +407,13 @@ onBeforeUnmount(() => {
               <span class="workflow-node-progress" aria-hidden="true">
                 <i :style="{ transform: `scaleX(${clampedProgress(data.progress) / 100})`, backgroundColor: statusColor(data.status) }" />
               </span>
-              <Handle type="source" :position="Position.Right" :connectable="false" />
+              <Handle v-for="port in data.outputs" :id="port.id" :key="port.id" type="source" :position="Position.Right" :style="{ top: `${port.y}px` }" :connectable="false" />
             </article>
           </template>
         </VueFlow>
 
+        <div v-if="layoutError" class="dag-layout-status" role="alert">布局加载失败<button type="button" class="sc-action sc-action--small" @click="refreshLayout">重新加载</button></div>
+        <div v-else-if="!titlesMeasured" class="dag-layout-status" role="status">正在布局…</div>
         <Transition name="dag-popover" mode="out-in">
           <aside
             v-if="selectedNode"
@@ -567,6 +529,9 @@ onBeforeUnmount(() => {
   user-select: none;
 }
 .dag-flow:active { cursor: grabbing; }
+.dag-flow.is-layout-pending { opacity:0; pointer-events:none; }
+.dag-layout-status { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; gap:12px; color:var(--scnet-text-muted); }
+.dag-edge-underlay { stroke:#fbfcfe; stroke-width:5px; pointer-events:none; }
 .dag-flow :deep(.vue-flow__pane) { cursor: inherit; }
 .dag-flow :deep(.vue-flow__node) { border: 0; background: transparent; box-shadow: none; }
 .dag-flow :deep(.vue-flow__node:focus-visible) { outline: 2px solid #72a8e6; outline-offset: 4px; border-radius: 8px; }
@@ -593,7 +558,7 @@ onBeforeUnmount(() => {
 .workflow-node.is-running { border-color:#a7c5ec; background:#f8fbff; }
 .workflow-node.is-waiting { border-color:#bfd9c9; }
 .workflow-node-accent { position: absolute; top: -1px; bottom: -1px; left: -1px; width: 5px; border-radius: 8px 0 0 8px; }
-.workflow-node > strong { display: block; color: inherit; font-size: 13px; font-weight: 650; line-height: 1.4; white-space: normal; overflow-wrap: anywhere; }
+.workflow-node > strong { display: block; color: inherit; font-size: 14px; font-weight: 650; line-height: 1.4; white-space: normal; overflow-wrap: anywhere; }
 .workflow-node-meta { min-width: 0; display: flex; align-items: center; gap: 7px; margin-top: 7px; color: #758195; font-size: 11px; line-height: 1.3; }
 .workflow-node-meta > span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .workflow-node-status { width: 6px; height: 6px; flex: 0 0 auto; border-radius: 50%; }
