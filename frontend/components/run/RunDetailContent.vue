@@ -395,14 +395,22 @@ function chartOption(section: ExtraSection): Record<string, unknown> | null {
               <p>{{ detail.scenario_name ?? detail.scenario_id }}</p>
           </div>
 
-          <NuxtLink
-            v-if="!embedded"
-            class="run-detail-back-link sc-action"
-            :to="`/domains/${domain}/runs`"
-          >
-            <ArrowLeft aria-hidden="true" />
-            <span>返回运行记录</span>
-          </NuxtLink>
+          <div class="run-record-actions">
+            <RunPauseButton
+              :domain="domain"
+              :run-id="detail.run_id"
+              :status="detail.status"
+              @changed="pollDetail"
+            />
+            <NuxtLink
+              v-if="!embedded"
+              class="run-detail-back-link sc-action"
+              :to="`/domains/${domain}/runs`"
+            >
+              <ArrowLeft aria-hidden="true" />
+              <span>返回运行记录</span>
+            </NuxtLink>
+          </div>
         </header>
         <p v-if="embedded && !['success', 'completed'].includes(detail.status)" class="run-result-note">{{ ['failed', 'stopped', 'cancelled'].includes(detail.status) ? '任务未成功完成，以下展示已产生的数据与产物。' : '任务尚未完成，以下展示当前已有数据与阶段性结果。' }}</p>
 
@@ -746,6 +754,12 @@ function chartOption(section: ExtraSection): Record<string, unknown> | null {
 }
 
 .run-result-note { margin: 0; padding: 0 28px 18px; color: #687588; font-size: 13px; line-height: 1.6; }
+.run-record-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
 .run-record-header {
   min-height: 88px;
   display: flex;

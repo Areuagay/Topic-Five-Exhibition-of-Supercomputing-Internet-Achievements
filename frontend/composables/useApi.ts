@@ -132,6 +132,10 @@ export function useApi() {
       }),
     advanceRun: (domain: string, runId: string) =>
       mutate<RunAdvanceResult>(`/${domain}/runs/${runId}/advance`, 'POST'),
+    pauseRun: (domain: string, runId: string) =>
+      mutate<RunDetail>(`/${domain}/runs/${runId}/pause`, 'POST'),
+    resumeRun: (domain: string, runId: string) =>
+      mutate<RunDetail>(`/${domain}/runs/${runId}/resume`, 'POST'),
 
     // 函数多中心联调
     getClusters: () => request<MultiCluster[]>('/multicenter/clusters'),

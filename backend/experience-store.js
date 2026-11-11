@@ -2,7 +2,7 @@ import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from '
 import { resolve } from 'node:path'
 import { scenarioMetrics } from './scenario-metrics.js'
 import { createDatasetFiles } from './dataset-files.js'
-import { applyOperatorPlan, annotateJoins, estimatePlanSeconds, needsOperatorPlan } from './operator-plan.js'
+import { applyOperatorPlan, annotateJoins, estimatePlanSeconds, needsOperatorPlan, propagateTerminal } from './operator-plan.js'
 
 export const EXPERIENCE_DOMAINS = ['geodynamics', 'llm', 'automotive', 'uav', 'drug', 'dft']
 const PREFIXES = ['GEO', 'LLM', 'AUTO', 'UAV', 'DRUG', 'DFT']
@@ -116,9 +116,9 @@ export function createExperienceStore({ dataDir, runtimeDir, now = Date.now }) {
         if (detail._clock !== 'realtime' && detail.start_time && ['success', 'failed', 'stopped'].includes(detail.status)) {
           detail.end_time = addSeconds(detail.start_time, detail.elapsed_seconds)
         }
-        if (detail._clock !== 'realtime' && detail.status === 'success') {
-          detail.progress = 100
-          for (const node of detail.workflow?.nodes ?? []) { node.status = 'success'; node.progress = 100 }
+        if (detail._clock !== 'realtime') {
+          if (detail.status === 'success') detail.progress = 100
+          normalizeWorkflow(detail)
         }
         const metrics = scenarioMetrics(detail.scenario_id, detail.metrics?.domain_data, detail.progress)
         if (metrics) detail.metrics.metrics = metrics
@@ -184,6 +184,8 @@ export function createExperienceStore({ dataDir, runtimeDir, now = Date.now }) {
       if (detail.start_time && ['success', 'failed', 'stopped'].includes(detail.status)) {
         detail.end_time = addSeconds(detail.start_time, detail.elapsed_seconds)
       }
+      // 历史记录：DAG 节点状态必须与任务终态一致，节点数也要与图上数量一致
+      normalizeWorkflow(detail)
       const metrics = scenarioMetrics(detail.scenario_id, detail.metrics?.domain_data, detail.progress)
       if (metrics) detail.metrics.metrics = metrics
       detail._last_tick = now()
@@ -208,6 +210,62 @@ export function createExperienceStore({ dataDir, runtimeDir, now = Date.now }) {
     run.has_result = detail.status === 'success' && detail.has_result === true
     run.has_workflow = true
     run.metrics_snapshot = copy(detail.metrics?.metrics ?? [])
+  }
+
+  /**
+   * 让 DAG 节点状态与任务状态保持一致。
+   *
+   * 历史记录的 workflow 来自同类模板（可能是一条运行中的记录），合并后会出现
+   * 「任务已成功、图上还在跑」的矛盾。这里按任务终态统一收口：
+   * - success：所有节点已完成，进度 100
+   * - failed / stopped：失败或停止之前的节点视为已完成，命中的节点保留原状态，其余等待
+   * - 运行中（running/queued/pending）：只补默认字段，交给实时推进逻辑
+   * 同时把节点数量写回 detail.nodes，避免「工作节点 8 个」和图上 3 个节点打架。
+   */
+  function normalizeWorkflow(detail) {
+    const nodes = detail.workflow?.nodes ?? []
+    if (!nodes.length) return
+    const terminal = ['success', 'failed', 'stopped'].includes(detail.status)
+
+    if (detail.status === 'success') {
+      for (const node of nodes) {
+        node.status = 'success'
+        node.progress = 100
+      }
+    } else if (terminal) {
+      // 按图的上游/下游收口：失败节点之前（祖先）已完成，之后（后代）未开始，
+      // 与失败分支无关的并行分支保留原状态。以前按下标处理，并行图会错位。
+      if (nodes.some(node => ['failed', 'stopped'].includes(node.status))) {
+        propagateTerminal(nodes, detail.workflow?.edges ?? [])
+      } else {
+        const hit = nodes.length - 1
+        nodes.forEach((node, index) => {
+          if (index < hit) { node.status = 'success'; node.progress = 100 }
+          else { node.status = 'failed'; node.progress = Math.min(99, Math.max(1, Number(node.progress) || 100)) }
+        })
+      }
+    } else {
+      for (const node of nodes) {
+        if (!node.status) node.status = 'pending'
+        if (typeof node.progress !== 'number') node.progress = 0
+      }
+    }
+
+    detail.nodes = nodes.length
+
+    // 总体进度以节点时长为准重新计算，避免「总体 99% 但节点加起来 275%」这种对不上。
+    // 只处理失败/停止：成功记录一律 100%，其耗时与总时长沿用原计划，不做回写。
+    const totalPlanned = nodes.reduce((sum, node) => sum + (Number(node.planned_seconds) || 0), 0)
+    const totalElapsed = nodes.reduce((sum, node) => sum + (Number(node.elapsed_seconds) || 0), 0)
+    if (totalPlanned > 0 && terminal && detail.status !== 'success') {
+      detail.planned_seconds = Math.round(totalPlanned)
+      detail.progress = Math.min(99, Math.max(0, Math.round((totalElapsed / totalPlanned) * 100)))
+      detail.elapsed_seconds = Math.round(totalElapsed)
+      detail.remaining_seconds = Math.max(0, detail.planned_seconds - detail.elapsed_seconds)
+      if (detail.start_time) {
+        detail.end_time = new Date(Date.parse(detail.start_time) + detail.elapsed_seconds * 1000).toISOString()
+      }
+    }
   }
 
   /**
@@ -284,12 +342,57 @@ export function createExperienceStore({ dataDir, runtimeDir, now = Date.now }) {
     if (dirty) save(domain, state)
   }
 
+  /**
+   * 实时提交的任务原本没有日志，页面上的「运行日志」会一直空着。
+   * 这里按节点状态实时生成时间线日志，让新建任务也有可读的执行记录。
+   */
+  function synthLogs(detail) {
+    const nodes = detail.workflow?.nodes ?? []
+    if (!nodes.length) return { next_offset: 0, has_more: false, lines: [] }
+    const start = Date.parse(detail.start_time) || now()
+    const lines = [{
+      seq: 1,
+      timestamp: new Date(start).toISOString(),
+      level: 'INFO',
+      message: `[${detail.cluster_name || detail.cluster_id || '调度中心'}] 任务 ${detail.run_id} 进入队列，等待资源分配`,
+    }]
+    let seq = 2
+    for (const node of nodes) {
+      if (node.status === 'pending') break
+      const at = new Date(start + (Number(node.planned_start_seconds) || 0) * 1000).toISOString()
+      lines.push({ seq: seq++, timestamp: at, level: 'INFO', message: `[${node.cluster_id || detail.cluster_id || '-'}] 开始执行「${node.name}」` })
+      if (node.status === 'success') {
+        const fin = new Date(start + ((Number(node.planned_start_seconds) || 0) + (Number(node.planned_seconds) || 0)) * 1000).toISOString()
+        lines.push({
+          seq: seq++,
+          timestamp: fin,
+          level: 'INFO',
+          message: `[${node.cluster_id || detail.cluster_id || '-'}] 「${node.name}」完成，累计 ${Number(node.core_hours || 0).toFixed(2)} 核时`,
+        })
+      } else if (node.status === 'running') {
+        lines.push({
+          seq: seq++,
+          timestamp: new Date(now()).toISOString(),
+          level: 'INFO',
+          message: `[${node.cluster_id || detail.cluster_id || '-'}] 「${node.name}」进度 ${Number(node.progress || 0).toFixed(0)}%，已运行 ${Number(node.elapsed_seconds || 0)} 秒`,
+        })
+      } else if (node.status === 'failed') {
+        lines.push({ seq: seq++, timestamp: new Date(now()).toISOString(), level: 'ERROR', message: `[${node.cluster_id || '-'}] 「${node.name}」执行失败` })
+      }
+    }
+    if (detail.status === 'paused') {
+      lines.push({ seq: seq++, timestamp: new Date(now()).toISOString(), level: 'WARN', message: '任务已暂停，可再次点击暂停按钮继续执行' })
+    }
+    return { next_offset: lines.length, has_more: false, lines }
+  }
+
   function publicDetail(detail) {
     const result = copy(detail)
     for (const key of Object.keys(result)) if (key.startsWith('_')) delete result[key]
     for (const node of result.workflow?.nodes ?? []) delete node._elapsed_ticks
     result.server_time = new Date(now()).toISOString()
     result.has_result = result.status === 'success' && result.has_result === true
+    if (!result.logs?.lines?.length) result.logs = synthLogs(detail)
     if (!result.has_result) {
       delete result.domain_data
       result.artifacts = []
@@ -423,6 +526,45 @@ export function createExperienceStore({ dataDir, runtimeDir, now = Date.now }) {
       state.runs.unshift(run)
       save(domain, state)
       return envelope({ run_id: runId, workflow: copy(detail.workflow), progress: 0, selected_operator_ids: ids, planned_seconds: planSeconds })
+    }
+    if (resource === 'runs' && method === 'POST' && (action === 'pause' || action === 'resume')) {
+      const detail = state.details[id]
+      if (!detail) return error('运行记录不存在', 404)
+      if (action === 'pause') {
+        if (!['running', 'queued', 'pending'].includes(detail.status)) return error('当前任务不可暂停')
+        detail._paused_status = detail.status
+        detail.status = 'paused'
+        detail.current_stage = '已暂停'
+        // 正在跑的节点一并置为「已暂停」，避免暂停后 DAG 仍显示运行中
+        for (const node of detail.workflow?.nodes ?? []) {
+          if (node.status === 'running') node.status = 'paused'
+        }
+        const run = state.runs.find(r => r.run_id === id)
+        if (run) syncSummary(run, detail)
+      } else {
+        if (detail.status !== 'paused') return error('当前任务未暂停')
+        const elapsed = Math.max(0, Number(detail.elapsed_seconds) || 0)
+        const resumeTo = detail._paused_status === 'queued' ? 'queued' : 'running'
+        delete detail._paused_status
+        detail.status = resumeTo
+        // 恢复时把暂停的节点还原成运行中，继续按墙钟推进
+        for (const node of detail.workflow?.nodes ?? []) {
+          if (node.status === 'paused') node.status = 'running'
+        }
+        if (resumeTo === 'running') {
+          // 把开始时间整体后移，已运行时长不因暂停而丢失
+          detail.start_time = new Date(now() - elapsed * 1000).toISOString()
+          detail._clock = 'realtime'
+          const running = detail.workflow.nodes.filter(n => n.status === 'running')
+          detail.current_stage = running.length ? running.map(n => n.name).join('、') : '继续执行'
+        } else {
+          detail.current_stage = '排队等待'
+        }
+        const run = state.runs.find(r => r.run_id === id)
+        if (run) syncSummary(run, detail)
+      }
+      save(domain, state)
+      return envelope(publicDetail(detail))
     }
     if (resource === 'runs' && method === 'POST' && action === 'advance') {
       // Compatibility endpoint; elapsed time, never request count, drives progress.

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { computed } from 'vue'
 import { Box } from '@lucide/vue'
 import WorkflowDag from '~/components/WorkflowDag.vue'
@@ -63,6 +63,9 @@ function selectRun(value: string): void {
       <header class="exp-chosen-heading"><div><strong>本条任务算子</strong><span class="exp-chosen-count">{{ chosenOperators.length }} 项</span></div><p>与下方工作流、执行监控同步</p></header>
       <ul v-if="chosenOperators.length"><li v-for="operator in chosenOperators" :key="operator.name"><span class="exp-chosen-icon"><Box :size="17" aria-hidden="true" /></span><span class="exp-chosen-name">{{ operator.title || (operator.description.includes('：') ? operator.description.split('：')[0] : operator.name) }}<small>{{ operator.name }} · {{ runtimeLabel(operator) }}</small></span></li></ul>
       <p v-else>预置运行记录，计算阶段请查看下方工作流。</p>
+      <p class="exp-chain-note">
+        工作流按所选算子顺序串联：输入数据准备 → 算子 1 … 算子 N → 结果整理与输出；每个算子使用各自的镜像与资源配置，前一阶段的输出作为后一阶段的输入。
+      </p>
     </section>
     <div class="exp-toolbar">
       <label class="exp-toolbar-field">
@@ -125,6 +128,7 @@ function selectRun(value: string): void {
 </template>
 
 <style scoped>
+.exp-chain-note { margin: 10px 0 0; padding: 8px 12px; border-radius: 6px; background: #f4f7fb; color: #526074; font-size: 12.5px; line-height: 1.6; }
 .exp-chosen-operators { padding: 20px 24px; border: 1px solid var(--scnet-divider); border-radius: 10px; background: #fff; }
 .exp-chosen-heading { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px 20px; padding-bottom: 15px; border-bottom: 1px solid var(--scnet-divider); }
 .exp-chosen-heading > div { display: flex; align-items: center; gap: 12px; }

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, shallowRef, useId, watch } from 'vue'
 import {
   BaseEdge,
@@ -85,21 +85,23 @@ const {
 const STATUS_COLORS: Record<string, string> = {
   success: '#32915b',
   running: '#1769d2',
+  paused: '#b57820',
   queued: '#b57820',
   pending: '#9aa6b5',
   failed: '#d64b4b',
   stopped: '#687588',
-  blocked: '#d64b4b',
+  blocked: '#9aa6b5',
 }
 
 const STATUS_TEXT: Record<string, string> = {
   success: '已完成',
   running: '运行中',
+  paused: '已暂停',
   queued: '排队中',
   pending: '等待执行',
   failed: '失败',
   stopped: '已停止',
-  blocked: '上游失败',
+  blocked: '等待执行',
 }
 
 const graphLabel = computed(

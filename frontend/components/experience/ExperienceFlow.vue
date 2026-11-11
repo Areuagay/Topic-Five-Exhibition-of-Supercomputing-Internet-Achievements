@@ -336,6 +336,10 @@ async function handleOperatorSubmit(): Promise<void> {
 
 /* All visible runs refresh from the same server clock, without POST-driven ticks. */
 const selectedRun = computed(() => scenarioRuns.value.find(run => run.run_id === selectedRunId.value))
+/** 暂停按钮的当前任务：优先选中记录，其次当前提交的任务 */
+const pauseTarget = computed(() => selectedRun.value
+  ?? scenarioRuns.value.find(run => run.run_id === submittedRunId.value)
+  ?? null)
 const runOperators = computed(() => (operators.value ?? []).filter(operator => selectedRun.value?.selected_operator_ids?.includes(operator.name)))
 const resultAvailable = computed(() => canViewResult(selectedRun.value))
 const liveMessage = ref('')
@@ -415,7 +419,17 @@ watch(activeKey, key => { if (key === 'resource') void refreshClusters() })
         <span class="experience-guide-progress">{{ guideActive ? '体验' : '步骤' }} {{ activeStep.index }} / {{ experienceSteps.length }}</span>
         <span class="experience-guide-summary" :title="guideSummary">{{ guideSummary }}</span>
       </p>
+      <p v-if="activeKey === 'operator' && !chosenOperators.length" class="experience-guide-hint" role="status">
+        请先在下方选择算子（可点「采用场景推荐」一键选好），再提交并编排。
+      </p>
       <div class="experience-guide-actions">
+        <RunPauseButton
+          v-if="activeKey === 'workflow' && pauseTarget"
+          :domain="domain"
+          :run-id="pauseTarget.run_id"
+          :status="pauseTarget.status"
+          @changed="refreshRuns"
+        />
         <button :disabled="!previousStep" type="button" class="experience-previous sc-action" @click="previousStep && selectStep(previousStep.key)"><ArrowLeft class="experience-nav-arrow" aria-hidden="true" /> 上一步</button>
         <button :disabled="nextDisabled" :aria-busy="nextBusy" type="button" class="experience-next sc-action sc-action--primary" :title="nextStep ? '下一步：' + nextStep.title : '已是最后一步'" @click="goNext">
           <span>{{ nextLabel }}</span><span class="experience-next-icon" aria-hidden="true"><LoaderCircle v-if="nextBusy" class="is-spinning" /><ArrowRight v-else class="experience-nav-arrow action-arrow" /></span>
@@ -485,6 +499,7 @@ watch(activeKey, key => { if (key === 'resource') void refreshClusters() })
         @update:selected-run-id="(value) => (selectedRunId = value)"
         @inspect="handleInspect"
         @result="handleResult"
+        @refresh="refreshRuns"
       />
 
       <ExperienceResultStep
@@ -495,6 +510,7 @@ watch(activeKey, key => { if (key === 'resource') void refreshClusters() })
         :run-status="selectedRun?.status"
         :progress="selectedRun?.progress"
         @back-to-monitor="selectStep('monitor')"
+        @refresh="refreshRuns"
       />
       </KeepAlive>
       </Transition>
@@ -619,8 +635,21 @@ watch(activeKey, key => { if (key === 'resource') void refreshClusters() })
 .experience-guide-line { display: flex; align-items: center; gap: 14px; min-width: 0; margin: 0; font-size: 16px; color: var(--scnet-text-secondary); }
 .experience-guide-progress { flex-shrink: 0; color: var(--scnet-primary); font-weight: 600; font-variant-numeric: tabular-nums; }
 .experience-guide-summary { white-space: normal; overflow-wrap: anywhere; }
-.experience-guide-actions { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); width: 268px; min-width: 0; max-width: 100%; gap: 8px; }
-.experience-guide-actions button { width: 100%; min-width: 0; height: 44px; padding-inline: 10px; font-size: 14px; box-sizing: border-box; }
+.experience-guide-hint {
+  margin: 6px 0 0;
+  padding: 6px 10px;
+  border-left: 3px solid #e6a23c;
+  border-radius: 4px;
+  background: #fdf6ec;
+  color: #8a5a12;
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+.experience-guide-actions { display: flex; align-items: center; justify-content: flex-end; width: auto; min-width: 0; max-width: 100%; gap: 8px; }
+.experience-guide-actions button { min-width: 0; height: 44px; padding-inline: 14px; font-size: 14px; box-sizing: border-box; }
+.experience-guide-actions .experience-previous { flex: 0 0 auto; width: 104px; padding-inline: 10px; }
+.experience-guide-actions .experience-next { flex: 1 1 auto; width: auto; min-width: 132px; }
+.experience-guide-actions :deep(.run-pause__btn) { height: 44px; min-height: 44px; }
 .experience-next-icon { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 16px; width: 16px; height: 16px; }
 .experience-next-icon .action-arrow { margin-left: 0; }
 .experience-nav-arrow { display: inline-block; transition: transform 180ms var(--scnet-hover-easing); }

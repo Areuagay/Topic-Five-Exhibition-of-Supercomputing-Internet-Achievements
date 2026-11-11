@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 格式化工具：数字 / 字节 / 耗时 / 时间 / 状态文案映射。
  */
 
@@ -93,8 +93,10 @@ const STATUS_TEXT: Record<string, string> = {
   queued: '排队中',
   waiting: '等待中',
   running: '运行中',
+  paused: '已暂停',
   success: '成功',
   failed: '失败',
+  blocked: '等待执行',
   stopped: '已停止',
   online: '在线',
   degraded: '降级',
@@ -119,6 +121,8 @@ const STATUS_TAG: Record<string, 'success' | 'warning' | 'danger' | 'info' | 'pr
   available: 'success',
   ok: 'success',
   running: 'primary',
+  paused: 'warning',
+  blocked: 'info',
   active: 'primary',
   migrating: 'primary',
   degraded: 'warning',

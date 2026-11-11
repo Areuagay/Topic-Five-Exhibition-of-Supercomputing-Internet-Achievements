@@ -1,1134 +1,1102 @@
 {
-  "code": 200,
-  "message": "success",
-  "data": {
-    "run_id": "AUTO-20260811-0010",
-    "scenario_id": "fatigue-life",
-    "scenario_name": "结构疲劳寿命预测",
-    "status": "success",
-    "progress": 100,
-    "execution_mode": "simulated",
-    "cluster_id": "changsha",
-    "cluster_name": "天河新一代",
-    "job_id": "209910",
-    "current_stage": "completed",
-    "start_time": "2026-08-10T13:00:00+08:00",
-    "end_time": "2026-08-10T13:45:00+08:00",
-    "elapsed_seconds": 2700,
-    "nodes": 3,
-    "cpu_cores": 10,
-    "gpu_count": 2,
-    "memory_gb": 0,
-    "core_hours": 5.55,
-    "source_type": "simulated",
-    "workflow": {
-      "nodes": [
-        {
-          "id": "prepare",
-          "name": "输入数据准备",
-          "duration_ticks": 1,
-          "status": "success",
-          "progress": 100,
-          "elapsed_seconds": 270,
-          "core_hours": 0,
-          "resource_source": "none",
-          "planned_start_seconds": 0,
-          "planned_seconds": 270,
-          "waiting_for": [],
-          "waiting_at_join": false
-        },
-        {
-          "id": "operator-0",
-          "operator_id": "ipfno",
-          "name": "IPFNO隐式傅里叶神经算子快速评估函数接口",
-          "duration_ticks": 1,
-          "status": "success",
-          "progress": 100,
-          "elapsed_seconds": 1350,
-          "core_hours": 0.38,
-          "operator_name": "ipfno",
-          "operator_title": "IPFNO隐式傅里叶神经算子快速评估函数接口",
-          "runtime_type": "docker",
-          "runtime_label": "Docker",
-          "runtime_deployment": "Docker 运行",
-          "runtime_detail": "hub.cngrid.org:5000/scnet/cars/ipfno:gpu20250827_nodata",
-          "cpu_cores": 1,
-          "gpu_count": 1,
-          "memory_mb": 0,
-          "memory_gb": 0,
-          "resource_source": "operator",
-          "planned_start_seconds": 270,
-          "planned_seconds": 1350,
-          "waiting_for": [],
-          "waiting_at_join": false
-        },
-        {
-          "id": "operator-1",
-          "operator_id": "transolver",
-          "name": "Transolver几何PDE代理模型快速评估函数接口",
-          "duration_ticks": 5,
-          "status": "success",
-          "progress": 100,
-          "elapsed_seconds": 1350,
-          "core_hours": 0.38,
-          "operator_name": "transolver",
-          "operator_title": "Transolver几何PDE代理模型快速评估函数接口",
-          "runtime_type": "docker",
-          "runtime_label": "Docker",
-          "runtime_deployment": "Docker 运行",
-          "runtime_detail": "hub.cngrid.org:5000/scnet/cars/transolver:gpu20250820",
-          "cpu_cores": 1,
-          "gpu_count": 1,
-          "memory_mb": 0,
-          "memory_gb": 0,
-          "resource_source": "operator",
-          "planned_start_seconds": 270,
-          "planned_seconds": 1350,
-          "waiting_for": [],
-          "waiting_at_join": false
-        },
-        {
-          "id": "operator-2",
-          "operator_id": "structural-thermal-load",
-          "name": "汽车结构热负荷评估函数接口",
-          "duration_ticks": 3,
-          "status": "success",
-          "progress": 100,
-          "elapsed_seconds": 2160,
-          "core_hours": 4.8,
-          "operator_name": "structural-thermal-load",
-          "operator_title": "汽车结构热负荷评估函数接口",
-          "runtime_type": "singularity",
-          "runtime_label": "Singularity",
-          "runtime_deployment": "",
-          "runtime_detail": "/public/home/wxn/image/scnet/simulation/openfoam/openfoam _13.sif",
-          "cpu_cores": 8,
-          "gpu_count": 0,
-          "memory_mb": 0,
-          "memory_gb": 0,
-          "resource_source": "operator",
-          "planned_start_seconds": 270,
-          "planned_seconds": 2160,
-          "waiting_for": [],
-          "waiting_at_join": false
-        },
-        {
-          "id": "post",
-          "name": "结果整理与输出",
-          "duration_ticks": 1,
-          "status": "success",
-          "progress": 100,
-          "elapsed_seconds": 270,
-          "core_hours": 0,
-          "resource_source": "none",
-          "planned_start_seconds": 2430,
-          "planned_seconds": 270,
-          "waiting_for": [],
-          "waiting_at_join": false
-        }
-      ],
-      "edges": [
-        {
-          "source": "prepare",
-          "target": "operator-0"
-        },
-        {
-          "source": "prepare",
-          "target": "operator-1"
-        },
-        {
-          "source": "prepare",
-          "target": "operator-2"
-        },
-        {
-          "source": "operator-0",
-          "target": "post"
-        },
-        {
-          "source": "operator-1",
-          "target": "post"
-        },
-        {
-          "source": "operator-2",
-          "target": "post"
-        }
-      ]
+ "code": 200,
+ "message": "success",
+ "data": {
+  "run_id": "AUTO-20260811-0010",
+  "scenario_id": "fatigue-life",
+  "scenario_name": "结构疲劳寿命预测",
+  "status": "success",
+  "progress": 100,
+  "execution_mode": "simulated",
+  "cluster_id": "changsha",
+  "cluster_name": "天河新一代",
+  "job_id": "209910",
+  "current_stage": "completed",
+  "start_time": "2026-08-10T13:00:00+08:00",
+  "end_time": "2026-08-12T03:00:00+08:00",
+  "elapsed_seconds": 136800,
+  "nodes": 5,
+  "cpu_cores": 32768,
+  "gpu_count": 2,
+  "memory_gb": 0,
+  "core_hours": 1245184,
+  "source_type": "simulated",
+  "workflow": {
+   "nodes": [
+    {
+     "id": "prepare",
+     "name": "输入数据准备",
+     "duration_ticks": 1,
+     "status": "success",
+     "progress": 100,
+     "elapsed_seconds": 270,
+     "core_hours": 0,
+     "resource_source": "none",
+     "planned_start_seconds": 0,
+     "planned_seconds": 270,
+     "waiting_for": [],
+     "waiting_at_join": false
     },
-    "metrics": {
-      "progress": 100,
-      "metrics": [
-        {
-          "name": "simulation_time",
-          "label": "当前仿真时间",
-          "value": 100,
-          "total": 100,
-          "unit": "%"
-        },
-        {
-          "name": "kinetic_energy",
-          "label": "动能",
-          "value": 0,
-          "total": 0,
-          "unit": "kJ"
-        },
-        {
-          "name": "internal_energy",
-          "label": "内能",
-          "value": 0,
-          "total": 0,
-          "unit": "kJ"
-        },
-        {
-          "name": "hourglass_energy_ratio",
-          "label": "沙漏能占比",
-          "value": 0,
-          "total": 100,
-          "unit": "%"
-        },
-        {
-          "name": "total_energy_error",
-          "label": "总能量误差",
-          "value": 0,
-          "total": 100,
-          "unit": "%"
-        },
-        {
-          "name": "peak_acceleration",
-          "label": "加速度峰值",
-          "value": 0,
-          "total": 0,
-          "unit": "g"
-        },
-        {
-          "name": "cpu_utilization",
-          "label": "CPU利用率",
-          "value": 86,
-          "total": 100,
-          "unit": "%"
-        }
-      ],
-      "domain_data": {
-        "source_type": "simulated",
-        "execution_mode": "simulated",
-        "scenario_id": "fatigue-life",
-        "damage_series": [
-          {
-            "cycle": 0,
-            "damage_ratio": 0
-          },
-          {
-            "cycle": 14492,
-            "damage_ratio": 0
-          },
-          {
-            "cycle": 28985,
-            "damage_ratio": 0.00171
-          },
-          {
-            "cycle": 43478,
-            "damage_ratio": 0.00171
-          },
-          {
-            "cycle": 57971,
-            "damage_ratio": 0.00179
-          },
-          {
-            "cycle": 72463,
-            "damage_ratio": 0.00284
-          },
-          {
-            "cycle": 86956,
-            "damage_ratio": 0.00437
-          },
-          {
-            "cycle": 101449,
-            "damage_ratio": 0.00505
-          },
-          {
-            "cycle": 115942,
-            "damage_ratio": 0.01425
-          },
-          {
-            "cycle": 130434,
-            "damage_ratio": 0.01425
-          },
-          {
-            "cycle": 144927,
-            "damage_ratio": 0.01425
-          },
-          {
-            "cycle": 159420,
-            "damage_ratio": 0.01859
-          },
-          {
-            "cycle": 173913,
-            "damage_ratio": 0.02163
-          },
-          {
-            "cycle": 188405,
-            "damage_ratio": 0.0244
-          },
-          {
-            "cycle": 202898,
-            "damage_ratio": 0.02862
-          },
-          {
-            "cycle": 217391,
-            "damage_ratio": 0.04018
-          },
-          {
-            "cycle": 231884,
-            "damage_ratio": 0.04193
-          },
-          {
-            "cycle": 246376,
-            "damage_ratio": 0.04193
-          },
-          {
-            "cycle": 260869,
-            "damage_ratio": 0.05419
-          },
-          {
-            "cycle": 275362,
-            "damage_ratio": 0.05834
-          },
-          {
-            "cycle": 289855,
-            "damage_ratio": 0.06435
-          },
-          {
-            "cycle": 304347,
-            "damage_ratio": 0.07547
-          },
-          {
-            "cycle": 318840,
-            "damage_ratio": 0.08123
-          },
-          {
-            "cycle": 333333,
-            "damage_ratio": 0.08996
-          },
-          {
-            "cycle": 347826,
-            "damage_ratio": 0.09589
-          },
-          {
-            "cycle": 362318,
-            "damage_ratio": 0.10553
-          },
-          {
-            "cycle": 376811,
-            "damage_ratio": 0.1172
-          },
-          {
-            "cycle": 391304,
-            "damage_ratio": 0.13045
-          },
-          {
-            "cycle": 405797,
-            "damage_ratio": 0.13727
-          },
-          {
-            "cycle": 420289,
-            "damage_ratio": 0.1451
-          },
-          {
-            "cycle": 434782,
-            "damage_ratio": 0.15818
-          },
-          {
-            "cycle": 449275,
-            "damage_ratio": 0.17507
-          },
-          {
-            "cycle": 463768,
-            "damage_ratio": 0.1856
-          },
-          {
-            "cycle": 478260,
-            "damage_ratio": 0.19801
-          },
-          {
-            "cycle": 492753,
-            "damage_ratio": 0.21028
-          },
-          {
-            "cycle": 507246,
-            "damage_ratio": 0.22162
-          },
-          {
-            "cycle": 521739,
-            "damage_ratio": 0.24241
-          },
-          {
-            "cycle": 536231,
-            "damage_ratio": 0.25453
-          },
-          {
-            "cycle": 550724,
-            "damage_ratio": 0.26785
-          },
-          {
-            "cycle": 565217,
-            "damage_ratio": 0.28417
-          },
-          {
-            "cycle": 579710,
-            "damage_ratio": 0.29942
-          },
-          {
-            "cycle": 594202,
-            "damage_ratio": 0.31751
-          },
-          {
-            "cycle": 608695,
-            "damage_ratio": 0.33466
-          },
-          {
-            "cycle": 623188,
-            "damage_ratio": 0.35144
-          },
-          {
-            "cycle": 637681,
-            "damage_ratio": 0.37186
-          },
-          {
-            "cycle": 652173,
-            "damage_ratio": 0.39031
-          },
-          {
-            "cycle": 666666,
-            "damage_ratio": 0.41546
-          },
-          {
-            "cycle": 681159,
-            "damage_ratio": 0.43218
-          },
-          {
-            "cycle": 695652,
-            "damage_ratio": 0.44676
-          },
-          {
-            "cycle": 710144,
-            "damage_ratio": 0.47217
-          },
-          {
-            "cycle": 724637,
-            "damage_ratio": 0.49386
-          },
-          {
-            "cycle": 739130,
-            "damage_ratio": 0.51063
-          },
-          {
-            "cycle": 753623,
-            "damage_ratio": 0.53485
-          },
-          {
-            "cycle": 768115,
-            "damage_ratio": 0.56007
-          },
-          {
-            "cycle": 782608,
-            "damage_ratio": 0.58082
-          },
-          {
-            "cycle": 797101,
-            "damage_ratio": 0.60798
-          },
-          {
-            "cycle": 811594,
-            "damage_ratio": 0.62979
-          },
-          {
-            "cycle": 826086,
-            "damage_ratio": 0.65785
-          },
-          {
-            "cycle": 840579,
-            "damage_ratio": 0.68324
-          },
-          {
-            "cycle": 855072,
-            "damage_ratio": 0.70851
-          },
-          {
-            "cycle": 869565,
-            "damage_ratio": 0.7333
-          },
-          {
-            "cycle": 884057,
-            "damage_ratio": 0.76217
-          },
-          {
-            "cycle": 898550,
-            "damage_ratio": 0.79042
-          },
-          {
-            "cycle": 913043,
-            "damage_ratio": 0.81599
-          },
-          {
-            "cycle": 927536,
-            "damage_ratio": 0.84826
-          },
-          {
-            "cycle": 942028,
-            "damage_ratio": 0.87339
-          },
-          {
-            "cycle": 956521,
-            "damage_ratio": 0.90321
-          },
-          {
-            "cycle": 971014,
-            "damage_ratio": 0.93675
-          },
-          {
-            "cycle": 985507,
-            "damage_ratio": 0.97125
-          },
-          {
-            "cycle": 1000000,
-            "damage_ratio": 0.98
-          }
-        ],
-        "sn_curve": [
-          {
-            "stress_amplitude": 120,
-            "cycles_to_failure": 52828.2
-          },
-          {
-            "stress_amplitude": 131.88,
-            "cycles_to_failure": 37962.8
-          },
-          {
-            "stress_amplitude": 144.94,
-            "cycles_to_failure": 27280.4
-          },
-          {
-            "stress_amplitude": 159.29,
-            "cycles_to_failure": 19603.9
-          },
-          {
-            "stress_amplitude": 175.06,
-            "cycles_to_failure": 14087.5
-          },
-          {
-            "stress_amplitude": 192.39,
-            "cycles_to_failure": 10123.4
-          },
-          {
-            "stress_amplitude": 211.44,
-            "cycles_to_failure": 7274.8
-          },
-          {
-            "stress_amplitude": 232.38,
-            "cycles_to_failure": 5227.7
-          },
-          {
-            "stress_amplitude": 255.39,
-            "cycles_to_failure": 3756.7
-          },
-          {
-            "stress_amplitude": 280.67,
-            "cycles_to_failure": 2699.6
-          },
-          {
-            "stress_amplitude": 308.46,
-            "cycles_to_failure": 1939.9
-          },
-          {
-            "stress_amplitude": 339,
-            "cycles_to_failure": 1394.1
-          },
-          {
-            "stress_amplitude": 372.57,
-            "cycles_to_failure": 1001.8
-          },
-          {
-            "stress_amplitude": 409.46,
-            "cycles_to_failure": 719.9
-          },
-          {
-            "stress_amplitude": 450,
-            "cycles_to_failure": 517.3
-          }
-        ],
-        "critical_locations": [
-          {
-            "location": "knuckle_fillet",
-            "max_stress": 416.1,
-            "damage": 0.8786,
-            "predicted_life": 24315
-          },
-          {
-            "location": "weld_toe_A",
-            "max_stress": 428.4,
-            "damage": 0.8469,
-            "predicted_life": 37193
-          },
-          {
-            "location": "weld_toe_B",
-            "max_stress": 394.2,
-            "damage": 0.7763,
-            "predicted_life": 78396
-          },
-          {
-            "location": "bolt_hole_rim",
-            "max_stress": 386.1,
-            "damage": 0.7407,
-            "predicted_life": 106445
-          },
-          {
-            "location": "bracket_root",
-            "max_stress": 388.3,
-            "damage": 0.7383,
-            "predicted_life": 108448
-          },
-          {
-            "location": "crossmember_notch",
-            "max_stress": 346.7,
-            "damage": 0.5716,
-            "predicted_life": 316670
-          },
-          {
-            "location": "suspension_bushing",
-            "max_stress": 298.6,
-            "damage": 0.4389,
-            "predicted_life": 583906
-          },
-          {
-            "location": "frame_rail_bend",
-            "max_stress": 247.3,
-            "damage": 0.2167,
-            "predicted_life": 1267700
-          }
-        ]
-      }
+    {
+     "id": "operator-0",
+     "operator_id": "ipfno",
+     "name": "IPFNO隐式傅里叶神经算子快速评估函数接口",
+     "duration_ticks": 1,
+     "status": "success",
+     "progress": 100,
+     "elapsed_seconds": 1350,
+     "core_hours": 0.38,
+     "operator_name": "ipfno",
+     "operator_title": "IPFNO隐式傅里叶神经算子快速评估函数接口",
+     "runtime_type": "docker",
+     "runtime_label": "Docker",
+     "runtime_deployment": "Docker 运行",
+     "runtime_detail": "hub.cngrid.org:5000/scnet/cars/ipfno:gpu20250827_nodata",
+     "cpu_cores": 1,
+     "gpu_count": 1,
+     "memory_mb": 0,
+     "memory_gb": 0,
+     "resource_source": "operator",
+     "planned_start_seconds": 270,
+     "planned_seconds": 1350,
+     "waiting_for": [],
+     "waiting_at_join": false
     },
-    "logs": {
-      "next_offset": 8,
-      "has_more": false,
-      "lines": [
-        {
-          "seq": 1,
-          "timestamp": "2026-08-10T13:00:02+08:00",
-          "level": "INFO",
-          "cluster_id": "changsha",
-          "message": "任务提交成功，作业ID 209910，分配节点 8 个（512 核）"
-        },
-        {
-          "seq": 2,
-          "timestamp": "2026-08-10T13:02:30+08:00",
-          "level": "INFO",
-          "cluster_id": "changsha",
-          "message": "车身底架有限元模型导入完成：860 万节点，材料 S-N 曲线加载完毕"
-        },
-        {
-          "seq": 3,
-          "timestamp": "2026-08-10T13:04:00+08:00",
-          "level": "INFO",
-          "cluster_id": "changsha",
-          "message": "载荷谱导入：8 通道时域载荷，等效 100 万次循环"
-        },
-        {
-          "seq": 4,
-          "timestamp": "2026-08-10T13:05:10+08:00",
-          "level": "INFO",
-          "cluster_id": "changsha",
-          "message": "应力历程提取完成：结合有限元静力结果插值得到节点应力时间历程"
-        },
-        {
-          "seq": 5,
-          "timestamp": "2026-08-10T13:20:00+08:00",
-          "level": "INFO",
-          "cluster_id": "changsha",
-          "message": "Miner 累积损伤计算完成：损伤因子峰值 4.2，位于后纵梁焊点区域"
-        },
-        {
-          "seq": 6,
-          "timestamp": "2026-08-10T13:30:00+08:00",
-          "level": "INFO",
-          "cluster_id": "changsha",
-          "message": "疲劳寿命预测完成：最小寿命 2.4e5 次循环，低于设计目标，已标记高风险区域"
-        },
-        {
-          "seq": 7,
-          "timestamp": "2026-08-10T13:45:00+08:00",
-          "level": "INFO",
-          "cluster_id": "changsha",
-          "message": "任务成功结束，输出寿命云图与分析报告，累计核时 384.0 核时"
-        }
-      ]
+    {
+     "id": "operator-1",
+     "operator_id": "transolver",
+     "name": "Transolver几何PDE代理模型快速评估函数接口",
+     "duration_ticks": 5,
+     "status": "success",
+     "progress": 100,
+     "elapsed_seconds": 1350,
+     "core_hours": 0.38,
+     "operator_name": "transolver",
+     "operator_title": "Transolver几何PDE代理模型快速评估函数接口",
+     "runtime_type": "docker",
+     "runtime_label": "Docker",
+     "runtime_deployment": "Docker 运行",
+     "runtime_detail": "hub.cngrid.org:5000/scnet/cars/transolver:gpu20250820",
+     "cpu_cores": 1,
+     "gpu_count": 1,
+     "memory_mb": 0,
+     "memory_gb": 0,
+     "resource_source": "operator",
+     "planned_start_seconds": 270,
+     "planned_seconds": 1350,
+     "waiting_for": [],
+     "waiting_at_join": false
     },
-    "artifacts": [
-      {
-        "id": "ART-AUTO-010",
-        "name": "fatigue_life_map.png",
-        "type": "image",
-        "format": "png",
-        "size": 4194304,
-        "storage_path": "gfs://results/AUTO-20260811-0010/fatigue_life_map.png",
-        "preview_url": "/api/v1/files/ART-AUTO-010/preview",
-        "download_url": "/api/v1/files/ART-AUTO-010/download",
-        "created_at": "2026-08-10T13:35:00+08:00"
-      },
-      {
-        "id": "ART-AUTO-011",
-        "name": "damage_distribution.csv",
-        "type": "dataset",
-        "format": "csv",
-        "size": 5242880,
-        "storage_path": "gfs://results/AUTO-20260811-0010/damage_distribution.csv",
-        "preview_url": "",
-        "download_url": "/api/v1/files/ART-AUTO-011/download",
-        "created_at": "2026-08-10T13:36:00+08:00"
-      },
-      {
-        "id": "ART-AUTO-012",
-        "name": "fatigue_report.pdf",
-        "type": "report",
-        "format": "pdf",
-        "size": 3145728,
-        "storage_path": "gfs://results/AUTO-20260811-0010/fatigue_report.pdf",
-        "preview_url": "/api/v1/files/ART-AUTO-012/preview",
-        "download_url": "/api/v1/files/ART-AUTO-012/download",
-        "created_at": "2026-08-10T13:44:00+08:00"
-      },
-      {
-        "id": "ART-AUTO-FIMG1",
-        "name": "damage_map.png",
-        "type": "image",
-        "format": "png",
-        "size": 31318,
-        "storage_path": "artifacts/simulated/automotive/fatigue-life/AUTO-20260811-0010/damage_map.png",
-        "preview_url": "/api/v1/files/ART-AUTO-FIMG1/preview",
-        "download_url": "/api/v1/files/ART-AUTO-FIMG1/download",
-        "created_at": "2026-09-09T18:06:01+08:00",
-        "source_type": "simulated"
-      },
-      {
-        "id": "ART-AUTO-FCSV1",
-        "name": "damage_series.csv",
-        "type": "dataset",
-        "format": "csv",
-        "size": 1114,
-        "storage_path": "artifacts/simulated/automotive/fatigue-life/AUTO-20260811-0010/damage_series.csv",
-        "preview_url": "/api/v1/files/ART-AUTO-FCSV1/preview",
-        "download_url": "/api/v1/files/ART-AUTO-FCSV1/download",
-        "created_at": "2026-09-09T18:06:01+08:00",
-        "source_type": "simulated"
-      }
-    ],
-    "domain_data": {
-      "source_type": "simulated",
-      "execution_mode": "simulated",
-      "scenario_id": "fatigue-life",
-      "damage_series": [
-        {
-          "cycle": 0,
-          "damage_ratio": 0
-        },
-        {
-          "cycle": 14492,
-          "damage_ratio": 0
-        },
-        {
-          "cycle": 28985,
-          "damage_ratio": 0.00171
-        },
-        {
-          "cycle": 43478,
-          "damage_ratio": 0.00171
-        },
-        {
-          "cycle": 57971,
-          "damage_ratio": 0.00179
-        },
-        {
-          "cycle": 72463,
-          "damage_ratio": 0.00284
-        },
-        {
-          "cycle": 86956,
-          "damage_ratio": 0.00437
-        },
-        {
-          "cycle": 101449,
-          "damage_ratio": 0.00505
-        },
-        {
-          "cycle": 115942,
-          "damage_ratio": 0.01425
-        },
-        {
-          "cycle": 130434,
-          "damage_ratio": 0.01425
-        },
-        {
-          "cycle": 144927,
-          "damage_ratio": 0.01425
-        },
-        {
-          "cycle": 159420,
-          "damage_ratio": 0.01859
-        },
-        {
-          "cycle": 173913,
-          "damage_ratio": 0.02163
-        },
-        {
-          "cycle": 188405,
-          "damage_ratio": 0.0244
-        },
-        {
-          "cycle": 202898,
-          "damage_ratio": 0.02862
-        },
-        {
-          "cycle": 217391,
-          "damage_ratio": 0.04018
-        },
-        {
-          "cycle": 231884,
-          "damage_ratio": 0.04193
-        },
-        {
-          "cycle": 246376,
-          "damage_ratio": 0.04193
-        },
-        {
-          "cycle": 260869,
-          "damage_ratio": 0.05419
-        },
-        {
-          "cycle": 275362,
-          "damage_ratio": 0.05834
-        },
-        {
-          "cycle": 289855,
-          "damage_ratio": 0.06435
-        },
-        {
-          "cycle": 304347,
-          "damage_ratio": 0.07547
-        },
-        {
-          "cycle": 318840,
-          "damage_ratio": 0.08123
-        },
-        {
-          "cycle": 333333,
-          "damage_ratio": 0.08996
-        },
-        {
-          "cycle": 347826,
-          "damage_ratio": 0.09589
-        },
-        {
-          "cycle": 362318,
-          "damage_ratio": 0.10553
-        },
-        {
-          "cycle": 376811,
-          "damage_ratio": 0.1172
-        },
-        {
-          "cycle": 391304,
-          "damage_ratio": 0.13045
-        },
-        {
-          "cycle": 405797,
-          "damage_ratio": 0.13727
-        },
-        {
-          "cycle": 420289,
-          "damage_ratio": 0.1451
-        },
-        {
-          "cycle": 434782,
-          "damage_ratio": 0.15818
-        },
-        {
-          "cycle": 449275,
-          "damage_ratio": 0.17507
-        },
-        {
-          "cycle": 463768,
-          "damage_ratio": 0.1856
-        },
-        {
-          "cycle": 478260,
-          "damage_ratio": 0.19801
-        },
-        {
-          "cycle": 492753,
-          "damage_ratio": 0.21028
-        },
-        {
-          "cycle": 507246,
-          "damage_ratio": 0.22162
-        },
-        {
-          "cycle": 521739,
-          "damage_ratio": 0.24241
-        },
-        {
-          "cycle": 536231,
-          "damage_ratio": 0.25453
-        },
-        {
-          "cycle": 550724,
-          "damage_ratio": 0.26785
-        },
-        {
-          "cycle": 565217,
-          "damage_ratio": 0.28417
-        },
-        {
-          "cycle": 579710,
-          "damage_ratio": 0.29942
-        },
-        {
-          "cycle": 594202,
-          "damage_ratio": 0.31751
-        },
-        {
-          "cycle": 608695,
-          "damage_ratio": 0.33466
-        },
-        {
-          "cycle": 623188,
-          "damage_ratio": 0.35144
-        },
-        {
-          "cycle": 637681,
-          "damage_ratio": 0.37186
-        },
-        {
-          "cycle": 652173,
-          "damage_ratio": 0.39031
-        },
-        {
-          "cycle": 666666,
-          "damage_ratio": 0.41546
-        },
-        {
-          "cycle": 681159,
-          "damage_ratio": 0.43218
-        },
-        {
-          "cycle": 695652,
-          "damage_ratio": 0.44676
-        },
-        {
-          "cycle": 710144,
-          "damage_ratio": 0.47217
-        },
-        {
-          "cycle": 724637,
-          "damage_ratio": 0.49386
-        },
-        {
-          "cycle": 739130,
-          "damage_ratio": 0.51063
-        },
-        {
-          "cycle": 753623,
-          "damage_ratio": 0.53485
-        },
-        {
-          "cycle": 768115,
-          "damage_ratio": 0.56007
-        },
-        {
-          "cycle": 782608,
-          "damage_ratio": 0.58082
-        },
-        {
-          "cycle": 797101,
-          "damage_ratio": 0.60798
-        },
-        {
-          "cycle": 811594,
-          "damage_ratio": 0.62979
-        },
-        {
-          "cycle": 826086,
-          "damage_ratio": 0.65785
-        },
-        {
-          "cycle": 840579,
-          "damage_ratio": 0.68324
-        },
-        {
-          "cycle": 855072,
-          "damage_ratio": 0.70851
-        },
-        {
-          "cycle": 869565,
-          "damage_ratio": 0.7333
-        },
-        {
-          "cycle": 884057,
-          "damage_ratio": 0.76217
-        },
-        {
-          "cycle": 898550,
-          "damage_ratio": 0.79042
-        },
-        {
-          "cycle": 913043,
-          "damage_ratio": 0.81599
-        },
-        {
-          "cycle": 927536,
-          "damage_ratio": 0.84826
-        },
-        {
-          "cycle": 942028,
-          "damage_ratio": 0.87339
-        },
-        {
-          "cycle": 956521,
-          "damage_ratio": 0.90321
-        },
-        {
-          "cycle": 971014,
-          "damage_ratio": 0.93675
-        },
-        {
-          "cycle": 985507,
-          "damage_ratio": 0.97125
-        },
-        {
-          "cycle": 1000000,
-          "damage_ratio": 0.98
-        }
-      ],
-      "sn_curve": [
-        {
-          "stress_amplitude": 120,
-          "cycles_to_failure": 52828.2
-        },
-        {
-          "stress_amplitude": 131.88,
-          "cycles_to_failure": 37962.8
-        },
-        {
-          "stress_amplitude": 144.94,
-          "cycles_to_failure": 27280.4
-        },
-        {
-          "stress_amplitude": 159.29,
-          "cycles_to_failure": 19603.9
-        },
-        {
-          "stress_amplitude": 175.06,
-          "cycles_to_failure": 14087.5
-        },
-        {
-          "stress_amplitude": 192.39,
-          "cycles_to_failure": 10123.4
-        },
-        {
-          "stress_amplitude": 211.44,
-          "cycles_to_failure": 7274.8
-        },
-        {
-          "stress_amplitude": 232.38,
-          "cycles_to_failure": 5227.7
-        },
-        {
-          "stress_amplitude": 255.39,
-          "cycles_to_failure": 3756.7
-        },
-        {
-          "stress_amplitude": 280.67,
-          "cycles_to_failure": 2699.6
-        },
-        {
-          "stress_amplitude": 308.46,
-          "cycles_to_failure": 1939.9
-        },
-        {
-          "stress_amplitude": 339,
-          "cycles_to_failure": 1394.1
-        },
-        {
-          "stress_amplitude": 372.57,
-          "cycles_to_failure": 1001.8
-        },
-        {
-          "stress_amplitude": 409.46,
-          "cycles_to_failure": 719.9
-        },
-        {
-          "stress_amplitude": 450,
-          "cycles_to_failure": 517.3
-        }
-      ],
-      "critical_locations": [
-        {
-          "location": "knuckle_fillet",
-          "max_stress": 416.1,
-          "damage": 0.8786,
-          "predicted_life": 24315
-        },
-        {
-          "location": "weld_toe_A",
-          "max_stress": 428.4,
-          "damage": 0.8469,
-          "predicted_life": 37193
-        },
-        {
-          "location": "weld_toe_B",
-          "max_stress": 394.2,
-          "damage": 0.7763,
-          "predicted_life": 78396
-        },
-        {
-          "location": "bolt_hole_rim",
-          "max_stress": 386.1,
-          "damage": 0.7407,
-          "predicted_life": 106445
-        },
-        {
-          "location": "bracket_root",
-          "max_stress": 388.3,
-          "damage": 0.7383,
-          "predicted_life": 108448
-        },
-        {
-          "location": "crossmember_notch",
-          "max_stress": 346.7,
-          "damage": 0.5716,
-          "predicted_life": 316670
-        },
-        {
-          "location": "suspension_bushing",
-          "max_stress": 298.6,
-          "damage": 0.4389,
-          "predicted_life": 583906
-        },
-        {
-          "location": "frame_rail_bend",
-          "max_stress": 247.3,
-          "damage": 0.2167,
-          "predicted_life": 1267700
-        }
-      ]
+    {
+     "id": "operator-2",
+     "operator_id": "structural-thermal-load",
+     "name": "汽车结构热负荷评估函数接口",
+     "duration_ticks": 3,
+     "status": "success",
+     "progress": 100,
+     "elapsed_seconds": 2160,
+     "core_hours": 4.8,
+     "operator_name": "structural-thermal-load",
+     "operator_title": "汽车结构热负荷评估函数接口",
+     "runtime_type": "singularity",
+     "runtime_label": "Singularity",
+     "runtime_deployment": "",
+     "runtime_detail": "/public/home/wxn/image/scnet/simulation/openfoam/openfoam _13.sif",
+     "cpu_cores": 8,
+     "gpu_count": 0,
+     "memory_mb": 0,
+     "memory_gb": 0,
+     "resource_source": "operator",
+     "planned_start_seconds": 270,
+     "planned_seconds": 2160,
+     "waiting_for": [],
+     "waiting_at_join": false
     },
-    "selected_operator_ids": [
-      "ipfno",
-      "transolver",
-      "structural-thermal-load"
-    ],
-    "resource_source": "operator",
-    "planned_seconds": 2700,
-    "remaining_seconds": 0,
-    "_operator_version": 4
+    {
+     "id": "post",
+     "name": "结果整理与输出",
+     "duration_ticks": 1,
+     "status": "success",
+     "progress": 100,
+     "elapsed_seconds": 270,
+     "core_hours": 0,
+     "resource_source": "none",
+     "planned_start_seconds": 2430,
+     "planned_seconds": 270,
+     "waiting_for": [],
+     "waiting_at_join": false
+    }
+   ],
+   "edges": [
+    {
+     "source": "prepare",
+     "target": "operator-0"
+    },
+    {
+     "source": "prepare",
+     "target": "operator-1"
+    },
+    {
+     "source": "prepare",
+     "target": "operator-2"
+    },
+    {
+     "source": "operator-0",
+     "target": "post"
+    },
+    {
+     "source": "operator-1",
+     "target": "post"
+    },
+    {
+     "source": "operator-2",
+     "target": "post"
+    }
+   ]
   },
-  "timestamp": "2026-08-10T13:45:02+08:00"
+  "metrics": {
+   "progress": 100,
+   "metrics": [
+    {
+     "name": "simulation_time",
+     "label": "当前仿真时间",
+     "value": 100,
+     "total": 100,
+     "unit": "%"
+    },
+    {
+     "name": "kinetic_energy",
+     "label": "动能",
+     "value": 0,
+     "total": 0,
+     "unit": "kJ"
+    },
+    {
+     "name": "internal_energy",
+     "label": "内能",
+     "value": 0,
+     "total": 0,
+     "unit": "kJ"
+    },
+    {
+     "name": "hourglass_energy_ratio",
+     "label": "沙漏能占比",
+     "value": 0,
+     "total": 100,
+     "unit": "%"
+    },
+    {
+     "name": "total_energy_error",
+     "label": "总能量误差",
+     "value": 0,
+     "total": 100,
+     "unit": "%"
+    },
+    {
+     "name": "peak_acceleration",
+     "label": "加速度峰值",
+     "value": 0,
+     "total": 0,
+     "unit": "g"
+    },
+    {
+     "name": "cpu_utilization",
+     "label": "CPU利用率",
+     "value": 86,
+     "total": 100,
+     "unit": "%"
+    }
+   ],
+   "domain_data": {
+    "source_type": "simulated",
+    "execution_mode": "simulated",
+    "scenario_id": "fatigue-life",
+    "damage_series": [
+     {
+      "cycle": 0,
+      "damage_ratio": 0
+     },
+     {
+      "cycle": 14492,
+      "damage_ratio": 0
+     },
+     {
+      "cycle": 28985,
+      "damage_ratio": 0.00171
+     },
+     {
+      "cycle": 43478,
+      "damage_ratio": 0.00171
+     },
+     {
+      "cycle": 57971,
+      "damage_ratio": 0.00179
+     },
+     {
+      "cycle": 72463,
+      "damage_ratio": 0.00284
+     },
+     {
+      "cycle": 86956,
+      "damage_ratio": 0.00437
+     },
+     {
+      "cycle": 101449,
+      "damage_ratio": 0.00505
+     },
+     {
+      "cycle": 115942,
+      "damage_ratio": 0.01425
+     },
+     {
+      "cycle": 130434,
+      "damage_ratio": 0.01425
+     },
+     {
+      "cycle": 144927,
+      "damage_ratio": 0.01425
+     },
+     {
+      "cycle": 159420,
+      "damage_ratio": 0.01859
+     },
+     {
+      "cycle": 173913,
+      "damage_ratio": 0.02163
+     },
+     {
+      "cycle": 188405,
+      "damage_ratio": 0.0244
+     },
+     {
+      "cycle": 202898,
+      "damage_ratio": 0.02862
+     },
+     {
+      "cycle": 217391,
+      "damage_ratio": 0.04018
+     },
+     {
+      "cycle": 231884,
+      "damage_ratio": 0.04193
+     },
+     {
+      "cycle": 246376,
+      "damage_ratio": 0.04193
+     },
+     {
+      "cycle": 260869,
+      "damage_ratio": 0.05419
+     },
+     {
+      "cycle": 275362,
+      "damage_ratio": 0.05834
+     },
+     {
+      "cycle": 289855,
+      "damage_ratio": 0.06435
+     },
+     {
+      "cycle": 304347,
+      "damage_ratio": 0.07547
+     },
+     {
+      "cycle": 318840,
+      "damage_ratio": 0.08123
+     },
+     {
+      "cycle": 333333,
+      "damage_ratio": 0.08996
+     },
+     {
+      "cycle": 347826,
+      "damage_ratio": 0.09589
+     },
+     {
+      "cycle": 362318,
+      "damage_ratio": 0.10553
+     },
+     {
+      "cycle": 376811,
+      "damage_ratio": 0.1172
+     },
+     {
+      "cycle": 391304,
+      "damage_ratio": 0.13045
+     },
+     {
+      "cycle": 405797,
+      "damage_ratio": 0.13727
+     },
+     {
+      "cycle": 420289,
+      "damage_ratio": 0.1451
+     },
+     {
+      "cycle": 434782,
+      "damage_ratio": 0.15818
+     },
+     {
+      "cycle": 449275,
+      "damage_ratio": 0.17507
+     },
+     {
+      "cycle": 463768,
+      "damage_ratio": 0.1856
+     },
+     {
+      "cycle": 478260,
+      "damage_ratio": 0.19801
+     },
+     {
+      "cycle": 492753,
+      "damage_ratio": 0.21028
+     },
+     {
+      "cycle": 507246,
+      "damage_ratio": 0.22162
+     },
+     {
+      "cycle": 521739,
+      "damage_ratio": 0.24241
+     },
+     {
+      "cycle": 536231,
+      "damage_ratio": 0.25453
+     },
+     {
+      "cycle": 550724,
+      "damage_ratio": 0.26785
+     },
+     {
+      "cycle": 565217,
+      "damage_ratio": 0.28417
+     },
+     {
+      "cycle": 579710,
+      "damage_ratio": 0.29942
+     },
+     {
+      "cycle": 594202,
+      "damage_ratio": 0.31751
+     },
+     {
+      "cycle": 608695,
+      "damage_ratio": 0.33466
+     },
+     {
+      "cycle": 623188,
+      "damage_ratio": 0.35144
+     },
+     {
+      "cycle": 637681,
+      "damage_ratio": 0.37186
+     },
+     {
+      "cycle": 652173,
+      "damage_ratio": 0.39031
+     },
+     {
+      "cycle": 666666,
+      "damage_ratio": 0.41546
+     },
+     {
+      "cycle": 681159,
+      "damage_ratio": 0.43218
+     },
+     {
+      "cycle": 695652,
+      "damage_ratio": 0.44676
+     },
+     {
+      "cycle": 710144,
+      "damage_ratio": 0.47217
+     },
+     {
+      "cycle": 724637,
+      "damage_ratio": 0.49386
+     },
+     {
+      "cycle": 739130,
+      "damage_ratio": 0.51063
+     },
+     {
+      "cycle": 753623,
+      "damage_ratio": 0.53485
+     },
+     {
+      "cycle": 768115,
+      "damage_ratio": 0.56007
+     },
+     {
+      "cycle": 782608,
+      "damage_ratio": 0.58082
+     },
+     {
+      "cycle": 797101,
+      "damage_ratio": 0.60798
+     },
+     {
+      "cycle": 811594,
+      "damage_ratio": 0.62979
+     },
+     {
+      "cycle": 826086,
+      "damage_ratio": 0.65785
+     },
+     {
+      "cycle": 840579,
+      "damage_ratio": 0.68324
+     },
+     {
+      "cycle": 855072,
+      "damage_ratio": 0.70851
+     },
+     {
+      "cycle": 869565,
+      "damage_ratio": 0.7333
+     },
+     {
+      "cycle": 884057,
+      "damage_ratio": 0.76217
+     },
+     {
+      "cycle": 898550,
+      "damage_ratio": 0.79042
+     },
+     {
+      "cycle": 913043,
+      "damage_ratio": 0.81599
+     },
+     {
+      "cycle": 927536,
+      "damage_ratio": 0.84826
+     },
+     {
+      "cycle": 942028,
+      "damage_ratio": 0.87339
+     },
+     {
+      "cycle": 956521,
+      "damage_ratio": 0.90321
+     },
+     {
+      "cycle": 971014,
+      "damage_ratio": 0.93675
+     },
+     {
+      "cycle": 985507,
+      "damage_ratio": 0.97125
+     },
+     {
+      "cycle": 1000000,
+      "damage_ratio": 0.98
+     }
+    ],
+    "sn_curve": [
+     {
+      "stress_amplitude": 120,
+      "cycles_to_failure": 52828.2
+     },
+     {
+      "stress_amplitude": 131.88,
+      "cycles_to_failure": 37962.8
+     },
+     {
+      "stress_amplitude": 144.94,
+      "cycles_to_failure": 27280.4
+     },
+     {
+      "stress_amplitude": 159.29,
+      "cycles_to_failure": 19603.9
+     },
+     {
+      "stress_amplitude": 175.06,
+      "cycles_to_failure": 14087.5
+     },
+     {
+      "stress_amplitude": 192.39,
+      "cycles_to_failure": 10123.4
+     },
+     {
+      "stress_amplitude": 211.44,
+      "cycles_to_failure": 7274.8
+     },
+     {
+      "stress_amplitude": 232.38,
+      "cycles_to_failure": 5227.7
+     },
+     {
+      "stress_amplitude": 255.39,
+      "cycles_to_failure": 3756.7
+     },
+     {
+      "stress_amplitude": 280.67,
+      "cycles_to_failure": 2699.6
+     },
+     {
+      "stress_amplitude": 308.46,
+      "cycles_to_failure": 1939.9
+     },
+     {
+      "stress_amplitude": 339,
+      "cycles_to_failure": 1394.1
+     },
+     {
+      "stress_amplitude": 372.57,
+      "cycles_to_failure": 1001.8
+     },
+     {
+      "stress_amplitude": 409.46,
+      "cycles_to_failure": 719.9
+     },
+     {
+      "stress_amplitude": 450,
+      "cycles_to_failure": 517.3
+     }
+    ],
+    "critical_locations": [
+     {
+      "location": "knuckle_fillet",
+      "max_stress": 416.1,
+      "damage": 0.8786,
+      "predicted_life": 24315
+     },
+     {
+      "location": "weld_toe_A",
+      "max_stress": 428.4,
+      "damage": 0.8469,
+      "predicted_life": 37193
+     },
+     {
+      "location": "weld_toe_B",
+      "max_stress": 394.2,
+      "damage": 0.7763,
+      "predicted_life": 78396
+     },
+     {
+      "location": "bolt_hole_rim",
+      "max_stress": 386.1,
+      "damage": 0.7407,
+      "predicted_life": 106445
+     },
+     {
+      "location": "bracket_root",
+      "max_stress": 388.3,
+      "damage": 0.7383,
+      "predicted_life": 108448
+     },
+     {
+      "location": "crossmember_notch",
+      "max_stress": 346.7,
+      "damage": 0.5716,
+      "predicted_life": 316670
+     },
+     {
+      "location": "suspension_bushing",
+      "max_stress": 298.6,
+      "damage": 0.4389,
+      "predicted_life": 583906
+     },
+     {
+      "location": "frame_rail_bend",
+      "max_stress": 247.3,
+      "damage": 0.2167,
+      "predicted_life": 1267700
+     }
+    ]
+   }
+  },
+  "logs": {
+   "next_offset": 8,
+   "has_more": false,
+   "lines": [
+    {
+     "seq": 1,
+     "timestamp": "2026-08-10T13:00:02+08:00",
+     "level": "INFO",
+     "cluster_id": "changsha",
+     "message": "任务提交成功，作业ID 209910，分配节点 8 个（512 核）"
+    },
+    {
+     "seq": 2,
+     "timestamp": "2026-08-10T13:02:30+08:00",
+     "level": "INFO",
+     "cluster_id": "changsha",
+     "message": "车身底架有限元模型导入完成：860 万节点，材料 S-N 曲线加载完毕"
+    },
+    {
+     "seq": 3,
+     "timestamp": "2026-08-10T13:04:00+08:00",
+     "level": "INFO",
+     "cluster_id": "changsha",
+     "message": "载荷谱导入：8 通道时域载荷，等效 100 万次循环"
+    },
+    {
+     "seq": 4,
+     "timestamp": "2026-08-10T13:05:10+08:00",
+     "level": "INFO",
+     "cluster_id": "changsha",
+     "message": "应力历程提取完成：结合有限元静力结果插值得到节点应力时间历程"
+    },
+    {
+     "seq": 5,
+     "timestamp": "2026-08-10T13:20:00+08:00",
+     "level": "INFO",
+     "cluster_id": "changsha",
+     "message": "Miner 累积损伤计算完成：损伤因子峰值 4.2，位于后纵梁焊点区域"
+    },
+    {
+     "seq": 6,
+     "timestamp": "2026-08-10T13:30:00+08:00",
+     "level": "INFO",
+     "cluster_id": "changsha",
+     "message": "疲劳寿命预测完成：最小寿命 2.4e5 次循环，低于设计目标，已标记高风险区域"
+    },
+    {
+     "seq": 7,
+     "timestamp": "2026-08-10T13:45:00+08:00",
+     "level": "INFO",
+     "cluster_id": "changsha",
+     "message": "任务成功结束，输出寿命云图与分析报告，累计核时 384.0 核时"
+    }
+   ]
+  },
+  "artifacts": [
+   {
+    "id": "ART-AUTO-FIMG1",
+    "name": "damage_map.png",
+    "type": "image",
+    "format": "png",
+    "size": 31318,
+    "storage_path": "artifacts/simulated/automotive/fatigue-life/AUTO-20260811-0010/damage_map.png",
+    "preview_url": "/api/v1/files/ART-AUTO-FIMG1/preview",
+    "download_url": "/api/v1/files/ART-AUTO-FIMG1/download",
+    "created_at": "2026-09-09T18:06:01+08:00",
+    "source_type": "simulated"
+   },
+   {
+    "id": "ART-AUTO-FCSV1",
+    "name": "damage_series.csv",
+    "type": "dataset",
+    "format": "csv",
+    "size": 1114,
+    "storage_path": "artifacts/simulated/automotive/fatigue-life/AUTO-20260811-0010/damage_series.csv",
+    "preview_url": "/api/v1/files/ART-AUTO-FCSV1/preview",
+    "download_url": "/api/v1/files/ART-AUTO-FCSV1/download",
+    "created_at": "2026-09-09T18:06:01+08:00",
+    "source_type": "simulated"
+   }
+  ],
+  "domain_data": {
+   "source_type": "simulated",
+   "execution_mode": "simulated",
+   "scenario_id": "fatigue-life",
+   "damage_series": [
+    {
+     "cycle": 0,
+     "damage_ratio": 0
+    },
+    {
+     "cycle": 14492,
+     "damage_ratio": 0
+    },
+    {
+     "cycle": 28985,
+     "damage_ratio": 0.00171
+    },
+    {
+     "cycle": 43478,
+     "damage_ratio": 0.00171
+    },
+    {
+     "cycle": 57971,
+     "damage_ratio": 0.00179
+    },
+    {
+     "cycle": 72463,
+     "damage_ratio": 0.00284
+    },
+    {
+     "cycle": 86956,
+     "damage_ratio": 0.00437
+    },
+    {
+     "cycle": 101449,
+     "damage_ratio": 0.00505
+    },
+    {
+     "cycle": 115942,
+     "damage_ratio": 0.01425
+    },
+    {
+     "cycle": 130434,
+     "damage_ratio": 0.01425
+    },
+    {
+     "cycle": 144927,
+     "damage_ratio": 0.01425
+    },
+    {
+     "cycle": 159420,
+     "damage_ratio": 0.01859
+    },
+    {
+     "cycle": 173913,
+     "damage_ratio": 0.02163
+    },
+    {
+     "cycle": 188405,
+     "damage_ratio": 0.0244
+    },
+    {
+     "cycle": 202898,
+     "damage_ratio": 0.02862
+    },
+    {
+     "cycle": 217391,
+     "damage_ratio": 0.04018
+    },
+    {
+     "cycle": 231884,
+     "damage_ratio": 0.04193
+    },
+    {
+     "cycle": 246376,
+     "damage_ratio": 0.04193
+    },
+    {
+     "cycle": 260869,
+     "damage_ratio": 0.05419
+    },
+    {
+     "cycle": 275362,
+     "damage_ratio": 0.05834
+    },
+    {
+     "cycle": 289855,
+     "damage_ratio": 0.06435
+    },
+    {
+     "cycle": 304347,
+     "damage_ratio": 0.07547
+    },
+    {
+     "cycle": 318840,
+     "damage_ratio": 0.08123
+    },
+    {
+     "cycle": 333333,
+     "damage_ratio": 0.08996
+    },
+    {
+     "cycle": 347826,
+     "damage_ratio": 0.09589
+    },
+    {
+     "cycle": 362318,
+     "damage_ratio": 0.10553
+    },
+    {
+     "cycle": 376811,
+     "damage_ratio": 0.1172
+    },
+    {
+     "cycle": 391304,
+     "damage_ratio": 0.13045
+    },
+    {
+     "cycle": 405797,
+     "damage_ratio": 0.13727
+    },
+    {
+     "cycle": 420289,
+     "damage_ratio": 0.1451
+    },
+    {
+     "cycle": 434782,
+     "damage_ratio": 0.15818
+    },
+    {
+     "cycle": 449275,
+     "damage_ratio": 0.17507
+    },
+    {
+     "cycle": 463768,
+     "damage_ratio": 0.1856
+    },
+    {
+     "cycle": 478260,
+     "damage_ratio": 0.19801
+    },
+    {
+     "cycle": 492753,
+     "damage_ratio": 0.21028
+    },
+    {
+     "cycle": 507246,
+     "damage_ratio": 0.22162
+    },
+    {
+     "cycle": 521739,
+     "damage_ratio": 0.24241
+    },
+    {
+     "cycle": 536231,
+     "damage_ratio": 0.25453
+    },
+    {
+     "cycle": 550724,
+     "damage_ratio": 0.26785
+    },
+    {
+     "cycle": 565217,
+     "damage_ratio": 0.28417
+    },
+    {
+     "cycle": 579710,
+     "damage_ratio": 0.29942
+    },
+    {
+     "cycle": 594202,
+     "damage_ratio": 0.31751
+    },
+    {
+     "cycle": 608695,
+     "damage_ratio": 0.33466
+    },
+    {
+     "cycle": 623188,
+     "damage_ratio": 0.35144
+    },
+    {
+     "cycle": 637681,
+     "damage_ratio": 0.37186
+    },
+    {
+     "cycle": 652173,
+     "damage_ratio": 0.39031
+    },
+    {
+     "cycle": 666666,
+     "damage_ratio": 0.41546
+    },
+    {
+     "cycle": 681159,
+     "damage_ratio": 0.43218
+    },
+    {
+     "cycle": 695652,
+     "damage_ratio": 0.44676
+    },
+    {
+     "cycle": 710144,
+     "damage_ratio": 0.47217
+    },
+    {
+     "cycle": 724637,
+     "damage_ratio": 0.49386
+    },
+    {
+     "cycle": 739130,
+     "damage_ratio": 0.51063
+    },
+    {
+     "cycle": 753623,
+     "damage_ratio": 0.53485
+    },
+    {
+     "cycle": 768115,
+     "damage_ratio": 0.56007
+    },
+    {
+     "cycle": 782608,
+     "damage_ratio": 0.58082
+    },
+    {
+     "cycle": 797101,
+     "damage_ratio": 0.60798
+    },
+    {
+     "cycle": 811594,
+     "damage_ratio": 0.62979
+    },
+    {
+     "cycle": 826086,
+     "damage_ratio": 0.65785
+    },
+    {
+     "cycle": 840579,
+     "damage_ratio": 0.68324
+    },
+    {
+     "cycle": 855072,
+     "damage_ratio": 0.70851
+    },
+    {
+     "cycle": 869565,
+     "damage_ratio": 0.7333
+    },
+    {
+     "cycle": 884057,
+     "damage_ratio": 0.76217
+    },
+    {
+     "cycle": 898550,
+     "damage_ratio": 0.79042
+    },
+    {
+     "cycle": 913043,
+     "damage_ratio": 0.81599
+    },
+    {
+     "cycle": 927536,
+     "damage_ratio": 0.84826
+    },
+    {
+     "cycle": 942028,
+     "damage_ratio": 0.87339
+    },
+    {
+     "cycle": 956521,
+     "damage_ratio": 0.90321
+    },
+    {
+     "cycle": 971014,
+     "damage_ratio": 0.93675
+    },
+    {
+     "cycle": 985507,
+     "damage_ratio": 0.97125
+    },
+    {
+     "cycle": 1000000,
+     "damage_ratio": 0.98
+    }
+   ],
+   "sn_curve": [
+    {
+     "stress_amplitude": 120,
+     "cycles_to_failure": 52828.2
+    },
+    {
+     "stress_amplitude": 131.88,
+     "cycles_to_failure": 37962.8
+    },
+    {
+     "stress_amplitude": 144.94,
+     "cycles_to_failure": 27280.4
+    },
+    {
+     "stress_amplitude": 159.29,
+     "cycles_to_failure": 19603.9
+    },
+    {
+     "stress_amplitude": 175.06,
+     "cycles_to_failure": 14087.5
+    },
+    {
+     "stress_amplitude": 192.39,
+     "cycles_to_failure": 10123.4
+    },
+    {
+     "stress_amplitude": 211.44,
+     "cycles_to_failure": 7274.8
+    },
+    {
+     "stress_amplitude": 232.38,
+     "cycles_to_failure": 5227.7
+    },
+    {
+     "stress_amplitude": 255.39,
+     "cycles_to_failure": 3756.7
+    },
+    {
+     "stress_amplitude": 280.67,
+     "cycles_to_failure": 2699.6
+    },
+    {
+     "stress_amplitude": 308.46,
+     "cycles_to_failure": 1939.9
+    },
+    {
+     "stress_amplitude": 339,
+     "cycles_to_failure": 1394.1
+    },
+    {
+     "stress_amplitude": 372.57,
+     "cycles_to_failure": 1001.8
+    },
+    {
+     "stress_amplitude": 409.46,
+     "cycles_to_failure": 719.9
+    },
+    {
+     "stress_amplitude": 450,
+     "cycles_to_failure": 517.3
+    }
+   ],
+   "critical_locations": [
+    {
+     "location": "knuckle_fillet",
+     "max_stress": 416.1,
+     "damage": 0.8786,
+     "predicted_life": 24315
+    },
+    {
+     "location": "weld_toe_A",
+     "max_stress": 428.4,
+     "damage": 0.8469,
+     "predicted_life": 37193
+    },
+    {
+     "location": "weld_toe_B",
+     "max_stress": 394.2,
+     "damage": 0.7763,
+     "predicted_life": 78396
+    },
+    {
+     "location": "bolt_hole_rim",
+     "max_stress": 386.1,
+     "damage": 0.7407,
+     "predicted_life": 106445
+    },
+    {
+     "location": "bracket_root",
+     "max_stress": 388.3,
+     "damage": 0.7383,
+     "predicted_life": 108448
+    },
+    {
+     "location": "crossmember_notch",
+     "max_stress": 346.7,
+     "damage": 0.5716,
+     "predicted_life": 316670
+    },
+    {
+     "location": "suspension_bushing",
+     "max_stress": 298.6,
+     "damage": 0.4389,
+     "predicted_life": 583906
+    },
+    {
+     "location": "frame_rail_bend",
+     "max_stress": 247.3,
+     "damage": 0.2167,
+     "predicted_life": 1267700
+    }
+   ]
+  },
+  "selected_operator_ids": [
+   "ipfno",
+   "transolver",
+   "structural-thermal-load"
+  ],
+  "resource_source": "operator",
+  "planned_seconds": 136800,
+  "remaining_seconds": 0,
+  "_operator_version": 4,
+  "target_core_hours": 1114112
+ },
+ "timestamp": "2026-11-11T16:00:50+08:00"
 }

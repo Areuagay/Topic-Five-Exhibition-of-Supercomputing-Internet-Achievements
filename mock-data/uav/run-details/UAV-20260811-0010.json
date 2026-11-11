@@ -1,1827 +1,1773 @@
 {
-  "code": 200,
-  "message": "success",
-  "data": {
-    "run_id": "UAV-20260811-0010",
-    "scenario_id": "path-planning",
-    "scenario_name": "航迹规划与避障",
-    "status": "success",
-    "progress": 100,
-    "execution_mode": "simulated",
-    "cluster_id": "changsha",
-    "cluster_name": "天河新一代",
-    "job_id": "210050",
-    "current_stage": "completed",
-    "start_time": "2026-08-10T13:00:00+08:00",
-    "end_time": "2026-08-10T13:26:00+08:00",
-    "elapsed_seconds": 1560,
-    "nodes": 4,
-    "cpu_cores": 11,
-    "gpu_count": 0,
-    "memory_gb": 8,
-    "core_hours": 2.42,
-    "source_type": "simulated",
-    "workflow": {
-      "nodes": [
-        {
-          "id": "prepare",
-          "name": "输入数据准备",
-          "duration_ticks": 1,
-          "status": "success",
-          "progress": 100,
-          "elapsed_seconds": 130,
-          "core_hours": 0,
-          "resource_source": "none",
-          "planned_start_seconds": 0,
-          "planned_seconds": 130,
-          "waiting_for": [],
-          "waiting_at_join": false
-        },
-        {
-          "id": "operator-0",
-          "operator_id": "foam-to-vtk",
-          "name": "基于foamToVTK的结果导出函数接口",
-          "duration_ticks": 1,
-          "status": "success",
-          "progress": 100,
-          "elapsed_seconds": 130,
-          "core_hours": 0.04,
-          "operator_name": "foam-to-vtk",
-          "operator_title": "基于foamToVTK的结果导出函数接口",
-          "runtime_type": "singularity",
-          "runtime_label": "Singularity",
-          "runtime_deployment": "",
-          "runtime_detail": "/public/home/wxn/image/scnet/simulation/openfoam/openfoam _13.sif",
-          "cpu_cores": 1,
-          "gpu_count": 0,
-          "memory_mb": 8192,
-          "memory_gb": 8,
-          "resource_source": "operator",
-          "planned_start_seconds": 1300,
-          "planned_seconds": 130,
-          "waiting_for": [],
-          "waiting_at_join": false
-        },
-        {
-          "id": "operator-1",
-          "operator_id": "postprocess-metrics",
-          "name": "基于postProcess的指标提取函数接口",
-          "duration_ticks": 3,
-          "status": "success",
-          "progress": 100,
-          "elapsed_seconds": 130,
-          "core_hours": 0.04,
-          "operator_name": "postprocess-metrics",
-          "operator_title": "基于postProcess的指标提取函数接口",
-          "runtime_type": "singularity",
-          "runtime_label": "Singularity",
-          "runtime_deployment": "",
-          "runtime_detail": "/public/home/wxn/image/scnet/simulation/openfoam/openfoam _13.sif",
-          "cpu_cores": 1,
-          "gpu_count": 0,
-          "memory_mb": 0,
-          "memory_gb": 0,
-          "resource_source": "operator",
-          "planned_start_seconds": 1300,
-          "planned_seconds": 130,
-          "waiting_for": [],
-          "waiting_at_join": false
-        },
-        {
-          "id": "operator-2",
-          "operator_id": "reconstruct-par",
-          "name": "基于reconstructPar的结果重构函数接口",
-          "duration_ticks": 1,
-          "status": "success",
-          "progress": 100,
-          "elapsed_seconds": 130,
-          "core_hours": 0.04,
-          "operator_name": "reconstruct-par",
-          "operator_title": "基于reconstructPar的结果重构函数接口",
-          "runtime_type": "singularity",
-          "runtime_label": "Singularity",
-          "runtime_deployment": "",
-          "runtime_detail": "/public/home/wxn/image/scnet/simulation/openfoam/openfoam _13.sif",
-          "cpu_cores": 1,
-          "gpu_count": 0,
-          "memory_mb": 0,
-          "memory_gb": 0,
-          "resource_source": "operator",
-          "planned_start_seconds": 1170,
-          "planned_seconds": 130,
-          "waiting_for": [],
-          "waiting_at_join": false
-        },
-        {
-          "id": "operator-3",
-          "operator_id": "solid-displacement",
-          "name": "基于solidDisplacement的结构响应函数接口",
-          "duration_ticks": 1,
-          "status": "success",
-          "progress": 100,
-          "elapsed_seconds": 1040,
-          "core_hours": 2.31,
-          "operator_name": "solid-displacement",
-          "operator_title": "基于solidDisplacement的结构响应函数接口",
-          "runtime_type": "singularity",
-          "runtime_label": "Singularity",
-          "runtime_deployment": "",
-          "runtime_detail": "/public/home/wxn/image/scnet/simulation/openfoam/openfoam _13.sif",
-          "cpu_cores": 8,
-          "gpu_count": 0,
-          "memory_mb": 0,
-          "memory_gb": 0,
-          "resource_source": "operator",
-          "planned_start_seconds": 130,
-          "planned_seconds": 1040,
-          "waiting_for": [],
-          "waiting_at_join": false
-        },
-        {
-          "id": "post",
-          "name": "结果整理与输出",
-          "duration_ticks": 1,
-          "status": "success",
-          "progress": 100,
-          "elapsed_seconds": 130,
-          "core_hours": 0,
-          "resource_source": "none",
-          "planned_start_seconds": 1430,
-          "planned_seconds": 130,
-          "waiting_for": [],
-          "waiting_at_join": false
-        }
-      ],
-      "edges": [
-        {
-          "source": "operator-2",
-          "target": "operator-0"
-        },
-        {
-          "source": "operator-2",
-          "target": "operator-1"
-        },
-        {
-          "source": "operator-3",
-          "target": "operator-2"
-        },
-        {
-          "source": "prepare",
-          "target": "operator-3"
-        },
-        {
-          "source": "operator-0",
-          "target": "post"
-        },
-        {
-          "source": "operator-1",
-          "target": "post"
-        }
-      ]
+ "code": 200,
+ "message": "success",
+ "data": {
+  "run_id": "UAV-20260811-0010",
+  "scenario_id": "path-planning",
+  "scenario_name": "航迹规划与避障",
+  "status": "success",
+  "progress": 100,
+  "execution_mode": "simulated",
+  "cluster_id": "changsha",
+  "cluster_name": "天河新一代",
+  "job_id": "210050",
+  "current_stage": "completed",
+  "start_time": "2026-08-10T13:00:00+08:00",
+  "end_time": "2026-08-12T05:00:00+08:00",
+  "elapsed_seconds": 144000,
+  "nodes": 6,
+  "cpu_cores": 32768,
+  "gpu_count": 0,
+  "memory_gb": 8,
+  "core_hours": 1245184,
+  "source_type": "simulated",
+  "workflow": {
+   "nodes": [
+    {
+     "id": "prepare",
+     "name": "输入数据准备",
+     "duration_ticks": 1,
+     "status": "success",
+     "progress": 100,
+     "elapsed_seconds": 130,
+     "core_hours": 0,
+     "resource_source": "none",
+     "planned_start_seconds": 0,
+     "planned_seconds": 130,
+     "waiting_for": [],
+     "waiting_at_join": false
     },
-    "metrics": {
-      "progress": 100,
-      "metrics": [
-        {
-          "name": "simulation_step",
-          "label": "当前仿真步",
-          "value": 5000,
-          "total": 5000,
-          "unit": "step"
-        },
-        {
-          "name": "active_uavs",
-          "label": "当前无人机数",
-          "value": 200,
-          "total": 200,
-          "unit": "架"
-        },
-        {
-          "name": "mission_completion_rate",
-          "label": "任务完成率",
-          "value": 98.6,
-          "total": 100,
-          "unit": "%"
-        },
-        {
-          "name": "collision_count",
-          "label": "碰撞次数",
-          "value": 0,
-          "total": 0,
-          "unit": "次"
-        },
-        {
-          "name": "formation_error",
-          "label": "编队误差",
-          "value": 0.32,
-          "total": 0,
-          "unit": "m"
-        },
-        {
-          "name": "simulation_speed",
-          "label": "仿真速度",
-          "value": 908,
-          "total": 0,
-          "unit": "条/min"
-        },
-        {
-          "name": "cpu_utilization",
-          "label": "CPU利用率",
-          "value": 89,
-          "total": 100,
-          "unit": "%"
-        }
-      ],
-      "cluster_summary": {
-        "active_uavs": 200,
-        "completed_uavs": 200,
-        "collision_count": 0,
-        "average_formation_error": 0.32
-      },
-      "domain_data": {
-        "source_type": "simulated",
-        "execution_mode": "simulated",
-        "scenario_id": "path-planning",
-        "environment": {
-          "width": 100,
-          "height": 100,
-          "start": [
-            5,
-            5
-          ],
-          "goal": [
-            92,
-            90
-          ],
-          "obstacles": [
-            {
-              "type": "rectangle",
-              "x": 20,
-              "y": 10,
-              "w": 12,
-              "h": 30
-            },
-            {
-              "type": "rectangle",
-              "x": 45,
-              "y": 40,
-              "w": 18,
-              "h": 10
-            },
-            {
-              "type": "rectangle",
-              "x": 70,
-              "y": 15,
-              "w": 10,
-              "h": 25
-            },
-            {
-              "type": "circle",
-              "cx": 35,
-              "cy": 70,
-              "r": 8
-            },
-            {
-              "type": "circle",
-              "cx": 60,
-              "cy": 75,
-              "r": 7
-            },
-            {
-              "type": "rectangle",
-              "x": 10,
-              "y": 55,
-              "w": 15,
-              "h": 8
-            },
-            {
-              "type": "rectangle",
-              "x": 78,
-              "y": 55,
-              "w": 8,
-              "h": 20
-            },
-            {
-              "type": "circle",
-              "cx": 50,
-              "cy": 20,
-              "r": 6
-            }
-          ]
-        },
-        "best_path": [
-          {
-            "x": 5,
-            "y": 5
-          },
-          {
-            "x": 6,
-            "y": 6
-          },
-          {
-            "x": 7,
-            "y": 7
-          },
-          {
-            "x": 8,
-            "y": 8
-          },
-          {
-            "x": 9,
-            "y": 9
-          },
-          {
-            "x": 10,
-            "y": 10
-          },
-          {
-            "x": 11,
-            "y": 11
-          },
-          {
-            "x": 12,
-            "y": 12
-          },
-          {
-            "x": 13,
-            "y": 13
-          },
-          {
-            "x": 14,
-            "y": 14
-          },
-          {
-            "x": 15,
-            "y": 15
-          },
-          {
-            "x": 16,
-            "y": 16
-          },
-          {
-            "x": 17,
-            "y": 17
-          },
-          {
-            "x": 18,
-            "y": 18
-          },
-          {
-            "x": 18,
-            "y": 19
-          },
-          {
-            "x": 18,
-            "y": 20
-          },
-          {
-            "x": 18,
-            "y": 21
-          },
-          {
-            "x": 18,
-            "y": 22
-          },
-          {
-            "x": 18,
-            "y": 23
-          },
-          {
-            "x": 18,
-            "y": 24
-          },
-          {
-            "x": 18,
-            "y": 25
-          },
-          {
-            "x": 18,
-            "y": 26
-          },
-          {
-            "x": 18,
-            "y": 27
-          },
-          {
-            "x": 18,
-            "y": 28
-          },
-          {
-            "x": 18,
-            "y": 29
-          },
-          {
-            "x": 18,
-            "y": 30
-          },
-          {
-            "x": 18,
-            "y": 31
-          },
-          {
-            "x": 19,
-            "y": 32
-          },
-          {
-            "x": 19,
-            "y": 33
-          },
-          {
-            "x": 19,
-            "y": 34
-          },
-          {
-            "x": 19,
-            "y": 35
-          },
-          {
-            "x": 19,
-            "y": 36
-          },
-          {
-            "x": 19,
-            "y": 37
-          },
-          {
-            "x": 19,
-            "y": 38
-          },
-          {
-            "x": 19,
-            "y": 39
-          },
-          {
-            "x": 20,
-            "y": 40
-          },
-          {
-            "x": 21,
-            "y": 41
-          },
-          {
-            "x": 22,
-            "y": 42
-          },
-          {
-            "x": 23,
-            "y": 43
-          },
-          {
-            "x": 24,
-            "y": 44
-          },
-          {
-            "x": 25,
-            "y": 45
-          },
-          {
-            "x": 26,
-            "y": 46
-          },
-          {
-            "x": 27,
-            "y": 47
-          },
-          {
-            "x": 28,
-            "y": 48
-          },
-          {
-            "x": 29,
-            "y": 49
-          },
-          {
-            "x": 30,
-            "y": 50
-          },
-          {
-            "x": 31,
-            "y": 51
-          },
-          {
-            "x": 32,
-            "y": 52
-          },
-          {
-            "x": 33,
-            "y": 53
-          },
-          {
-            "x": 34,
-            "y": 54
-          },
-          {
-            "x": 35,
-            "y": 55
-          },
-          {
-            "x": 36,
-            "y": 56
-          },
-          {
-            "x": 37,
-            "y": 57
-          },
-          {
-            "x": 38,
-            "y": 58
-          },
-          {
-            "x": 39,
-            "y": 59
-          },
-          {
-            "x": 40,
-            "y": 60
-          },
-          {
-            "x": 41,
-            "y": 61
-          },
-          {
-            "x": 42,
-            "y": 62
-          },
-          {
-            "x": 43,
-            "y": 63
-          },
-          {
-            "x": 44,
-            "y": 64
-          },
-          {
-            "x": 45,
-            "y": 65
-          },
-          {
-            "x": 46,
-            "y": 66
-          },
-          {
-            "x": 47,
-            "y": 67
-          },
-          {
-            "x": 48,
-            "y": 67
-          },
-          {
-            "x": 49,
-            "y": 67
-          },
-          {
-            "x": 50,
-            "y": 67
-          },
-          {
-            "x": 51,
-            "y": 67
-          },
-          {
-            "x": 52,
-            "y": 67
-          },
-          {
-            "x": 53,
-            "y": 67
-          },
-          {
-            "x": 54,
-            "y": 67
-          },
-          {
-            "x": 55,
-            "y": 67
-          },
-          {
-            "x": 56,
-            "y": 67
-          },
-          {
-            "x": 57,
-            "y": 67
-          },
-          {
-            "x": 58,
-            "y": 67
-          },
-          {
-            "x": 59,
-            "y": 67
-          },
-          {
-            "x": 60,
-            "y": 67
-          },
-          {
-            "x": 61,
-            "y": 67
-          },
-          {
-            "x": 62,
-            "y": 67
-          },
-          {
-            "x": 63,
-            "y": 68
-          },
-          {
-            "x": 64,
-            "y": 69
-          },
-          {
-            "x": 65,
-            "y": 70
-          },
-          {
-            "x": 66,
-            "y": 71
-          },
-          {
-            "x": 67,
-            "y": 72
-          },
-          {
-            "x": 68,
-            "y": 73
-          },
-          {
-            "x": 69,
-            "y": 74
-          },
-          {
-            "x": 70,
-            "y": 75
-          },
-          {
-            "x": 71,
-            "y": 76
-          },
-          {
-            "x": 72,
-            "y": 77
-          },
-          {
-            "x": 73,
-            "y": 78
-          },
-          {
-            "x": 74,
-            "y": 79
-          },
-          {
-            "x": 75,
-            "y": 80
-          },
-          {
-            "x": 76,
-            "y": 81
-          },
-          {
-            "x": 77,
-            "y": 82
-          },
-          {
-            "x": 78,
-            "y": 83
-          },
-          {
-            "x": 79,
-            "y": 84
-          },
-          {
-            "x": 80,
-            "y": 85
-          },
-          {
-            "x": 81,
-            "y": 85
-          },
-          {
-            "x": 82,
-            "y": 85
-          },
-          {
-            "x": 83,
-            "y": 86
-          },
-          {
-            "x": 84,
-            "y": 86
-          },
-          {
-            "x": 85,
-            "y": 87
-          },
-          {
-            "x": 86,
-            "y": 87
-          },
-          {
-            "x": 87,
-            "y": 88
-          },
-          {
-            "x": 88,
-            "y": 88
-          },
-          {
-            "x": 89,
-            "y": 89
-          },
-          {
-            "x": 90,
-            "y": 89
-          },
-          {
-            "x": 91,
-            "y": 90
-          },
-          {
-            "x": 92,
-            "y": 90
-          }
-        ],
-        "cost_series": [
-          {
-            "iteration": 1,
-            "best_cost": 123.925,
-            "average_cost": 135.968
-          },
-          {
-            "iteration": 2,
-            "best_cost": 118.398,
-            "average_cost": 130.059
-          },
-          {
-            "iteration": 3,
-            "best_cost": 114.373,
-            "average_cost": 126.033
-          },
-          {
-            "iteration": 4,
-            "best_cost": 110.36,
-            "average_cost": 121.306
-          },
-          {
-            "iteration": 5,
-            "best_cost": 105.602,
-            "average_cost": 116.939
-          },
-          {
-            "iteration": 6,
-            "best_cost": 102.781,
-            "average_cost": 114.399
-          },
-          {
-            "iteration": 7,
-            "best_cost": 100.437,
-            "average_cost": 111.001
-          },
-          {
-            "iteration": 8,
-            "best_cost": 97.315,
-            "average_cost": 107.468
-          },
-          {
-            "iteration": 9,
-            "best_cost": 94.702,
-            "average_cost": 105.062
-          },
-          {
-            "iteration": 10,
-            "best_cost": 92.957,
-            "average_cost": 103.9
-          },
-          {
-            "iteration": 11,
-            "best_cost": 90.577,
-            "average_cost": 100.523
-          },
-          {
-            "iteration": 12,
-            "best_cost": 88.427,
-            "average_cost": 98.168
-          },
-          {
-            "iteration": 13,
-            "best_cost": 86.577,
-            "average_cost": 96.44
-          },
-          {
-            "iteration": 14,
-            "best_cost": 85.762,
-            "average_cost": 95.742
-          },
-          {
-            "iteration": 15,
-            "best_cost": 84.129,
-            "average_cost": 93.45
-          },
-          {
-            "iteration": 16,
-            "best_cost": 83.87,
-            "average_cost": 94.228
-          },
-          {
-            "iteration": 17,
-            "best_cost": 81.834,
-            "average_cost": 91.468
-          },
-          {
-            "iteration": 18,
-            "best_cost": 80.631,
-            "average_cost": 89.614
-          },
-          {
-            "iteration": 19,
-            "best_cost": 80.242,
-            "average_cost": 89.252
-          },
-          {
-            "iteration": 20,
-            "best_cost": 79.45,
-            "average_cost": 88.333
-          },
-          {
-            "iteration": 21,
-            "best_cost": 78.842,
-            "average_cost": 87.594
-          },
-          {
-            "iteration": 22,
-            "best_cost": 77.643,
-            "average_cost": 86.301
-          },
-          {
-            "iteration": 23,
-            "best_cost": 77.426,
-            "average_cost": 86.127
-          },
-          {
-            "iteration": 24,
-            "best_cost": 75.755,
-            "average_cost": 85.046
-          },
-          {
-            "iteration": 25,
-            "best_cost": 76.708,
-            "average_cost": 85.25
-          },
-          {
-            "iteration": 26,
-            "best_cost": 76.138,
-            "average_cost": 85.218
-          },
-          {
-            "iteration": 27,
-            "best_cost": 75.113,
-            "average_cost": 84.169
-          },
-          {
-            "iteration": 28,
-            "best_cost": 75.165,
-            "average_cost": 84.044
-          },
-          {
-            "iteration": 29,
-            "best_cost": 74.105,
-            "average_cost": 83.319
-          },
-          {
-            "iteration": 30,
-            "best_cost": 74.033,
-            "average_cost": 82.538
-          },
-          {
-            "iteration": 31,
-            "best_cost": 74.18,
-            "average_cost": 83.138
-          },
-          {
-            "iteration": 32,
-            "best_cost": 73.975,
-            "average_cost": 83.049
-          },
-          {
-            "iteration": 33,
-            "best_cost": 73.192,
-            "average_cost": 81.976
-          },
-          {
-            "iteration": 34,
-            "best_cost": 73.506,
-            "average_cost": 82.259
-          },
-          {
-            "iteration": 35,
-            "best_cost": 73.581,
-            "average_cost": 81.939
-          },
-          {
-            "iteration": 36,
-            "best_cost": 72.176,
-            "average_cost": 80.611
-          },
-          {
-            "iteration": 37,
-            "best_cost": 72.352,
-            "average_cost": 81.187
-          },
-          {
-            "iteration": 38,
-            "best_cost": 72.14,
-            "average_cost": 81.144
-          },
-          {
-            "iteration": 39,
-            "best_cost": 72.232,
-            "average_cost": 81.239
-          },
-          {
-            "iteration": 40,
-            "best_cost": 72.156,
-            "average_cost": 80.729
-          }
-        ],
-        "path_preview": "/api/v1/files/ART-UAV-PIMG1/preview"
-      }
+    {
+     "id": "operator-0",
+     "operator_id": "foam-to-vtk",
+     "name": "基于foamToVTK的结果导出函数接口",
+     "duration_ticks": 1,
+     "status": "success",
+     "progress": 100,
+     "elapsed_seconds": 130,
+     "core_hours": 0.04,
+     "operator_name": "foam-to-vtk",
+     "operator_title": "基于foamToVTK的结果导出函数接口",
+     "runtime_type": "singularity",
+     "runtime_label": "Singularity",
+     "runtime_deployment": "",
+     "runtime_detail": "/public/home/wxn/image/scnet/simulation/openfoam/openfoam _13.sif",
+     "cpu_cores": 1,
+     "gpu_count": 0,
+     "memory_mb": 8192,
+     "memory_gb": 8,
+     "resource_source": "operator",
+     "planned_start_seconds": 1300,
+     "planned_seconds": 130,
+     "waiting_for": [],
+     "waiting_at_join": false
     },
-    "logs": {
-      "next_offset": 9,
-      "has_more": false,
-      "lines": [
-        {
-          "seq": 1,
-          "timestamp": "2026-08-10T13:00:02+08:00",
-          "level": "INFO",
-          "cluster_id": "changsha",
-          "message": "任务提交成功，作业ID 210050，分配节点 8 个（512 核）"
-        },
-        {
-          "seq": 2,
-          "timestamp": "2026-08-10T13:00:40+08:00",
-          "level": "INFO",
-          "cluster_id": "changsha",
-          "message": "场景初始化完成：三维地形 5km×5km，障碍物 42 个，目标点 8 个"
-        },
-        {
-          "seq": 3,
-          "timestamp": "2026-08-10T13:01:10+08:00",
-          "level": "INFO",
-          "cluster_id": "changsha",
-          "message": "通信拓扑构建完成：星形拓扑，200 架无人机编组为 4 个飞行编队"
-        },
-        {
-          "seq": 4,
-          "timestamp": "2026-08-10T13:01:30+08:00",
-          "level": "INFO",
-          "cluster_id": "changsha",
-          "message": "任务分配完成：K-means 聚类划分目标区域，每编队 50 架，任务量均衡"
-        },
-        {
-          "seq": 5,
-          "timestamp": "2026-08-10T13:02:00+08:00",
-          "level": "INFO",
-          "cluster_id": "changsha",
-          "message": "协同控制求解完成：一致性控制收敛，编队误差稳定在 0.32m"
-        },
-        {
-          "seq": 6,
-          "timestamp": "2026-08-10T13:06:30+08:00",
-          "level": "INFO",
-          "cluster_id": "changsha",
-          "message": "多智能体动力学仿真完成：5000 步，平均仿真速度 908 条/min"
-        },
-        {
-          "seq": 7,
-          "timestamp": "2026-08-10T13:24:00+08:00",
-          "level": "INFO",
-          "cluster_id": "changsha",
-          "message": "碰撞检测完成：全程碰撞 0 次，最小安全距离 8.2m（阈值 5m）"
-        },
-        {
-          "seq": 8,
-          "timestamp": "2026-08-10T13:26:00+08:00",
-          "level": "INFO",
-          "cluster_id": "changsha",
-          "message": "任务完成：航迹规划成功率 100%，任务完成率 98.6%，结果已归档"
-        }
-      ]
+    {
+     "id": "operator-1",
+     "operator_id": "postprocess-metrics",
+     "name": "基于postProcess的指标提取函数接口",
+     "duration_ticks": 3,
+     "status": "success",
+     "progress": 100,
+     "elapsed_seconds": 130,
+     "core_hours": 0.04,
+     "operator_name": "postprocess-metrics",
+     "operator_title": "基于postProcess的指标提取函数接口",
+     "runtime_type": "singularity",
+     "runtime_label": "Singularity",
+     "runtime_deployment": "",
+     "runtime_detail": "/public/home/wxn/image/scnet/simulation/openfoam/openfoam _13.sif",
+     "cpu_cores": 1,
+     "gpu_count": 0,
+     "memory_mb": 0,
+     "memory_gb": 0,
+     "resource_source": "operator",
+     "planned_start_seconds": 1300,
+     "planned_seconds": 130,
+     "waiting_for": [],
+     "waiting_at_join": false
     },
-    "artifacts": [
-      {
-        "id": "ART-UAV-011",
-        "name": "trajectory.json",
-        "type": "dataset",
-        "format": "json",
-        "size": 33554432,
-        "storage_path": "gfs://results/UAV-20260811-0010/trajectory.json",
-        "preview_url": "",
-        "download_url": "/api/v1/files/ART-UAV-011/download",
-        "created_at": "2026-08-10T13:26:00+08:00"
-      },
-      {
-        "id": "ART-UAV-012",
-        "name": "trajectory.csv",
-        "type": "dataset",
-        "format": "csv",
-        "size": 26214400,
-        "storage_path": "gfs://results/UAV-20260811-0010/trajectory.csv",
-        "preview_url": "",
-        "download_url": "/api/v1/files/ART-UAV-012/download",
-        "created_at": "2026-08-10T13:26:00+08:00"
-      },
-      {
-        "id": "ART-UAV-013",
-        "name": "simulation.mp4",
-        "type": "video",
-        "format": "mp4",
-        "size": 52428800,
-        "storage_path": "gfs://results/UAV-20260811-0010/simulation.mp4",
-        "preview_url": "/api/v1/files/ART-UAV-013/preview",
-        "download_url": "/api/v1/files/ART-UAV-013/download",
-        "created_at": "2026-08-10T13:26:10+08:00"
-      },
-      {
-        "id": "ART-UAV-014",
-        "name": "mission_statistics.json",
-        "type": "report",
-        "format": "json",
-        "size": 524288,
-        "storage_path": "gfs://results/UAV-20260811-0010/mission_statistics.json",
-        "preview_url": "/api/v1/files/ART-UAV-014/preview",
-        "download_url": "/api/v1/files/ART-UAV-014/download",
-        "created_at": "2026-08-10T13:26:10+08:00"
-      },
-      {
-        "id": "ART-UAV-015",
-        "name": "path_3d.json",
-        "type": "dataset",
-        "format": "json",
-        "size": 16777216,
-        "storage_path": "gfs://results/UAV-20260811-0010/path_3d.json",
-        "preview_url": "",
-        "download_url": "/api/v1/files/ART-UAV-015/download",
-        "created_at": "2026-08-10T13:26:10+08:00"
-      },
-      {
-        "id": "ART-UAV-PIMG1",
-        "name": "path_preview.png",
-        "type": "image",
-        "format": "png",
-        "size": 21455,
-        "storage_path": "artifacts/simulated/uav/path-planning/UAV-20260811-0010/path_preview.png",
-        "preview_url": "/api/v1/files/ART-UAV-PIMG1/preview",
-        "download_url": "/api/v1/files/ART-UAV-PIMG1/download",
-        "created_at": "2026-09-09T18:06:31+08:00",
-        "source_type": "simulated"
-      },
-      {
-        "id": "ART-UAV-PJSON1",
-        "name": "environment.json",
-        "type": "dataset",
-        "format": "json",
-        "size": 6525,
-        "storage_path": "artifacts/simulated/uav/path-planning/UAV-20260811-0010/environment.json",
-        "preview_url": "/api/v1/files/ART-UAV-PJSON1/preview",
-        "download_url": "/api/v1/files/ART-UAV-PJSON1/download",
-        "created_at": "2026-09-09T18:06:31+08:00",
-        "source_type": "simulated"
-      },
-      {
-        "id": "ART-UAV-PCSV1",
-        "name": "cost_series.csv",
-        "type": "dataset",
-        "format": "csv",
-        "size": 753,
-        "storage_path": "artifacts/simulated/uav/path-planning/UAV-20260811-0010/cost_series.csv",
-        "preview_url": "/api/v1/files/ART-UAV-PCSV1/preview",
-        "download_url": "/api/v1/files/ART-UAV-PCSV1/download",
-        "created_at": "2026-09-09T18:06:31+08:00",
-        "source_type": "simulated"
-      }
-    ],
-    "domain_data": {
-      "source_type": "simulated",
-      "execution_mode": "simulated",
-      "scenario_id": "path-planning",
-      "environment": {
-        "width": 100,
-        "height": 100,
-        "start": [
-          5,
-          5
-        ],
-        "goal": [
-          92,
-          90
-        ],
-        "obstacles": [
-          {
-            "type": "rectangle",
-            "x": 20,
-            "y": 10,
-            "w": 12,
-            "h": 30
-          },
-          {
-            "type": "rectangle",
-            "x": 45,
-            "y": 40,
-            "w": 18,
-            "h": 10
-          },
-          {
-            "type": "rectangle",
-            "x": 70,
-            "y": 15,
-            "w": 10,
-            "h": 25
-          },
-          {
-            "type": "circle",
-            "cx": 35,
-            "cy": 70,
-            "r": 8
-          },
-          {
-            "type": "circle",
-            "cx": 60,
-            "cy": 75,
-            "r": 7
-          },
-          {
-            "type": "rectangle",
-            "x": 10,
-            "y": 55,
-            "w": 15,
-            "h": 8
-          },
-          {
-            "type": "rectangle",
-            "x": 78,
-            "y": 55,
-            "w": 8,
-            "h": 20
-          },
-          {
-            "type": "circle",
-            "cx": 50,
-            "cy": 20,
-            "r": 6
-          }
-        ]
-      },
-      "best_path": [
-        {
-          "x": 5,
-          "y": 5
-        },
-        {
-          "x": 6,
-          "y": 6
-        },
-        {
-          "x": 7,
-          "y": 7
-        },
-        {
-          "x": 8,
-          "y": 8
-        },
-        {
-          "x": 9,
-          "y": 9
-        },
-        {
-          "x": 10,
-          "y": 10
-        },
-        {
-          "x": 11,
-          "y": 11
-        },
-        {
-          "x": 12,
-          "y": 12
-        },
-        {
-          "x": 13,
-          "y": 13
-        },
-        {
-          "x": 14,
-          "y": 14
-        },
-        {
-          "x": 15,
-          "y": 15
-        },
-        {
-          "x": 16,
-          "y": 16
-        },
-        {
-          "x": 17,
-          "y": 17
-        },
-        {
-          "x": 18,
-          "y": 18
-        },
-        {
-          "x": 18,
-          "y": 19
-        },
-        {
-          "x": 18,
-          "y": 20
-        },
-        {
-          "x": 18,
-          "y": 21
-        },
-        {
-          "x": 18,
-          "y": 22
-        },
-        {
-          "x": 18,
-          "y": 23
-        },
-        {
-          "x": 18,
-          "y": 24
-        },
-        {
-          "x": 18,
-          "y": 25
-        },
-        {
-          "x": 18,
-          "y": 26
-        },
-        {
-          "x": 18,
-          "y": 27
-        },
-        {
-          "x": 18,
-          "y": 28
-        },
-        {
-          "x": 18,
-          "y": 29
-        },
-        {
-          "x": 18,
-          "y": 30
-        },
-        {
-          "x": 18,
-          "y": 31
-        },
-        {
-          "x": 19,
-          "y": 32
-        },
-        {
-          "x": 19,
-          "y": 33
-        },
-        {
-          "x": 19,
-          "y": 34
-        },
-        {
-          "x": 19,
-          "y": 35
-        },
-        {
-          "x": 19,
-          "y": 36
-        },
-        {
-          "x": 19,
-          "y": 37
-        },
-        {
-          "x": 19,
-          "y": 38
-        },
-        {
-          "x": 19,
-          "y": 39
-        },
-        {
-          "x": 20,
-          "y": 40
-        },
-        {
-          "x": 21,
-          "y": 41
-        },
-        {
-          "x": 22,
-          "y": 42
-        },
-        {
-          "x": 23,
-          "y": 43
-        },
-        {
-          "x": 24,
-          "y": 44
-        },
-        {
-          "x": 25,
-          "y": 45
-        },
-        {
-          "x": 26,
-          "y": 46
-        },
-        {
-          "x": 27,
-          "y": 47
-        },
-        {
-          "x": 28,
-          "y": 48
-        },
-        {
-          "x": 29,
-          "y": 49
-        },
-        {
-          "x": 30,
-          "y": 50
-        },
-        {
-          "x": 31,
-          "y": 51
-        },
-        {
-          "x": 32,
-          "y": 52
-        },
-        {
-          "x": 33,
-          "y": 53
-        },
-        {
-          "x": 34,
-          "y": 54
-        },
-        {
-          "x": 35,
-          "y": 55
-        },
-        {
-          "x": 36,
-          "y": 56
-        },
-        {
-          "x": 37,
-          "y": 57
-        },
-        {
-          "x": 38,
-          "y": 58
-        },
-        {
-          "x": 39,
-          "y": 59
-        },
-        {
-          "x": 40,
-          "y": 60
-        },
-        {
-          "x": 41,
-          "y": 61
-        },
-        {
-          "x": 42,
-          "y": 62
-        },
-        {
-          "x": 43,
-          "y": 63
-        },
-        {
-          "x": 44,
-          "y": 64
-        },
-        {
-          "x": 45,
-          "y": 65
-        },
-        {
-          "x": 46,
-          "y": 66
-        },
-        {
-          "x": 47,
-          "y": 67
-        },
-        {
-          "x": 48,
-          "y": 67
-        },
-        {
-          "x": 49,
-          "y": 67
-        },
-        {
-          "x": 50,
-          "y": 67
-        },
-        {
-          "x": 51,
-          "y": 67
-        },
-        {
-          "x": 52,
-          "y": 67
-        },
-        {
-          "x": 53,
-          "y": 67
-        },
-        {
-          "x": 54,
-          "y": 67
-        },
-        {
-          "x": 55,
-          "y": 67
-        },
-        {
-          "x": 56,
-          "y": 67
-        },
-        {
-          "x": 57,
-          "y": 67
-        },
-        {
-          "x": 58,
-          "y": 67
-        },
-        {
-          "x": 59,
-          "y": 67
-        },
-        {
-          "x": 60,
-          "y": 67
-        },
-        {
-          "x": 61,
-          "y": 67
-        },
-        {
-          "x": 62,
-          "y": 67
-        },
-        {
-          "x": 63,
-          "y": 68
-        },
-        {
-          "x": 64,
-          "y": 69
-        },
-        {
-          "x": 65,
-          "y": 70
-        },
-        {
-          "x": 66,
-          "y": 71
-        },
-        {
-          "x": 67,
-          "y": 72
-        },
-        {
-          "x": 68,
-          "y": 73
-        },
-        {
-          "x": 69,
-          "y": 74
-        },
-        {
-          "x": 70,
-          "y": 75
-        },
-        {
-          "x": 71,
-          "y": 76
-        },
-        {
-          "x": 72,
-          "y": 77
-        },
-        {
-          "x": 73,
-          "y": 78
-        },
-        {
-          "x": 74,
-          "y": 79
-        },
-        {
-          "x": 75,
-          "y": 80
-        },
-        {
-          "x": 76,
-          "y": 81
-        },
-        {
-          "x": 77,
-          "y": 82
-        },
-        {
-          "x": 78,
-          "y": 83
-        },
-        {
-          "x": 79,
-          "y": 84
-        },
-        {
-          "x": 80,
-          "y": 85
-        },
-        {
-          "x": 81,
-          "y": 85
-        },
-        {
-          "x": 82,
-          "y": 85
-        },
-        {
-          "x": 83,
-          "y": 86
-        },
-        {
-          "x": 84,
-          "y": 86
-        },
-        {
-          "x": 85,
-          "y": 87
-        },
-        {
-          "x": 86,
-          "y": 87
-        },
-        {
-          "x": 87,
-          "y": 88
-        },
-        {
-          "x": 88,
-          "y": 88
-        },
-        {
-          "x": 89,
-          "y": 89
-        },
-        {
-          "x": 90,
-          "y": 89
-        },
-        {
-          "x": 91,
-          "y": 90
-        },
-        {
-          "x": 92,
-          "y": 90
-        }
-      ],
-      "cost_series": [
-        {
-          "iteration": 1,
-          "best_cost": 123.925,
-          "average_cost": 135.968
-        },
-        {
-          "iteration": 2,
-          "best_cost": 118.398,
-          "average_cost": 130.059
-        },
-        {
-          "iteration": 3,
-          "best_cost": 114.373,
-          "average_cost": 126.033
-        },
-        {
-          "iteration": 4,
-          "best_cost": 110.36,
-          "average_cost": 121.306
-        },
-        {
-          "iteration": 5,
-          "best_cost": 105.602,
-          "average_cost": 116.939
-        },
-        {
-          "iteration": 6,
-          "best_cost": 102.781,
-          "average_cost": 114.399
-        },
-        {
-          "iteration": 7,
-          "best_cost": 100.437,
-          "average_cost": 111.001
-        },
-        {
-          "iteration": 8,
-          "best_cost": 97.315,
-          "average_cost": 107.468
-        },
-        {
-          "iteration": 9,
-          "best_cost": 94.702,
-          "average_cost": 105.062
-        },
-        {
-          "iteration": 10,
-          "best_cost": 92.957,
-          "average_cost": 103.9
-        },
-        {
-          "iteration": 11,
-          "best_cost": 90.577,
-          "average_cost": 100.523
-        },
-        {
-          "iteration": 12,
-          "best_cost": 88.427,
-          "average_cost": 98.168
-        },
-        {
-          "iteration": 13,
-          "best_cost": 86.577,
-          "average_cost": 96.44
-        },
-        {
-          "iteration": 14,
-          "best_cost": 85.762,
-          "average_cost": 95.742
-        },
-        {
-          "iteration": 15,
-          "best_cost": 84.129,
-          "average_cost": 93.45
-        },
-        {
-          "iteration": 16,
-          "best_cost": 83.87,
-          "average_cost": 94.228
-        },
-        {
-          "iteration": 17,
-          "best_cost": 81.834,
-          "average_cost": 91.468
-        },
-        {
-          "iteration": 18,
-          "best_cost": 80.631,
-          "average_cost": 89.614
-        },
-        {
-          "iteration": 19,
-          "best_cost": 80.242,
-          "average_cost": 89.252
-        },
-        {
-          "iteration": 20,
-          "best_cost": 79.45,
-          "average_cost": 88.333
-        },
-        {
-          "iteration": 21,
-          "best_cost": 78.842,
-          "average_cost": 87.594
-        },
-        {
-          "iteration": 22,
-          "best_cost": 77.643,
-          "average_cost": 86.301
-        },
-        {
-          "iteration": 23,
-          "best_cost": 77.426,
-          "average_cost": 86.127
-        },
-        {
-          "iteration": 24,
-          "best_cost": 75.755,
-          "average_cost": 85.046
-        },
-        {
-          "iteration": 25,
-          "best_cost": 76.708,
-          "average_cost": 85.25
-        },
-        {
-          "iteration": 26,
-          "best_cost": 76.138,
-          "average_cost": 85.218
-        },
-        {
-          "iteration": 27,
-          "best_cost": 75.113,
-          "average_cost": 84.169
-        },
-        {
-          "iteration": 28,
-          "best_cost": 75.165,
-          "average_cost": 84.044
-        },
-        {
-          "iteration": 29,
-          "best_cost": 74.105,
-          "average_cost": 83.319
-        },
-        {
-          "iteration": 30,
-          "best_cost": 74.033,
-          "average_cost": 82.538
-        },
-        {
-          "iteration": 31,
-          "best_cost": 74.18,
-          "average_cost": 83.138
-        },
-        {
-          "iteration": 32,
-          "best_cost": 73.975,
-          "average_cost": 83.049
-        },
-        {
-          "iteration": 33,
-          "best_cost": 73.192,
-          "average_cost": 81.976
-        },
-        {
-          "iteration": 34,
-          "best_cost": 73.506,
-          "average_cost": 82.259
-        },
-        {
-          "iteration": 35,
-          "best_cost": 73.581,
-          "average_cost": 81.939
-        },
-        {
-          "iteration": 36,
-          "best_cost": 72.176,
-          "average_cost": 80.611
-        },
-        {
-          "iteration": 37,
-          "best_cost": 72.352,
-          "average_cost": 81.187
-        },
-        {
-          "iteration": 38,
-          "best_cost": 72.14,
-          "average_cost": 81.144
-        },
-        {
-          "iteration": 39,
-          "best_cost": 72.232,
-          "average_cost": 81.239
-        },
-        {
-          "iteration": 40,
-          "best_cost": 72.156,
-          "average_cost": 80.729
-        }
-      ],
-      "path_preview": "/api/v1/files/ART-UAV-PIMG1/preview"
+    {
+     "id": "operator-2",
+     "operator_id": "reconstruct-par",
+     "name": "基于reconstructPar的结果重构函数接口",
+     "duration_ticks": 1,
+     "status": "success",
+     "progress": 100,
+     "elapsed_seconds": 130,
+     "core_hours": 0.04,
+     "operator_name": "reconstruct-par",
+     "operator_title": "基于reconstructPar的结果重构函数接口",
+     "runtime_type": "singularity",
+     "runtime_label": "Singularity",
+     "runtime_deployment": "",
+     "runtime_detail": "/public/home/wxn/image/scnet/simulation/openfoam/openfoam _13.sif",
+     "cpu_cores": 1,
+     "gpu_count": 0,
+     "memory_mb": 0,
+     "memory_gb": 0,
+     "resource_source": "operator",
+     "planned_start_seconds": 1170,
+     "planned_seconds": 130,
+     "waiting_for": [],
+     "waiting_at_join": false
     },
-    "selected_operator_ids": [
-      "foam-to-vtk",
-      "postprocess-metrics",
-      "reconstruct-par",
-      "solid-displacement"
-    ],
-    "resource_source": "operator",
-    "planned_seconds": 1560,
-    "remaining_seconds": 0,
-    "_operator_version": 4
+    {
+     "id": "operator-3",
+     "operator_id": "solid-displacement",
+     "name": "基于solidDisplacement的结构响应函数接口",
+     "duration_ticks": 1,
+     "status": "success",
+     "progress": 100,
+     "elapsed_seconds": 1040,
+     "core_hours": 2.31,
+     "operator_name": "solid-displacement",
+     "operator_title": "基于solidDisplacement的结构响应函数接口",
+     "runtime_type": "singularity",
+     "runtime_label": "Singularity",
+     "runtime_deployment": "",
+     "runtime_detail": "/public/home/wxn/image/scnet/simulation/openfoam/openfoam _13.sif",
+     "cpu_cores": 8,
+     "gpu_count": 0,
+     "memory_mb": 0,
+     "memory_gb": 0,
+     "resource_source": "operator",
+     "planned_start_seconds": 130,
+     "planned_seconds": 1040,
+     "waiting_for": [],
+     "waiting_at_join": false
+    },
+    {
+     "id": "post",
+     "name": "结果整理与输出",
+     "duration_ticks": 1,
+     "status": "success",
+     "progress": 100,
+     "elapsed_seconds": 130,
+     "core_hours": 0,
+     "resource_source": "none",
+     "planned_start_seconds": 1430,
+     "planned_seconds": 130,
+     "waiting_for": [],
+     "waiting_at_join": false
+    }
+   ],
+   "edges": [
+    {
+     "source": "operator-2",
+     "target": "operator-0"
+    },
+    {
+     "source": "operator-2",
+     "target": "operator-1"
+    },
+    {
+     "source": "operator-3",
+     "target": "operator-2"
+    },
+    {
+     "source": "prepare",
+     "target": "operator-3"
+    },
+    {
+     "source": "operator-0",
+     "target": "post"
+    },
+    {
+     "source": "operator-1",
+     "target": "post"
+    }
+   ]
   },
-  "timestamp": "2026-08-10T13:26:30+08:00"
+  "metrics": {
+   "progress": 100,
+   "metrics": [
+    {
+     "name": "simulation_step",
+     "label": "当前仿真步",
+     "value": 5000,
+     "total": 5000,
+     "unit": "step"
+    },
+    {
+     "name": "active_uavs",
+     "label": "当前无人机数",
+     "value": 200,
+     "total": 200,
+     "unit": "架"
+    },
+    {
+     "name": "mission_completion_rate",
+     "label": "任务完成率",
+     "value": 98.6,
+     "total": 100,
+     "unit": "%"
+    },
+    {
+     "name": "collision_count",
+     "label": "碰撞次数",
+     "value": 0,
+     "total": 0,
+     "unit": "次"
+    },
+    {
+     "name": "formation_error",
+     "label": "编队误差",
+     "value": 0.32,
+     "total": 0,
+     "unit": "m"
+    },
+    {
+     "name": "simulation_speed",
+     "label": "仿真速度",
+     "value": 908,
+     "total": 0,
+     "unit": "条/min"
+    },
+    {
+     "name": "cpu_utilization",
+     "label": "CPU利用率",
+     "value": 89,
+     "total": 100,
+     "unit": "%"
+    }
+   ],
+   "cluster_summary": {
+    "active_uavs": 200,
+    "completed_uavs": 200,
+    "collision_count": 0,
+    "average_formation_error": 0.32
+   },
+   "domain_data": {
+    "source_type": "simulated",
+    "execution_mode": "simulated",
+    "scenario_id": "path-planning",
+    "environment": {
+     "width": 100,
+     "height": 100,
+     "start": [
+      5,
+      5
+     ],
+     "goal": [
+      92,
+      90
+     ],
+     "obstacles": [
+      {
+       "type": "rectangle",
+       "x": 20,
+       "y": 10,
+       "w": 12,
+       "h": 30
+      },
+      {
+       "type": "rectangle",
+       "x": 45,
+       "y": 40,
+       "w": 18,
+       "h": 10
+      },
+      {
+       "type": "rectangle",
+       "x": 70,
+       "y": 15,
+       "w": 10,
+       "h": 25
+      },
+      {
+       "type": "circle",
+       "cx": 35,
+       "cy": 70,
+       "r": 8
+      },
+      {
+       "type": "circle",
+       "cx": 60,
+       "cy": 75,
+       "r": 7
+      },
+      {
+       "type": "rectangle",
+       "x": 10,
+       "y": 55,
+       "w": 15,
+       "h": 8
+      },
+      {
+       "type": "rectangle",
+       "x": 78,
+       "y": 55,
+       "w": 8,
+       "h": 20
+      },
+      {
+       "type": "circle",
+       "cx": 50,
+       "cy": 20,
+       "r": 6
+      }
+     ]
+    },
+    "best_path": [
+     {
+      "x": 5,
+      "y": 5
+     },
+     {
+      "x": 6,
+      "y": 6
+     },
+     {
+      "x": 7,
+      "y": 7
+     },
+     {
+      "x": 8,
+      "y": 8
+     },
+     {
+      "x": 9,
+      "y": 9
+     },
+     {
+      "x": 10,
+      "y": 10
+     },
+     {
+      "x": 11,
+      "y": 11
+     },
+     {
+      "x": 12,
+      "y": 12
+     },
+     {
+      "x": 13,
+      "y": 13
+     },
+     {
+      "x": 14,
+      "y": 14
+     },
+     {
+      "x": 15,
+      "y": 15
+     },
+     {
+      "x": 16,
+      "y": 16
+     },
+     {
+      "x": 17,
+      "y": 17
+     },
+     {
+      "x": 18,
+      "y": 18
+     },
+     {
+      "x": 18,
+      "y": 19
+     },
+     {
+      "x": 18,
+      "y": 20
+     },
+     {
+      "x": 18,
+      "y": 21
+     },
+     {
+      "x": 18,
+      "y": 22
+     },
+     {
+      "x": 18,
+      "y": 23
+     },
+     {
+      "x": 18,
+      "y": 24
+     },
+     {
+      "x": 18,
+      "y": 25
+     },
+     {
+      "x": 18,
+      "y": 26
+     },
+     {
+      "x": 18,
+      "y": 27
+     },
+     {
+      "x": 18,
+      "y": 28
+     },
+     {
+      "x": 18,
+      "y": 29
+     },
+     {
+      "x": 18,
+      "y": 30
+     },
+     {
+      "x": 18,
+      "y": 31
+     },
+     {
+      "x": 19,
+      "y": 32
+     },
+     {
+      "x": 19,
+      "y": 33
+     },
+     {
+      "x": 19,
+      "y": 34
+     },
+     {
+      "x": 19,
+      "y": 35
+     },
+     {
+      "x": 19,
+      "y": 36
+     },
+     {
+      "x": 19,
+      "y": 37
+     },
+     {
+      "x": 19,
+      "y": 38
+     },
+     {
+      "x": 19,
+      "y": 39
+     },
+     {
+      "x": 20,
+      "y": 40
+     },
+     {
+      "x": 21,
+      "y": 41
+     },
+     {
+      "x": 22,
+      "y": 42
+     },
+     {
+      "x": 23,
+      "y": 43
+     },
+     {
+      "x": 24,
+      "y": 44
+     },
+     {
+      "x": 25,
+      "y": 45
+     },
+     {
+      "x": 26,
+      "y": 46
+     },
+     {
+      "x": 27,
+      "y": 47
+     },
+     {
+      "x": 28,
+      "y": 48
+     },
+     {
+      "x": 29,
+      "y": 49
+     },
+     {
+      "x": 30,
+      "y": 50
+     },
+     {
+      "x": 31,
+      "y": 51
+     },
+     {
+      "x": 32,
+      "y": 52
+     },
+     {
+      "x": 33,
+      "y": 53
+     },
+     {
+      "x": 34,
+      "y": 54
+     },
+     {
+      "x": 35,
+      "y": 55
+     },
+     {
+      "x": 36,
+      "y": 56
+     },
+     {
+      "x": 37,
+      "y": 57
+     },
+     {
+      "x": 38,
+      "y": 58
+     },
+     {
+      "x": 39,
+      "y": 59
+     },
+     {
+      "x": 40,
+      "y": 60
+     },
+     {
+      "x": 41,
+      "y": 61
+     },
+     {
+      "x": 42,
+      "y": 62
+     },
+     {
+      "x": 43,
+      "y": 63
+     },
+     {
+      "x": 44,
+      "y": 64
+     },
+     {
+      "x": 45,
+      "y": 65
+     },
+     {
+      "x": 46,
+      "y": 66
+     },
+     {
+      "x": 47,
+      "y": 67
+     },
+     {
+      "x": 48,
+      "y": 67
+     },
+     {
+      "x": 49,
+      "y": 67
+     },
+     {
+      "x": 50,
+      "y": 67
+     },
+     {
+      "x": 51,
+      "y": 67
+     },
+     {
+      "x": 52,
+      "y": 67
+     },
+     {
+      "x": 53,
+      "y": 67
+     },
+     {
+      "x": 54,
+      "y": 67
+     },
+     {
+      "x": 55,
+      "y": 67
+     },
+     {
+      "x": 56,
+      "y": 67
+     },
+     {
+      "x": 57,
+      "y": 67
+     },
+     {
+      "x": 58,
+      "y": 67
+     },
+     {
+      "x": 59,
+      "y": 67
+     },
+     {
+      "x": 60,
+      "y": 67
+     },
+     {
+      "x": 61,
+      "y": 67
+     },
+     {
+      "x": 62,
+      "y": 67
+     },
+     {
+      "x": 63,
+      "y": 68
+     },
+     {
+      "x": 64,
+      "y": 69
+     },
+     {
+      "x": 65,
+      "y": 70
+     },
+     {
+      "x": 66,
+      "y": 71
+     },
+     {
+      "x": 67,
+      "y": 72
+     },
+     {
+      "x": 68,
+      "y": 73
+     },
+     {
+      "x": 69,
+      "y": 74
+     },
+     {
+      "x": 70,
+      "y": 75
+     },
+     {
+      "x": 71,
+      "y": 76
+     },
+     {
+      "x": 72,
+      "y": 77
+     },
+     {
+      "x": 73,
+      "y": 78
+     },
+     {
+      "x": 74,
+      "y": 79
+     },
+     {
+      "x": 75,
+      "y": 80
+     },
+     {
+      "x": 76,
+      "y": 81
+     },
+     {
+      "x": 77,
+      "y": 82
+     },
+     {
+      "x": 78,
+      "y": 83
+     },
+     {
+      "x": 79,
+      "y": 84
+     },
+     {
+      "x": 80,
+      "y": 85
+     },
+     {
+      "x": 81,
+      "y": 85
+     },
+     {
+      "x": 82,
+      "y": 85
+     },
+     {
+      "x": 83,
+      "y": 86
+     },
+     {
+      "x": 84,
+      "y": 86
+     },
+     {
+      "x": 85,
+      "y": 87
+     },
+     {
+      "x": 86,
+      "y": 87
+     },
+     {
+      "x": 87,
+      "y": 88
+     },
+     {
+      "x": 88,
+      "y": 88
+     },
+     {
+      "x": 89,
+      "y": 89
+     },
+     {
+      "x": 90,
+      "y": 89
+     },
+     {
+      "x": 91,
+      "y": 90
+     },
+     {
+      "x": 92,
+      "y": 90
+     }
+    ],
+    "cost_series": [
+     {
+      "iteration": 1,
+      "best_cost": 123.925,
+      "average_cost": 135.968
+     },
+     {
+      "iteration": 2,
+      "best_cost": 118.398,
+      "average_cost": 130.059
+     },
+     {
+      "iteration": 3,
+      "best_cost": 114.373,
+      "average_cost": 126.033
+     },
+     {
+      "iteration": 4,
+      "best_cost": 110.36,
+      "average_cost": 121.306
+     },
+     {
+      "iteration": 5,
+      "best_cost": 105.602,
+      "average_cost": 116.939
+     },
+     {
+      "iteration": 6,
+      "best_cost": 102.781,
+      "average_cost": 114.399
+     },
+     {
+      "iteration": 7,
+      "best_cost": 100.437,
+      "average_cost": 111.001
+     },
+     {
+      "iteration": 8,
+      "best_cost": 97.315,
+      "average_cost": 107.468
+     },
+     {
+      "iteration": 9,
+      "best_cost": 94.702,
+      "average_cost": 105.062
+     },
+     {
+      "iteration": 10,
+      "best_cost": 92.957,
+      "average_cost": 103.9
+     },
+     {
+      "iteration": 11,
+      "best_cost": 90.577,
+      "average_cost": 100.523
+     },
+     {
+      "iteration": 12,
+      "best_cost": 88.427,
+      "average_cost": 98.168
+     },
+     {
+      "iteration": 13,
+      "best_cost": 86.577,
+      "average_cost": 96.44
+     },
+     {
+      "iteration": 14,
+      "best_cost": 85.762,
+      "average_cost": 95.742
+     },
+     {
+      "iteration": 15,
+      "best_cost": 84.129,
+      "average_cost": 93.45
+     },
+     {
+      "iteration": 16,
+      "best_cost": 83.87,
+      "average_cost": 94.228
+     },
+     {
+      "iteration": 17,
+      "best_cost": 81.834,
+      "average_cost": 91.468
+     },
+     {
+      "iteration": 18,
+      "best_cost": 80.631,
+      "average_cost": 89.614
+     },
+     {
+      "iteration": 19,
+      "best_cost": 80.242,
+      "average_cost": 89.252
+     },
+     {
+      "iteration": 20,
+      "best_cost": 79.45,
+      "average_cost": 88.333
+     },
+     {
+      "iteration": 21,
+      "best_cost": 78.842,
+      "average_cost": 87.594
+     },
+     {
+      "iteration": 22,
+      "best_cost": 77.643,
+      "average_cost": 86.301
+     },
+     {
+      "iteration": 23,
+      "best_cost": 77.426,
+      "average_cost": 86.127
+     },
+     {
+      "iteration": 24,
+      "best_cost": 75.755,
+      "average_cost": 85.046
+     },
+     {
+      "iteration": 25,
+      "best_cost": 76.708,
+      "average_cost": 85.25
+     },
+     {
+      "iteration": 26,
+      "best_cost": 76.138,
+      "average_cost": 85.218
+     },
+     {
+      "iteration": 27,
+      "best_cost": 75.113,
+      "average_cost": 84.169
+     },
+     {
+      "iteration": 28,
+      "best_cost": 75.165,
+      "average_cost": 84.044
+     },
+     {
+      "iteration": 29,
+      "best_cost": 74.105,
+      "average_cost": 83.319
+     },
+     {
+      "iteration": 30,
+      "best_cost": 74.033,
+      "average_cost": 82.538
+     },
+     {
+      "iteration": 31,
+      "best_cost": 74.18,
+      "average_cost": 83.138
+     },
+     {
+      "iteration": 32,
+      "best_cost": 73.975,
+      "average_cost": 83.049
+     },
+     {
+      "iteration": 33,
+      "best_cost": 73.192,
+      "average_cost": 81.976
+     },
+     {
+      "iteration": 34,
+      "best_cost": 73.506,
+      "average_cost": 82.259
+     },
+     {
+      "iteration": 35,
+      "best_cost": 73.581,
+      "average_cost": 81.939
+     },
+     {
+      "iteration": 36,
+      "best_cost": 72.176,
+      "average_cost": 80.611
+     },
+     {
+      "iteration": 37,
+      "best_cost": 72.352,
+      "average_cost": 81.187
+     },
+     {
+      "iteration": 38,
+      "best_cost": 72.14,
+      "average_cost": 81.144
+     },
+     {
+      "iteration": 39,
+      "best_cost": 72.232,
+      "average_cost": 81.239
+     },
+     {
+      "iteration": 40,
+      "best_cost": 72.156,
+      "average_cost": 80.729
+     }
+    ],
+    "path_preview": "/api/v1/files/ART-UAV-PIMG1/preview"
+   }
+  },
+  "logs": {
+   "next_offset": 9,
+   "has_more": false,
+   "lines": [
+    {
+     "seq": 1,
+     "timestamp": "2026-08-10T13:00:02+08:00",
+     "level": "INFO",
+     "cluster_id": "changsha",
+     "message": "任务提交成功，作业ID 210050，分配节点 8 个（512 核）"
+    },
+    {
+     "seq": 2,
+     "timestamp": "2026-08-10T13:00:40+08:00",
+     "level": "INFO",
+     "cluster_id": "changsha",
+     "message": "场景初始化完成：三维地形 5km×5km，障碍物 42 个，目标点 8 个"
+    },
+    {
+     "seq": 3,
+     "timestamp": "2026-08-10T13:01:10+08:00",
+     "level": "INFO",
+     "cluster_id": "changsha",
+     "message": "通信拓扑构建完成：星形拓扑，200 架无人机编组为 4 个飞行编队"
+    },
+    {
+     "seq": 4,
+     "timestamp": "2026-08-10T13:01:30+08:00",
+     "level": "INFO",
+     "cluster_id": "changsha",
+     "message": "任务分配完成：K-means 聚类划分目标区域，每编队 50 架，任务量均衡"
+    },
+    {
+     "seq": 5,
+     "timestamp": "2026-08-10T13:02:00+08:00",
+     "level": "INFO",
+     "cluster_id": "changsha",
+     "message": "协同控制求解完成：一致性控制收敛，编队误差稳定在 0.32m"
+    },
+    {
+     "seq": 6,
+     "timestamp": "2026-08-10T13:06:30+08:00",
+     "level": "INFO",
+     "cluster_id": "changsha",
+     "message": "多智能体动力学仿真完成：5000 步，平均仿真速度 908 条/min"
+    },
+    {
+     "seq": 7,
+     "timestamp": "2026-08-10T13:24:00+08:00",
+     "level": "INFO",
+     "cluster_id": "changsha",
+     "message": "碰撞检测完成：全程碰撞 0 次，最小安全距离 8.2m（阈值 5m）"
+    },
+    {
+     "seq": 8,
+     "timestamp": "2026-08-10T13:26:00+08:00",
+     "level": "INFO",
+     "cluster_id": "changsha",
+     "message": "任务完成：航迹规划成功率 100%，任务完成率 98.6%，结果已归档"
+    }
+   ]
+  },
+  "artifacts": [
+   {
+    "id": "ART-UAV-PIMG1",
+    "name": "path_preview.png",
+    "type": "image",
+    "format": "png",
+    "size": 21455,
+    "storage_path": "artifacts/simulated/uav/path-planning/UAV-20260811-0010/path_preview.png",
+    "preview_url": "/api/v1/files/ART-UAV-PIMG1/preview",
+    "download_url": "/api/v1/files/ART-UAV-PIMG1/download",
+    "created_at": "2026-09-09T18:06:31+08:00",
+    "source_type": "simulated"
+   },
+   {
+    "id": "ART-UAV-PJSON1",
+    "name": "environment.json",
+    "type": "dataset",
+    "format": "json",
+    "size": 6525,
+    "storage_path": "artifacts/simulated/uav/path-planning/UAV-20260811-0010/environment.json",
+    "preview_url": "/api/v1/files/ART-UAV-PJSON1/preview",
+    "download_url": "/api/v1/files/ART-UAV-PJSON1/download",
+    "created_at": "2026-09-09T18:06:31+08:00",
+    "source_type": "simulated"
+   },
+   {
+    "id": "ART-UAV-PCSV1",
+    "name": "cost_series.csv",
+    "type": "dataset",
+    "format": "csv",
+    "size": 753,
+    "storage_path": "artifacts/simulated/uav/path-planning/UAV-20260811-0010/cost_series.csv",
+    "preview_url": "/api/v1/files/ART-UAV-PCSV1/preview",
+    "download_url": "/api/v1/files/ART-UAV-PCSV1/download",
+    "created_at": "2026-09-09T18:06:31+08:00",
+    "source_type": "simulated"
+   }
+  ],
+  "domain_data": {
+   "source_type": "simulated",
+   "execution_mode": "simulated",
+   "scenario_id": "path-planning",
+   "environment": {
+    "width": 100,
+    "height": 100,
+    "start": [
+     5,
+     5
+    ],
+    "goal": [
+     92,
+     90
+    ],
+    "obstacles": [
+     {
+      "type": "rectangle",
+      "x": 20,
+      "y": 10,
+      "w": 12,
+      "h": 30
+     },
+     {
+      "type": "rectangle",
+      "x": 45,
+      "y": 40,
+      "w": 18,
+      "h": 10
+     },
+     {
+      "type": "rectangle",
+      "x": 70,
+      "y": 15,
+      "w": 10,
+      "h": 25
+     },
+     {
+      "type": "circle",
+      "cx": 35,
+      "cy": 70,
+      "r": 8
+     },
+     {
+      "type": "circle",
+      "cx": 60,
+      "cy": 75,
+      "r": 7
+     },
+     {
+      "type": "rectangle",
+      "x": 10,
+      "y": 55,
+      "w": 15,
+      "h": 8
+     },
+     {
+      "type": "rectangle",
+      "x": 78,
+      "y": 55,
+      "w": 8,
+      "h": 20
+     },
+     {
+      "type": "circle",
+      "cx": 50,
+      "cy": 20,
+      "r": 6
+     }
+    ]
+   },
+   "best_path": [
+    {
+     "x": 5,
+     "y": 5
+    },
+    {
+     "x": 6,
+     "y": 6
+    },
+    {
+     "x": 7,
+     "y": 7
+    },
+    {
+     "x": 8,
+     "y": 8
+    },
+    {
+     "x": 9,
+     "y": 9
+    },
+    {
+     "x": 10,
+     "y": 10
+    },
+    {
+     "x": 11,
+     "y": 11
+    },
+    {
+     "x": 12,
+     "y": 12
+    },
+    {
+     "x": 13,
+     "y": 13
+    },
+    {
+     "x": 14,
+     "y": 14
+    },
+    {
+     "x": 15,
+     "y": 15
+    },
+    {
+     "x": 16,
+     "y": 16
+    },
+    {
+     "x": 17,
+     "y": 17
+    },
+    {
+     "x": 18,
+     "y": 18
+    },
+    {
+     "x": 18,
+     "y": 19
+    },
+    {
+     "x": 18,
+     "y": 20
+    },
+    {
+     "x": 18,
+     "y": 21
+    },
+    {
+     "x": 18,
+     "y": 22
+    },
+    {
+     "x": 18,
+     "y": 23
+    },
+    {
+     "x": 18,
+     "y": 24
+    },
+    {
+     "x": 18,
+     "y": 25
+    },
+    {
+     "x": 18,
+     "y": 26
+    },
+    {
+     "x": 18,
+     "y": 27
+    },
+    {
+     "x": 18,
+     "y": 28
+    },
+    {
+     "x": 18,
+     "y": 29
+    },
+    {
+     "x": 18,
+     "y": 30
+    },
+    {
+     "x": 18,
+     "y": 31
+    },
+    {
+     "x": 19,
+     "y": 32
+    },
+    {
+     "x": 19,
+     "y": 33
+    },
+    {
+     "x": 19,
+     "y": 34
+    },
+    {
+     "x": 19,
+     "y": 35
+    },
+    {
+     "x": 19,
+     "y": 36
+    },
+    {
+     "x": 19,
+     "y": 37
+    },
+    {
+     "x": 19,
+     "y": 38
+    },
+    {
+     "x": 19,
+     "y": 39
+    },
+    {
+     "x": 20,
+     "y": 40
+    },
+    {
+     "x": 21,
+     "y": 41
+    },
+    {
+     "x": 22,
+     "y": 42
+    },
+    {
+     "x": 23,
+     "y": 43
+    },
+    {
+     "x": 24,
+     "y": 44
+    },
+    {
+     "x": 25,
+     "y": 45
+    },
+    {
+     "x": 26,
+     "y": 46
+    },
+    {
+     "x": 27,
+     "y": 47
+    },
+    {
+     "x": 28,
+     "y": 48
+    },
+    {
+     "x": 29,
+     "y": 49
+    },
+    {
+     "x": 30,
+     "y": 50
+    },
+    {
+     "x": 31,
+     "y": 51
+    },
+    {
+     "x": 32,
+     "y": 52
+    },
+    {
+     "x": 33,
+     "y": 53
+    },
+    {
+     "x": 34,
+     "y": 54
+    },
+    {
+     "x": 35,
+     "y": 55
+    },
+    {
+     "x": 36,
+     "y": 56
+    },
+    {
+     "x": 37,
+     "y": 57
+    },
+    {
+     "x": 38,
+     "y": 58
+    },
+    {
+     "x": 39,
+     "y": 59
+    },
+    {
+     "x": 40,
+     "y": 60
+    },
+    {
+     "x": 41,
+     "y": 61
+    },
+    {
+     "x": 42,
+     "y": 62
+    },
+    {
+     "x": 43,
+     "y": 63
+    },
+    {
+     "x": 44,
+     "y": 64
+    },
+    {
+     "x": 45,
+     "y": 65
+    },
+    {
+     "x": 46,
+     "y": 66
+    },
+    {
+     "x": 47,
+     "y": 67
+    },
+    {
+     "x": 48,
+     "y": 67
+    },
+    {
+     "x": 49,
+     "y": 67
+    },
+    {
+     "x": 50,
+     "y": 67
+    },
+    {
+     "x": 51,
+     "y": 67
+    },
+    {
+     "x": 52,
+     "y": 67
+    },
+    {
+     "x": 53,
+     "y": 67
+    },
+    {
+     "x": 54,
+     "y": 67
+    },
+    {
+     "x": 55,
+     "y": 67
+    },
+    {
+     "x": 56,
+     "y": 67
+    },
+    {
+     "x": 57,
+     "y": 67
+    },
+    {
+     "x": 58,
+     "y": 67
+    },
+    {
+     "x": 59,
+     "y": 67
+    },
+    {
+     "x": 60,
+     "y": 67
+    },
+    {
+     "x": 61,
+     "y": 67
+    },
+    {
+     "x": 62,
+     "y": 67
+    },
+    {
+     "x": 63,
+     "y": 68
+    },
+    {
+     "x": 64,
+     "y": 69
+    },
+    {
+     "x": 65,
+     "y": 70
+    },
+    {
+     "x": 66,
+     "y": 71
+    },
+    {
+     "x": 67,
+     "y": 72
+    },
+    {
+     "x": 68,
+     "y": 73
+    },
+    {
+     "x": 69,
+     "y": 74
+    },
+    {
+     "x": 70,
+     "y": 75
+    },
+    {
+     "x": 71,
+     "y": 76
+    },
+    {
+     "x": 72,
+     "y": 77
+    },
+    {
+     "x": 73,
+     "y": 78
+    },
+    {
+     "x": 74,
+     "y": 79
+    },
+    {
+     "x": 75,
+     "y": 80
+    },
+    {
+     "x": 76,
+     "y": 81
+    },
+    {
+     "x": 77,
+     "y": 82
+    },
+    {
+     "x": 78,
+     "y": 83
+    },
+    {
+     "x": 79,
+     "y": 84
+    },
+    {
+     "x": 80,
+     "y": 85
+    },
+    {
+     "x": 81,
+     "y": 85
+    },
+    {
+     "x": 82,
+     "y": 85
+    },
+    {
+     "x": 83,
+     "y": 86
+    },
+    {
+     "x": 84,
+     "y": 86
+    },
+    {
+     "x": 85,
+     "y": 87
+    },
+    {
+     "x": 86,
+     "y": 87
+    },
+    {
+     "x": 87,
+     "y": 88
+    },
+    {
+     "x": 88,
+     "y": 88
+    },
+    {
+     "x": 89,
+     "y": 89
+    },
+    {
+     "x": 90,
+     "y": 89
+    },
+    {
+     "x": 91,
+     "y": 90
+    },
+    {
+     "x": 92,
+     "y": 90
+    }
+   ],
+   "cost_series": [
+    {
+     "iteration": 1,
+     "best_cost": 123.925,
+     "average_cost": 135.968
+    },
+    {
+     "iteration": 2,
+     "best_cost": 118.398,
+     "average_cost": 130.059
+    },
+    {
+     "iteration": 3,
+     "best_cost": 114.373,
+     "average_cost": 126.033
+    },
+    {
+     "iteration": 4,
+     "best_cost": 110.36,
+     "average_cost": 121.306
+    },
+    {
+     "iteration": 5,
+     "best_cost": 105.602,
+     "average_cost": 116.939
+    },
+    {
+     "iteration": 6,
+     "best_cost": 102.781,
+     "average_cost": 114.399
+    },
+    {
+     "iteration": 7,
+     "best_cost": 100.437,
+     "average_cost": 111.001
+    },
+    {
+     "iteration": 8,
+     "best_cost": 97.315,
+     "average_cost": 107.468
+    },
+    {
+     "iteration": 9,
+     "best_cost": 94.702,
+     "average_cost": 105.062
+    },
+    {
+     "iteration": 10,
+     "best_cost": 92.957,
+     "average_cost": 103.9
+    },
+    {
+     "iteration": 11,
+     "best_cost": 90.577,
+     "average_cost": 100.523
+    },
+    {
+     "iteration": 12,
+     "best_cost": 88.427,
+     "average_cost": 98.168
+    },
+    {
+     "iteration": 13,
+     "best_cost": 86.577,
+     "average_cost": 96.44
+    },
+    {
+     "iteration": 14,
+     "best_cost": 85.762,
+     "average_cost": 95.742
+    },
+    {
+     "iteration": 15,
+     "best_cost": 84.129,
+     "average_cost": 93.45
+    },
+    {
+     "iteration": 16,
+     "best_cost": 83.87,
+     "average_cost": 94.228
+    },
+    {
+     "iteration": 17,
+     "best_cost": 81.834,
+     "average_cost": 91.468
+    },
+    {
+     "iteration": 18,
+     "best_cost": 80.631,
+     "average_cost": 89.614
+    },
+    {
+     "iteration": 19,
+     "best_cost": 80.242,
+     "average_cost": 89.252
+    },
+    {
+     "iteration": 20,
+     "best_cost": 79.45,
+     "average_cost": 88.333
+    },
+    {
+     "iteration": 21,
+     "best_cost": 78.842,
+     "average_cost": 87.594
+    },
+    {
+     "iteration": 22,
+     "best_cost": 77.643,
+     "average_cost": 86.301
+    },
+    {
+     "iteration": 23,
+     "best_cost": 77.426,
+     "average_cost": 86.127
+    },
+    {
+     "iteration": 24,
+     "best_cost": 75.755,
+     "average_cost": 85.046
+    },
+    {
+     "iteration": 25,
+     "best_cost": 76.708,
+     "average_cost": 85.25
+    },
+    {
+     "iteration": 26,
+     "best_cost": 76.138,
+     "average_cost": 85.218
+    },
+    {
+     "iteration": 27,
+     "best_cost": 75.113,
+     "average_cost": 84.169
+    },
+    {
+     "iteration": 28,
+     "best_cost": 75.165,
+     "average_cost": 84.044
+    },
+    {
+     "iteration": 29,
+     "best_cost": 74.105,
+     "average_cost": 83.319
+    },
+    {
+     "iteration": 30,
+     "best_cost": 74.033,
+     "average_cost": 82.538
+    },
+    {
+     "iteration": 31,
+     "best_cost": 74.18,
+     "average_cost": 83.138
+    },
+    {
+     "iteration": 32,
+     "best_cost": 73.975,
+     "average_cost": 83.049
+    },
+    {
+     "iteration": 33,
+     "best_cost": 73.192,
+     "average_cost": 81.976
+    },
+    {
+     "iteration": 34,
+     "best_cost": 73.506,
+     "average_cost": 82.259
+    },
+    {
+     "iteration": 35,
+     "best_cost": 73.581,
+     "average_cost": 81.939
+    },
+    {
+     "iteration": 36,
+     "best_cost": 72.176,
+     "average_cost": 80.611
+    },
+    {
+     "iteration": 37,
+     "best_cost": 72.352,
+     "average_cost": 81.187
+    },
+    {
+     "iteration": 38,
+     "best_cost": 72.14,
+     "average_cost": 81.144
+    },
+    {
+     "iteration": 39,
+     "best_cost": 72.232,
+     "average_cost": 81.239
+    },
+    {
+     "iteration": 40,
+     "best_cost": 72.156,
+     "average_cost": 80.729
+    }
+   ],
+   "path_preview": "/api/v1/files/ART-UAV-PIMG1/preview"
+  },
+  "selected_operator_ids": [
+   "foam-to-vtk",
+   "postprocess-metrics",
+   "reconstruct-par",
+   "solid-displacement"
+  ],
+  "resource_source": "operator",
+  "planned_seconds": 144000,
+  "remaining_seconds": 0,
+  "_operator_version": 4,
+  "target_core_hours": 1245184
+ },
+ "timestamp": "2026-11-11T16:00:50+08:00"
 }

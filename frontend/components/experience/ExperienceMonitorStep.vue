@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { canViewResult } from '~/utils/experience-simulation'
 import { formatDuration, formatNumber, statusText } from '~/composables/useFormat'
@@ -15,6 +15,7 @@ const emit = defineEmits<{
   'update:selectedRunId': [value: string]
   inspect: [value: string]
   result: [value: string]
+  refresh: []
 }>()
 
 const statusOrder = ['running', 'success', 'failed', 'stopped', 'queued']
@@ -104,9 +105,17 @@ function inspect(value: string): void {
         <el-table-column label="核时" width="90" class-name="mono">
           <template #default="{ row }">{{ formatNumber(row.core_hours, 1) }}</template>
         </el-table-column>
-        <el-table-column label="操作" width="210" class-name="run-actions-cell">
+        <el-table-column label="操作" width="300" class-name="run-actions-cell">
           <template #default="{ row }">
             <div class="exp-row-actions">
+              <RunPauseButton
+                v-if="row.run_id === submittedRunId || row.run_id === selectedRunId"
+                :domain="domain"
+                :run-id="row.run_id"
+                :status="row.status"
+                compact
+                @changed="emit('refresh')"
+              />
               <button type="button" class="exp-link sc-action sc-action--ghost sc-action--small" @click.stop="inspect(row.run_id)">查看工作流</button>
               <button
                 v-if="canViewResult(row as Run)"
