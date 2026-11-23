@@ -1,4 +1,4 @@
-﻿/**
+/**
  * 格式化工具：数字 / 字节 / 耗时 / 时间 / 状态文案映射。
  */
 
@@ -9,6 +9,24 @@ export function formatNumber(value?: number | string | null, digits = 0): string
   // 极小值才使用科学计数法；0.2、0.05 这类展示值必须保持普通小数。
   if (n !== 0 && Math.abs(n) < 10 ** -Math.max(digits, 3)) return Number(n.toPrecision(3)).toExponential()
   return n.toLocaleString('zh-CN', { maximumFractionDigits: digits })
+}
+
+/** 大数用万 / 亿，小数保留精度，避免非零核时被显示为 0。 */
+export function formatChineseCount(value?: number | string | null): string {
+  if (value === undefined || value === null || value === '') return '-'
+  const n = Number(value)
+  if (Number.isNaN(n)) return String(value)
+  const abs = Math.abs(n)
+  const sign = n < 0 ? '-' : ''
+  if (abs >= 1e8) return `${sign}${trimChineseCount(abs / 1e8)}亿`
+  if (abs >= 1e4) return `${sign}${trimChineseCount(abs / 1e4)}万`
+  return formatNumber(n, abs > 0 && abs < 0.01 ? 4 : 2)
+}
+
+/** 保留最多 2 位小数并去掉多余尾零（1 → "1"，100 → "100"，123.456 → "123.46"） */
+function trimChineseCount(n: number): string {
+  const r = Math.round(n * 100) / 100
+  return r.toLocaleString('zh-CN', { maximumFractionDigits: 2 })
 }
 
 export function formatPercent(value?: number | string | null, digits = 1): string {

@@ -39,8 +39,36 @@ function chain(nodes) {
 export function createExperienceStore({ dataDir, runtimeDir, now = Date.now }) {
   const files = createDatasetFiles({ dataDir, runtimeDir })
   const states = new Map()
+  const targetConfigs = new Map()
   const readSeed = path => {
     try { return JSON.parse(readFileSync(resolve(dataDir, path), 'utf8')).data } catch { return null }
+  }
+  const validTarget = value => typeof value === 'number' && Number.isFinite(value) && value >= 0
+  // Older persisted runs/templates predate the target field. Recover display
+  // metadata from the current demo configuration without replanning resources.
+  function withTargetCoreHours(domain, record) {
+    if (validTarget(record.target_core_hours)) return record
+    if (record.execution_mode === 'real' || record.source_type === 'real') return record
+    if (!targetConfigs.has(domain)) {
+      const byRun = new Map()
+      const byScenario = new Map()
+      for (const run of readSeed(`${domain}/runs.json`) ?? []) {
+        const seed = readSeed(`${domain}/run-details/${run.run_id}.json`)
+        if (!seed || !validTarget(seed.target_core_hours)) continue
+        byRun.set(seed.run_id, seed)
+        if (!byScenario.has(seed.scenario_id) || seed.status === 'success') {
+          byScenario.set(seed.scenario_id, seed.target_core_hours)
+        }
+      }
+      targetConfigs.set(domain, { byRun, byScenario })
+    }
+    const { byRun, byScenario } = targetConfigs.get(domain)
+    const seed = byRun.get(record.run_id)
+    const target = seed?.scenario_id === record.scenario_id
+      ? seed.target_core_hours
+      : byScenario.get(record.scenario_id)
+    if (target !== undefined) record.target_core_hours = target
+    return record
   }
   const operators = domain => readSeed(`${domain}/operators.json`) ?? []
   const scenarioDetails = domain => {
@@ -203,7 +231,7 @@ export function createExperienceStore({ dataDir, runtimeDir, now = Date.now }) {
 
   function syncSummary(run, detail) {
     for (const key of ['status', 'progress', 'current_stage', 'elapsed_seconds', 'start_time', 'end_time', 'origin',
-      'nodes', 'cpu_cores', 'gpu_count', 'memory_gb', 'core_hours', 'planned_seconds', 'remaining_seconds', 'resource_source']) {
+      'nodes', 'cpu_cores', 'gpu_count', 'memory_gb', 'core_hours', 'target_core_hours', 'planned_seconds', 'remaining_seconds', 'resource_source']) {
       run[key] = detail[key]
     }
     run.selected_operator_ids = Array.isArray(detail.selected_operator_ids) ? [...detail.selected_operator_ids] : []
@@ -386,8 +414,8 @@ export function createExperienceStore({ dataDir, runtimeDir, now = Date.now }) {
     return { next_offset: lines.length, has_more: false, lines }
   }
 
-  function publicDetail(detail) {
-    const result = copy(detail)
+  function publicDetail(domain, detail) {
+    const result = withTargetCoreHours(domain, copy(detail))
     for (const key of Object.keys(result)) if (key.startsWith('_')) delete result[key]
     for (const node of result.workflow?.nodes ?? []) delete node._elapsed_ticks
     result.server_time = new Date(now()).toISOString()
@@ -429,9 +457,9 @@ export function createExperienceStore({ dataDir, runtimeDir, now = Date.now }) {
       return envelope(files.describe(domain, dataset))
     }
     advance(domain, state)
-    if (!id) return envelope(copy(state.runs))
+    if (!id) return envelope(copy(state.runs).map(run => withTargetCoreHours(domain, run)))
     if (!state.details[id]) return error('运行记录不存在', 404)
-    const detail = publicDetail(state.details[id])
+    const detail = publicDetail(domain, state.details[id])
     return envelope(sub ? detail[sub] : detail)
   }
 
@@ -508,6 +536,7 @@ export function createExperienceStore({ dataDir, runtimeDir, now = Date.now }) {
         logs: { lines: [], next_offset: 0, has_more: false },
       }
       applyOperatorPlan(domain, detail, available, scenario?.operators ?? [], { realtime: true, plannedSeconds: planSeconds })
+      withTargetCoreHours(domain, detail)
       detail.status = 'queued'
       detail.current_stage = '排队等待'
       detail.elapsed_seconds = 0
@@ -564,7 +593,7 @@ export function createExperienceStore({ dataDir, runtimeDir, now = Date.now }) {
         if (run) syncSummary(run, detail)
       }
       save(domain, state)
-      return envelope(publicDetail(detail))
+      return envelope(publicDetail(domain, detail))
     }
     if (resource === 'runs' && method === 'POST' && action === 'advance') {
       // Compatibility endpoint; elapsed time, never request count, drives progress.

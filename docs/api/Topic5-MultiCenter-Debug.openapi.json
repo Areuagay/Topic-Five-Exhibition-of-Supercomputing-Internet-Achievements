@@ -1192,6 +1192,21 @@
                             ],
                             "example": "simulated"
                           },
+                          "concurrent_users": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "title": "中心用户数",
+                            "description": "该中心当前用户数，来源见 concurrent_users_source。"
+                          },
+                          "concurrent_users_source": {
+                            "type": "string",
+                            "title": "用户数来源",
+                            "description": "real=实测上报用户数；simulated=预置演示用户数。",
+                            "enum": [
+                              "real",
+                              "simulated"
+                            ]
+                          },
                           "cpu_total": {
                             "type": "integer",
                             "title": "CPU总核数",

@@ -5,6 +5,11 @@ export default defineNuxtConfig({
   // 关闭匿名数据收集询问，避免首次启动时交互式提示阻塞 dev server 初始化
   telemetry: false,
 
+  $development: {
+    // 避免开发启动时预转换抢先解析尚未生成的 #app-manifest。
+    experimental: { appManifest: false },
+  },
+
   // 技术栈对齐：Element Plus + Pinia
   modules: ['@element-plus/nuxt', '@pinia/nuxt'],
 

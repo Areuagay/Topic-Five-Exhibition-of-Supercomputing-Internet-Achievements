@@ -3,7 +3,7 @@ import { computed, ref, watch } from 'vue'
 import { ArrowRight } from '@lucide/vue'
 import { useApi } from '~/composables/useApi'
 import { useAppStore } from '~/stores/app'
-import { formatDuration, formatNumber, statusText } from '~/composables/useFormat'
+import { formatChineseCount, formatDuration, formatNumber, statusText } from '~/composables/useFormat'
 
 const route = useRoute()
 const domain = String(route.params.domain)
@@ -213,8 +213,8 @@ function runRowClassName({ row }: { row: { status?: string } }): string {
         <el-table-column label="耗时" width="110">
           <template #default="{ row }">{{ formatDuration(row.elapsed_seconds) }}</template>
         </el-table-column>
-        <el-table-column label="核时" width="100">
-          <template #default="{ row }">{{ formatNumber(row.core_hours, 1) }}</template>
+        <el-table-column label="核时" width="110">
+          <template #default="{ row }">{{ formatChineseCount(row.core_hours) }}</template>
         </el-table-column>
         <el-table-column label="操作" width="116" fixed="right">
           <template #default="{ row }">

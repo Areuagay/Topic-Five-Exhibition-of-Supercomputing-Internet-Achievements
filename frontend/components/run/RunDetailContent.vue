@@ -11,6 +11,7 @@ import { useApi } from '~/composables/useApi'
 import { useAppStore } from '~/stores/app'
 import {
   formatBytes,
+  formatChineseCount,
   formatDuration,
   formatNumber,
   formatTimestamp,
@@ -248,7 +249,8 @@ const resourceItems = computed(() => {
     { label: 'CPU 核数', value: run.cpu_cores != null ? `${formatNumber(run.cpu_cores)} 核` : '-' },
     { label: 'GPU 卡数', value: run.gpu_count != null ? `${formatNumber(run.gpu_count)} 卡` : '-' },
     { label: '内存', value: run.memory_gb != null && run.memory_gb > 0 ? `${formatNumber(run.memory_gb, 1)} GB` : '按需' },
-    { label: '累计核时', value: run.core_hours != null ? formatNumber(run.core_hours, 1) : '-' },
+    { label: '目标核时', value: run.target_core_hours != null ? `${formatChineseCount(run.target_core_hours)} 核时` : '-' },
+    { label: '累计核时', value: run.core_hours != null ? `${formatChineseCount(run.core_hours)} 核时` : '-' },
   ]
 })
 
@@ -1027,7 +1029,7 @@ function chartOption(section: ExtraSection): Record<string, unknown> | null {
 .run-resource-strip {
   min-width: 0;
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   margin: 0;
   background: #fbfcfe;
 }

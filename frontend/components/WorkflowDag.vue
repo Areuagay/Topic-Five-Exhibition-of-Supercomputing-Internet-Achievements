@@ -13,7 +13,7 @@ import {
 } from '@vue-flow/core'
 import { Background } from '@vue-flow/background'
 import type { WorkflowEdge, WorkflowNode } from '~/types'
-import { formatBytes, formatDuration, formatNumber } from '~/composables/useFormat'
+import { formatBytes, formatChineseCount, formatDuration, formatNumber } from '~/composables/useFormat'
 import { positionDagPopover } from '~/utils/dag-popover'
 import { layoutDag, dagViewport, DAG_NODE_WIDTH, DAG_NODE_HEIGHT, type DagLayout, type DagPort } from '~/utils/dag-layout'
 import '@vue-flow/core/dist/style.css'
@@ -145,7 +145,7 @@ function nodeMemory(node: WorkflowNode): string {
   return Number(node.memory_mb) > 0 ? formatBytes(Number(node.memory_mb) * 1024 * 1024) : '内存按需'
 }
 function nodeCoreHours(node: WorkflowNode): string {
-  return Number(node.core_hours) > 0 ? `${formatNumber(node.core_hours, 2)} 核时` : '—'
+  return node.core_hours != null ? `${formatChineseCount(node.core_hours)} 核时` : '—'
 }
 function nodeResourceLine(node: WorkflowNode): string {
   return [nodeCpu(node), nodeGpu(node), nodeMemory(node)].join(' · ')

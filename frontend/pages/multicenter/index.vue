@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useSlidingHighlight } from '~/composables/useSlidingHighlight'
 import { usePreferredReducedMotion } from '@vueuse/core'
 import { useApi } from '~/composables/useApi'
 import { useAppStore } from '~/stores/app'
+import { nextOnlineUserDemoCount, onlineUserDemoDelay } from '~/utils/online-user-simulation'
 import {
   formatBytes,
   formatMs,
@@ -129,6 +130,46 @@ const maintenanceClusterCount = computed(() => clusterList.value.filter((c) => c
 const healthyLinkCount = computed(() => topologyLinks.value.filter((l) => l.status === 'online').length)
 const activeJobCount = computed(() => clusterList.value.reduce((sum, c) => sum + Number(c.active_jobs || 0), 0))
 const queuedJobCount = computed(() => clusterList.value.reduce((sum, c) => sum + Number(c.queue_length || 0), 0))
+const baselineOnlineUserCount = computed(() => clusterList.value.reduce((sum, c) => sum + Number(c.concurrent_users || 0), 0))
+const onlineUsersAreSimulated = computed(() => clusterList.value.length > 0
+  && clusterList.value.every(c => c.concurrent_users_source === 'simulated'))
+const demoOnlineUserCount = ref<number | null>(null)
+const onlineUserCount = computed(() => onlineUsersAreSimulated.value
+  ? demoOnlineUserCount.value ?? baselineOnlineUserCount.value
+  : baselineOnlineUserCount.value)
+let onlineUserDemoTimer: ReturnType<typeof setTimeout> | undefined
+let onlineUserDemoMounted = false
+
+function stopOnlineUserDemo(): void {
+  clearTimeout(onlineUserDemoTimer)
+  onlineUserDemoTimer = undefined
+}
+
+function scheduleOnlineUserDemo(): void {
+  stopOnlineUserDemo()
+  if (!onlineUserDemoMounted || !onlineUsersAreSimulated.value
+    || activeTab.value !== 'overview' || document.hidden) return
+  onlineUserDemoTimer = setTimeout(() => {
+    demoOnlineUserCount.value = nextOnlineUserDemoCount(baselineOnlineUserCount.value, onlineUserCount.value)
+    scheduleOnlineUserDemo()
+  }, onlineUserDemoDelay())
+}
+
+watch([baselineOnlineUserCount, onlineUsersAreSimulated], () => {
+  demoOnlineUserCount.value = null
+  scheduleOnlineUserDemo()
+})
+watch(activeTab, scheduleOnlineUserDemo)
+onMounted(() => {
+  onlineUserDemoMounted = true
+  document.addEventListener('visibilitychange', scheduleOnlineUserDemo)
+  scheduleOnlineUserDemo()
+})
+onBeforeUnmount(() => {
+  onlineUserDemoMounted = false
+  stopOnlineUserDemo()
+  document.removeEventListener('visibilitychange', scheduleOnlineUserDemo)
+})
 
 const selectedCluster = computed<MultiCluster | null>(() => {
   const id = selectedClusterId.value
@@ -654,6 +695,10 @@ async function openMig(id: string): Promise<void> {
             <div>
               <dt>排队等待</dt>
               <dd>{{ formatNumber(queuedJobCount) }}<span>项</span></dd>
+            </div>
+            <div class="online-user-summary">
+              <dt>在线人数</dt>
+              <dd>{{ formatNumber(onlineUserCount) }}<span>人</span></dd>
             </div>
           </dl>
 
@@ -1956,7 +2001,7 @@ async function openMig(id: string): Promise<void> {
 
 .multicenter-summary {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   margin: 0;
   border: 1px solid #e2e7ed;
   border-radius: 7px;
@@ -2560,8 +2605,8 @@ async function openMig(id: string): Promise<void> {
   .multicenter-tabs { --mc-tab-padding: 12px; }
   .multicenter-tabs :deep(.el-tabs__content) { padding: 12px; }
   .multicenter-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .multicenter-summary > div:nth-child(2)::after { display: none; }
-  .multicenter-summary > div:nth-child(-n + 2) { border-bottom: 1px solid var(--scnet-divider); }
+  .multicenter-summary > div:nth-child(2n)::after { display: none; }
+  .multicenter-summary > div:not(:last-child) { border-bottom: 1px solid var(--scnet-divider); }
   .topology-panel-header { align-items: flex-start; flex-direction: column; }
   .topology-actions { width: 100%; justify-content: flex-start; }
   .topology-workspace { grid-template-columns: 1fr; }

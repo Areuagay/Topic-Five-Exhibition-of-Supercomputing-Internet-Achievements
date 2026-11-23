@@ -1,7 +1,7 @@
 ﻿<script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { canViewResult } from '~/utils/experience-simulation'
-import { formatDuration, formatNumber, statusText } from '~/composables/useFormat'
+import { formatChineseCount, formatDuration, statusText } from '~/composables/useFormat'
 import type { Run } from '~/types'
 
 const props = defineProps<{
@@ -103,7 +103,7 @@ function inspect(value: string): void {
           <template #default="{ row }">{{ formatDuration(row.elapsed_seconds) }}</template>
         </el-table-column>
         <el-table-column label="核时" width="90" class-name="mono">
-          <template #default="{ row }">{{ formatNumber(row.core_hours, 1) }}</template>
+          <template #default="{ row }">{{ formatChineseCount(row.core_hours) }}</template>
         </el-table-column>
         <el-table-column label="操作" width="300" class-name="run-actions-cell">
           <template #default="{ row }">

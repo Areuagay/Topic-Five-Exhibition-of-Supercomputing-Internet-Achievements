@@ -198,6 +198,9 @@ function buildClusters(cards, previous, snapshot) {
       gpu_utilization: card.gpu,
       active_jobs: card.running,
       queue_length: card.queued,
+      // 平台首页未提供在线用户数，沿用 clusters.json 中已播种的演示值（与 total_nodes / total_cores 同属本地补充字段）
+      concurrent_users: spec.concurrent_users ?? 0,
+      concurrent_users_source: 'simulated',
       updated_at: snapshot.fetched_at,
     }
   })

@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import { Box } from '@lucide/vue'
 import WorkflowDag from '~/components/WorkflowDag.vue'
 import { getStageLabels } from '~/config/scenario-experience'
-import { formatDuration, formatNumber, statusText } from '~/composables/useFormat'
+import { formatChineseCount, formatDuration, formatNumber, statusText } from '~/composables/useFormat'
 import type { Operator, Run, RunDetail } from '~/types'
 
 const props = defineProps<{
@@ -110,7 +110,7 @@ function selectRun(value: string): void {
         </div>
         <div>
           <dt>累计核时</dt>
-          <dd>{{ formatNumber(selectedRun.core_hours, 1) }}</dd>
+          <dd>{{ formatChineseCount(selectedRun.core_hours) }}</dd>
         </div>
         <div>
           <dt>{{ ['running', 'queued', 'pending'].includes(selectedRun.status) ? '已运行 / 预计' : '运行耗时' }}</dt>

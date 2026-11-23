@@ -256,6 +256,8 @@ export interface Run {
   gpu_count: number
   memory_gb: number
   core_hours: number
+  /** 案例计划目标核时，不代表实际已消耗核时。 */
+  target_core_hours?: number
   source_type: string
   has_detail: boolean
   has_result?: boolean
@@ -347,6 +349,8 @@ export interface RunDetail {
   gpu_count?: number
   memory_gb?: number
   core_hours?: number
+  /** 案例计划目标核时，不代表实际已消耗核时。 */
+  target_core_hours?: number
   planned_seconds?: number
   remaining_seconds?: number
   resource_source?: string
@@ -377,6 +381,9 @@ export interface MultiCluster {
   gpu_count: number
   active_jobs: number
   queue_length: number
+  /** 该中心上报或预置的用户数，是否实测由 concurrent_users_source 标明。 */
+  concurrent_users?: number
+  concurrent_users_source?: 'real' | 'simulated'
   updated_at: string
 }
 

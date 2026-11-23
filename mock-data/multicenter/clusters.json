@@ -18,6 +18,8 @@
       "gpu_utilization": 22.2,
       "active_jobs": 12,
       "queue_length": 45,
+      "concurrent_users": 3700,
+      "concurrent_users_source": "simulated",
       "updated_at": "2026-11-05T18:10:01+08:00"
     },
     {
@@ -36,6 +38,8 @@
       "gpu_utilization": 22.2,
       "active_jobs": 18,
       "queue_length": 82,
+      "concurrent_users": 3300,
+      "concurrent_users_source": "simulated",
       "updated_at": "2026-11-05T18:10:01+08:00"
     },
     {
@@ -54,6 +58,8 @@
       "gpu_utilization": 62.2,
       "active_jobs": 6,
       "queue_length": 12,
+      "concurrent_users": 3200,
+      "concurrent_users_source": "simulated",
       "updated_at": "2026-11-05T18:10:01+08:00"
     },
     {
@@ -72,6 +78,8 @@
       "gpu_utilization": 0,
       "active_jobs": 0,
       "queue_length": 0,
+      "concurrent_users": 0,
+      "concurrent_users_source": "simulated",
       "updated_at": "2026-11-05T18:10:01+08:00"
     }
   ],

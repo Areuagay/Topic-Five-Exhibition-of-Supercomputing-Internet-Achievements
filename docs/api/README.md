@@ -74,6 +74,7 @@
 
 - 学科仿真接口：通过 `source_type` 字段区分，取值 `real`（真实数据）或 `simulated`（本地模拟数据）。
 - 多中心联调接口：通过 `source_type` 或 `execution_mode` 字段区分，取值 `real` / `simulated` / `replay`（历史回放）。
+- 中心用户数单独以 `concurrent_users_source` 标识来源（`real` / `simulated`）。动态随机演示只用于模拟来源，“在线人数”标题旁明确保留“模拟”标记，不得作为实时用户统计或容量实测。
 - 模拟数据仅用于界面联调与流程演示，**不得作为真实超算验收、跨中心验收的实测证据**。
 
 ## 使用原则
