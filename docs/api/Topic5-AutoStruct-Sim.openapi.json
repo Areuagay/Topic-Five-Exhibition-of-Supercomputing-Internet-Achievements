@@ -1029,7 +1029,7 @@
                           },
                           "core_hours": {
                             "type": "number",
-                            "title": "核时"
+                            "title": "运行消耗核时"
                           },
                           "source_type": {
                             "type": "string",
@@ -2476,7 +2476,7 @@
       "get": {
         "summary": "查询汽车结构仿真任务状态",
         "deprecated": false,
-        "description": "查询仿真进度、当前阶段、运行中心、资源配置和累计核时。",
+        "description": "查询仿真进度、当前阶段、运行中心、资源配置和运行消耗核时。",
         "operationId": "getAutomotiveRun",
         "tags": [
           "任务运行"
@@ -2637,8 +2637,8 @@
                         },
                         "core_hours": {
                           "type": "number",
-                          "title": "累计核时",
-                          "description": "截至当前统计的累计 core-hours。",
+                          "title": "运行消耗核时",
+                          "description": "截至当前统计的运行消耗 core-hours。",
                           "example": 622.9
                         }
                       },

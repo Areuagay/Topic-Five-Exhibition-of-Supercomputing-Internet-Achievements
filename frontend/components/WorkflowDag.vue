@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, shallowRef, useId, watch } from 'vue'
 import {
   BaseEdge,
@@ -466,7 +466,7 @@ onBeforeUnmount(() => {
               <div v-if="selectedNode.cpu_cores != null"><dt>CPU 核数</dt><dd>{{ nodeCpu(selectedNode) }}</dd></div>
               <div v-if="selectedNode.gpu_count != null"><dt>GPU 卡数</dt><dd>{{ nodeGpu(selectedNode) }}</dd></div>
               <div v-if="selectedNode.memory_mb != null"><dt>内存</dt><dd>{{ nodeMemory(selectedNode) }}</dd></div>
-              <div v-if="selectedNode.core_hours != null"><dt>累计核时</dt><dd>{{ nodeCoreHours(selectedNode) }}</dd></div>
+              <div v-if="selectedNode.core_hours != null"><dt>运行消耗核时</dt><dd>{{ nodeCoreHours(selectedNode) }}</dd></div>
               <div v-if="selectedNode.planned_seconds != null" class="dag-node-popover-wide"><dt>计划耗时</dt><dd>{{ formatDuration(selectedNode.planned_seconds) }}</dd></div>
               <div v-if="selectedNode.waiting_at_join" class="dag-node-popover-wide"><dt>同步状态</dt><dd>等待其他分支完成</dd></div>
               <div v-if="selectedNode.waiting_for?.length" class="dag-node-popover-wide"><dt>等待上游</dt><dd>{{ selectedNode.waiting_for.map(id => nodes.find(n => n.id === id)?.name || id).join('、') }}</dd></div>

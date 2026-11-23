@@ -256,7 +256,7 @@ export interface Run {
   gpu_count: number
   memory_gb: number
   core_hours: number
-  /** 案例计划目标核时，不代表实际已消耗核时。 */
+  /** 运行结束核时：计划完成时的核时，不代表当前已消耗核时。 */
   target_core_hours?: number
   source_type: string
   has_detail: boolean
@@ -349,7 +349,7 @@ export interface RunDetail {
   gpu_count?: number
   memory_gb?: number
   core_hours?: number
-  /** 案例计划目标核时，不代表实际已消耗核时。 */
+  /** 运行结束核时：计划完成时的核时，不代表当前已消耗核时。 */
   target_core_hours?: number
   planned_seconds?: number
   remaining_seconds?: number

@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { computed } from 'vue'
 import { Box } from '@lucide/vue'
 import WorkflowDag from '~/components/WorkflowDag.vue'
@@ -109,7 +109,7 @@ function selectRun(value: string): void {
           <dd>{{ memoryText(selectedRun.memory_gb) }}</dd>
         </div>
         <div>
-          <dt>累计核时</dt>
+          <dt>运行消耗核时</dt>
           <dd>{{ formatChineseCount(selectedRun.core_hours) }}</dd>
         </div>
         <div>

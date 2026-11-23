@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { canViewResult } from '~/utils/experience-simulation'
 import { formatChineseCount, formatDuration, statusText } from '~/composables/useFormat'
@@ -102,7 +102,7 @@ function inspect(value: string): void {
         <el-table-column label="耗时" width="110" class-name="mono">
           <template #default="{ row }">{{ formatDuration(row.elapsed_seconds) }}</template>
         </el-table-column>
-        <el-table-column label="核时" width="90" class-name="mono">
+        <el-table-column label="运行消耗核时" width="128" class-name="mono">
           <template #default="{ row }">{{ formatChineseCount(row.core_hours) }}</template>
         </el-table-column>
         <el-table-column label="操作" width="300" class-name="run-actions-cell">

@@ -10,6 +10,7 @@ import type { Artifact } from '~/types'
 import { useApi } from '~/composables/useApi'
 import { useAppStore } from '~/stores/app'
 import {
+  consumedCoreHours,
   formatBytes,
   formatChineseCount,
   formatDuration,
@@ -249,8 +250,8 @@ const resourceItems = computed(() => {
     { label: 'CPU 核数', value: run.cpu_cores != null ? `${formatNumber(run.cpu_cores)} 核` : '-' },
     { label: 'GPU 卡数', value: run.gpu_count != null ? `${formatNumber(run.gpu_count)} 卡` : '-' },
     { label: '内存', value: run.memory_gb != null && run.memory_gb > 0 ? `${formatNumber(run.memory_gb, 1)} GB` : '按需' },
-    { label: '目标核时', value: run.target_core_hours != null ? `${formatChineseCount(run.target_core_hours)} 核时` : '-' },
-    { label: '累计核时', value: run.core_hours != null ? `${formatChineseCount(run.core_hours)} 核时` : '-' },
+    { label: '运行消耗核时', value: run.core_hours != null ? `${formatChineseCount(consumedCoreHours(run.core_hours, run.status))} 核时` : '-' },
+    { label: '运行结束核时', value: run.core_hours != null ? `${formatChineseCount(run.core_hours)} 核时` : '-' },
   ]
 })
 

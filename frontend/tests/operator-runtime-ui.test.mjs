@@ -28,7 +28,7 @@ test('workflow DAG nodes render operator CPU, GPU, memory, runtime and core-hour
   assert.match(dag, /node\.core_hours/)
   assert.match(dag, /runtime_label/)
   assert.match(dag, /workflow-node-resources/)
-  assert.match(dag, /累计核时/)
+  assert.match(dag, /运行消耗核时/)
   assert.match(dag, /运行环境/)
 })
 

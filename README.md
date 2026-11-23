@@ -84,7 +84,7 @@ node scripts/sync-operator-library.mjs --offline
 - 算子选择卡片提供「运行环境」筛选，可按 Singularity / Docker 过滤
 - 同步脚本会把运行详情里已失效的 `selected_operator_ids` 迁移到新算子；执行
   `node scripts/migrate-run-operators.mjs` 可进一步重建历史记录的工作流节点，并按算子补齐
-  CPU / GPU / 内存 / 累计核时，同时对齐起止时间。迁移 `.runtime-data/` 前请先停止后端，
+  CPU / GPU / 内存 / 运行消耗核时，同时对齐起止时间。迁移 `.runtime-data/` 前请先停止后端，
   避免运行中的内存状态覆盖迁移结果。
 
 ## Applications

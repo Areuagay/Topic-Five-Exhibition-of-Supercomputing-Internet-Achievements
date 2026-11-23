@@ -886,7 +886,7 @@
      "timestamp": "2026-08-10T07:40:00+08:00",
      "level": "INFO",
      "cluster_id": "changsha",
-     "message": "任务成功结束，累计核时 9898.7 核时"
+     "message": "任务成功结束，运行消耗核时 9898.7 核时"
     }
    ]
   },

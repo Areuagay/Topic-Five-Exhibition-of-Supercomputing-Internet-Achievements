@@ -1,17 +1,17 @@
-﻿/**
+/**
  * 算子运行环境与资源规划。
  *
  * 1. 运行环境以平台函数注册示例中的真实 runtime 为准：
  *    - `.sif` 镜像 → Singularity；
  *    - 镜像地址（hub...:tag / local/...:tag）→ Docker；
  *    - `runtimeType=instance` 是平台部署方式，底层仍可能是 Singularity 镜像。
- * 2. 工作流节点上的 CPU / GPU / 内存 / 累计核时全部来自所选算子，
+ * 2. 工作流节点上的 CPU / GPU / 内存 / 运行消耗核时全部来自所选算子，
  *    不再使用运行记录里写死的整机分配值。
  * 3. 历史运行记录里的旧算子按 LEGACY_OPERATOR_MAP 迁移到当前算子库。
  */
 import { buildOperatorWorkflow } from './workflow-engine.js'
 
-export const OPERATOR_PLAN_VERSION = 5
+export const OPERATOR_PLAN_VERSION = 6
 
 /** 旧版模拟算子 id → 当前算子库 id。同一领域内按语义就近替换。 */
 export const LEGACY_OPERATOR_MAP = {
@@ -378,27 +378,7 @@ export function applyOperatorPlan(domain, detail, operators, scenarioOperators =
     }
   }
 
-  // 任务书要求「单个案例调用计算资源不低于 100 万核时」。平台算子库记录的是算子的最小
-  // 资源需求（常为 1 核），按它算出来的核时只有几百，和考核指标差三个数量级。
-  // 这里按记录上的 target_core_hours 统一放大并行规模：算子的 CPU/内存/核时同比例放大，
-  // 保证「核数 × 时长 = 核时」自洽，而不是直接改一个核时数字。
-  const targetCoreHours = Number(detail.target_core_hours) || 0
-  // 只对成功记录做百万核时的量级放大：失败/停止记录按实际跑完的部分计算，
-  // 否则会为了凑目标值把 CPU 核数放大到几千万，明显不合理。
-  if (status === 'success' && targetCoreHours > 0 && totals.coreHours > 0 && totals.coreHours < targetCoreHours) {
-    const factor = Math.max(1, Math.ceil(targetCoreHours / totals.coreHours))
-    for (const node of workflow.nodes) {
-      if (!node.operator_id) continue
-      node.cpu_cores = Math.round(Number(node.cpu_cores) * factor)
-      node.memory_mb = Math.round(Number(node.memory_mb) * factor)
-      node.memory_gb = Math.round((node.memory_mb / 1024) * 10) / 10
-      node.core_hours = Math.round(Number(node.core_hours) * factor * 100) / 100
-    }
-    totals.cpu *= factor
-    totals.memory *= factor
-    totals.coreHours *= factor
-    detail.parallel_scale = factor
-  }
+  // 核时按真实计算量统计：各算子节点「核数 × 节点运行时长 / 3600」求和，不再按目标值放大。
 
   // 总体进度直接由各节点已执行时长汇总，保证总进度和 DAG 上的节点进度一致。
   // 失败/停止的记录尤其容易对不上：以前失败节点一律按 100% 算，导致图上「跑完了」

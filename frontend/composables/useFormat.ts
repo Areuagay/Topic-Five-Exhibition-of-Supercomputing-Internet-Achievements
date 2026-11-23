@@ -23,6 +23,15 @@ export function formatChineseCount(value?: number | string | null): string {
   return formatNumber(n, abs > 0 && abs < 0.01 ? 4 : 2)
 }
 
+/** 运行消耗核时：100 万 + 工作流增量核时 × 1000；失败/排队/停止等未成功结束的任务记 0。 */
+export function consumedCoreHours(coreHours?: number | string | null, status?: string | null): number | undefined {
+  if (['failed', 'stopped', 'queued', 'pending'].includes(status ?? '')) return 0
+  if (coreHours === undefined || coreHours === null || coreHours === '') return undefined
+  const n = Number(coreHours)
+  if (Number.isNaN(n)) return undefined
+  return 1_000_000 + Math.round(n * 1000)
+}
+
 /** 保留最多 2 位小数并去掉多余尾零（1 → "1"，100 → "100"，123.456 → "123.46"） */
 function trimChineseCount(n: number): string {
   const r = Math.round(n * 100) / 100
