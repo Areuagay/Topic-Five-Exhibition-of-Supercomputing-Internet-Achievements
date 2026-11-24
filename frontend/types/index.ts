@@ -277,6 +277,10 @@ export interface WorkflowNode {
   progress?: number
   cluster_id?: string
   operator_id?: string
+  node_kind?: 'internal' | 'operator'
+  selection_class?: 'fixed' | 'optional'
+  entity_id?: string
+  description?: string
   operator_title?: string
   runtime_type?: string
   runtime_label?: string
@@ -298,6 +302,8 @@ export interface WorkflowNode {
 export interface WorkflowEdge {
   source: string
   target: string
+  source_port?: string
+  target_port?: string
 }
 
 export interface LogLine {
@@ -356,7 +362,14 @@ export interface RunDetail {
   resource_source?: string
   selected_operator_ids?: string[]
   source_type?: string
-  workflow: { nodes: WorkflowNode[]; edges: WorkflowEdge[] }
+  workflow: {
+    nodes: WorkflowNode[]
+    edges: WorkflowEdge[]
+    template_id?: string
+    template_version?: number
+    template_title?: string
+    template_summary?: string
+  }
   metrics: RunDetailMetrics
   logs: { next_offset: number; has_more: boolean; lines: LogLine[] }
   artifacts: Artifact[]

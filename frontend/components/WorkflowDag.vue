@@ -52,7 +52,7 @@ function measureNodeTitles(): void {
   for (const node of [...props.nodes].sort((a, b) => a.id.localeCompare(b.id))) {
     const title = frame.value.querySelector<HTMLElement>(`.vue-flow__node[data-id="${CSS.escape(node.id)}"] .workflow-node > strong`)
     if (!title) return
-    heights[node.id] = Math.max(NODE_HEIGHT, title.offsetHeight + (node.operator_id ? 78 : 52))
+    heights[node.id] = Math.max(NODE_HEIGHT, title.offsetHeight + (node.operator_id ? 78 : 52) + (node.node_kind ? 22 : 0))
   }
   if (JSON.stringify(nodeHeights.value) !== JSON.stringify(heights)) {
     nodeHeights.value = heights
@@ -132,6 +132,12 @@ function nodeMeta(node: WorkflowNode): string {
   if (node.status === 'pending' && parents.length > 1) return `等待汇合 · ${parents.filter(p => p?.status === 'success').length}/${parents.length}`
   const status = statusText(node.status)
   return node.progress != null ? `${status} · ${Math.round(node.progress)}%` : status
+}
+
+function nodeKindLabel(node: WorkflowNode): string {
+  return node.node_kind === 'internal' ? '内置实体'
+    : node.selection_class === 'fixed' ? '固定算子'
+      : node.selection_class === 'optional' ? '可选算子' : ''
 }
 
 /** 节点附带的工作负载信息全部来自算子记录，不在前端写死。 */
@@ -419,6 +425,7 @@ onBeforeUnmount(() => {
             <article class="workflow-node" :class="{ 'is-selected': selected, 'is-running': data.status === 'running', 'is-waiting': data.waiting_at_join }" :title="data.name">
               <Handle v-for="port in data.inputs" :id="port.id" :key="port.id" type="target" :position="Position.Left" :style="{ top: `${port.y}px` }" :connectable="false" />
               <span class="workflow-node-accent" :style="{ backgroundColor: statusColor(data.status) }" aria-hidden="true" />
+              <span v-if="nodeKindLabel(data)" class="workflow-node-kind">{{ nodeKindLabel(data) }}</span>
               <strong>{{ data.name }}</strong>
               <div class="workflow-node-meta">
                 <span class="workflow-node-status" :style="{ backgroundColor: statusColor(data.status) }" aria-hidden="true" />
@@ -458,6 +465,8 @@ onBeforeUnmount(() => {
               </div>
             </div>
             <dl class="dag-node-popover-facts">
+              <div v-if="nodeKindLabel(selectedNode)"><dt>节点类别</dt><dd>{{ nodeKindLabel(selectedNode) }}</dd></div>
+              <div v-if="selectedNode.description" class="dag-node-popover-wide"><dt>处理内容</dt><dd>{{ selectedNode.description }}</dd></div>
               <div><dt>状态</dt><dd>{{ statusText(selectedNode.status) }}</dd></div>
               <div><dt>进度</dt><dd>{{ selectedNode.progress != null ? `${selectedNode.progress}%` : '—' }}</dd></div>
               <div v-if="selectedNode.elapsed_seconds != null"><dt>运行耗时</dt><dd>{{ selectedNode.elapsed_seconds }} 秒</dd></div>
@@ -575,6 +584,7 @@ onBeforeUnmount(() => {
 }
 @keyframes dag-flow { to { stroke-dashoffset:-22; } }
 
+.workflow-node-kind { display: block; margin-bottom: 5px; color: #61758e; font-size: 10px; line-height: 17px; }
 .workflow-node {
   position: relative;
   width: 100%;

@@ -4,6 +4,7 @@ import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { resolve, sep } from 'node:path'
 import { createExperienceStore, EXPERIENCE_DOMAINS } from '../experience-store.js'
+import { getGeodynamicsPolicy } from '../../shared/geodynamics-workflow.js'
 
 const dataDir = resolve(import.meta.dirname, '../../mock-data')
 const readJson = file => JSON.parse(readFileSync(file, 'utf8'))
@@ -84,7 +85,7 @@ test('legacy runs recover configured targets without changing resource accountin
     for (const scenario of Object.keys(state.templates)) {
       const operator = store.operators(domain).find(item => ['available', 'registered'].includes(item.status))
       const created = store.write('POST', [domain, 'scenarios', scenario, 'operators', 'submit'], {
-        operator_ids: [operator.name],
+        operator_ids: getGeodynamicsPolicy(domain, scenario)?.fixedOperatorIds ?? [operator.name],
       })
       assert.equal(created.code, 200)
       const detail = store.read([domain, 'runs', created.data.run_id]).data

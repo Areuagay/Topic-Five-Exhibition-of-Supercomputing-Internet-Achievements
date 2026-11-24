@@ -3,6 +3,7 @@ import { resolve } from 'node:path'
 import { scenarioMetrics } from './scenario-metrics.js'
 import { createDatasetFiles } from './dataset-files.js'
 import { applyOperatorPlan, annotateJoins, estimatePlanSeconds, needsOperatorPlan, propagateTerminal } from './operator-plan.js'
+import { getGeodynamicsPolicy } from '../shared/geodynamics-workflow.js'
 
 export const EXPERIENCE_DOMAINS = ['geodynamics', 'llm', 'automotive', 'uav', 'drug', 'dft']
 const PREFIXES = ['GEO', 'LLM', 'AUTO', 'UAV', 'DRUG', 'DFT']
@@ -112,6 +113,7 @@ export function createExperienceStore({ dataDir, runtimeDir, now = Date.now }) {
     const path = resolve(runtimeDir, `${domain}.json`)
     if (existsSync(path)) {
       const state = JSON.parse(readFileSync(path, 'utf8'))
+      let plansChanged = false
       for (const dataset of state.datasets) {
         if (dataset.builtin) { dataset.input_source = 'builtin'; continue }
         if (files.stored(domain, dataset)) { dataset.input_source = 'upload'; continue }
@@ -137,9 +139,9 @@ export function createExperienceStore({ dataDir, runtimeDir, now = Date.now }) {
           detail.current_stage = 'completed'
           if (detail.start_time) detail.end_time = addSeconds(detail.start_time, detail.elapsed_seconds)
         }
-        ensureOperatorPlan(domain, detail, detail._clock === 'realtime'
+        plansChanged = ensureOperatorPlan(domain, detail, detail._clock === 'realtime'
           ? { realtime: true, plannedSeconds: detail.planned_seconds }
-          : { plannedSeconds: detail.elapsed_seconds })
+          : { plannedSeconds: detail.elapsed_seconds }) || plansChanged
         // 历史记录的起止时间与累计运行时间保持一致；实时任务由推进逻辑维护。
         if (detail._clock !== 'realtime' && detail.start_time && ['success', 'failed', 'stopped'].includes(detail.status)) {
           detail.end_time = addSeconds(detail.start_time, detail.elapsed_seconds)
@@ -153,6 +155,7 @@ export function createExperienceStore({ dataDir, runtimeDir, now = Date.now }) {
         syncSummary(run, detail)
       }
       states.set(domain, state)
+      if (plansChanged) save(domain, state)
       return state
     }
     const runs = readSeed(`${domain}/runs.json`) ?? []
@@ -386,7 +389,7 @@ export function createExperienceStore({ dataDir, runtimeDir, now = Date.now }) {
     }]
     let seq = 2
     for (const node of nodes) {
-      if (node.status === 'pending') break
+      if (node.status === 'pending') continue
       const at = new Date(start + (Number(node.planned_start_seconds) || 0) * 1000).toISOString()
       lines.push({ seq: seq++, timestamp: at, level: 'INFO', message: `[${node.cluster_id || detail.cluster_id || '-'}] 开始执行「${node.name}」` })
       if (node.status === 'success') {
@@ -519,6 +522,9 @@ export function createExperienceStore({ dataDir, runtimeDir, now = Date.now }) {
       const available = operators(domain)
       const chosen = ids.map(name => available.find(o => o.name === name && ['available', 'registered'].includes(o.status)))
       if (!ids.length || chosen.some(o => !o)) return error('请选择有效且可用的算子')
+      const policy = getGeodynamicsPolicy(domain, id)
+      const missing = policy?.fixedOperatorIds.filter(name => !ids.includes(name)) ?? []
+      if (missing.length) return error(`必须保留固定算子：${missing.map(name => available.find(o => o.name === name)?.title || name).join('、')}`)
       const prefix = PREFIXES[EXPERIENCE_DOMAINS.indexOf(domain)]
       const seq = 1 + Math.max(0, ...state.runs.map(r => Number(r.run_id.split('-').at(-1)) || 0))
       const runId = `${prefix}-${new Date(now()).toISOString().slice(0, 10).replaceAll('-', '')}-${String(seq).padStart(4, '0')}`

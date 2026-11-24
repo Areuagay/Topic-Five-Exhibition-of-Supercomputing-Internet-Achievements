@@ -18,6 +18,7 @@ import { formatNumber, statusText } from '~/composables/useFormat'
 import { canViewResult } from '~/utils/experience-simulation'
 import { unitText } from '~/utils/workspace'
 import { experienceSteps, getScenarioExperience } from '~/config/scenario-experience'
+import { getGeodynamicsPolicy, retainFixedOperators } from '../../../shared/geodynamics-workflow.js'
 import type {
   Benchmark,
   DatasetItem,
@@ -120,6 +121,13 @@ const supportedClusters = computed(() => props.detail?.supported_clusters ?? [])
  */
 const resourceLoadStore = useResourceLoadStore()
 const selectedOperators = computed(() => props.detail?.operators ?? [])
+const operatorPolicy = computed(() => getGeodynamicsPolicy(props.domain, props.scenarioId))
+const fixedOperatorIds = computed(() => operatorPolicy.value?.fixedOperatorIds ?? [])
+watch([chosenOperatorIds, fixedOperatorIds], ([ids, fixed]) => {
+  if (!fixed.length) return
+  const normalized = retainFixedOperators(ids ?? [], fixed)
+  if (JSON.stringify(ids) !== JSON.stringify(normalized)) chosenOperatorIds.value = normalized
+}, { immediate: true, flush: 'sync' })
 const chosenOperators = computed(() => (operators.value ?? []).filter((item) => chosenOperatorIds.value?.includes(item.name)))
 const guideActive = useState<boolean>(`experience-guide-${props.domain}-${props.scenarioId}`, () => false)
 const guideBar = ref<HTMLElement>()
@@ -470,6 +478,7 @@ watch(activeKey, key => { if (key === 'resource') void refreshClusters() })
       <ExperienceOperatorStep
         v-else-if="activeKey === 'operator'"
         :domain="domain"
+        :scenario-id="scenarioId"
         :operators="operators ?? []"
         :selected-operators="selectedOperators"
         :chosen-ids="chosenOperatorIds ?? []"

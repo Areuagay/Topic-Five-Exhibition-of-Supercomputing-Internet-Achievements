@@ -63,6 +63,7 @@ cpSync(join(REPO, 'backend'), join(STAGE, 'backend'), {
   recursive: true,
   filter: (src) => !src.includes('tests') && !src.endsWith('.log'),
 })
+cpSync(join(REPO, 'shared'), join(STAGE, 'shared'), { recursive: true })
 
 // 3. 数据与产物
 cpSync(join(REPO, 'mock-data'), join(STAGE, 'mock-data'), { recursive: true })

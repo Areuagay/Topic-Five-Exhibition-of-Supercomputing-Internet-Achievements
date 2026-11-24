@@ -2,22 +2,29 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { layoutDag, dagViewport, DAG_NODE_GAP } from '../utils/dag-layout.ts'
 import { buildOperatorWorkflow, OPERATOR_DEPENDENCIES } from '../../backend/workflow-engine.js'
+import { applyOperatorPlan } from '../../backend/operator-plan.js'
+import { readFileSync } from 'node:fs'
+import { DOMAIN_WORKFLOW_TEMPLATES } from '../../backend/domain-workflows.js'
 
 const edges = pairs => pairs.map(([source, target]) => ({ source, target }))
 const positions = layout => new Map(layout.nodes.map(node => [node.id, node]))
 
-function assertClearRoutes(layout) {
+function assertClearRoutes(layout, minimumGap = DAG_NODE_GAP) {
   const nodes = positions(layout)
   for (const route of layout.edges) {
     const source = nodes.get(route.source), target = nodes.get(route.target)
     assert.ok(source.x + source.width < target.x, `${route.id}: dependencies flow right`)
-    assert.deepEqual(route.points[0], { x: source.x + source.width, y: source.y + source.outputs.find(p => p.id === route.sourceHandle).y })
-    assert.deepEqual(route.points.at(-1), { x: target.x, y: target.y + target.inputs.find(p => p.id === route.targetHandle).y })
+    const expectedStart = { x: source.x + source.width, y: source.y + source.outputs.find(p => p.id === route.sourceHandle).y }
+    const expectedEnd = { x: target.x, y: target.y + target.inputs.find(p => p.id === route.targetHandle).y }
+    for (const [actual, expected] of [[route.points[0], expectedStart], [route.points.at(-1), expectedEnd]]) {
+      assert.ok(Math.abs(actual.x - expected.x) < 1e-6 && Math.abs(actual.y - expected.y) < 1e-6, 'route endpoints attach to their ports')
+    }
     for (let i = 1; i < route.points.length; i++) {
       const a = route.points[i - 1], b = route.points[i]
-      assert.ok(a.x === b.x || a.y === b.y, 'orthogonal segment')
+      const vertical = Math.abs(a.x - b.x) < 1e-6
+      assert.ok(vertical || Math.abs(a.y - b.y) < 1e-6, 'orthogonal segment')
       for (const node of layout.nodes) {
-        const crosses = a.x === b.x
+        const crosses = vertical
           ? a.x > node.x + .01 && a.x < node.x + node.width - .01 && Math.max(a.y, b.y) > node.y + .01 && Math.min(a.y, b.y) < node.y + node.height - .01
           : a.y > node.y + .01 && a.y < node.y + node.height - .01 && Math.max(a.x, b.x) > node.x + .01 && Math.min(a.x, b.x) < node.x + node.width - .01
         assert.equal(crosses, false, `${route.source} -> ${route.target} must not pass through ${node.id}`)
@@ -26,8 +33,11 @@ function assertClearRoutes(layout) {
     for (const point of route.points) assert.ok(point.x >= 0 && point.y >= 0 && point.x <= layout.width && point.y <= layout.height)
   }
   for (const a of layout.nodes) for (const b of layout.nodes) {
+    if (a.id !== b.id) {
+      assert.equal(a.x < b.x + b.width && a.x + a.width > b.x && a.y < b.y + b.height && a.y + a.height > b.y, false, `${a.id} must not overlap ${b.id}`)
+    }
     if (a.id === b.id || a.x !== b.x || a.y >= b.y) continue
-    assert.ok(b.y - a.y - a.height >= DAG_NODE_GAP - .01, 'branch spacing accounts for measured node heights')
+    assert.ok(b.y - a.y - a.height >= minimumGap - .01, 'branch spacing accounts for measured node heights')
   }
 }
 
@@ -100,5 +110,40 @@ test('initial view retains readable scale while explicit overview includes the w
     assert.ok(overview.x >= 0 && overview.y >= 0)
     assert.ok(overview.x + graph.width * overview.zoom <= width + .01)
     assert.ok(overview.y + graph.height * overview.zoom <= height + .01)
+  }
+})
+
+test('both geodynamics entity workflows route preparation, solver branches and archive inputs without collisions', async () => {
+  const catalog = JSON.parse(readFileSync(new URL('../../mock-data/geodynamics/operators.json', import.meta.url), 'utf8')).data
+  for (const scenario of ['wave-propagation', 'tectonic-evolution']) {
+    const detail = {
+      scenario_id: scenario, status: 'queued', selected_operator_ids: catalog.map(operator => operator.name),
+      workflow: { nodes: [{ id: 'prepare' }, { id: 'post' }], edges: [] },
+    }
+    applyOperatorPlan('geodynamics', detail, catalog, [], { realtime: true })
+    const nodes = detail.workflow.nodes.map(node => ({ id: node.id, height: node.operator_id ? 158 : 118 }))
+    const layout = await layoutDag(nodes, detail.workflow.edges)
+    assertClearRoutes(layout)
+    assert.equal(layout.nodes.length, 12)
+    assert.equal(positions(layout).get('post').inputs.length, 3)
+  }
+})
+
+test('ten domain-specific workflows route their complete fixed entities and selected operator branches without collisions', async () => {
+  for (const [scenario, template] of Object.entries(DOMAIN_WORKFLOW_TEMPLATES)) {
+    const catalog = JSON.parse(readFileSync(new URL(`../../mock-data/${template.domain}/operators.json`, import.meta.url), 'utf8')).data
+    for (const selected of [catalog.map(item => item.name), [catalog[0].name]]) {
+      const detail = {
+        scenario_id: scenario, status: 'queued', selected_operator_ids: selected,
+        workflow: { nodes: [{ id: 'prepare' }, { id: 'post' }], edges: [] },
+      }
+      applyOperatorPlan(template.domain, detail, catalog, [], { realtime: true })
+      const nodes = detail.workflow.nodes.map(node => ({ id: node.id, height: node.operator_id ? 172 : 142 }))
+      const layout = await layoutDag(nodes, detail.workflow.edges)
+      // ELK may compact a dense multi-join graph below the preferred 88px gap;
+      // require clear routes, no overlapping rectangles and 24px minimum space.
+      assertClearRoutes(layout, 24)
+      assert.equal(layout.nodes.length, template.nodes.length + selected.length)
+    }
   }
 })

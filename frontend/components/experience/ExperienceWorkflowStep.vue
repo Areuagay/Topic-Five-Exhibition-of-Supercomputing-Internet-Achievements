@@ -22,6 +22,12 @@ const emit = defineEmits<{
 const selectedRun = computed(() => props.runs.find((run) => run.run_id === props.selectedRunId))
 const nodes = computed(() => props.workflow?.nodes ?? [])
 const edges = computed(() => props.workflow?.edges ?? [])
+const internalNodes = computed(() => nodes.value.filter(node => node.node_kind === 'internal'))
+const fixedCount = computed(() => nodes.value.filter(node => node.selection_class === 'fixed').length)
+const workflowSummary = computed(() => props.workflow?.template_summary
+  || (props.domain === 'geodynamics' && internalNodes.value.length
+    ? '数据读取与镜像准备并行，区域划分后执行所选算子；迭代收集汇合全部计算分支，再进行分析、转换和剖面生成，最后编号归档。内置实体自动参与执行，每一步均显示进度。'
+    : '工作流根据算子依赖编排，独立分支可并行执行；下游等待其全部前置节点完成后开始，每个算子使用各自的镜像与资源配置。'))
 
 /** 工作流阶段中文标签按学科域从配置读取，组件不内嵌学科文案 */
 const stageLabels = computed(() => getStageLabels(props.domain))
@@ -60,12 +66,10 @@ function selectRun(value: string): void {
 <template>
   <div class="exp-workflow">
     <section class="exp-chosen-operators" aria-label="本次体验已选算子">
-      <header class="exp-chosen-heading"><div><strong>本条任务算子</strong><span class="exp-chosen-count">{{ chosenOperators.length }} 项</span></div><p>与下方工作流、执行监控同步</p></header>
-      <ul v-if="chosenOperators.length"><li v-for="operator in chosenOperators" :key="operator.name"><span class="exp-chosen-icon"><Box :size="17" aria-hidden="true" /></span><span class="exp-chosen-name">{{ operator.title || (operator.description.includes('：') ? operator.description.split('：')[0] : operator.name) }}<small>{{ operator.name }} · {{ runtimeLabel(operator) }}</small></span></li></ul>
+      <header class="exp-chosen-heading"><div><strong>本条任务算子</strong><span class="exp-chosen-count">{{ chosenOperators.length }} 项</span></div><p>{{ fixedCount ? `固定 ${fixedCount} 项 · 可选 ${Math.max(0, chosenOperators.length - fixedCount)} 项` : '与下方工作流、执行监控同步' }}</p></header>
+      <ul v-if="chosenOperators.length"><li v-for="operator in chosenOperators" :key="operator.name"><span class="exp-chosen-icon"><Box :size="17" aria-hidden="true" /></span><span class="exp-chosen-name">{{ operator.title || (operator.description.includes('：') ? operator.description.split('：')[0] : operator.name) }}<small>{{ operator.name }} · {{ runtimeLabel(operator) }}<template v-if="internalNodes.length"> · {{ nodes.find(node => node.operator_id === operator.name)?.selection_class === 'fixed' ? '固定算子' : '可选算子' }}</template></small></span></li></ul>
       <p v-else>预置运行记录，计算阶段请查看下方工作流。</p>
-      <p class="exp-chain-note">
-        工作流按所选算子顺序串联：输入数据准备 → 算子 1 … 算子 N → 结果整理与输出；每个算子使用各自的镜像与资源配置，前一阶段的输出作为后一阶段的输入。
-      </p>
+      <p class="exp-chain-note">{{ workflowSummary }}</p>
     </section>
     <div class="exp-toolbar">
       <label class="exp-toolbar-field">
@@ -143,6 +147,7 @@ function selectRun(value: string): void {
 .exp-chosen-name small { display: block; margin-top: 3px; font: 11px/1.5 var(--scnet-font-mono); color: #7a8b9f; }
 .exp-workflow {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 18px;
   min-width: 0;
 }

@@ -1,0 +1,28 @@
+{
+  "format": "citcomcu.geodynamics.workflow",
+  "version": "1.0",
+  "title": "CitcomCU 地球动力学模拟与可视化",
+  "nodes": [
+    { "id": "read", "label": "数据读取" },
+    { "id": "runtime", "label": "CitcomCU 镜像拉取" },
+    { "id": "partition", "label": "求解区域划分" },
+    { "id": "iterate", "label": "迭代计算与结果收集" },
+    { "id": "existing", "label": "读取已有 CitcomCU 结果" },
+    { "id": "analyze", "label": "数据集成分析" },
+    { "id": "vtk", "label": "CitcomCU 转 ParaView" },
+    { "id": "preview", "label": "温度与流速剖面" },
+    { "id": "package", "label": "结果编号归档" }
+  ],
+  "edges": [
+    { "from": { "node": "read", "port": "model" }, "to": { "node": "partition", "port": "model" }, "mode": "simulate" },
+    { "from": { "node": "runtime", "port": "environment" }, "to": { "node": "partition", "port": "environment" }, "mode": "simulate" },
+    { "from": { "node": "partition", "port": "state" }, "to": { "node": "iterate", "port": "initial_state" }, "mode": "simulate" },
+    { "from": { "node": "iterate", "port": "results" }, "to": { "node": "analyze", "port": "results" }, "mode": "simulate" },
+    { "from": { "node": "existing", "port": "results" }, "to": { "node": "analyze", "port": "results" }, "mode": "replay" },
+    { "from": { "node": "analyze", "port": "snapshot" }, "to": { "node": "vtk", "port": "snapshot" }, "mode": "shared" },
+    { "from": { "node": "vtk", "port": "grid" }, "to": { "node": "preview", "port": "grid" }, "mode": "shared" },
+    { "from": { "node": "analyze", "port": "snapshot" }, "to": { "node": "package", "port": "snapshot" }, "mode": "shared" },
+    { "from": { "node": "vtk", "port": "grid" }, "to": { "node": "package", "port": "grid" }, "mode": "shared" },
+    { "from": { "node": "preview", "port": "image" }, "to": { "node": "package", "port": "image" }, "mode": "shared" }
+  ]
+}

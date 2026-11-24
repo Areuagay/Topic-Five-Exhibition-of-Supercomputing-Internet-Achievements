@@ -1,13 +1,21 @@
 <script setup lang="ts">
-import { Check, Plus, X, Info, ArrowUpRight } from '@lucide/vue'
+import { Check, Plus, X, Info, ArrowUpRight, LockKeyhole } from '@lucide/vue'
 import { useSelectionFeedback } from '~/composables/useSelectionFeedback'
 import { computed, nextTick, onBeforeUnmount, onDeactivated, ref, watch } from 'vue'
 import { useSlidingHighlight } from '~/composables/useSlidingHighlight'
 import { formatBytes, formatNumber, statusText } from '~/composables/useFormat'
 import type { Operator, OperatorRef } from '~/types'
+import { getGeodynamicsPolicy, retainFixedOperators } from '../../../shared/geodynamics-workflow.js'
 
-const props = defineProps<{ domain: string; operators: Operator[]; selectedOperators: OperatorRef[]; chosenIds: string[]; submitting?: boolean; submittedMessage?: string }>()
+const props = defineProps<{ domain: string; scenarioId?: string; operators: Operator[]; selectedOperators: OperatorRef[]; chosenIds: string[]; submitting?: boolean; submittedMessage?: string }>()
 const emit = defineEmits<{ 'update:chosenIds': [value: string[]]; submit: [] }>()
+const policy = computed(() => getGeodynamicsPolicy(props.domain, props.scenarioId))
+const fixedIds = computed(() => policy.value?.fixedOperatorIds ?? [])
+const fixedCount = computed(() => props.operators.filter(isFixed).length)
+const categoryFilter = ref<'all' | 'fixed' | 'optional'>('all')
+function isFixed(operator: Operator): boolean {
+  return fixedIds.value.includes(operator.name)
+}
 const chosenSet = computed(() => new Set(props.chosenIds))
 const chosenCount = computed(() => props.operators.filter((item) => chosenSet.value.has(item.name)).length)
 const submitting = computed(() => props.submitting === true)
@@ -24,18 +32,18 @@ function isAvailable(operator: Operator): boolean {
   return ['registered', 'available'].includes(operator.status)
 }
 function toggleOperator(operator: Operator): void {
-  if (submitting.value) return
+  if (submitting.value || isFixed(operator)) return
   if (chosenSet.value.has(operator.name)) emit('update:chosenIds', props.chosenIds.filter((id) => id !== operator.name))
   else if (isAvailable(operator)) emit('update:chosenIds', [...props.chosenIds, operator.name])
 }
 function useRecommended(): void {
   if (submitting.value) return
-  emit('update:chosenIds', props.operators.filter((item) => isRecommended(item) && isAvailable(item)).map((item) => item.name))
+  emit('update:chosenIds', retainFixedOperators(props.operators.filter((item) => isRecommended(item) && isAvailable(item)).map((item) => item.name), fixedIds.value))
   showActionFeedback('recommended')
 }
 function clearSelection(): void {
   if (submitting.value) return
-  emit('update:chosenIds', [])
+  emit('update:chosenIds', [...fixedIds.value])
   showActionFeedback('cleared')
 }
 const query = ref('')
@@ -59,9 +67,10 @@ const ordered = computed(() => {
   const keyword = query.value.trim().toLocaleLowerCase()
   return [...props.operators].filter((operator) =>
     (!recommendedOnly.value || isRecommended(operator))
+    && (categoryFilter.value === 'all' || (categoryFilter.value === 'fixed' ? isFixed(operator) : !isFixed(operator)))
     && (!runtimeFilter.value || runtimeTypeText(operator) === runtimeFilter.value)
     && (!keyword || [operator.name, operator.title, displayName(operator), operator.description, operator.runtime_type, operator.runtime_label, operator.backend_tags, operator.backend_categories, operator.resource_requirement].join(' ').toLocaleLowerCase().includes(keyword)),
-  ).sort((a, b) => Number(isRecommended(b)) - Number(isRecommended(a)))
+  ).sort((a, b) => Number(isFixed(b)) - Number(isFixed(a)) || Number(isRecommended(b)) - Number(isRecommended(a)))
 })
 const listFrame = ref<HTMLElement>()
 const runtimeOperatorId = ref('')
@@ -128,6 +137,7 @@ function resetFilters(): void {
   query.value = ''
   recommendedOnly.value = false
   runtimeFilter.value = ''
+  categoryFilter.value = 'all'
 }
 function requirement(operator: Operator): string {
   return operator.resource_requirement ?? ''
@@ -177,7 +187,7 @@ function resetRuntimeFilter(): void {
 <template>
   <section class="operator-panel" aria-labelledby="operator-title">
     <header class="operator-header">
-      <div><h3 id="operator-title">科学计算算子</h3><p>选择本次体验的算子，对比计算能力与运行要求。</p></div>
+      <div><h3 id="operator-title">科学计算算子</h3><p>{{ policy ? '固定算子自动保留，可按计算需要添加或取消可选算子。' : '选择本次体验的算子，对比计算能力与运行要求。' }}</p></div>
       <p class="operator-count">场景推荐 <strong>{{ recommendedCount }}</strong> <span>/ {{ operators.length }} 个算子</span></p>
     </header>
     <div class="operator-toolbar">
@@ -208,6 +218,14 @@ function resetRuntimeFilter(): void {
         <input v-model="query" type="search" aria-label="搜索算子" placeholder="搜索名称、功能或运行环境" />
       </label>
     </div>
+    <div v-if="policy" class="operator-policy">
+      <div class="operator-category-filters" role="group" aria-label="按算子类别筛选">
+        <button type="button" class="sc-pressable" :aria-pressed="categoryFilter === 'all'" @click="categoryFilter = 'all'">全部类型</button>
+        <button type="button" class="sc-pressable" :aria-pressed="categoryFilter === 'fixed'" @click="categoryFilter = 'fixed'">固定算子类 <span>{{ fixedCount }}</span></button>
+        <button type="button" class="sc-pressable" :aria-pressed="categoryFilter === 'optional'" @click="categoryFilter = 'optional'">可选算子类 <span>{{ operators.length - fixedCount }}</span></button>
+      </div>
+      <p><LockKeyhole :size="14" aria-hidden="true" />{{ policy.reason }}</p>
+    </div>
     <div class="operator-selection-bar">
       <span role="status">本次已选 <span class="selection-count-slot"><Transition name="selection-count"><strong :key="chosenCount" class="selection-count">{{ chosenCount }}</strong></Transition></span> 个算子</span>
       <div class="operator-batch-actions">
@@ -215,29 +233,29 @@ function resetRuntimeFilter(): void {
           <span class="operator-batch-icon" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="m4 10 4 4 8-9" /></svg></span>
           <span class="operator-batch-label"><span :class="{ 'is-hidden': actionFeedback === 'recommended' }">采用场景推荐</span><span v-if="actionFeedback === 'recommended'" class="operator-batch-feedback">已采用推荐</span></span>
         </button>
-        <button type="button" class="operator-batch-button is-clear sc-action sc-action--ghost" :class="{ 'is-confirmed': actionFeedback === 'cleared' }" :disabled="submitting || !chosenCount" @click="clearSelection">
+        <button type="button" class="operator-batch-button is-clear sc-action sc-action--ghost" :class="{ 'is-confirmed': actionFeedback === 'cleared' }" :disabled="submitting || chosenCount <= fixedCount" @click="clearSelection">
           <span class="operator-batch-icon" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M4 8a6 6 0 1 1 0 5M4 3v5h5" /></svg></span>
-          <span class="operator-batch-label"><span :class="{ 'is-hidden': actionFeedback === 'cleared' }">清空选择</span><span v-if="actionFeedback === 'cleared'" class="operator-batch-feedback">已清空</span></span>
+          <span class="operator-batch-label"><span :class="{ 'is-hidden': actionFeedback === 'cleared' }">{{ policy ? '清空可选算子' : '清空选择' }}</span><span v-if="actionFeedback === 'cleared'" class="operator-batch-feedback">{{ policy ? '已保留固定算子' : '已清空' }}</span></span>
         </button>
-        <span class="operator-action-status" role="status">{{ actionFeedback === 'recommended' ? '已采用场景推荐算子' : actionFeedback === 'cleared' ? '已清空算子选择' : '' }}</span>
+        <span class="operator-action-status" role="status">{{ actionFeedback === 'recommended' ? '已采用场景推荐算子' : actionFeedback === 'cleared' ? (policy ? '已清空可选算子，固定算子保留' : '已清空算子选择') : '' }}</span>
       </div>
     </div>
     <div ref="selectedFrame" class="operator-selected-frame" :class="{ 'has-selection': chosenCount > 0 }">
     <TransitionGroup name="selected-chip" tag="div" class="operator-selected-chips" aria-label="已选算子" @before-leave="positionLeavingItem" @after-leave="clearItemPosition" @leave-cancelled="clearItemPosition" @before-enter="clearItemPosition">
-      <button v-for="operator in selectedItems" :key="operator.name" type="button" class="selected-chip sc-pressable" :disabled="submitting" :aria-label="'取消选择：' + displayName(operator)" @click="toggleOperator(operator)"><Check :size="13" aria-hidden="true" />{{ displayName(operator) }}<X :size="13" class="chip-remove" aria-hidden="true" /></button>
+      <button v-for="operator in selectedItems" :key="operator.name" type="button" class="selected-chip sc-pressable" :disabled="submitting || isFixed(operator)" :aria-label="(isFixed(operator) ? '固定算子：' : '取消选择：') + displayName(operator)" @click="toggleOperator(operator)"><LockKeyhole v-if="isFixed(operator)" :size="13" aria-hidden="true" /><Check v-else :size="13" aria-hidden="true" />{{ displayName(operator) }}<X v-if="!isFixed(operator)" :size="13" class="chip-remove" aria-hidden="true" /></button>
     </TransitionGroup>
     </div>
     <p v-if="showSubmitPanel" class="operator-submit-panel" role="alert">{{ props.submittedMessage }}</p>
     <p v-if="query.trim()" class="operator-search-result" role="status">找到 {{ ordered.length }} 个匹配算子</p>
     <div ref="listFrame" class="operator-list-frame">
     <TransitionGroup tag="div" name="operator-filter" class="operator-list" @before-leave="positionLeavingItem" @after-leave="clearItemPosition" @leave-cancelled="clearItemPosition" @before-enter="clearItemPosition">
-      <article v-for="operator in ordered" :key="operator.name" class="operator-item" :data-selection-id="operator.name" :class="{ 'is-chosen': chosenSet.has(operator.name) }">
+      <article v-for="operator in ordered" :key="operator.name" class="operator-item" :data-selection-id="operator.name" :data-operator-class="policy ? (isFixed(operator) ? 'fixed' : 'optional') : undefined" :class="{ 'is-chosen': chosenSet.has(operator.name) }">
         <div class="operator-main">
           <div class="operator-symbol" aria-hidden="true">
             <svg viewBox="0 0 24 24"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Zm0 9L4 7.5m8 4.5 8-4.5M12 12v9M8 5.2l8 4.6"/></svg>
           </div>
           <div class="operator-content">
-            <div class="operator-heading"><h4>{{ displayName(operator) }}</h4><span v-if="isRecommended(operator)" class="operator-recommended">场景推荐</span><span v-else-if="isAvailable(operator)" class="operator-optional" title="未列入场景推荐，仍可自行选择">自主选用</span></div>
+            <div class="operator-heading"><h4>{{ displayName(operator) }}</h4><span v-if="policy" :class="isFixed(operator) ? 'operator-fixed' : 'operator-optional'">{{ isFixed(operator) ? '固定算子' : '可选算子' }}</span><span v-if="isRecommended(operator)" class="operator-recommended">场景推荐</span><span v-else-if="!policy && isAvailable(operator)" class="operator-optional" title="未列入场景推荐，仍可自行选择">自主选用</span></div>
             <p class="operator-id">{{ operator.name }} <span>{{ operator.version }}</span></p>
           </div>
           <span class="operator-status" :class="{ 'is-ready': isAvailable(operator) }">{{ statusText(operator.status) }}</span>
@@ -255,9 +273,9 @@ function resetRuntimeFilter(): void {
             <template #reference><button type="button" class="operator-detail-trigger sc-action sc-action--ghost" :data-runtime-trigger="operator.name" :aria-expanded="runtimeOperatorId === operator.name" :aria-label="'查看 ' + displayName(operator) + ' 的运行详情'" @keydown.esc.stop="closeRuntime(operator.name)"><Info aria-hidden="true" />运行详情<ArrowUpRight class="detail-arrow" aria-hidden="true" /></button></template>
             <div class="operator-runtime-content" @keydown.esc.stop="closeRuntime(operator.name)"><button type="button" class="operator-runtime-close sc-action sc-action--ghost sc-action--icon" aria-label="关闭运行详情" @click="closeRuntime(operator.name)"><X :size="16" aria-hidden="true" /></button><strong>{{ displayName(operator) }}</strong><p>运行配置</p><dl><div><dt>运行镜像</dt><dd>{{ operator.image || operator.runtime || '未提供' }}</dd></div><div><dt>运行环境</dt><dd>{{ runtimeTypeText(operator) }}</dd></div><div><dt>部署方式</dt><dd>{{ deploymentText(operator) || '原生运行' }}</dd></div><div><dt>调用入口</dt><dd>{{ operator.handler || '未提供' }}</dd></div><div><dt>资源要求</dt><dd>{{ operator.resource_requirement || '未限定' }}</dd></div><div><dt>算子类型</dt><dd>{{ operator.backend_categories || '未提供' }}</dd></div><div><dt>所属场景</dt><dd>{{ operator.backend_tags || '未提供' }}</dd></div></dl></div>
           </el-popover>
-          <button type="button" class="operator-select-button sc-action" :aria-pressed="chosenSet.has(operator.name)" :aria-label="'选择算子：' + displayName(operator)" :disabled="submitting || (!isAvailable(operator) && !chosenSet.has(operator.name))" @click="toggleOperator(operator)">
+          <button type="button" class="operator-select-button sc-action" :aria-pressed="chosenSet.has(operator.name)" :aria-label="(isFixed(operator) ? '固定算子：' : '选择算子：') + displayName(operator)" :disabled="submitting || isFixed(operator) || (!isAvailable(operator) && !chosenSet.has(operator.name))" @click="toggleOperator(operator)">
             <span class="operator-select-icon" aria-hidden="true"><Plus class="operator-icon-add" /><Check class="operator-icon-check" /></span>
-            <span class="operator-select-label"><span class="operator-select-current">{{ chosenSet.has(operator.name) ? '已选择' : isAvailable(operator) ? '选择算子' : '暂不可选' }}</span><span v-if="chosenSet.has(operator.name)" class="operator-select-undo" aria-hidden="true">取消选择</span></span>
+            <span class="operator-select-label"><span class="operator-select-current">{{ isFixed(operator) ? '固定保留' : chosenSet.has(operator.name) ? '已选择' : isAvailable(operator) ? '选择算子' : '暂不可选' }}</span><span v-if="chosenSet.has(operator.name) && !isFixed(operator)" class="operator-select-undo" aria-hidden="true">取消选择</span></span>
           </button>
           </div>
         </div>
@@ -337,6 +355,16 @@ function resetRuntimeFilter(): void {
 .operator-content { min-width: 0; flex: 1; }
 .operator-heading { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 12px; }
 .operator-heading h4 { margin: 0; font-size: 17px; font-weight: 600; overflow-wrap: anywhere; }
+.operator-policy { margin: 16px 24px 0; padding: 14px 16px; border: 1px solid #dce6f3; border-radius: 8px; background: #f8fafd; }
+.operator-category-filters { display: flex; flex-wrap: wrap; gap: 6px; }
+.operator-category-filters button { min-height: 38px; padding: 0 12px; border: 1px solid transparent; border-radius: 6px; background: transparent; color: #526074; cursor: pointer; }
+.operator-category-filters button[aria-pressed="true"] { border-color: #c8daf4; background: #edf4ff; color: var(--scnet-primary); font-weight: 600; }
+.operator-category-filters span { margin-left: 6px; font: 12px var(--scnet-font-mono); }
+.operator-policy p { display: flex; align-items: flex-start; gap: 6px; margin: 10px 0 0; color: #61758e; font-size: 12px; line-height: 1.7; }
+.operator-policy p svg { flex: none; margin-top: 3px; }
+.operator-fixed { padding: 1px 7px; border: 1px solid #bcd2f0; border-radius: 4px; color: #235ba4; background: #eaf2ff; font-size: 11px; white-space: nowrap; }
+.selected-chip:disabled { opacity: 1; cursor: default; }
+.operator-select-button:disabled .operator-select-current { opacity: 1; transform: none; }
 .operator-recommended { padding: 1px 7px; border-radius: 4px; color: var(--scnet-primary); background: var(--scnet-primary-soft); font-size: 11px; white-space: nowrap; }
 .operator-optional { padding: 1px 7px; border: 1px solid #e1e6ed; border-radius: 4px; color: #687588; background: #f6f8fb; font-size: 11px; white-space: nowrap; }
 .operator-id { margin: 3px 0 0; color: #687588; font: 12px/1.7 var(--scnet-font-mono); overflow-wrap: anywhere; }

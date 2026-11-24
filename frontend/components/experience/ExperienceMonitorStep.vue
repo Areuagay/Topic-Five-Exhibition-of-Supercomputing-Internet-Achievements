@@ -80,7 +80,7 @@ function inspect(value: string): void {
         size="default"
         @row-click="(row) => selectRun(row.run_id)"
       >
-        <el-table-column label="运行记录" min-width="210" class-name="mono"><template #default="{ row }"><div class="run-identity">{{ row.run_id }}<span class="run-origin" :class="{ 'is-runtime': row.run_id === submittedRunId }">{{ row.run_id === submittedRunId ? '当前任务' : row.origin === 'runtime' ? '历史创建' : '预置' }}</span></div></template></el-table-column>
+        <el-table-column label="运行记录" min-width="210" class-name="mono"><template #default="{ row }"><div class="run-identity">{{ row.run_id }}<span class="run-origin" :class="{ 'is-runtime': row.run_id === submittedRunId }">{{ row.run_id === submittedRunId ? '当前任务' : '历史创建' }}</span></div></template></el-table-column>
         <el-table-column label="状态" width="100">
           <template #default="{ row }">
             <el-tag

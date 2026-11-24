@@ -68,7 +68,7 @@ test('historical operator ids are replaced by current operators with node resour
   assert.ok(detail.workflow.nodes.every(node => !node.operator_id || names.has(node.operator_id)))
   assert.ok(detail.workflow.nodes.filter(node => node.operator_id).every(node => node.cpu_cores >= 1))
   assert.ok(detail.workflow.nodes.some(node => node.runtime_label === 'Singularity'))
-  assert.equal(detail.nodes, detail.workflow.nodes.filter(node => node.operator_id).length)
+  assert.equal(detail.nodes, detail.workflow.nodes.length)
   assert.equal(detail.cpu_cores, detail.workflow.nodes.reduce((sum, node) => sum + (node.cpu_cores || 0), 0))
   assert.equal(detail.elapsed_seconds, 3600)
   assert.equal(detail.planned_seconds, 3600)

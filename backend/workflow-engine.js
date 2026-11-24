@@ -1,5 +1,8 @@
 // Demonstration orchestration rules. These describe independent invocations and
 // data preparation/postprocessing, not MPI threads inside a scientific solver.
+import { GEODYNAMICS_ENTITIES, GEODYNAMICS_WORKFLOW_VERSION, getGeodynamicsPolicy } from '../shared/geodynamics-workflow.js'
+import { getDomainWorkflowTemplate } from './domain-workflows.js'
+
 export const OPERATOR_DEPENDENCIES = {
   geodynamics: {
     supg: [], uzawa: [], 'citcoms-global': [], 'citcoms-regional': [],
@@ -75,12 +78,126 @@ export function analyzeWorkflow(workflow) {
   return { incoming, outgoing, order, ranks, parallel: new Set(ranks.values()).size < nodes.size }
 }
 
-export function buildOperatorWorkflow(domain, nodes, ticksPerNode) {
+function buildGeodynamicsWorkflow(nodes, ticksPerNode, policy) {
+  const operators = nodes.filter(node => node.operator_id).map(node => ({
+    ...node,
+    node_kind: 'operator',
+    selection_class: policy.fixedOperatorIds.includes(node.operator_id) ? 'fixed' : 'optional',
+  }))
+  const byOperator = new Map(operators.map(node => [node.operator_id, node.id]))
+  const internal = GEODYNAMICS_ENTITIES.map(entity => ({
+    ...entity,
+    name: entity.id === 'preview' ? policy.previewName : entity.name,
+    node_kind: 'internal',
+    status: 'pending', progress: 0, duration_ticks: ticksPerNode,
+  }))
+  const edges = [
+    { source: 'prepare', target: 'partition', source_port: 'model', target_port: 'model' },
+    { source: 'runtime', target: 'partition', source_port: 'environment', target_port: 'environment' },
+  ]
+  // A Stokes velocity/pressure stage precedes stabilized transport when both
+  // interfaces are selected. CitcomS invocations are separate comparison runs.
+  for (const node of operators) {
+    const parent = node.operator_id === 'supg' ? byOperator.get('uzawa') : null
+    edges.push({ source: parent || 'partition', target: node.id })
+  }
+  const nonLeaves = new Set(edges.map(edge => edge.source))
+  for (const node of operators.filter(node => !nonLeaves.has(node.id))) {
+    edges.push({ source: node.id, target: 'iterate', source_port: 'results', target_port: 'results' })
+  }
+  if (!operators.length) edges.push({ source: 'partition', target: 'iterate' })
+  edges.push(
+    { source: 'iterate', target: 'analyze', source_port: 'results', target_port: 'results' },
+    { source: 'analyze', target: 'vtk', source_port: 'snapshot', target_port: 'snapshot' },
+    { source: 'vtk', target: 'preview', source_port: 'grid', target_port: 'grid' },
+    { source: 'analyze', target: 'post', source_port: 'snapshot', target_port: 'snapshot' },
+    { source: 'vtk', target: 'post', source_port: 'grid', target_port: 'grid' },
+    { source: 'preview', target: 'post', source_port: 'image', target_port: 'image' },
+  )
+  const workflow = {
+    nodes: [...internal.slice(0, 3), ...operators, ...internal.slice(3)],
+    edges,
+    template_id: 'citcomcu.geodynamics.workflow',
+    template_version: GEODYNAMICS_WORKFLOW_VERSION,
+  }
+  analyzeWorkflow(workflow)
+  return workflow
+}
+
+/** Keep only dependencies that cannot already be reached through another edge. */
+function reduceDependencies(nodes, edges) {
+  const outgoing = new Map(nodes.map(node => [node.id, []]))
+  for (const edge of edges) outgoing.get(edge.source).push(edge.target)
+  return edges.filter(edge => {
+    const queue = outgoing.get(edge.source).filter(id => id !== edge.target)
+    const seen = new Set()
+    for (const id of queue) {
+      if (id === edge.target) return false
+      if (seen.has(id)) continue
+      seen.add(id)
+      queue.push(...outgoing.get(id).filter(next => !seen.has(next)))
+    }
+    return true
+  })
+}
+
+function buildDomainWorkflow(nodes, ticksPerNode, rules, template) {
+  const selected = new Map(nodes.filter(node => node.operator_id).map(node => [`@${node.operator_id}`, {
+    ...node, node_kind: 'operator', selection_class: 'optional',
+  }]))
+  const nonLeaves = new Set(Object.values(rules).flat())
+  const resultNames = template.result_slots ?? Object.keys(rules).filter(name => !nonLeaves.has(name))
+  const expand = refs => [...new Set(refs.flatMap(ref => ref === '$results' ? resultNames.map(name => `@${name}`) : [ref]))]
+  const dependencies = new Map(template.nodes.map(node => [node.id, expand(node.depends_on)]))
+  for (const [name, parents] of Object.entries(rules)) {
+    dependencies.set(`@${name}`, [...new Set([
+      ...parents.map(parent => `@${parent}`),
+      ...(template.operator_hooks?.[name] ?? template.operator_inputs),
+    ])])
+  }
+  // Validate the complete template, including optional slots, before projection.
+  analyzeWorkflow({
+    nodes: [...dependencies.keys()].map(id => ({ id })),
+    edges: [...dependencies].flatMap(([target, sources]) => sources.map(source => ({ source, target }))),
+  })
+  const kept = new Map(template.nodes.map(({ depends_on, ...entity }) => [entity.id, {
+    ...entity, entity_id: entity.id, node_kind: 'internal', status: 'pending', progress: 0,
+    duration_ticks: ticksPerNode * entity.duration_weight,
+  }]))
+  for (const [key, node] of selected) kept.set(key, node)
+  const memo = new Map()
+  const nearestInputs = key => {
+    if (kept.has(key)) return [key]
+    if (!memo.has(key)) memo.set(key, [...new Set(dependencies.get(key).flatMap(nearestInputs))])
+    return memo.get(key)
+  }
+  const edges = [...kept].flatMap(([key, node]) =>
+    [...new Set(dependencies.get(key).flatMap(nearestInputs))].map(parent => ({ source: kept.get(parent).id, target: node.id })),
+  )
+  const workflow = {
+    nodes: [...kept.values()],
+    edges: reduceDependencies([...kept.values()], edges),
+    template_id: template.id,
+    template_version: template.version,
+    template_title: template.title,
+    template_summary: template.summary,
+  }
+  const graph = analyzeWorkflow(workflow)
+  const byId = new Map(workflow.nodes.map(node => [node.id, node]))
+  workflow.nodes = graph.order.map(id => byId.get(id))
+  return workflow
+}
+
+export function buildOperatorWorkflow(domain, nodes, ticksPerNode, scenarioId) {
   const rules = OPERATOR_DEPENDENCIES[domain] ?? {}
   const operators = nodes.filter(n => n.operator_id)
   const known = operators.every(n => Object.hasOwn(rules, n.operator_id))
   // Unknown integrations preserve the original selected-order serial contract.
   if (!known) return { nodes, edges: nodes.slice(1).map((n,i) => ({ source:nodes[i].id, target:n.id })) }
+  const policy = getGeodynamicsPolicy(domain, scenarioId)
+  if (policy) return buildGeodynamicsWorkflow(nodes, ticksPerNode, policy)
+  const template = getDomainWorkflowTemplate(domain, scenarioId)
+  if (template) return buildDomainWorkflow(nodes, ticksPerNode, rules, template)
   const selected = new Map(operators.map(n => [n.operator_id, n.id]))
   const ancestors = (name, visiting = new Set()) => {
     if (visiting.has(name)) throw new Error('算子依赖存在循环')

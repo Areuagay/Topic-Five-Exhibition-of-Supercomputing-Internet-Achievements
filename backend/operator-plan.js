@@ -10,6 +10,8 @@
  * 3. 历史运行记录里的旧算子按 LEGACY_OPERATOR_MAP 迁移到当前算子库。
  */
 import { buildOperatorWorkflow } from './workflow-engine.js'
+import { GEODYNAMICS_WORKFLOW_VERSION, getGeodynamicsPolicy, retainFixedOperators } from '../shared/geodynamics-workflow.js'
+import { getDomainWorkflowTemplate } from './domain-workflows.js'
 
 export const OPERATOR_PLAN_VERSION = 6
 
@@ -96,7 +98,7 @@ function nodeWeight(node, operatorByName) {
     const { cpu_cores, gpu_count } = operatorResources(operatorByName.get(node.operator_id))
     return Math.max(1, cpu_cores) + gpu_count * 4
   }
-  return 1
+  return Math.max(1, Number(node.duration_weight) || 1)
 }
 
 /** 按依赖关系做最早开始时间排程；生成各节点的计划区间（秒）。 */
@@ -236,7 +238,8 @@ function detailOperatorNames(detail, operatorNames) {
 export function applyOperatorPlan(domain, detail, operators, scenarioOperators = [], options = {}) {
   if (!detail || !Array.isArray(detail.workflow?.nodes)) return false
   const previousNodes = detail.workflow.nodes
-  const previousFailed = previousNodes.findIndex(node => ['failed', 'blocked'].includes(node.status))
+  const previousFailed = previousNodes.find(node => node.status === 'failed') ?? previousNodes.find(node => node.status === 'blocked')
+  const policy = getGeodynamicsPolicy(domain, detail.scenario_id)
   const operatorByName = new Map(operators.map(operator => [operator.name, operator]))
   const operatorNames = new Set(operatorByName.keys())
   const scenarioIds = scenarioOperators.map(item => item.id).filter(id => operatorNames.has(id))
@@ -246,6 +249,7 @@ export function applyOperatorPlan(domain, detail, operators, scenarioOperators =
 
   let selected = detailOperatorNames(detail, operatorNames)
   if (!selected.length) selected = scenarioIds.slice(0, expectedCount)
+  if (policy) selected = retainFixedOperators(selected, policy.fixedOperatorIds.filter(id => operatorNames.has(id)))
   selected = [...new Set(selected)]
   if (!selected.length) return false
 
@@ -255,7 +259,7 @@ export function applyOperatorPlan(domain, detail, operators, scenarioOperators =
     ...chosen.map((operator, index) => ({ id: `operator-${index}`, operator_id: operator.name, name: operator.title || operator.name })),
     { id: 'post', name: '结果整理与输出' },
   ]
-  const workflow = buildOperatorWorkflow(domain, nodes.map(node => ({ ...node })), 1)
+  const workflow = buildOperatorWorkflow(domain, nodes.map(node => ({ ...node })), 1, detail.scenario_id)
 
   const isRealtime = options.realtime === true
   const plannedSeconds = isRealtime
@@ -274,11 +278,11 @@ export function applyOperatorPlan(domain, detail, operators, scenarioOperators =
         ? Math.min(plannedSeconds, elapsed)
         : Math.min(plannedSeconds, plannedSeconds * progress / 100)
 
-  let failedIndex = -1
-  if (status === 'failed') {
-    const oldIndex = previousFailed
-    failedIndex = oldIndex > 0 ? Math.min(chosen.length - 1, oldIndex - 1) : chosen.length - 1
-  }
+  const failedNodeId = status === 'failed'
+    ? (workflow.nodes.find(node => previousFailed?.operator_id
+      ? node.operator_id === previousFailed.operator_id
+      : node.id === previousFailed?.id) ?? workflow.nodes.filter(node => node.operator_id).at(-1))?.id
+    : null
   if (['running', 'stopped', 'failed'].includes(status) && !isRealtime) {
     detail.elapsed_seconds = Math.round(runElapsed)
   }
@@ -296,27 +300,11 @@ export function applyOperatorPlan(domain, detail, operators, scenarioOperators =
       nodeProgress = 0
       nodeStatus = 'pending'
     } else if (status === 'failed') {
-      if (node.id === 'post') {
-        nodeProgress = 0
-        nodeStatus = 'blocked'
-      } else if (node.operator_id) {
-        const index = Number(node.id.replace('operator-', ''))
-        if (index < failedIndex) {
-          nodeProgress = 100
-          nodeStatus = 'success'
-        } else if (index === failedIndex) {
-          // 失败节点按它在计划区间里实际走到哪给出进度，
-          // 这样「总体进度」与图上各节点进度之和能对得上。
-          nodeProgress = Math.min(99, Math.max(1, progressAt(slot, runElapsed)))
-          nodeStatus = 'failed'
-        } else {
-          nodeProgress = 0
-          nodeStatus = 'blocked'
-        }
-      } else {
-        nodeProgress = runElapsed >= slot.start ? 100 : 0
-        nodeStatus = nodeProgress === 100 ? 'success' : 'blocked'
-      }
+      nodeProgress = node.id === failedNodeId
+        ? Math.min(99, Math.max(1, progressAt(slot, runElapsed)))
+        : progressAt(slot, runElapsed)
+      nodeStatus = node.id === failedNodeId ? 'failed'
+        : nodeProgress >= 100 ? 'success' : nodeProgress > 0 ? 'running' : 'pending'
     } else {
       nodeProgress = progressAt(slot, runElapsed)
       nodeStatus = nodeProgress >= 100 ? 'success' : nodeProgress > 0 || runElapsed >= slot.start ? 'running' : 'pending'
@@ -388,7 +376,9 @@ export function applyOperatorPlan(domain, detail, operators, scenarioOperators =
     ? 100
     : status === 'queued' || status === 'pending'
       ? 0
-      : Math.min(99, Math.max(0, Math.round((elapsedTotal / plannedSeconds) * 100)))
+      : isRealtime
+        ? Math.min(99, Math.floor(runElapsed / plannedSeconds * 100))
+        : Math.min(99, Math.max(0, Math.round((elapsedTotal / plannedSeconds) * 100)))
   if (['failed', 'stopped'].includes(status)) {
     detail.elapsed_seconds = Math.round(plannedSeconds * overall / 100)
   }
@@ -416,6 +406,10 @@ export function applyOperatorPlan(domain, detail, operators, scenarioOperators =
     detail.current_stage = '已停止'
     for (const node of running) node.status = 'stopped'
   }
+  else if (status === 'paused') {
+    detail.current_stage = '已暂停'
+    for (const node of running) node.status = 'paused'
+  }
   else if (status === 'queued' || status === 'pending') detail.current_stage = '排队等待'
   else detail.current_stage = running.length ? running.map(node => node.name).join('、') : '等待依赖'
   return true
@@ -424,6 +418,10 @@ export function applyOperatorPlan(domain, detail, operators, scenarioOperators =
 /** 判断当前记录是否仍引用旧算子或缺少算子资源，需要迁移。 */
 export function needsOperatorPlan(detail, operatorNames) {
   if (!detail) return false
+  if (getGeodynamicsPolicy('geodynamics', detail.scenario_id)
+    && detail.workflow?.template_version !== GEODYNAMICS_WORKFLOW_VERSION) return true
+  const template = getDomainWorkflowTemplate(null, detail.scenario_id)
+  if (template && (detail.workflow?.template_id !== template.id || detail.workflow?.template_version !== template.version)) return true
   if (detail._operator_version !== OPERATOR_PLAN_VERSION) return true
   const ids = Array.isArray(detail.selected_operator_ids) ? detail.selected_operator_ids : []
   if (!ids.length || ids.some(id => !operatorNames.has(id))) return true
