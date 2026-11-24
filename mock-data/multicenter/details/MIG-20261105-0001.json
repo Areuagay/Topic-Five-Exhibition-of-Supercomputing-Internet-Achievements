@@ -7,7 +7,7 @@
     "function_id": "fn-matrix-multiply",
     "status": "migrating",
     "progress": 65,
-    "from_cluster": "guangzhou",
+    "from_cluster": "jinan",
     "to_cluster": "kunshan",
     "source_type": "backend",
     "start_time": "2026-11-05T17:58:01+08:00",
@@ -35,7 +35,7 @@
         "timestamp": "2026-11-05T18:02:01+08:00"
       }
     ],
-    "reason": "广州中心排队等待 82 项，向昆山中心转移矩阵乘法实例",
+    "reason": "济南中心排队等待 82 项，向昆山中心转移矩阵乘法实例",
     "transferred_replicas": 1,
     "total_size_mb": 1024
   },

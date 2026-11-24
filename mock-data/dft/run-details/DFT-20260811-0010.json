@@ -9,7 +9,7 @@
   "progress": 100,
   "execution_mode": "simulated",
   "cluster_id": "guangzhou",
-  "cluster_name": "神威·太湖之光",
+  "cluster_name": "银河 III",
   "job_id": "DFT-SLURM-71438",
   "current_stage": "completed",
   "start_time": "2026-08-10T14:00:00+08:00",

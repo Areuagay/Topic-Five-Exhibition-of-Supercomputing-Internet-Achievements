@@ -102,7 +102,7 @@ function usage(value: number): number {
             <span class="resource-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="7" rx="1.5"/><rect x="4" y="14" width="16" height="7" rx="1.5"/><path d="M8 6.5h.01M8 17.5h.01M12 6.5h4M12 17.5h4M12 10v4"/></svg>
             </span>
-            <div><h4>{{ cluster.name }}</h4><p>{{ cluster.location }} · {{ cluster.scheduler }}</p><span v-if="!supportedSet.has(cluster.id)" class="resource-unavailable-label">未适配本场景</span></div>
+            <div><h4>{{ cluster.location }}中心</h4><p>{{ cluster.name }} · {{ cluster.scheduler }}</p><span v-if="!supportedSet.has(cluster.id)" class="resource-unavailable-label">未适配本场景</span></div>
           </div>
           <span class="resource-status" :class="{ 'is-online': cluster.status === 'online', 'is-warning': cluster.status === 'degraded' }">
             <i aria-hidden="true" />{{ clusterStatusLabel(cluster) }}
@@ -117,11 +117,11 @@ function usage(value: number): number {
         <div class="resource-load">
           <div class="resource-load-item">
             <div><span>CPU 利用率</span><strong>{{ cpuValue(cluster).toFixed(2) }}<small>%</small></strong></div>
-            <meter :value="usage(cpuValue(cluster))" min="0" max="100" :aria-label="cluster.name + ' CPU 利用率'">{{ cpuValue(cluster).toFixed(2) }}%</meter>
+            <meter :value="usage(cpuValue(cluster))" min="0" max="100" :aria-label="cluster.location + '中心 CPU 利用率'">{{ cpuValue(cluster).toFixed(2) }}%</meter>
           </div>
           <div class="resource-load-item">
             <div><span>GPU 利用率</span><strong>{{ gpuValue(cluster).toFixed(2) }}<small>%</small></strong></div>
-            <meter :value="usage(gpuValue(cluster))" min="0" max="100" :aria-label="cluster.name + ' GPU 利用率'">{{ gpuValue(cluster).toFixed(2) }}%</meter>
+            <meter :value="usage(gpuValue(cluster))" min="0" max="100" :aria-label="cluster.location + '中心 GPU 利用率'">{{ gpuValue(cluster).toFixed(2) }}%</meter>
           </div>
         </div>
         <footer class="resource-card-foot">

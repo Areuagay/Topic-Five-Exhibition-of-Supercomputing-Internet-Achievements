@@ -8,7 +8,7 @@
         "name": "天河新一代"
       },
       {
-        "id": "guangzhou",
+        "id": "jinan",
         "name": "神威·太湖之光"
       },
       {
@@ -16,7 +16,7 @@
         "name": "曙光星云"
       },
       {
-        "id": "jinan",
+        "id": "guangzhou",
         "name": "银河 III"
       }
     ],
@@ -31,7 +31,7 @@
             "status": "ready"
           },
           {
-            "cluster_id": "guangzhou",
+            "cluster_id": "jinan",
             "replicas": 1,
             "status": "ready"
           },
@@ -41,7 +41,7 @@
             "status": "ready"
           },
           {
-            "cluster_id": "jinan",
+            "cluster_id": "guangzhou",
             "replicas": 0,
             "status": "offline"
           }
@@ -57,7 +57,7 @@
             "status": "ready"
           },
           {
-            "cluster_id": "guangzhou",
+            "cluster_id": "jinan",
             "replicas": 2,
             "status": "ready"
           },
@@ -67,7 +67,7 @@
             "status": "undeployed"
           },
           {
-            "cluster_id": "jinan",
+            "cluster_id": "guangzhou",
             "replicas": 0,
             "status": "offline"
           }
@@ -83,7 +83,7 @@
             "status": "ready"
           },
           {
-            "cluster_id": "guangzhou",
+            "cluster_id": "jinan",
             "replicas": 2,
             "status": "ready"
           },
@@ -93,7 +93,7 @@
             "status": "ready"
           },
           {
-            "cluster_id": "jinan",
+            "cluster_id": "guangzhou",
             "replicas": 0,
             "status": "offline"
           }

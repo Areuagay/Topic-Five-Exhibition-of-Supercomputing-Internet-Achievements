@@ -34,6 +34,8 @@
 
 ```powershell
 node scripts/sync-multicenter-backend.mjs
+# 仅使用仓库中的平台快照
+node scripts/sync-multicenter-backend.mjs --offline
 # 或在 frontend 目录
 npm run sync:backend
 # 默认读取 http://192.168.95.138:8890/ ，可用环境变量覆盖
@@ -42,7 +44,10 @@ $env:MULTICENTER_BACKEND_URL = 'http://192.168.95.138:8890/'
 
 - 快照：`mock-data/multicenter/backend-snapshot.json`（含来源地址与抓取时间）
 - 平台不可达时自动回退到该快照，脚本仍可重复执行
-- 应用示范保留长沙 / 广州 / 昆山 / 济南地名作为卡片小字，超算名称与资源状态跟随平台
+- 按超算名称匹配城市与硬件，不依赖平台卡片顺序；资源状态跟随对应的超算
+- 四中心对应关系：天河新一代 → 长沙 / 飞腾CPU + 迈创DSP；神威·太湖之光 → 济南 / 神威26010 众核处理器；
+  曙光星云 → 昆山 / 国产CPU + 寒武纪MLU；银河 III → 广州 / Intel Xeon + Xeon Phi；调度器均为 SLURM
+- 首页索引中的中心名称与架构、六大领域运行记录中的集群名称随脚本一起更新
 - 六大领域的运行记录、运行详情中的集群名称也随脚本同步，避免与资源调度显示不一致
 - 平台暂未开放函数部署、调用与迁移接口，这三块按四中心运行任务 / 排队等待推导：
   每中心每 4 个运行任务折算 1 个就绪实例，调用条数等于运行任务数，迁移只发生在非维护中心之间

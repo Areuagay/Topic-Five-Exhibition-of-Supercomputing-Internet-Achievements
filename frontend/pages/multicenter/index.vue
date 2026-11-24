@@ -110,8 +110,8 @@ watch(
 
 const clusterNameMap = computed(() => {
   const m = new Map<string, string>()
-  for (const c of clusters.value ?? []) m.set(c.id, c.name)
-  for (const c of appStore.clusters) if (!m.has(c.id)) m.set(c.id, c.name)
+  for (const c of clusters.value ?? []) m.set(c.id, `${c.location}中心`)
+  for (const c of appStore.clusters) if (!m.has(c.id)) m.set(c.id, `${c.location}中心`)
   return m
 })
 const nameOf = (id: string): string => clusterNameMap.value.get(id) ?? id
@@ -318,7 +318,7 @@ const topoOption = computed<EChartsCoreOption | null>(() => {
           }
           return `${nameOf(source)} ↔ ${nameOf(target)}<br/>时延 ${data.latency_ms ?? '-'} ms · 带宽 ${formatBandwidth(Number(data.bandwidth_mbps || 0))}`
         }
-        return `${String(data.name ?? '')}<br/>${String(data.architecture ?? '')} · ${String(data.resourceLabel ?? '')}`
+        return `${String(data.name ?? '')}<br/>${String(data.machineName ?? '')} · ${String(data.architecture ?? '')} · ${String(data.resourceLabel ?? '')}`
           + `<br/>CPU ${data.cpu ?? '-'}% · GPU ${data.gpu ?? '-'}%`
           + `<br/>运行任务 ${data.running ?? 0} · 排队等待 ${data.queued ?? 0}`
       },
@@ -337,7 +337,7 @@ const topoOption = computed<EChartsCoreOption | null>(() => {
           distance: 10,
           formatter: (params: { data?: Record<string, unknown> }) => {
             const data = params.data ?? {}
-            return `{name|${String(data.name ?? '')}}\n{meta|${String(data.location ?? '')} · ${String(data.resourceLabel ?? '')}}`
+            return `{name|${String(data.name ?? '')}}\n{meta|${String(data.machineName ?? '')} · ${String(data.resourceLabel ?? '')}}`
           },
           rich: {
             name: { color: '#2f3b50', fontSize: 13, fontWeight: 600, lineHeight: 22 },
@@ -366,10 +366,10 @@ const topoOption = computed<EChartsCoreOption | null>(() => {
           const cluster = clusterList.value.find((item) => item.id === n.id)
           return {
             id: n.id,
-            name: n.name,
+            name: nameOf(n.id),
+            machineName: n.name,
             selected: n.id === t.nodes[0]?.id,
             status: n.status,
-            location: cluster?.location ?? '',
             architecture: cluster?.architecture ?? '',
             resourceLabel: clusterStatusLabel(cluster),
             cpu: cluster?.cpu_utilization ?? 0,
@@ -473,7 +473,7 @@ const deploymentRows = computed<FunctionDeploymentRow[]>(() => {
         const deployment = deploymentByCluster.get(cluster.id)
         return {
           cluster_id: cluster.id,
-          cluster_name: cluster.name,
+          cluster_name: nameOf(cluster.id),
           replicas: deployment?.replicas ?? 0,
           status: deployment?.status ?? 'undeployed',
           deployed: Boolean(deployment),
@@ -744,10 +744,10 @@ async function openMig(id: string): Promise<void> {
                 >
                   <span class="cluster-status-dot" aria-hidden="true" />
                   <span class="cluster-rail-copy">
-                    <strong>{{ c.name }}</strong>
-                    <small>{{ c.location }} · CPU {{ Math.round(c.cpu_utilization) }}% · GPU {{ Math.round(c.gpu_utilization) }}%</small>
+                    <strong>{{ nameOf(c.id) }}</strong>
+                    <small>{{ c.name }} · CPU {{ Math.round(c.cpu_utilization) }}% · GPU {{ Math.round(c.gpu_utilization) }}%</small>
                   </span>
-                  <span class="cluster-rail-queue" :title="`${c.name} 排队等待 ${c.queue_length} 项`" :aria-label="`排队等待 ${c.queue_length} 项`">
+                  <span class="cluster-rail-queue" :title="`${nameOf(c.id)} 排队等待 ${c.queue_length} 项`" :aria-label="`排队等待 ${c.queue_length} 项`">
                     <strong>{{ c.queue_length }}</strong>
                     <small>排队</small>
                   </span>
@@ -799,9 +799,9 @@ async function openMig(id: string): Promise<void> {
                     <p>中心详情</p>
                     <span :class="`is-${selectedCluster.status}`">{{ clusterStatusLabel(selectedCluster) }}</span>
                   </div>
-                  <h3>{{ selectedCluster.name }}</h3>
+                  <h3>{{ nameOf(selectedCluster.id) }}</h3>
                   <p class="inspector-description">
-                    {{ selectedCluster.location }} · {{ selectedCluster.architecture }} · {{ selectedCluster.scheduler }}
+                    {{ selectedCluster.name }} · {{ selectedCluster.architecture }} · {{ selectedCluster.scheduler }}
                   </p>
                   <div class="inspector-utilization">
                     <div>
@@ -859,7 +859,7 @@ async function openMig(id: string): Promise<void> {
             <div class="deployment-board-header" aria-hidden="true">
               <span>函数信息</span>
               <div class="deployment-centers">
-                <span v-for="cluster in matrixClusters" :key="cluster.id">{{ cluster.name }}</span>
+                <span v-for="cluster in matrixClusters" :key="cluster.id">{{ nameOf(cluster.id) }}</span>
               </div>
             </div>
 

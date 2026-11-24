@@ -17,7 +17,7 @@
           "gpu_utilization": 22.2
         },
         {
-          "cluster_id": "guangzhou",
+          "cluster_id": "jinan",
           "desired_replicas": 1,
           "ready_replicas": 1,
           "cpu_utilization": 73.2,
@@ -31,7 +31,7 @@
           "gpu_utilization": 62.2
         },
         {
-          "cluster_id": "jinan",
+          "cluster_id": "guangzhou",
           "desired_replicas": 0,
           "ready_replicas": 0,
           "cpu_utilization": 0,
@@ -54,7 +54,7 @@
           "gpu_utilization": 22.2
         },
         {
-          "cluster_id": "guangzhou",
+          "cluster_id": "jinan",
           "desired_replicas": 2,
           "ready_replicas": 2,
           "cpu_utilization": 73.2,
@@ -68,7 +68,7 @@
           "gpu_utilization": 0
         },
         {
-          "cluster_id": "jinan",
+          "cluster_id": "guangzhou",
           "desired_replicas": 0,
           "ready_replicas": 0,
           "cpu_utilization": 0,
@@ -91,7 +91,7 @@
           "gpu_utilization": 22.2
         },
         {
-          "cluster_id": "guangzhou",
+          "cluster_id": "jinan",
           "desired_replicas": 2,
           "ready_replicas": 2,
           "cpu_utilization": 73.2,
@@ -105,7 +105,7 @@
           "gpu_utilization": 62.2
         },
         {
-          "cluster_id": "jinan",
+          "cluster_id": "guangzhou",
           "desired_replicas": 0,
           "ready_replicas": 0,
           "cpu_utilization": 0,

@@ -54,7 +54,8 @@ function domainCode(domain: string): string {
 }
 
 function clusterName(id: string): string {
-  return indexData.value?.clusters.find((cluster) => cluster.id === id)?.name ?? id
+  const cluster = indexData.value?.clusters.find((cluster) => cluster.id === id)
+  return cluster ? `${cluster.location}中心` : id
 }
 
 function statusLabel(cluster: MultiCluster): string {
@@ -215,8 +216,8 @@ function utilization(value: number): string {
               >
                 <header class="cluster-status-head">
                   <div>
-                    <h3>{{ cluster.name }}</h3>
-                    <p>{{ cluster.location }} · {{ cluster.architecture }} · {{ cluster.scheduler }}</p>
+                    <h3>{{ cluster.location }}中心</h3>
+                    <p>{{ cluster.name }} · {{ cluster.architecture }} · {{ cluster.scheduler }}</p>
                   </div>
                   <span
                     class="status-badge"

@@ -4,6 +4,7 @@
  *
  * 用法：
  *   node scripts/sync-multicenter-backend.mjs
+ *   node scripts/sync-multicenter-backend.mjs --offline
  *   MULTICENTER_BACKEND_URL=http://192.168.95.138:8890/ node scripts/sync-multicenter-backend.mjs
  *
  * 数据来源：平台首页（/home）「全局资源视图」四张卡片的
@@ -29,12 +30,12 @@ const RUN_DOMAINS = ['geodynamics', 'llm', 'automotive', 'uav', 'drug', 'dft']
 const BACKEND_URL = process.env.MULTICENTER_BACKEND_URL || 'http://192.168.95.138:8890/'
 const TIME_ZONE = 'Asia/Shanghai'
 
-/** 应用示范中的四个中心，顺序与平台首页四张卡片一一对应。 */
+/** 按超算名称绑定城市与硬件，避免平台卡片顺序变化时发生错位。 */
 const CENTERS = [
-  { id: 'changsha', city: '长沙' },
-  { id: 'guangzhou', city: '广州' },
-  { id: 'kunshan', city: '昆山' },
-  { id: 'jinan', city: '济南' },
+  { id: 'changsha', name: '天河新一代', city: '长沙', architecture: '飞腾CPU + 迈创DSP' },
+  { id: 'guangzhou', name: '银河 III', city: '广州', architecture: 'Intel Xeon + Xeon Phi' },
+  { id: 'kunshan', name: '曙光星云', city: '昆山', architecture: '国产CPU + 寒武纪MLU' },
+  { id: 'jinan', name: '神威·太湖之光', city: '济南', architecture: '神威26010 众核处理器' },
 ]
 
 /** 平台首页的枚举 → 应用示范沿用的 status / 中文文案。 */
@@ -177,17 +178,23 @@ function readJSON(file, fallback) {
 }
 
 /** 把平台四中心映射为应用示范的算力中心记录。 */
-function buildClusters(cards, previous, snapshot) {
+export function buildClusters(cards, previous, snapshot) {
+  if (cards.length !== CENTERS.length) throw new Error('四中心资源数据必须包含四个超算')
   const specs = new Map(previous.map((cluster) => [cluster.id, cluster]))
-  return CENTERS.map((center, index) => {
-    const card = cards[index]
+  const resources = new Map(previous.map((cluster) => [cluster.name, cluster]))
+  const seen = new Set()
+  return cards.map((card) => {
+    const center = CENTERS.find((item) => item.name === card.name)
+    if (!center || seen.has(center.id)) throw new Error(`超算名称未知或重复：${card.name}`)
+    seen.add(center.id)
     const spec = specs.get(center.id) ?? {}
+    const resource = resources.get(card.name) ?? spec
     return {
       id: center.id,
       name: card.name,
       location: center.city,
-      architecture: spec.architecture ?? card.architecture,
-      scheduler: spec.scheduler ?? 'SLURM',
+      architecture: center.architecture,
+      scheduler: 'SLURM',
       status: STATUS_MAP[card.status] ?? 'online',
       resource_status: card.status,
       source_type: 'backend',
@@ -199,7 +206,7 @@ function buildClusters(cards, previous, snapshot) {
       active_jobs: card.running,
       queue_length: card.queued,
       // 平台首页未提供在线用户数，沿用 clusters.json 中已播种的演示值（与 total_nodes / total_cores 同属本地补充字段）
-      concurrent_users: spec.concurrent_users ?? 0,
+      concurrent_users: resource.concurrent_users ?? 0,
       concurrent_users_source: 'simulated',
       updated_at: snapshot.fetched_at,
     }
@@ -306,7 +313,7 @@ function buildWorkloads(clusters, matrix) {
  */
 function buildInvocations(clusters, timestamp) {
   const stamp = timestamp.slice(0, 10).replaceAll('-', '')
-  const now = Date.now()
+  const now = Date.parse(timestamp)
   const records = []
 
   const push = (invocation) => records.push(invocation)
@@ -401,15 +408,16 @@ function buildTrace(invocation) {
 }
 
 /**
- * 负载迁移：广州（排队 82）向昆山、长沙转移负载；另补成功 / 失败各一条历史记录。
+ * 负载迁移：排队最多的可用中心向另两个可用中心转移负载；另补成功 / 失败各一条历史记录。
  * 维护中的中心不参与迁移。
  */
-function buildMigrations(clusters, timestamp) {
-  const byId = new Map(clusters.map((cluster) => [cluster.id, cluster]))
-  const guangzhou = byId.get('guangzhou')
-  const kunshan = byId.get('kunshan')
-  const changsha = byId.get('changsha')
-  const now = Date.now()
+export function buildMigrations(clusters, timestamp) {
+  const available = clusters
+    .filter((cluster) => cluster.status !== 'offline')
+    .sort((a, b) => b.queue_length - a.queue_length)
+  if (available.length < 3) return []
+  const [busy, other, idle] = available
+  const now = Date.parse(timestamp)
   const stamp = timestamp.slice(0, 10).replaceAll('-', '')
 
   const records = [
@@ -418,11 +426,11 @@ function buildMigrations(clusters, timestamp) {
       function_id: 'fn-matrix-multiply',
       status: 'migrating',
       progress: 65,
-      from_cluster: 'guangzhou',
-      to_cluster: 'kunshan',
+      from_cluster: busy.id,
+      to_cluster: idle.id,
       start_time: iso(now - 12 * 60_000),
       end_time: '',
-      reason: `广州中心排队等待 ${guangzhou?.queue_length ?? 0} 项，向昆山中心转移矩阵乘法实例`,
+      reason: `${busy.location}中心排队等待 ${busy.queue_length} 项，向${idle.location}中心转移矩阵乘法实例`,
       transferred_replicas: 1,
       total_size_mb: 1024,
       events: [
@@ -436,11 +444,11 @@ function buildMigrations(clusters, timestamp) {
       function_id: 'fn-fft',
       status: 'pending',
       progress: 0,
-      from_cluster: 'guangzhou',
-      to_cluster: 'changsha',
+      from_cluster: busy.id,
+      to_cluster: other.id,
       start_time: '',
       end_time: '',
-      reason: `广州中心排队等待 ${guangzhou?.queue_length ?? 0} 项，FFT 实例等待调度至长沙中心`,
+      reason: `${busy.location}中心排队等待 ${busy.queue_length} 项，FFT 实例等待调度至${other.location}中心`,
       transferred_replicas: 1,
       total_size_mb: 512,
       events: [
@@ -452,11 +460,11 @@ function buildMigrations(clusters, timestamp) {
       function_id: 'fn-file-convert',
       status: 'success',
       progress: 100,
-      from_cluster: 'changsha',
-      to_cluster: 'kunshan',
+      from_cluster: other.id,
+      to_cluster: idle.id,
       start_time: iso(now - 95 * 60_000),
       end_time: iso(now - 93 * 60_000),
-      reason: `昆山中心空闲资源充足（排队 ${kunshan?.queue_length ?? 0} 项），承接转换函数实例`,
+      reason: `${idle.location}中心空闲资源充足（排队 ${idle.queue_length} 项），承接转换函数实例`,
       transferred_replicas: 1,
       total_size_mb: 256,
       events: [
@@ -471,8 +479,8 @@ function buildMigrations(clusters, timestamp) {
       function_id: 'fn-matrix-multiply',
       status: 'failed',
       progress: 42,
-      from_cluster: 'kunshan',
-      to_cluster: 'changsha',
+      from_cluster: idle.id,
+      to_cluster: other.id,
       start_time: iso(now - 180 * 60_000),
       end_time: iso(now - 179.7 * 60_000),
       reason: '目标中心资源校验未通过，迁移中止',
@@ -516,10 +524,21 @@ function buildMigrations(clusters, timestamp) {
  */
 function syncRunClusterNames(clusters) {
   const names = new Map(clusters.map((cluster) => [cluster.id, cluster.name]))
+  const replacements = new Map()
+  // 只替换名称字符串，保留科学数值的原始表示、缩进与换行。
+  const writeNames = (file) => {
+    const raw = readFileSync(file, 'utf8')
+    writeFileSync(file, raw.replace(/("cluster_name"\s*:\s*)("(?:[^"\\]|\\.)*")/g, (entry, prefix, quoted) => {
+      const name = replacements.get(JSON.parse(quoted))
+      return name ? prefix + JSON.stringify(name) : entry
+    }), 'utf8')
+    replacements.clear()
+  }
   const apply = (record) => {
     if (!record?.cluster_id) return false
     const name = names.get(record.cluster_id)
     if (!name || record.cluster_name === name) return false
+    replacements.set(record.cluster_name, name)
     record.cluster_name = name
     return true
   }
@@ -530,7 +549,7 @@ function syncRunClusterNames(clusters) {
     if (runs?.data) {
       let dirty = false
       for (const run of runs.data) dirty = apply(run) || dirty
-      if (dirty) writeJSON(runsFile, runs)
+      if (dirty) writeNames(runsFile)
     }
 
     const detailDir = resolve(MOCK_DIR, domain, 'run-details')
@@ -538,7 +557,7 @@ function syncRunClusterNames(clusters) {
       if (!file.endsWith('.json')) continue
       const filePath = resolve(detailDir, file)
       const detail = readJSON(filePath, null)
-      if (detail?.data && apply(detail.data)) writeJSON(filePath, detail)
+      if (detail?.data && apply(detail.data)) writeNames(filePath)
     }
 
     const stateFile = resolve(RUNTIME_STATE_DIR, `${domain}.json`)
@@ -548,7 +567,7 @@ function syncRunClusterNames(clusters) {
       for (const run of state.runs ?? []) dirty = apply(run) || dirty
       for (const detail of Object.values(state.details ?? {})) dirty = apply(detail) || dirty
       for (const template of Object.values(state.templates ?? {})) dirty = apply(template) || dirty
-      if (dirty) writeJSON(stateFile, state)
+      if (dirty) writeNames(stateFile)
     }
   }
 }
@@ -559,14 +578,20 @@ async function main() {
   const previousIndex = readJSON(INDEX_FILE, null)
 
   let snapshot
-  try {
-    snapshot = await fetchBackendSnapshot()
-    console.log(`[sync] 已从 ${snapshot.source} 读取四个算力中心`)
-  } catch (error) {
-    const cached = readJSON(SNAPSHOT_FILE, null)
-    if (!cached?.items?.length) throw error
-    snapshot = cached
-    console.warn(`[sync] 平台不可达（${error.message}），改用本地快照 ${SNAPSHOT_FILE}`)
+  if (process.argv.includes('--offline')) {
+    snapshot = readJSON(SNAPSHOT_FILE, null)
+    if (!snapshot?.items?.length) throw new Error(`本地四中心快照不存在：${SNAPSHOT_FILE}`)
+    console.log(`[sync] 使用本地快照 ${SNAPSHOT_FILE}`)
+  } else {
+    try {
+      snapshot = await fetchBackendSnapshot()
+      console.log(`[sync] 已从 ${snapshot.source} 读取四个算力中心`)
+    } catch (error) {
+      const cached = readJSON(SNAPSHOT_FILE, null)
+      if (!cached?.items?.length) throw error
+      snapshot = cached
+      console.warn(`[sync] 平台不可达（${error.message}），改用本地快照 ${SNAPSHOT_FILE}`)
+    }
   }
 
   const timestamp = snapshot.fetched_at
@@ -619,15 +644,17 @@ async function main() {
   // 首页索引里的中心名称与多中心联调运行记录数跟随平台推导结果。
   // 采用文本替换而不是整体重写，避免把紧凑数组重新排版。
   if (previousIndex?.data?.clusters) {
-    const names = new Map(clusters.map((cluster) => [cluster.id, cluster.name]))
-    const previousNames = new Map(previousIndex.data.clusters.map((cluster) => [cluster.id, cluster.name]))
+    const byId = new Map(clusters.map((cluster) => [cluster.id, cluster]))
     let raw = readFileSync(INDEX_FILE, 'utf8')
-    for (const [id, name] of names) {
-      const previous = previousNames.get(id)
-      if (previous && previous !== name) {
-        raw = raw.split(`"name": "${previous}"`).join(`"name": "${name}"`)
+    raw = raw.replace(/\{[^{}]*"id":\s*"([^"]+)"[^{}]*\}/g, (entry, id) => {
+      const cluster = byId.get(id)
+      if (!cluster) return entry
+      const fields = JSON.parse(entry)
+      for (const key of ['name', 'location', 'architecture', 'scheduler']) {
+        if (key in fields) fields[key] = cluster[key]
       }
-    }
+      return `{ ${Object.entries(fields).map(([key, value]) => `${JSON.stringify(key)}: ${JSON.stringify(value)}`).join(', ')} }`
+    })
     raw = raw.replace(
       /("domain": "multicenter"[\s\S]*?"run_count":\s*)\d+/,
       `$1${invocations.length}`,
@@ -647,4 +674,4 @@ async function main() {
   console.log(`[sync] 合计运行 ${running} / 排队 ${queued}，生成调用 ${invocations.length} 条，迁移 ${migrations.length} 条`)
 }
 
-await main()
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) await main()

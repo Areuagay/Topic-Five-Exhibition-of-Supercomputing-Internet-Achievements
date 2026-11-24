@@ -18,7 +18,7 @@ export const useAppStore = defineStore('app', {
     },
     clusterNameMap: (state) => {
       const map = new Map<string, string>()
-      for (const c of state.clusters) map.set(c.id, c.name)
+      for (const c of state.clusters) map.set(c.id, `${c.location}中心`)
       return map
     },
     domainName: (state) => (id: string) => state.domains.find((d) => d.domain === id)?.name ?? id,

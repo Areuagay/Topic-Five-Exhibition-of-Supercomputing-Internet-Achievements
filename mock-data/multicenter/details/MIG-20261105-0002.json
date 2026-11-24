@@ -7,7 +7,7 @@
     "function_id": "fn-fft",
     "status": "pending",
     "progress": 0,
-    "from_cluster": "guangzhou",
+    "from_cluster": "jinan",
     "to_cluster": "changsha",
     "source_type": "backend",
     "start_time": "",
@@ -21,7 +21,7 @@
         "timestamp": "2026-11-05T18:04:01+08:00"
       }
     ],
-    "reason": "广州中心排队等待 82 项，FFT 实例等待调度至长沙中心",
+    "reason": "济南中心排队等待 82 项，FFT 实例等待调度至长沙中心",
     "transferred_replicas": 1,
     "total_size_mb": 512
   },

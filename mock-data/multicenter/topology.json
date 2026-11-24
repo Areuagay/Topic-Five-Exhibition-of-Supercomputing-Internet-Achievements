@@ -11,7 +11,7 @@
         "source_type": "backend"
       },
       {
-        "id": "guangzhou",
+        "id": "jinan",
         "name": "神威·太湖之光",
         "status": "degraded",
         "resource_status": "highLoad",
@@ -25,7 +25,7 @@
         "source_type": "backend"
       },
       {
-        "id": "jinan",
+        "id": "guangzhou",
         "name": "银河 III",
         "status": "offline",
         "resource_status": "maintenance",
@@ -36,7 +36,7 @@
       {
         "source": "changsha",
         "target": "guangzhou",
-        "status": "online",
+        "status": "offline",
         "latency_ms": 18.6,
         "bandwidth_mbps": 8200,
         "packet_loss_percent": 0.02,
@@ -54,7 +54,7 @@
       {
         "source": "changsha",
         "target": "jinan",
-        "status": "offline",
+        "status": "online",
         "latency_ms": 31.8,
         "bandwidth_mbps": 4200,
         "packet_loss_percent": 0.12,
@@ -63,7 +63,7 @@
       {
         "source": "guangzhou",
         "target": "kunshan",
-        "status": "online",
+        "status": "offline",
         "latency_ms": 27.5,
         "bandwidth_mbps": 7100,
         "packet_loss_percent": 0.04,
@@ -81,7 +81,7 @@
       {
         "source": "kunshan",
         "target": "jinan",
-        "status": "offline",
+        "status": "online",
         "latency_ms": 32.4,
         "bandwidth_mbps": 6300,
         "packet_loss_percent": 0.06,

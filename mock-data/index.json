@@ -107,9 +107,9 @@
     ],
     "clusters": [
       { "id": "changsha", "name": "天河新一代", "location": "长沙", "architecture": "飞腾CPU + 迈创DSP" },
-      { "id": "guangzhou", "name": "神威·太湖之光", "location": "广州", "architecture": "Intel CPU" },
-      { "id": "kunshan", "name": "曙光星云", "location": "昆山", "architecture": "曙光CPU + 曙光DCU" },
-      { "id": "jinan", "name": "银河 III", "location": "济南", "architecture": "申威CPU" }
+      { "id": "guangzhou", "name": "银河 III", "location": "广州", "architecture": "Intel Xeon + Xeon Phi" },
+      { "id": "kunshan", "name": "曙光星云", "location": "昆山", "architecture": "国产CPU + 寒武纪MLU" },
+      { "id": "jinan", "name": "神威·太湖之光", "location": "济南", "architecture": "神威26010 众核处理器" }
     ]
   }
 }

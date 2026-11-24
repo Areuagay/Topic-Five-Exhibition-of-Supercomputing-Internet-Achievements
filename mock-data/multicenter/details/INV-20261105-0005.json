@@ -4,43 +4,43 @@
   "data": {
     "invocation_id": "INV-20261105-0005",
     "trace_id": "TRACE-20261105-0005",
-    "total_latency_ms": 39.9,
+    "total_latency_ms": 59.1,
     "source_type": "backend",
     "spans": [
       {
         "seq": 1,
         "component": "scnet-gateway",
         "name": "跨域网关接入",
-        "cluster_id": "guangzhou",
+        "cluster_id": "jinan",
         "status": "success",
-        "latency_ms": 4.8,
+        "latency_ms": 7.1,
         "start_time": "2026-11-05T18:02:01+08:00"
       },
       {
         "seq": 2,
         "component": "fn-scheduler",
         "name": "跨中心调度编排",
-        "cluster_id": "guangzhou",
+        "cluster_id": "jinan",
         "status": "success",
-        "latency_ms": 8,
+        "latency_ms": 11.8,
         "start_time": "2026-11-05T18:02:01+08:00"
       },
       {
         "seq": 3,
         "component": "k8s-runtime",
         "name": "函数实例执行",
-        "cluster_id": "guangzhou",
+        "cluster_id": "jinan",
         "status": "running",
-        "latency_ms": 22.3,
+        "latency_ms": 33.1,
         "start_time": "2026-11-05T18:02:01+08:00"
       },
       {
         "seq": 4,
         "component": "result-collector",
         "name": "结果汇聚回传",
-        "cluster_id": "guangzhou",
+        "cluster_id": "jinan",
         "status": "waiting",
-        "latency_ms": 4.8,
+        "latency_ms": 7.1,
         "start_time": "2026-11-05T18:02:01+08:00"
       }
     ]
