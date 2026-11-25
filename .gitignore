@@ -55,6 +55,7 @@ artifacts/generated/
 # Large packages
 # ======================
 *.zip
+!artifacts/provided/地球动力_结果.zip
 *.tar
 *.tar.gz
 
@@ -76,3 +77,6 @@ htmlcov/
 
 # Local simulated experience state
 .runtime-data/
+
+# User-supplied local materials (not part of the repository)
+/AAA/

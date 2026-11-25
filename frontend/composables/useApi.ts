@@ -19,12 +19,14 @@ import type {
   RunDetail,
   Scenario,
   ScenarioDetail,
+  ScenarioVideo,
   Topology,
   TraceDetail,
   UploadSample,
   Workload,
 } from '~/types'
 import type { RunMetrics } from '~/types/domain-data'
+import type { ProvidedResult } from '~/types/provided-results'
 
 /**
  * API 访问层。
@@ -70,6 +72,8 @@ export function useApi() {
 
     // 学科域
     getScenarios: (domain: string) => request<Scenario[]>(`/${domain}/scenarios`),
+    getScenarioVideos: (domain: string, scenarioId: string) =>
+      request<ScenarioVideo[]>(`/${domain}/scenarios/${encodeURIComponent(scenarioId)}/videos`),
     getScenarioDetails: (domain: string) =>
       request<ScenarioDetail[]>(`/${domain}/scenario-details`),
     getParamsSchemas: (domain: string) =>
@@ -78,6 +82,8 @@ export function useApi() {
     getDatasets: (domain: string) => request<DatasetItem[]>(`/${domain}/datasets`),
     getOperators: (domain: string) => request<Operator[]>(`/${domain}/operators`),
     getRuns: (domain: string) => request<Run[]>(`/${domain}/runs`),
+    getMeasuredResult: (domain: string, runId: string) =>
+      request<ProvidedResult | null>(`/${domain}/runs/${encodeURIComponent(runId)}/measured-result`),
     getRunDetail: (domain: string, runId: string) =>
       request<Omit<RunDetail, 'workflow' | 'metrics' | 'logs' | 'artifacts'>>(`/${domain}/runs/${runId}`),
     getRunWorkflow: (domain: string, runId: string) =>

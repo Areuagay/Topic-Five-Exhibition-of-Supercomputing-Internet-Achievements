@@ -1,0 +1,578 @@
+{
+  "format": "citcomcu.geodynamics.workflow",
+  "version": "1.0",
+  "title": "CitcomCU 地球动力学模拟与可视化",
+  "binding_status": {
+    "reference": "参考图中的算子。运行前需要绑定目标平台中的算子 ID 和端口。Uzawa、加速与 SUPG 是 CitcomCU 求解内部阶段，是否可独立调用需按平台实际接口确认。",
+    "defined": "已定义输入输出与校验规则，可在导入时绑定实现。",
+    "verified_example": "已用 caseA 第 12500 步实测该阶段的文件输出。"
+  },
+  "layout": {
+    "unit": "px",
+    "direction": "left_to_right"
+  },
+  "nodes": [
+    {
+      "id": "read",
+      "label": "数据读取",
+      "binding": "reference",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "model",
+          "type": "model_configuration"
+        }
+      ],
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "config": {
+        "input_uri_parameter": "model_input_uri"
+      }
+    },
+    {
+      "id": "runtime",
+      "label": "CitcomCU 镜像拉取",
+      "binding": "reference",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "environment",
+          "type": "solver_environment"
+        }
+      ],
+      "position": {
+        "x": 0,
+        "y": 140
+      },
+      "config": {
+        "image_parameter": "citcomcu_image",
+        "execution_policy": "cluster_scheduler"
+      }
+    },
+    {
+      "id": "partition",
+      "label": "求解区域划分",
+      "binding": "reference",
+      "inputs": [
+        {
+          "name": "model",
+          "type": "model_configuration"
+        },
+        {
+          "name": "environment",
+          "type": "solver_environment"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "state",
+          "type": "partitioned_state"
+        }
+      ],
+      "position": {
+        "x": 280,
+        "y": 70
+      },
+      "config": {
+        "mpi_ranks_parameter": "mpi_ranks"
+      }
+    },
+    {
+      "id": "iterate",
+      "label": "迭代计算与结果收集",
+      "binding": "reference",
+      "inputs": [
+        {
+          "name": "initial_state",
+          "type": "partitioned_state"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "results",
+          "type": "citcomcu_snapshots"
+        }
+      ],
+      "position": {
+        "x": 560,
+        "y": 70
+      },
+      "config": {
+        "stop_limit_parameter": "max_steps",
+        "output_steps_parameter": "output_steps"
+      },
+      "subgraph": {
+        "state": {
+          "initial": "initial_state",
+          "next": "supg.next_state"
+        },
+        "nodes": [
+          {
+            "id": "uzawa",
+            "label": "Uzawa 算法求解",
+            "binding": "reference",
+            "inputs": [
+              {
+                "name": "state",
+                "type": "partitioned_state"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "solution",
+                "type": "flow_solution"
+              }
+            ],
+            "position": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          {
+            "id": "accelerate",
+            "label": "迭代求解加速",
+            "binding": "reference",
+            "inputs": [
+              {
+                "name": "solution",
+                "type": "flow_solution"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "solution",
+                "type": "flow_solution"
+              }
+            ],
+            "position": {
+              "x": 280,
+              "y": 0
+            },
+            "config": {
+              "enabled_parameter": "enable_acceleration",
+              "disabled_behavior": "forward_input"
+            }
+          },
+          {
+            "id": "supg",
+            "label": "SUPG 求解",
+            "binding": "reference",
+            "inputs": [
+              {
+                "name": "state",
+                "type": "partitioned_state"
+              },
+              {
+                "name": "flow",
+                "type": "flow_solution"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "next_state",
+                "type": "partitioned_state"
+              }
+            ],
+            "position": {
+              "x": 560,
+              "y": 0
+            }
+          }
+        ],
+        "edges": [
+          {
+            "from": {
+              "node": "uzawa",
+              "port": "solution"
+            },
+            "to": {
+              "node": "accelerate",
+              "port": "solution"
+            }
+          },
+          {
+            "from": {
+              "node": "accelerate",
+              "port": "solution"
+            },
+            "to": {
+              "node": "supg",
+              "port": "flow"
+            }
+          }
+        ],
+        "iteration_inputs": [
+          {
+            "state": "current_state",
+            "to": {
+              "node": "uzawa",
+              "port": "state"
+            }
+          },
+          {
+            "state": "current_state",
+            "to": {
+              "node": "supg",
+              "port": "state"
+            }
+          }
+        ],
+        "collection": {
+          "source": "supg.next_state",
+          "output": "results",
+          "on": "configured_output_steps",
+          "required_fields": [
+            "coordinates",
+            "temperature",
+            "velocity"
+          ]
+        }
+      }
+    },
+    {
+      "id": "existing",
+      "label": "读取已有 CitcomCU 结果",
+      "binding": "defined",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "results",
+          "type": "citcomcu_snapshots"
+        }
+      ],
+      "position": {
+        "x": 560,
+        "y": 260
+      },
+      "config": {
+        "directory_parameter": "snapshot_directory",
+        "patterns": [
+          "{prefix}.coord.{rank}",
+          "{prefix}.temp.{rank}.{step}",
+          "{prefix}.velo.{rank}.{step}"
+        ]
+      }
+    },
+    {
+      "id": "analyze",
+      "label": "数据集成分析",
+      "binding": "defined",
+      "inputs": [
+        {
+          "name": "results",
+          "type": "citcomcu_snapshots"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "snapshot",
+          "type": "validated_snapshot"
+        }
+      ],
+      "position": {
+        "x": 840,
+        "y": 70
+      },
+      "config": {
+        "checks": [
+          "same_step_and_simulation_time",
+          "coordinate_and_field_row_counts_match",
+          "overlap_values_match",
+          "selected_grid_has_no_missing_points"
+        ],
+        "on_inconsistent_data": "fail"
+      }
+    },
+    {
+      "id": "vtk",
+      "label": "CitcomCU 转 ParaView",
+      "binding": "verified_example",
+      "inputs": [
+        {
+          "name": "snapshot",
+          "type": "validated_snapshot"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "grid",
+          "type": "paraview_grid"
+        }
+      ],
+      "position": {
+        "x": 1120,
+        "y": 0
+      },
+      "config": {
+        "format": "vtr",
+        "point_arrays": {
+          "temperature": 1,
+          "velocity": 3
+        },
+        "axes": [
+          "radius",
+          "theta",
+          "phi"
+        ]
+      }
+    },
+    {
+      "id": "preview",
+      "label": "温度与流速剖面",
+      "binding": "verified_example",
+      "inputs": [
+        {
+          "name": "grid",
+          "type": "paraview_grid"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "image",
+          "type": "png"
+        }
+      ],
+      "position": {
+        "x": 1400,
+        "y": 0
+      },
+      "config": {
+        "slice": {
+          "axis": "phi",
+          "selection": "middle_grid_plane"
+        },
+        "panels": [
+          "temperature",
+          "velocity_magnitude"
+        ]
+      }
+    },
+    {
+      "id": "package",
+      "label": "结果编号归档",
+      "binding": "verified_example",
+      "inputs": [
+        {
+          "name": "snapshot",
+          "type": "validated_snapshot"
+        },
+        {
+          "name": "grid",
+          "type": "paraview_grid"
+        },
+        {
+          "name": "image",
+          "type": "png"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "archive",
+          "type": "zip"
+        }
+      ],
+      "position": {
+        "x": 1680,
+        "y": 70
+      },
+      "config": {
+        "include": [
+          "selected_raw_files",
+          "paraview_grid",
+          "preview_image",
+          "provenance",
+          "sha256_manifest"
+        ],
+        "filename_template": "{result_id}-{prefix}-{step}.zip"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": {
+        "node": "analyze",
+        "port": "snapshot"
+      },
+      "to": {
+        "node": "vtk",
+        "port": "snapshot"
+      }
+    },
+    {
+      "from": {
+        "node": "vtk",
+        "port": "grid"
+      },
+      "to": {
+        "node": "preview",
+        "port": "grid"
+      }
+    },
+    {
+      "from": {
+        "node": "analyze",
+        "port": "snapshot"
+      },
+      "to": {
+        "node": "package",
+        "port": "snapshot"
+      }
+    },
+    {
+      "from": {
+        "node": "vtk",
+        "port": "grid"
+      },
+      "to": {
+        "node": "package",
+        "port": "grid"
+      }
+    },
+    {
+      "from": {
+        "node": "preview",
+        "port": "image"
+      },
+      "to": {
+        "node": "package",
+        "port": "image"
+      }
+    }
+  ],
+  "modes": {
+    "simulate": {
+      "nodes": [
+        "read",
+        "runtime",
+        "partition",
+        "iterate",
+        "analyze",
+        "vtk",
+        "preview",
+        "package"
+      ],
+      "edges": [
+        {
+          "from": {
+            "node": "read",
+            "port": "model"
+          },
+          "to": {
+            "node": "partition",
+            "port": "model"
+          }
+        },
+        {
+          "from": {
+            "node": "runtime",
+            "port": "environment"
+          },
+          "to": {
+            "node": "partition",
+            "port": "environment"
+          }
+        },
+        {
+          "from": {
+            "node": "partition",
+            "port": "state"
+          },
+          "to": {
+            "node": "iterate",
+            "port": "initial_state"
+          }
+        },
+        {
+          "from": {
+            "node": "iterate",
+            "port": "results"
+          },
+          "to": {
+            "node": "analyze",
+            "port": "results"
+          }
+        }
+      ],
+      "required_parameters": [
+        "model_input_uri",
+        "citcomcu_image",
+        "mpi_ranks",
+        "max_steps",
+        "output_steps",
+        "result_id"
+      ],
+      "defaults": {
+        "enable_acceleration": true
+      }
+    },
+    "replay": {
+      "nodes": [
+        "existing",
+        "analyze",
+        "vtk",
+        "preview",
+        "package"
+      ],
+      "edges": [
+        {
+          "from": {
+            "node": "existing",
+            "port": "results"
+          },
+          "to": {
+            "node": "analyze",
+            "port": "results"
+          }
+        }
+      ],
+      "required_parameters": [
+        "snapshot_directory",
+        "prefix",
+        "step",
+        "ranks",
+        "result_id"
+      ],
+      "example_parameters": {
+        "snapshot_directory": "/vol8/home/hnu_tzlab_5/cjl/citcomcu-master/examples/example1-4/CASE1",
+        "prefix": "caseA",
+        "step": 12500,
+        "ranks": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "result_id": "001"
+      }
+    }
+  },
+  "verified_example": {
+    "simulation_time": 0.0347853,
+    "grid_shape": [
+      49,
+      49,
+      49
+    ],
+    "artifacts": [
+      "caseA-12500.vtr",
+      "caseA-12500-preview.png",
+      "001-CitcomCU-caseA-12500.zip"
+    ]
+  },
+  "outputs": [
+    {
+      "node": "vtk",
+      "port": "grid"
+    },
+    {
+      "node": "preview",
+      "port": "image"
+    },
+    {
+      "node": "package",
+      "port": "archive"
+    }
+  ]
+}

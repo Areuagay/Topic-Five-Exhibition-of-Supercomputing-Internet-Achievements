@@ -314,6 +314,17 @@ export interface LogLine {
   message: string
 }
 
+export interface ScenarioVideo {
+  id: string
+  domain: string
+  scenario_id: string
+  title: string
+  duration_seconds: number
+  source_type: 'provided'
+  available: boolean
+  video_url: string
+}
+
 export interface Artifact {
   id: string
   name: string

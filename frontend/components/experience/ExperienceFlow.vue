@@ -141,7 +141,12 @@ const guideInstructions: Record<string, string> = {
   monitor: '选择一条运行记录，查看状态和进度。',
   result: '已到达最后一步，查看所选记录的图表与成果文件。',
 }
-const guideSummary = computed(() => activeKey.value === 'operator' && !workflowAllowed.value ? '提交算子后，查看任务执行进度。' : guideActive.value ? (guideInstructions[activeKey.value] ?? activeStep.value.summary) : activeStep.value.summary)
+const guideSummary = computed(() => {
+  if (activeKey.value === 'operator') {
+    return chosenOperators.value.length ? `已选 ${chosenOperators.value.length} 个算子，可提交编排` : '选择算子，或采用场景推荐'
+  }
+  return guideActive.value ? (guideInstructions[activeKey.value] ?? activeStep.value.summary) : activeStep.value.summary
+})
 
 async function startExperience(): Promise<void> {
   if (operatorSubmitting.value || pendingSubmission.value) return
@@ -427,9 +432,6 @@ watch(activeKey, key => { if (key === 'resource') void refreshClusters() })
         <span class="experience-guide-progress">{{ guideActive ? '体验' : '步骤' }} {{ activeStep.index }} / {{ experienceSteps.length }}</span>
         <span class="experience-guide-summary" :title="guideSummary">{{ guideSummary }}</span>
       </p>
-      <p v-if="activeKey === 'operator' && !chosenOperators.length" class="experience-guide-hint" role="status">
-        请先在下方选择算子（可点「采用场景推荐」一键选好），再提交并编排。
-      </p>
       <div class="experience-guide-actions">
         <RunPauseButton
           v-if="activeKey === 'workflow' && pauseTarget"
@@ -644,17 +646,7 @@ watch(activeKey, key => { if (key === 'resource') void refreshClusters() })
 .experience-guide-line { display: flex; align-items: center; gap: 14px; min-width: 0; margin: 0; font-size: 16px; color: var(--scnet-text-secondary); }
 .experience-guide-progress { flex-shrink: 0; color: var(--scnet-primary); font-weight: 600; font-variant-numeric: tabular-nums; }
 .experience-guide-summary { white-space: normal; overflow-wrap: anywhere; }
-.experience-guide-hint {
-  margin: 6px 0 0;
-  padding: 6px 10px;
-  border-left: 3px solid #e6a23c;
-  border-radius: 4px;
-  background: #fdf6ec;
-  color: #8a5a12;
-  font-size: 12.5px;
-  line-height: 1.5;
-}
-.experience-guide-actions { display: flex; align-items: center; justify-content: flex-end; width: auto; min-width: 0; max-width: 100%; gap: 8px; }
+.experience-guide-actions { display: flex; align-items: center; justify-content: flex-end; width: auto; min-width: 0; max-width: 100%; gap: 12px; }
 .experience-guide-actions button { min-width: 0; height: 44px; padding-inline: 14px; font-size: 14px; box-sizing: border-box; }
 .experience-guide-actions .experience-previous { flex: 0 0 auto; width: 104px; padding-inline: 10px; }
 .experience-guide-actions .experience-next { flex: 1 1 auto; width: auto; min-width: 132px; }
@@ -683,7 +675,7 @@ button:focus-visible { outline: 2px solid var(--scnet-primary); outline-offset: 
   .experience-metrics dd { font-size: 21px; }
   .experience-metrics small { font-size: 12px; }
   .experience-guide { grid-template-columns: minmax(0, 1fr); gap: 10px; padding: 12px 16px; }
-  .experience-guide-line { height: 28px; font-size: 15px; }
+  .experience-guide-line { min-height: 28px; font-size: 15px; }
   .experience-guide-actions { justify-self: end; }
 }
 @media (prefers-reduced-motion: reduce) {

@@ -13,6 +13,7 @@ import { execSync } from 'node:child_process'
 import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { resolve, dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { SCENARIO_VIDEOS, resolveScenarioVideo } from '../backend/scenario-videos.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const REPO = resolve(__dirname, '..')
@@ -69,6 +70,14 @@ cpSync(join(REPO, 'shared'), join(STAGE, 'shared'), { recursive: true })
 cpSync(join(REPO, 'mock-data'), join(STAGE, 'mock-data'), { recursive: true })
 if (existsSync(join(REPO, 'artifacts'))) {
   cpSync(join(REPO, 'artifacts'), join(STAGE, 'artifacts'), { recursive: true })
+}
+// Only the six registered main recordings are shipped, not duplicate cuts or
+// the original recording brief. Local development can use the supplied folder.
+for (const video of SCENARIO_VIDEOS) {
+  const file = resolveScenarioVideo(video.id, REPO)
+  if (!file) { console.warn(`[WARN] 演示视频未找到：${video.title}`); continue }
+  mkdirSync(join(STAGE, 'artifacts', 'videos'), { recursive: true })
+  cpSync(file.path, join(STAGE, 'artifacts', 'videos', `${video.id}.mp4`))
 }
 
 // 4. 启动脚本

@@ -52,6 +52,20 @@ $env:MULTICENTER_BACKEND_URL = 'http://192.168.95.138:8890/'
 - 平台暂未开放函数部署、调用与迁移接口，这三块按四中心运行任务 / 排队等待推导：
   每中心每 4 个运行任务折算 1 个就绪实例，调用条数等于运行任务数，迁移只发生在非维护中心之间
 
+## 场景演示视频
+
+运行详情与体验流程的结果页在工作流和资源统计下方展示预录场景视频，支持切换、暂停、全屏和进度拖动。
+汽车 `vehicle-crash` 关联车辆模型、坠落、坠物、冲撞四条视频；无人机 `path-planning` 关联视觉避障和常规飞行两条视频。
+其余场景暂不关联视频。视频是提供方的预录场景演示，不代表当前模拟任务实际生成了这些结果，也不按旧 A01/U01 编号推断算子绑定。
+
+- 映射：`backend/scenario-videos.js`，沿用现有工作流，不修改节点或算子。
+- 六条主视频通过 Git LFS 保存在 `artifacts/videos/<视频ID>.mp4`，开发和部署均优先读取此目录。`AAA/` 仅作为本地原材料的备用来源，不提交到仓库。
+- 克隆仓库前安装 Git LFS，克隆后执行 `git lfs pull` 获取视频实体文件（不能只下载 GitHub 源码 ZIP 中的 LFS 指针）。
+- 可通过 `SCENARIO_VIDEO_DIR` 指定统一视频目录，其中使用 `<视频ID>.mp4` 命名。
+- `scripts/package-deploy.mjs` 会将已存在的六条主视频复制到部署包，缺失时提示；不重复打包切片。
+- 列表接口：`GET /api/v1/{domain}/scenarios/{scenarioId}/videos`；视频接口：`GET/HEAD /api/v1/scenario-videos/{id}/content`，支持 HTTP Range。
+- 没有配置视频时不显示视频区；已配置但文件缺失时显示重试提示。切换视频或离开结果页会停止播放。
+
 ## 本地文件上传与预览
 
 「输入数据」的六领域 33 个可上传项默认配好小规模演示文件，可直接预览、导入，也可点击「更换文件」。默认文件采用对应数据项的中文下载名称，上传后显示实际文件名；只校验内容、CSV 表头及 JSON 字段与类型，不要求固定文件名。单文件上限 5 MB，校验成功后保存并自动预览，失败时保留原数据。预览中可「恢复默认」。刷新或重启保留用户文件；上传存入 `.runtime-data/`，不修改 `mock-data/uploads/` 中的默认文件。详细说明、格式边界及接口见 [上传样例说明](mock-data/uploads/README.md)。
@@ -97,6 +111,24 @@ node scripts/sync-operator-library.mjs --offline
 其他五个领域的十个板块分别配置 10–19 个固定流程实体，覆盖领域专属的输入检查、
 计算分支、结果校验与归档；进度直接显示在 DAG 节点中。
 依赖、历史记录更新与模拟执行边界见 [工作流说明](docs/workflow-execution.md)。
+
+## 提供方实测算例
+
+结果页在对应场景默认显示「实测算例结果」，可切换「当前任务数据」。实测算例是提供方的独立结果，页面上方的任务状态、工作流与资源消耗仍属于当前演示任务。
+
+- 地球动力学 / 地幔对流与构造演化（`tectonic-evolution`）：CitcomCU caseA 第 12500 步，模拟时间 0.0347853，49×49×49 网格；展示温度与速度模长的 18°E 剖面、全场统计和原始结果图。材料只有一个快照，不生成时间演化曲线；原文未提供物理单位。
+- AI 模型训练 / 分布式预训练（`llm-pretraining`）：图文训练的 `ai-data-prep`、`transformers-trainer`、`peft-lora`、`pytorch-ddp` 四个算子的原始日志、数据划分、损失、准确率与三次并行对比。利用率提升采用日志中的相对百分比。日志提及的模型/适配器路径不代表已提供文件，不生成下载链接。
+- 汽车和无人机的录制工作流文档明确将参数标为示例。目前只接入已提供的视频；数值指标待收到实测文件后接入。
+
+原文件与可重复生成的展示索引位于 `artifacts/provided/`，部署脚本会一并复制。重新导入：
+
+```powershell
+python scripts/import-provided-results.py --geodynamics-zip "地球动力_结果.zip" --workflow "geodynamics-workflow.json" --training-log "训练算子输出.md"
+```
+
+导入会验证 ZIP CRC、14 个 SHA256、原始分块与 VTR 的网格/字段、训练数据划分和对比均值。速度分量由原始 theta/phi/radius 对应到 VTR radius/theta/phi，重叠网格保留源文件值，不平滑或平均。替换索引后重启后端。
+
+接口：`GET /api/v1/{domain}/runs/{runId}/measured-result` 按任务场景返回算例或 `null`；`GET /api/v1/provided-files/{assetId}/preview|download` 只开放登记的原始文件。验证：`node --test backend/tests/provided-results.test.mjs`；浏览器验证：`node frontend/browser-tests/provided-results.mjs`（需 Playwright，可通过 `PLAYWRIGHT_MODULE` 指定模块）。
 
 ## Applications
 

@@ -4,6 +4,8 @@ import { ArrowLeft } from '@lucide/vue'
 import ResourceState from '~/components/run/ResourceState.vue'
 import ScenarioWorkspace from '~/components/run/ScenarioWorkspace.vue'
 import ArtifactActions from '~/components/run/ArtifactActions.vue'
+import ScenarioVideos from '~/components/run/ScenarioVideos.vue'
+import MeasuredResults from '~/components/run/MeasuredResults.vue'
 import { metricUnit, quantityLabel, unitText } from '~/utils/workspace'
 import { getStageLabels } from '~/config/scenario-experience'
 import type { Artifact } from '~/types'
@@ -46,7 +48,12 @@ async function prepareDataDetails(event: MouseEvent): Promise<void> {
   disclosure.open = true
 }
 
-const { getRunDetail, getRunWorkflow, getRunMetrics, getRunLogs, getRunArtifacts } = useApi()
+const { getRunDetail, getRunWorkflow, getRunMetrics, getRunLogs, getRunArtifacts, getMeasuredResult } = useApi()
+const resultSource = ref<'provided' | 'task'>('provided')
+const { data: measuredResult, pending: measuredPending, error: measuredError, refresh: refreshMeasured } = useAsyncData(
+  `run-measured-${props.domain}-${props.runId}`, () => getMeasuredResult(props.domain, props.runId), { server: false, lazy: true },
+)
+const showMeasured = computed(() => resultSource.value === 'provided' && !!measuredResult.value)
 const appStore = useAppStore()
 
 // Separate resources: failure in metrics/files must not discard the task summary.
@@ -464,6 +471,16 @@ function chartOption(section: ExtraSection): Record<string, unknown> | null {
         </dl>
       </section>
 
+      <ScenarioVideos :key="`${domain}-${detail.scenario_id}`" :domain="domain" :scenario-id="detail.scenario_id" />
+
+      <ResourceState v-if="measuredPending || measuredError" :pending="measuredPending" :error="measuredError" label="实测算例结果" @retry="refreshMeasured()" />
+      <div v-if="measuredResult" class="result-source-controls" role="group" aria-label="结果数据来源">
+        <button class="sc-action" :aria-pressed="resultSource === 'provided'" @click="resultSource = 'provided'">实测算例结果</button>
+        <button class="sc-action" :aria-pressed="resultSource === 'task'" @click="resultSource = 'task'">当前任务数据</button>
+      </div>
+      <MeasuredResults v-if="showMeasured && measuredResult" :result="measuredResult" />
+
+      <template v-if="!showMeasured && !measuredPending && !measuredError">
       <section class="run-data-panel" aria-label="运行数据">
         <div class="run-data-layout">
           <div class="run-data-primary">
@@ -681,11 +698,14 @@ function chartOption(section: ExtraSection): Record<string, unknown> | null {
           </ResourceState>
         </section>
       </section>
+      </template>
     </article>
   </div>
 </template>
 
 <style scoped>
+.result-source-controls { display:flex; flex-wrap:wrap; gap:12px; }
+.result-source-controls [aria-pressed="true"] { color:var(--scnet-primary); background:var(--scnet-primary-soft); border-color:var(--scnet-primary); }
 .run-poll-feedback { padding: 12px 18px; color: #92632e; background: #fff5e5; border-radius: 8px; font-size: 14px; }
 .summary-back { display:inline-flex; align-items:center; justify-content:center; min-height:44px; box-sizing:border-box; padding:0 16px; border:1px solid #dce3ec; border-radius:6px; background:#fff; color:var(--scnet-text-secondary); font-size:14px; text-decoration:none; }.summary-back:hover { color:var(--scnet-primary); border-color:#a9c3e8; }.summary-back:focus-visible { outline:2px solid var(--scnet-primary); outline-offset:2px; }
 .scf-metric-controls { display: flex; gap: 10px; margin-bottom: 16px; }

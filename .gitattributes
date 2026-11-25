@@ -1,0 +1,5 @@
+# Preserve supplied files byte-for-byte so their SHA256 checks remain valid.
+/artifacts/provided/** -text -whitespace
+
+# Original demonstration recordings exceed GitHub's regular file size limit.
+/artifacts/videos/*.mp4 filter=lfs diff=lfs merge=lfs -text

@@ -27,6 +27,8 @@ import { createServer } from 'node:http'
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { createExperienceStore, EXPERIENCE_DOMAINS } from './experience-store.js'
 import { MAX_UPLOAD_BYTES } from './dataset-files.js'
+import { listScenarioVideos, resolveScenarioVideo, sendScenarioVideo } from './scenario-videos.js'
+import { createProvidedResults } from './provided-results.js'
 import { basename, extname, resolve, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -39,6 +41,7 @@ const UPLOADS_DIR = resolve(MOCK_DATA_DIR, 'uploads')
 const REPO_ROOT = resolve(__dirname, '..')
 const ARTIFACTS_ROOT = resolve(REPO_ROOT, 'artifacts')
 const ARTIFACT_INDEX = resolve(ARTIFACTS_ROOT, 'simulated', 'artifact_index.json')
+const providedResults = createProvidedResults(REPO_ROOT)
 
 const API_PREFIX = '/api/v1'
 
@@ -50,13 +53,17 @@ const MIME = {
   '.json': 'application/json; charset=utf-8',
   '.csv': 'text/csv; charset=utf-8',
   '.txt': 'text/plain; charset=utf-8',
+  '.md': 'text/plain; charset=utf-8',
+  '.vtr': 'application/xml; charset=utf-8',
+  '.zip': 'application/zip',
   '.dat': 'application/octet-stream',
 }
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization, Range',
+  'Access-Control-Expose-Headers': 'Accept-Ranges, Content-Range, Content-Length',
 }
 
 /** 发送 JSON 响应 */
@@ -297,9 +304,40 @@ const server = createServer(async (req, res) => {
     return
   }
 
+  if (routeParts[0] === 'scenario-videos' && routeParts[2] === 'content' && routeParts.length === 3) {
+    if (!['GET', 'HEAD'].includes(method)) {
+      res.setHeader('Allow', 'GET, HEAD')
+      sendJSON(res, 405, { code: 405, message: '仅支持读取视频', data: null })
+      return
+    }
+    const file = resolveScenarioVideo(routeParts[1], REPO_ROOT)
+    if (!file) { sendJSON(res, 404, { code: 404, message: '视频文件暂不可用', data: null }); return }
+    sendScenarioVideo(req, res, file, CORS_HEADERS)
+    return
+  }
+
   // 读操作：GET 返回 mock-data 下的 JSON；文件预览/下载单独处理
   if (method === 'GET') {
     const parts = pathname.slice(API_PREFIX.length).split('/').filter(Boolean)
+
+    if (parts[0] === 'provided-files' && parts.length === 3 && ['preview', 'download'].includes(parts[2])) {
+      const file = providedResults.file(parts[1], parts[2] === 'preview')
+      if (!file) { sendJSON(res, 404, { code: 404, message: '原始结果文件不存在', data: null }); return }
+      sendFile(res, file.path, { download: parts[2] === 'download', name: file.name })
+      return
+    }
+
+    if (EXPERIENCE_DOMAINS.includes(parts[0]) && parts[1] === 'runs' && parts[3] === 'measured-result' && parts.length === 4) {
+      const run = experienceStore.read(parts.slice(0, 3))
+      if (!run || run.code !== 200) { sendJSON(res, 404, { code: 404, message: '任务不存在', data: null }); return }
+      sendJSON(res, 200, { code: 200, message: 'success', data: providedResults.find(parts[0], run.data.scenario_id), timestamp: new Date().toISOString() })
+      return
+    }
+
+    if (EXPERIENCE_DOMAINS.includes(parts[0]) && parts[1] === 'scenarios' && parts[3] === 'videos' && parts.length === 4) {
+      sendJSON(res, 200, { code: 200, message: 'success', data: listScenarioVideos(parts[0], parts[2], REPO_ROOT), timestamp: new Date().toISOString() })
+      return
+    }
 
     if (EXPERIENCE_DOMAINS.includes(parts[0]) && parts[1] === 'datasets' && ['sample', 'download'].includes(parts[3]) && parts.length === 4) {
       const file = experienceStore.file(parts[0], parts[2], parts[3])
